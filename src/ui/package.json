@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test test/router.test.ts && node test/run-smoke.mjs"
+    "test": "node --experimental-strip-types --test test/router.test.ts test/loops-list.test.ts test/loop-runs.test.ts test/loop-editor.test.ts test/live-mappers.test.ts test/live-sources.test.ts && node test/run-smoke.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
@@ -22,4 +22,3 @@
     "vite": "^6.0.0"
   }
 }
-
