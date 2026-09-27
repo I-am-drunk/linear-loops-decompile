@@ -41,7 +41,8 @@ force-push + deletion blocked). No path bypasses review.
 
 ## PR contract
 
-- Branch: `agent-NN/tNNN-slug` (or `docs/<slug>`). One task = one branch = one PR.
+- Branch: `agent-NN/tNNN-slug` (or `docs/<slug>`; during generation overlap:
+  `gen<N>/agent-NN/tNNN-slug`). One task = one branch = one PR.
 - Commit: `T-NNN: <what> (agent-NN)` — credit authors and reviewers.
 - PR body: task-issue link · file list · verification evidence (tsc summary, test
   counts, Node version) · review checklist. Template: the `swarm-deliver-pr` skill.
