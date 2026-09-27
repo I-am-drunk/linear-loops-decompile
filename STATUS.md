@@ -16,6 +16,14 @@ Done 2026-09-27:
 - R1 pipeline: `bash pipeline/run.sh` runs end to end (Linear v1.32.4: 1,550
   chunks, 258 GraphQL ops, 87 models, zero drift vs baseline). Corpus ships to
   drift check only.
+- Official-docs drop: Linear's MIT `linear/linear` docs, package READMEs, SDK
+  changelog, and a schema refresh vendored in `extracts/linear-official/`
+  (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
+  (a stale `main` branch produced a false "zero drift" on 2026-09-27 morning).
+- Golden-goose trace (issue #14, PR #141): Q1-Q4 answered in
+  `docs/golden-goose-chat-route.md` + KNOWLEDGE.md §8a — send op + input fields,
+  streamData subscribe envelope, auth, wire shapes (now MIT-documented), meter
+  placement. Remaining: E1 live experiment on the user's account.
 - R2 feature matrix: `docs/feature-matrix.md` enumerates every Loops feature with
   corpus evidence; KNOWLEDGE.md gained §8 (chat substrate: loop chat IS normal
   chat; zero GraphQL subscriptions, streaming rides the sync queue).
@@ -35,10 +43,11 @@ Now:
   from docs/ui-reference.md, empty states) with the Settings page wired to the
   R3.3 RPCs.
 
-Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
+Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
-#20); golden-goose chat-route trace (issue #14).
+#20); golden-goose next steps after the trace (issue #14): E1 live experiment +
+minimal sync-reader slice when R6 lands.
 
 Infra note: GitHub Actions is billing-locked; the gate runs locally:
 `bash ci/check-src.sh`.
