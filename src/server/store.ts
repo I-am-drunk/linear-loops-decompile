@@ -162,13 +162,26 @@ export class Store {
 
   /**
    * One run by id, or null. The RPC layer (rpcs.ts) tries the live Runner
-   * first; this is the durable fallback. Gap vs the live record: the runs
-   * table has no pending_elicitation column, so a parked run's question is
-   * only on the Runner's record.
+   * first; this is the durable fallback. The runs table has no
+   * pending_elicitation column, so a parked run's question is reconstructed
+   * from its snapshot (the freshest parked state; T-1103 follow-up).
    */
   getRun(id: string): Run | null {
     const row = this.db.prepare("SELECT * FROM runs WHERE id = ?").get(id) as Record<string, unknown> | undefined;
-    return row === undefined ? null : runRow(row);
+    if (row === undefined) return null;
+    const run = runRow(row);
+    if (run.status === "awaitingInput") {
+      const snap = this.db.prepare("SELECT json FROM snapshots WHERE run_id = ?").get(id) as Record<string, unknown> | undefined;
+      if (snap !== undefined) {
+        try {
+          const parsed = JSON.parse(String(snap["json"])) as { run?: { pendingElicitation?: Run["pendingElicitation"] } };
+          if (parsed.run?.pendingElicitation !== undefined) run.pendingElicitation = parsed.run.pendingElicitation;
+        } catch {
+          /* a torn snapshot never blocks the read path */
+        }
+      }
+    }
+    return run;
   }
 
   /**

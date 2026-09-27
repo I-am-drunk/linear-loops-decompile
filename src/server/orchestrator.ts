@@ -222,13 +222,20 @@ export function createOrchestrator(deps: OrchestratorDeps): Orchestrator {
   }
 
   function attachRunWatch(runId: EntityId, loop: WorkflowDefinition): void {
-    let off: () => void = () => {};
-    off = runner.subscribe(runId, (event: RunEvent) => {
+    // The watch lives for the run's whole lifetime — `complete` is
+    // CONTINUABLE (SPECS/agent.md §continuation), and an off()-at-terminal
+    // watch silently drops every event of a continued run (found by the
+    // T-1103 acceptance test: runs.continue over the channel streamed
+    // nothing). Cost is recorded as a DELTA so a re-completed run never
+    // double-counts its cumulative usage against the budget.
+    let recordedCost = 0;
+    runner.subscribe(runId, (event: RunEvent) => {
       deps.publish?.(runId, event);
       if (event.type === "runStatus" && TERMINAL.has(event.status)) {
-        off();
         queue.markFinished(runId);
-        queue.recordCost(loop.id, event.run.usage.costUsd, now());
+        const cost = event.run.usage.costUsd;
+        queue.recordCost(loop.id, Math.max(0, cost - recordedCost), now());
+        recordedCost = cost;
         if (event.status === "complete") track(writeBackFor(runId, loop));
       }
     });
