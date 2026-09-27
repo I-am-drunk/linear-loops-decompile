@@ -19,8 +19,8 @@ Done 2026-09-27:
   drift check only.
 
 Now:
-- R3 skeleton (take it per AGENTS.md): fresh src/ (server, UI shell, connect)
-  per SPECS/target-architecture.md, built against docs/feature-matrix.md.
+- R3.1 transport slice (in progress: sess_01a0e2c0-4c63-70a3-a057-cc1ded6f0665):
+  src/connect per PLAN.md. We build in thin vertical slices, one PR each.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 
