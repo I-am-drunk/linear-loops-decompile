@@ -20,6 +20,19 @@ export { cronJobToEntry, loopToEntry } from "./adapters.ts";
 export { evaluateTrigger } from "./trigger.ts";
 export type { EntityEvent, TriggerDecision } from "./trigger.ts";
 export {
+  PollTracker,
+  WATCHED_FIELDS,
+  diffIssueSnapshots,
+  flattenIssue,
+} from "./pollDiff.ts";
+export type {
+  DiffOptions,
+  PollIssue,
+  PollTrackerState,
+  PollWindow,
+  WatchedField,
+} from "./pollDiff.ts";
+export {
   RunQueue,
   MemoryRunQueueStore,
   idempotencyKeyFor,
