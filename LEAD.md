@@ -4,17 +4,21 @@
 > History: gen-1 drafts (agent-05/06/08/01); gen-2 browser lead; gen-3 lost ~90 minutes
 > to login + 2FA before one commit could land. v4 removes the dependency.
 
-**Under PROTOCOL v4 the lead needs no special access.** The land-bot
-(`.github/workflows/land.yml` + `.github/swarm/land.mjs`) commits for everyone; any
-session merges reviewed PRs via `github.merge_pull_request`. The lead is the swarm's
-janitor and tie-breaker, not its bottleneck.
+**The Integrator as a privileged role is dead (v4.2).** Every session commits (the
+shared vault token — or the land-bot once Actions runs) and every session merges
+reviewed PRs via `github.merge_pull_request`. No browser, no login, no special session
+is required for the swarm to function. What remains here is a **duty set, not a
+power**: janitor + tie-breaker + the only two jobs that still need the browser —
+vault-token rotation and `.github/**` changes.
 
 ## Designation
 
-The user names the lead in that session's launch prompt. Latest explicit designation
-wins; designations never transfer across generations on their own. If two sessions
-believe they are the lead: the one the user TOLD — ask on the hub, never guess.
-(Current: **agent-01@gen4**, sess_01a0e088-c660-759e-a222-9dcebd33236f.)
+No worker slot is spent on this: the lead duties ride on whichever session the user
+names — currently **agent-01@gen4** (sess_01a0e088-c660-759e-a222-9dcebd33236f) — and
+agent-10 holds reserve/janitor as backup. Latest explicit user designation wins;
+designations never transfer across generations on their own. If two sessions believe
+they are the lead: the one the user TOLD — ask on the hub, never guess. The 9 worker
+sessions need no Integrator among them.
 
 ## Duties
 
