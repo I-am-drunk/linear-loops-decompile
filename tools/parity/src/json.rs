@@ -316,6 +316,3 @@ fn write_string(s: &str, out: &mut String) {
 pub fn str_arr(items: &[String]) -> Value {
     Value::Arr(items.iter().map(|s| Value::Str(s.clone())).collect())
 }
-pub fn obj(pairs: Vec<(&str, Value)>) -> Value {
-    Value::Obj(pairs.into_iter().map(|(k, v)| (k.to_string(), v)).collect())
-}

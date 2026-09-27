@@ -66,6 +66,7 @@ struct Opts {
     tolerances: Option<PathBuf>,
     improvements: Option<PathBuf>,
     report: Option<PathBuf>,
+    canaries: Option<PathBuf>,
 }
 
 impl Default for Opts {
@@ -79,6 +80,7 @@ impl Default for Opts {
             tolerances: None,
             improvements: None,
             report: None,
+            canaries: None,
         }
     }
 }
@@ -107,6 +109,7 @@ fn parse_opts(args: &[String]) -> Result<Opts, String> {
             "--tolerances" => o.tolerances = Some(PathBuf::from(take(&mut i)?)),
             "--improvements" => o.improvements = Some(PathBuf::from(take(&mut i)?)),
             "--report" => o.report = Some(PathBuf::from(take(&mut i)?)),
+            "--canaries" => o.canaries = Some(PathBuf::from(take(&mut i)?)),
             other => return Err(format!("unknown flag: {}", other)),
         }
         i += 1;
@@ -122,7 +125,11 @@ fn cmd_extract(args: &[String]) -> ExitCode {
             return ExitCode::from(2);
         }
     };
-    match extract::run(&o.corpus, &o.matrix, &o.out) {
+    let canaries = o.canaries.clone().or_else(|| {
+        let p = PathBuf::from("tools/parity/policy/canaries.txt");
+        p.exists().then_some(p)
+    });
+    match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref()) {
         Ok(stats) => {
             println!(
                 "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens → {}",
@@ -134,6 +141,9 @@ fn cmd_extract(args: &[String]) -> ExitCode {
                 stats.tokens,
                 o.out.display()
             );
+            if let Some((passed, total)) = stats.canaries {
+                println!("canaries: {}/{} pass", passed, total);
+            }
             ExitCode::SUCCESS
         }
         Err(e) => {
@@ -215,7 +225,7 @@ fn cmd_check(args: &[String]) -> ExitCode {
         outcome.not_built.len(),
         outcome.stale_improvements.len()
     );
-    if violations.is_empty() {
+    if outcome.pass() {
         println!("PASS");
         ExitCode::SUCCESS
     } else {

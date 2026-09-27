@@ -21,13 +21,13 @@ if [ ! -d pipeline/corpus/pretty/client ]; then
   echo "check-ui: no local corpus (pipeline/corpus) — skipping extract/check. Vacuous pass."
   exit 0
 fi
+echo "=== parity extract (corpus → reference; canaries enforced) ==="
+cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
+
 if [ ! -f src/ui/ui-facts.json ]; then
-  echo "check-ui: src/ui/ui-facts.json not present — no UI facts declared yet. Vacuous pass."
+  echo "check-ui: src/ui/ui-facts.json not present — extraction healthy, no UI facts to check yet. Vacuous pass."
   exit 0
 fi
-
-echo "=== parity extract (corpus → reference) ==="
-cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
 echo "=== parity check ==="
 cargo run --quiet --manifest-path tools/parity/Cargo.toml -- check \

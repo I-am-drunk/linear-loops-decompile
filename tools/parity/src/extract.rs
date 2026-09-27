@@ -21,9 +21,11 @@ pub struct ExtractStats {
     pub copy: usize,
     pub edges: usize,
     pub tokens: usize,
+    /// (passed, total) when a canary list was enforced.
+    pub canaries: Option<(usize, usize)>,
 }
 
-pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, String> {
+pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) -> Result<ExtractStats, String> {
     let mut facts = FactFile::default();
 
     // --- routes: the app's Loops/agent route table is ONE fact surface ------
@@ -45,10 +47,30 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
             app_routes.push(path.to_string());
         }
     }
+    // routes.json is a floor, not a ceiling (the analyzer misses route
+    // literals — #157 meta finding): also scan chunk bodies for
+    // `/:orgKey/…` template literals and merge.
+    let client_for_routes = corpus.join("pretty/client");
+    if let Ok(entries) = fs::read_dir(&client_for_routes) {
+        for entry in entries.flatten() {
+            let name = entry.file_name().to_string_lossy().to_string();
+            if !name.ends_with(".js") {
+                continue;
+            }
+            let Ok(text) = fs::read_to_string(entry.path()) else { continue };
+            for route in extract_route_literals(&text) {
+                if is_loops_route(&route) {
+                    app_routes.push(route);
+                }
+            }
+        }
+    }
+    app_routes.sort();
+    app_routes.dedup();
     if !app_routes.is_empty() {
         facts.surfaces.insert(
             "app.routes".to_string(),
-            Surface { routes: { let mut r = app_routes.clone(); r.sort(); r.dedup(); r }, ..Default::default() },
+            Surface { routes: app_routes.clone(), ..Default::default() },
         );
     }
 
@@ -58,11 +80,11 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0 };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, canaries: None };
 
-    for comp in &components {
+    for (comp, exact) in &components {
         let mut surface = Surface::default();
-        // chunk files for this component (hashes rotate; match by name prefix)
+        // chunk files for this surface pattern (hashes rotate; match by prefix)
         let mut matched_any = false;
         let entries = match fs::read_dir(&client_dir) {
             Ok(e) => e,
@@ -70,7 +92,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
         };
         for entry in entries.flatten() {
             let name = entry.file_name().to_string_lossy().to_string();
-            if !chunk_matches(&name, comp) {
+            if !chunk_matches(&name, comp, *exact) {
                 continue;
             }
             matched_any = true;
@@ -97,7 +119,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
     let mut theme = Surface::default();
     for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))?.flatten() {
         let name = entry.file_name().to_string_lossy().to_string();
-        if !chunk_matches(&name, "ThemeProvider") {
+        if !chunk_matches(&name, "ThemeProvider", true) {
             continue;
         }
         stats.chunks_read += 1;
@@ -116,6 +138,57 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
         stats.surfaces += 1;
     }
 
+    // --- canaries: prove the copy grammar on every extraction --------------
+    // A canary absent from the CORPUS = drift alarm (refresh canaries or
+    // corpus); present in corpus but absent from the EXTRACTED reference =
+    // copy-grammar regression. Both are loud failures (#162 consult).
+    if let Some(canary_path) = canaries {
+        let list_text = fs::read_to_string(canary_path)
+            .map_err(|e| format!("read canaries {}: {}", canary_path.display(), e))?;
+        let canary_list: Vec<String> = list_text
+            .lines()
+            .map(str::trim)
+            .filter(|l| !l.is_empty() && !l.starts_with('#'))
+            .map(str::to_string)
+            .collect();
+        if !canary_list.is_empty() {
+            // one pass over every chunk, all canaries at once
+            let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
+            for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))?.flatten() {
+                let name = entry.file_name().to_string_lossy().to_string();
+                if !name.ends_with(".js") {
+                    continue;
+                }
+                let Ok(text) = fs::read_to_string(entry.path()) else { continue };
+                for (i, c) in canary_list.iter().enumerate() {
+                    if !in_corpus[i] && text.contains(c.as_str()) {
+                        in_corpus[i] = true;
+                    }
+                }
+            }
+            let extracted: std::collections::BTreeSet<&str> = facts
+                .surfaces
+                .values()
+                .flat_map(|s| s.copy.iter().map(String::as_str))
+                .collect();
+            let mut problems: Vec<String> = Vec::new();
+            let mut passed = 0;
+            for (i, c) in canary_list.iter().enumerate() {
+                if !in_corpus[i] {
+                    problems.push(format!("canary absent from corpus (drift — refresh the canary list or the corpus): {:?}", c));
+                } else if !extracted.contains(c.as_str()) {
+                    problems.push(format!("canary in corpus but NOT extracted (copy-grammar regression): {:?}", c));
+                } else {
+                    passed += 1;
+                }
+            }
+            stats.canaries = Some((passed, canary_list.len()));
+            if !problems.is_empty() {
+                return Err(format!("canary check failed:\n  {}", problems.join("\n  ")));
+            }
+        }
+    }
+
     let parent = out.parent().ok_or("out path has no parent dir")?;
     fs::create_dir_all(parent).map_err(|e| format!("mkdir {}: {}", parent.display(), e))?;
     fs::write(out, crate::json::to_string(&crate::model::to_value(&facts)))
@@ -132,33 +205,74 @@ fn is_loops_route(path: &str) -> bool {
 /// Chunk file belongs to component: "AutomationNewDialog.Wu-wKkiY.js" matches
 /// "AutomationNewDialog". Hashes rotate between corpus versions, so the match
 /// is a strict "<Name>." prefix.
-fn chunk_matches(filename: &str, component: &str) -> bool {
-    filename.len() > component.len() + 1
-        && filename.starts_with(component)
-        && filename.as_bytes()[component.len()] == b'.'
-        && filename.ends_with(".js")
+/// Chunk file belongs to a pattern: exact patterns need "<prefix>." (a dot
+/// before the hash); family patterns are raw prefix matches.
+fn chunk_matches(filename: &str, prefix: &str, exact: bool) -> bool {
+    if !filename.ends_with(".js") || filename.len() <= prefix.len() {
+        return false;
+    }
+    if !filename.starts_with(prefix) {
+        return false;
+    }
+    if exact {
+        filename.as_bytes()[prefix.len()] == b'.'
+    } else {
+        true
+    }
 }
 
-/// Surface inventory from the feature matrix: backticked `Component.HASH.js`
-/// names, deduped by component prefix. Non-chunk backticks are ignored by the
-/// ".js" requirement.
-fn matrix_components(matrix: &str) -> Vec<String> {
-    let mut out = Vec::new();
+/// Surface patterns from the feature matrix. Two kinds:
+/// - exact component: `Name.HASH.js` or `Name.{H1,H2}.js` → matches chunks
+///   named "<Name>.<anything>.js" (hashes rotate between corpus versions).
+/// - family prefix: any other Capitalized backticked token containing ".js",
+///   "*" or "{" (e.g. `WorkspaceAgent(s)SettingsPage.*`, `AgentPanel*`) →
+///   leading alphanumeric run, matched as a raw prefix.
+/// Returns (prefix, exact) pairs, sorted and deduped.
+fn matrix_components(matrix: &str) -> Vec<(String, bool)> {
+    let mut out: Vec<(String, bool)> = Vec::new();
     let mut rest = matrix;
     while let Some(start) = rest.find('`') {
         let after = &rest[start + 1..];
         let Some(end) = after.find('`') else { break };
         let tok = &after[..end];
         rest = &after[end + 1..];
-        if let Some(stripped) = tok.strip_suffix(".js") {
-            if let Some((comp, hash)) = stripped.rsplit_once('.') {
+        let Some(first) = tok.chars().next() else { continue };
+        if !first.is_ascii_uppercase() {
+            continue;
+        }
+        // exact: strip ".js", optional ".{…}" brace hash-list, then "Name.hash"
+        let mut core = tok.strip_suffix(".js").unwrap_or(tok);
+        let mut exact = false;
+        if let Some(brace_at) = core.find(".{") {
+            if core.ends_with('}') {
+                core = &core[..brace_at];
+                exact = true;
+            }
+        }
+        if !exact {
+            if let Some((name, hash)) = core.rsplit_once('.') {
                 if !hash.is_empty()
-                    && comp.chars().next().is_some_and(|c| c.is_ascii_uppercase())
-                    && comp.chars().all(|c| c.is_ascii_alphanumeric())
-                    && !out.contains(&comp.to_string())
+                    && hash.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+                    && !name.contains('.')
+                    && name.chars().all(|c| c.is_ascii_alphanumeric())
                 {
-                    out.push(comp.to_string());
+                    core = name;
+                    exact = true;
                 }
+            }
+        }
+        if exact {
+            let name = core.to_string();
+            if !out.iter().any(|(p, _)| p == &name) {
+                out.push((name, true));
+            }
+            continue;
+        }
+        // family prefix
+        if tok.contains(".js") || tok.contains('*') || tok.contains('{') || tok.contains('(') {
+            let prefix: String = tok.chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
+            if !prefix.is_empty() && !out.iter().any(|(p, _)| p == &prefix) {
+                out.push((prefix, false));
             }
         }
     }
@@ -166,11 +280,35 @@ fn matrix_components(matrix: &str) -> Vec<String> {
     out
 }
 
-/// User-visible copy candidates from a prettified chunk. Heuristic by design
-/// (facts catalog, not code): keep string literals that read like UI copy —
-/// capitalized words or multi-word phrases — and drop identifiers, paths,
-/// URLs, keys, hashes, and colors. The committed deny-list
-/// (`.parity/extract-deny.txt`) curates the tail over time.
+/// Route literals in chunk bodies: `` `/:orgKey/…` `` template strings the
+/// analysis index misses (#157 meta: indexes are a floor, grep is truth).
+fn extract_route_literals(text: &str) -> Vec<String> {
+    let mut out = Vec::new();
+    let mut rest = text;
+    while let Some(idx) = rest.find("`/:orgKey/") {
+        let after = &rest[idx + 1..];
+        let Some(end) = after.find('`') else { break };
+        let route = &after[..end];
+        rest = &after[end + 1..];
+        // route paths: segments of word chars, dashes, and :params
+        if !route.is_empty()
+            && route
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '/' | ':' | '-' | '_'))
+        {
+            out.push(route.to_string());
+        }
+    }
+    out
+}
+
+/// User-visible copy candidates from a prettified chunk. The grammar
+/// (#162 consult): all three string-literal forms carry copy in the compiled
+/// JSX (`children: "…"`, backtick literals, props into shell components) — so
+/// scan literals, then keep what reads like UI copy: capitalized words or
+/// multi-word phrases, dropping identifiers, paths, URLs, keys, hashes,
+/// colors. The canary set (`--canaries`) proves the grammar per extraction:
+/// extraction regression = hard fail, never a silent false green.
 fn extract_copy(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let bytes = text.as_bytes();
@@ -237,12 +375,12 @@ fn looks_like_copy(s: &str) -> bool {
             && w.chars().all(|c| c.is_ascii_alphabetic());
     }
     // multi-word: sentence-case copy starts capitalized (Linear's style), and
-    // must be mostly letters/spaces/punctuation people read
+    // must be ≥2/3 letters/spaces (admits terminal punctuation like "…")
     if !t.chars().next().is_some_and(|c| c.is_ascii_uppercase()) && !t.chars().any(|c| c.is_ascii_uppercase()) {
         return false;
     }
     let letters = t.chars().filter(|c| c.is_ascii_alphabetic() || c.is_whitespace()).count();
-    letters * 2 >= t.len()
+    letters * 3 >= t.len() * 2
 }
 
 /// Component containment edges: `from "./Child.<hash>.js"` inside a chunk is a

@@ -39,17 +39,27 @@ gitignored.
 
 ```
 parity extract [--corpus pipeline/corpus] [--matrix docs/feature-matrix.md]
-               [--out .parity/reference.json]
+               [--out .parity/reference.json] [--canaries FILE]
 parity check   [--facts src/ui/ui-facts.json] [--ref .parity/reference.json]
                [--tolerances FILE] [--improvements FILE] [--report FILE]
 ```
 
+`extract` enforces the copy canaries (`policy/canaries.txt` by default): a
+canary missing from the corpus is a drift alarm; present-but-not-extracted is
+a grammar regression. Both fail loudly.
+
 Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
 
-Surfaces `app.routes` (the Loops/agent route table) and `theme.tokens` (the
-semantic token namespace) are synthetic app-level surfaces; the rest come from
-the feature matrix's chunk inventory. Theme token *values* are a known seam
-(served CSS isn't in the JS corpus — SPECS/ui-parity.md §Known seam).
+Fact families: routes, copy, structure, tokens, bindings, icons, behavior,
+states (set-compared) + order (whole-sequence) + primitive (exact scalar).
+A family compares only where the reference has facts for it (ramp rule).
+Synthetic app-level surfaces: `app.routes` (route table — chunk-body scan,
+because the analysis index is a floor) and `theme.tokens` (token namespace;
+VALUES come from the theme-generator golden-vectors slice, #162).
+
+No cargo on a fresh sandbox? `curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal`
+(+ `apt-get install -y gcc` for the linker). The gate skips with a pointer
+when cargo is absent.
 
 Tests: `cargo test --manifest-path tools/parity/Cargo.toml` (fixture corpus,
 no real corpus needed). Gate: `bash ci/check-ui.sh`.

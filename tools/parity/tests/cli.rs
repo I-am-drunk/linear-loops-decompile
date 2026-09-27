@@ -21,6 +21,7 @@ fn extract(tmp: &std::path::Path) -> PathBuf {
         .arg("--corpus").arg(f.join("corpus"))
         .arg("--matrix").arg(f.join("docs/feature-matrix.md"))
         .arg("--out").arg(&reference)
+        .arg("--canaries").arg(f.join("policy/canaries.txt"))
         .output()
         .expect("run parity extract");
     assert!(
@@ -30,6 +31,7 @@ fn extract(tmp: &std::path::Path) -> PathBuf {
     );
     let text = String::from_utf8(out.stdout).unwrap();
     assert!(text.contains("extract:"), "unexpected stdout: {}", text);
+    assert!(text.contains("canaries: 1/1 pass"), "canary enforcement ran: {}", text);
     reference
 }
 
