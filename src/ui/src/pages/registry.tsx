@@ -63,13 +63,21 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
   // later; the page never changes).
   "loop-new": {
     title: "New loop",
-    render: () => <DemoEditor initial={defaultLoopConfig()} />,
+    // key forces a remount on route change: AppShell renders children unkeyed,
+    // and two DemoEditor routes at one position would otherwise share state.
+    render: () => <DemoEditor key="new" initial={defaultLoopConfig()} />,
   },
   // T-803: loop-detail mounts the same editor on the fixture config;
   // per-id resolution arrives with the R9 connect container, not here.
   "loop-detail": {
     title: "Loop",
-    render: () => <DemoEditor initial={demoEditorConfig} publishedVersion={3} />,
+    render: (route) => (
+      <DemoEditor
+        key={route.name === "loop-detail" ? route.loopId : "loop"}
+        initial={demoEditorConfig}
+        publishedVersion={3}
+      />
+    ),
   },
   // T-703 + T-1104: runs pages live over the channel (fixture fallback).
   "loop-runs": {
