@@ -76,6 +76,7 @@ interface StartedRun {
   loopId: string;
   triggerEventId: string;
   target: { entityType: string; entityId: string };
+  message: string;
 }
 
 function fixtureCommands(): {
@@ -99,6 +100,7 @@ function fixtureCommands(): {
           loopId: req.loopId,
           triggerEventId: req.triggerEventId,
           target: req.target,
+          message: req.message,
         });
         const runId = state.nextRunId;
         state.nextRunId = `run_${Number(runId.split("_")[1]) + 1}`;
@@ -205,6 +207,8 @@ test("created → starts a run on the inbound loop with Linear's promptContext +
   assert.equal(fx.started[0]!.loopId, "loop-inbound");
   assert.equal(fx.started[0]!.triggerEventId, "agentSession:sess_linear_1");
   assert.deepEqual(fx.started[0]!.target, { entityType: "issue", entityId: "LIN-42" });
+  // Linear's pre-assembled context flows to the run verbatim.
+  assert.equal(fx.started[0]!.message, "Issue LIN-42: Triage me.\n\nComments: …\n\nGuidance: be terse.");
 
   // The session↔run mapping landed on the audit rail.
   assert.equal(readRunForSession(store, "sess_linear_1"), "run_1");
@@ -248,8 +252,30 @@ test("created without promptContext falls back to guidance + issue ref", async (
   const res = await post(handler, payload, { delivery: "del_3" });
   assert.equal(res.status, 200);
   assert.equal(fx.started.length, 1);
-  // Message assembled from the fallbacks (no promptContext present).
+  // Message assembled from the fallbacks (no promptContext present), exact.
   assert.equal(fx.started[0]!.target.entityId, "LIN-7");
+  assert.equal(fx.started[0]!.message, "be terse\n\nIssue: LIN-7");
+});
+
+test("prompted without a body → 200-and-skip with its own reason (not 'no mapped run')", async () => {
+  const fx = fixtureCommands();
+  const store = new Store(openDatabase(":memory:"));
+  const { handler } = depsFor({ commands: fx.commands, store });
+
+  await post(handler, CREATED_PAYLOAD, { delivery: "del_c2" });
+  const res = await post(
+    handler,
+    { action: "prompted", data: { agentSession: { id: "sess_linear_1" } } },
+    { delivery: "del_nb" },
+  );
+  assert.equal(res.status, 200);
+  assert.equal(fx.steered.length, 0);
+  const reasons = store
+    .listAuditByKind("linear.inbound")
+    .map((row) => JSON.parse(String(row["detail_json"])))
+    .filter((d) => d["skipped"] === true)
+    .map((d) => String(d["reason"]));
+  assert.deepEqual(reasons, ["prompted without a body (session sess_linear_1)"]);
 });
 
 // ---- prompted -----------------------------------------------------------------

@@ -62,13 +62,20 @@ export interface InboundLoopConfig {
 
 /** The run commands the composition root provides (orchestrator + rpc). */
 export interface AgentRunCommands {
-  /** orchestrator.requestRun — returns the started/queued run id. */
+  /**
+   * orchestrator.requestRun — returns the started/queued run id. `message`
+   * carries Linear's pre-assembled context (promptContext verbatim); the
+   * composition binding routes it to the run (orchestrator chat-wake
+   * message override when it lands — until then the inbound loop's prompt
+   * drives and the message rides the audit trail for the operator).
+   */
   requestRun(req: {
     loopId: EntityId;
     kind: "event";
     requestedAt: string;
     triggerEventId: string;
     target: { entityType: string; entityId: string };
+    message: string;
   }): Promise<{ runId?: EntityId | undefined }>;
   /** steer on an active run / answer on a parked one (rpc.ts's mapping). */
   steerRun(runId: EntityId, text: string): void;
@@ -165,7 +172,7 @@ function readBody(req: IncomingMessage, capBytes = 1_000_000): Promise<Buffer> {
       size += chunk.length;
       if (size > capBytes) {
         reject(new Error("body too large"));
-        req.destroy();
+        req.resume(); // drain, never destroy: the 200 internal-skip must reach the sender
         return;
       }
       chunks.push(chunk);
@@ -225,19 +232,22 @@ export function createAgentWebhookHandler(
         res.end(JSON.stringify({ ok: true }));
       };
 
-      // Delivery replay rail: a re-delivered id never re-runs.
+      // Delivery replay rail: bounded (own kind only) and effectively atomic
+      // — the check and the `received` row are written back-to-back with no
+      // awaits between, so two racing deliveries of one id cannot both pass
+      // (single-process server; multi-instance dedupe is M6 territory).
       if (deliveryId !== null) {
-        const seen = deps.store
-          .listAudit({})
-          .some((row) => {
-            if (row["kind"] !== AUDIT_INBOUND) return false;
-            const detail = typeof row["detail_json"] === "string" ? JSON.parse(row["detail_json"]) : null;
-            return detail !== null && detail.deliveryId === deliveryId;
-          });
+        const seen = deps.store.listAuditByKind(AUDIT_INBOUND).some((row) => {
+          const detail = typeof row["detail_json"] === "string" ? JSON.parse(row["detail_json"]) : null;
+          return detail !== null && detail.deliveryId === deliveryId;
+        });
         if (seen) {
           ack();
           return;
         }
+        deps.store.appendAudit(AUDIT_INBOUND, {
+          detail: { ok: true, received: true, deliveryId },
+        });
       }
 
       let event: AgentSessionEvent | null = null;
@@ -278,6 +288,7 @@ export function createAgentWebhookHandler(
             entityType: "issue",
             entityId: event.issueId ?? event.sessionId,
           },
+          message,
         });
         deps.store.appendAudit(AUDIT_INBOUND, {
           loopId,
@@ -296,8 +307,13 @@ export function createAgentWebhookHandler(
 
       if (event.action === "prompted") {
         const runId = readRunForSession(deps.store, event.sessionId);
-        if (runId === null || event.promptBody === undefined) {
+        if (runId === null) {
           skip(deliveryId, `prompted with no mapped run (session ${event.sessionId})`);
+          ack();
+          return;
+        }
+        if (event.promptBody === undefined) {
+          skip(deliveryId, `prompted without a body (session ${event.sessionId})`);
           ack();
           return;
         }
@@ -324,11 +340,9 @@ export function createAgentWebhookHandler(
   };
 }
 
-/** sessionId → runId from the audit rail (latest created wins). */
+/** sessionId → runId from the audit rail (latest created wins; bounded). */
 export function readRunForSession(store: Store, sessionId: string): EntityId | null {
-  let found: EntityId | null = null;
-  for (const row of store.listAudit({})) {
-    if (row["kind"] !== AUDIT_INBOUND) continue;
+  for (const row of store.listAuditByKind(AUDIT_INBOUND)) {
     const detail = typeof row["detail_json"] === "string" ? JSON.parse(row["detail_json"]) : null;
     if (
       detail !== null &&
@@ -336,8 +350,8 @@ export function readRunForSession(store: Store, sessionId: string): EntityId | n
       detail.sessionId === sessionId &&
       typeof detail.runId === "string"
     ) {
-      found = detail.runId;
+      return detail.runId; // newest-first: first match is the latest
     }
   }
-  return found;
+  return null;
 }
