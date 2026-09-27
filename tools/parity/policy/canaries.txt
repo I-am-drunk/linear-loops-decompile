@@ -1,0 +1,13 @@
+# Copy canaries (issue #162 consult): strings that MUST extract from a
+# healthy corpus. Missing from corpus = drift alarm; present but not
+# extracted = copy-grammar regression. Both fail extraction loudly.
+New loop
+Find loops…
+My loops
+Loops are available on Business and Enterprise plans
+Notes saved by Linear Agent from previous runs
+
+# Route canaries (issue #177): one matcher-declared route with an optional
+# param, one route-table registration. Route-extraction regression fails red.
+route:/:orgKey/loops/:viewType?
+route:/:orgKey/automation/:automationId/run/:runId

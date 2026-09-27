@@ -106,4 +106,6 @@ on `SPECS/loops.md` as corrected by #167/#173.
 ## R8: matrix burn-down
 
 Rows to `built` then `exact`. Release bar: every row verified, UI checked against
-the corpus (issue #20).
+the corpus (issue #20) — **computed, not eyeballed**: `tools/parity` (the Rust
+parity harness, SPECS/ui-parity.md) turns the corpus into the reference and every
+UI PR carries its `parity check` report.
