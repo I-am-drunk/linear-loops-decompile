@@ -66,7 +66,7 @@ function extractFiles(text) {
   const out = [];
   const lines = String(text || '').split('\n');
   for (let i = 0; i < lines.length; i++) {
-    const h = lines[i].trim().match(/^#{1,4}\s*FILE:\s*(\S+)\s*$/);
+    const h = lines[i].trim().match(/^#{1,4}\s*FILE:\s*(\S+)(?:\s+\([^)]*\))?\s*$/);
     if (!h) continue;
     let j = i + 1;
     while (j < lines.length && !lines[j].trim()) j++;
