@@ -38,10 +38,13 @@ Done 2026-09-27:
   secrets, credential-header refusal, duplicate-name rejection; 8/8 server
   tests with an injected fake fetch.
 
+- R3.4 UI shell: `src/ui` (Vite + React 19, hand-rolled router, theme tokens
+  from the corpus via docs/ui-reference.md) with the Settings page wired to the
+  R3.3 RPCs. Gate: tsc + vite build; serve smoke through the real server.
+
 Now:
-- R3.4 UI shell (unassigned): src/ui skeleton (sidebar, routes, theme tokens
-  from docs/ui-reference.md, empty states) with the Settings page wired to the
-  R3.3 RPCs.
+- R4.1 loops domain slice (unassigned): loops.list/upsert/publish/setEnabled
+  over the store + the loops list page wired live. src/model gains loop.ts.
 
 Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
 
