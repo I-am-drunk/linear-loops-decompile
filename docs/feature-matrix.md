@@ -81,7 +81,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 |---|---|---|
 | AgentSession model (status, plan, agentActivities, codingEnvironment, modelSelection, externalUrls, diffs, availableSkills) | `models.json` | corpus |
 | AgentActivity model (content, signal, ephemeral, sourceComment, queued) | `models.json` | corpus |
-| Session UI | `AgentSessionPage.D4DhwkML.js`, `AgentSessionActivities.B9yu6arN.js`, `LinearAgentCommentContent.C---p7AT.js`, `LinearAgentEmptyState(+Hero)` | corpus |
+| Session UI | `AgentSessionPage.D4DhwkML.js`, `AgentSessionActivities.B9yu6arN.js`, `LinearAgentCommentContent.C---p7AT.js`, `LinearAgentEmptyState*` (+Hero) | corpus |
 | Coding harness | ops `AgentSessionCodingHarness(ModelLabel)`, `AgentSessionSandbox`, `AgentSessionSshAddress`, `AgentSessionRestartWithDefaultModel`; `CodingAgentModelSelect.USYHzowP.js` | corpus |
 | PR integration | ops `PullRequestAgentSessionCreate`, `PullRequestAgentFixDispatch`, `PullRequestCommentDispatchToAgent`; model `AgentSessionToPullRequest`; `canOpenAgentSessionInReview.BbTwURTH.js` | corpus |
 | Official public API surface | `extracts/linear-official/AGENT-API.md` (12 ops) | corpus |

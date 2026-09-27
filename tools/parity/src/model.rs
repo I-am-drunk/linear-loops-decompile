@@ -87,9 +87,6 @@ impl Surface {
         }
         self.order.dedup();
     }
-    pub fn is_empty(&self) -> bool {
-        self.set_lists().iter().all(|l| l.is_empty()) && self.order.is_empty() && self.primitive.is_none()
-    }
     pub fn set_lists(&self) -> [&Vec<String>; 8] {
         [
             &self.routes, &self.copy, &self.structure, &self.tokens,

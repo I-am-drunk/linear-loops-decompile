@@ -31,6 +31,14 @@ pub struct ExtractStats {
 pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) -> Result<ExtractStats, String> {
     let mut facts = FactFile::default();
 
+    // --- corpus integrity: the chunk inventory must be complete -------------
+    // A stale or partial corpus copy produced a silent false-green reference
+    // once already (#162 INFRA ALERT: 1,043/1,550 chunks, 21 matrix surfaces
+    // missing, no warning; #205). analysis/chunks.json is the inventory the
+    // pipeline wrote for this corpus; every chunk it names must be present in
+    // pretty/client before an extract can be trusted.
+    check_corpus_integrity(corpus)?;
+
     // --- routes: the app's Loops/agent route table is ONE fact surface ------
     // (routes.json's `file` is the chunk where the route literal appears —
     // usually a lazy-loader, not the page — so per-component attachment is
@@ -120,6 +128,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
 
     let client_dir = corpus.join("pretty/client");
     let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, canaries: None };
+    let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
         let mut surface = Surface::default();
@@ -155,14 +164,28 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             surface.order = best;
         }
         surface.normalize();
-        if matched_any || !surface.is_empty() {
-            stats.copy += surface.copy.len();
-            stats.edges += surface.structure.len();
-            stats.tokens += surface.tokens.len();
-            stats.order += usize::from(!surface.order.is_empty());
-            facts.surfaces.insert(comp.clone(), surface);
-            stats.surfaces += 1;
+        if !matched_any {
+            // A matrix surface with zero matching chunks is the other silent
+            // false-green path (#205): the reference simply omits it and every
+            // check against it passes vacuously. Loud failure: either the
+            // corpus copy is partial (re-clone the vault) or the matrix names
+            // a component the corpus no longer ships (fix the matrix row).
+            unmatched.push(comp.clone());
+            continue;
         }
+        stats.copy += surface.copy.len();
+        stats.edges += surface.structure.len();
+        stats.tokens += surface.tokens.len();
+        stats.order += usize::from(!surface.order.is_empty());
+        facts.surfaces.insert(comp.clone(), surface);
+        stats.surfaces += 1;
+    }
+    if !unmatched.is_empty() {
+        return Err(format!(
+            "matrix surfaces with zero matching chunks in {} (partial corpus? re-clone the vault — #187; or a stale matrix row):\n  {}",
+            client_dir.display(),
+            unmatched.join("\n  ")
+        ));
     }
 
     // --- theme: the semantic token namespace is one synthetic surface -------
@@ -322,6 +345,61 @@ fn is_route_table_chunk(filename: &str) -> bool {
     chunk_matches(filename, "Root", true)
 }
 
+/// Corpus integrity: every chunk named by `analysis/chunks.json` (the
+/// inventory the pipeline wrote for THIS corpus) must exist in
+/// `pretty/client/`. A shortfall means a partial or stale corpus copy — the
+/// exact condition that produced a silent false-green reference on
+/// 2026-09-27 (#162 INFRA ALERT, #205). The fix is a full re-clone of the
+/// vault (#187), never trusting a sparse/API-based fetch.
+/// A missing chunks.json is tolerated (fixture mini-corpora don't carry one);
+/// a present-but-unreadable one is an error.
+fn check_corpus_integrity(corpus: &Path) -> Result<(), String> {
+    let inventory_path = corpus.join("analysis/chunks.json");
+    if !inventory_path.exists() {
+        return Ok(());
+    }
+    let text = fs::read_to_string(&inventory_path)
+        .map_err(|e| format!("read {}: {}", inventory_path.display(), e))?;
+    let json = crate::json::parse(&text)?;
+    let arr = json
+        .as_arr()
+        .ok_or_else(|| format!("{}: expected a JSON array", inventory_path.display()))?;
+    let client_dir = corpus.join("pretty/client");
+    let mut missing: Vec<String> = Vec::new();
+    let mut total = 0usize;
+    for item in arr {
+        // The pipeline writes a string `file` for every chunk record: a
+        // malformed entry is a broken inventory, not a skippable row — if the
+        // matrix does not name the affected chunk, skipping would let
+        // extraction write an incomplete reference (CodeRabbit #210).
+        let Some(file) = item.get("file").and_then(|v| v.as_str()) else {
+            return Err(format!(
+                "{}: malformed inventory entry (missing string `file`): {}",
+                inventory_path.display(),
+                crate::json::to_string(item).trim_end()
+            ));
+        };
+        total += 1;
+        if !client_dir.join(file).is_file() {
+            missing.push(file.to_string());
+        }
+    }
+    if !missing.is_empty() {
+        let shown: Vec<&str> = missing.iter().take(10).map(String::as_str).collect();
+        let more = if missing.len() > 10 { format!("\n  … and {} more", missing.len() - 10) } else { String::new() };
+        return Err(format!(
+            "corpus integrity: {}/{} chunks from {} are missing in {} — partial or stale corpus copy; the vault fast path must be a FULL git clone (#187):\n  {}{}",
+            missing.len(),
+            total,
+            inventory_path.display(),
+            client_dir.display(),
+            shown.join("\n  "),
+            more
+        ));
+    }
+    Ok(())
+}
+
 /// Absolute routes that belong to the Loops/agent surfaces.
 fn is_loops_route(path: &str) -> bool {
     let p = path.to_ascii_lowercase();
@@ -350,7 +428,7 @@ fn chunk_matches(filename: &str, prefix: &str, exact: bool) -> bool {
 /// Surface patterns from the feature matrix. Two kinds:
 /// - exact component: `Name.HASH.js` or `Name.{H1,H2}.js` → matches chunks
 ///   named "<Name>.<anything>.js" (hashes rotate between corpus versions).
-/// - family prefix: any other Capitalized backticked token containing ".js",
+/// - family prefix: any other Capitalized backticked token ending in ".js",
 ///   "*" or "{" (e.g. `WorkspaceAgent(s)SettingsPage.*`, `AgentPanel*`) →
 ///   leading alphanumeric run, matched as a raw prefix.
 /// Returns (prefix, exact) pairs, sorted and deduped.
@@ -366,24 +444,30 @@ fn matrix_components(matrix: &str) -> Vec<(String, bool)> {
         if !first.is_ascii_uppercase() {
             continue;
         }
-        // exact: strip ".js", optional ".{…}" brace hash-list, then "Name.hash"
+        // exact: only ".js"-suffixed tokens are chunk names (without this,
+        // `KNOWLEDGE.md` parsed as surface "KNOWLEDGE" with hash "md" — a
+        // phantom surface, #205). Strip ".js", optional ".{…}" brace
+        // hash-list, then "Name.hash".
+        let is_chunk_name = tok.ends_with(".js");
         let mut core = tok.strip_suffix(".js").unwrap_or(tok);
         let mut exact = false;
-        if let Some(brace_at) = core.find(".{") {
-            if core.ends_with('}') {
-                core = &core[..brace_at];
-                exact = true;
-            }
-        }
-        if !exact {
-            if let Some((name, hash)) = core.rsplit_once('.') {
-                if !hash.is_empty()
-                    && hash.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
-                    && !name.contains('.')
-                    && name.chars().all(|c| c.is_ascii_alphanumeric())
-                {
-                    core = name;
+        if is_chunk_name {
+            if let Some(brace_at) = core.find(".{") {
+                if core.ends_with('}') {
+                    core = &core[..brace_at];
                     exact = true;
+                }
+            }
+            if !exact {
+                if let Some((name, hash)) = core.rsplit_once('.') {
+                    if !hash.is_empty()
+                        && hash.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+                        && !name.contains('.')
+                        && name.chars().all(|c| c.is_ascii_alphanumeric())
+                    {
+                        core = name;
+                        exact = true;
+                    }
                 }
             }
         }
@@ -394,8 +478,14 @@ fn matrix_components(matrix: &str) -> Vec<(String, bool)> {
             }
             continue;
         }
-        // family prefix
-        if tok.contains(".js") || tok.contains('*') || tok.contains('{') || tok.contains('(') {
+        // family prefix. `(` is NOT a trigger: parenthesized backticked
+        // tokens in the matrix are GraphQL op shorthand
+        // (`AutomationTrustedSources(WithUsage)`), not chunk patterns — they
+        // parsed into phantom surfaces that match zero chunks (#205).
+        // `.js` must be a SUFFIX to trigger (a `Component.js.md` token in an
+        // alternate --matrix would otherwise create a phantom surface —
+        // CodeRabbit #210); `*` and `{` stay as the family/brace triggers.
+        if tok.ends_with(".js") || tok.contains('*') || tok.contains('{') {
             let prefix: String = tok.chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
             if !prefix.is_empty() && !out.iter().any(|(p, _)| p == &prefix) {
                 out.push((prefix, false));

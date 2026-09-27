@@ -84,7 +84,7 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
 - H1 follow-ups: #177 closed (routes.json union + `?` params landed via
   #171/#189/#181). declaredIn route tagging (registration vs matcher, #208)
   in PR; extract integrity guards (chunk-count vs chunks.json + loud
-  unmatched-surface failure) are #205 (claimed).
+  unmatched-surface failure) LANDED (#205 closed; #210+#214 merged).
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
 - H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
   as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
