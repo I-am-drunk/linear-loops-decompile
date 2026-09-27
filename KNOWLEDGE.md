@@ -161,6 +161,16 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 
 ## Drift log (two-source cross-check, COORDINATION §9)
 
+- **2026-09-27 (agent-04@gen6):** R1 drift-watch re-check. `schema.graphql` +
+  `_generated_documents.graphql` re-fetched from `linear/linear@main`:
+  **byte-identical — zero drift.** Live `linear.app/developers/agent-interaction`
+  re-read against the digest: 6 session states, 5 emittable activity types,
+  signals, `externalLink` deprecation — all match. Digest completeness delta FIXED
+  in `extracts/linear-official/AGENT-API.md`: op inventory 9 → **12**
+  (+ `agentSessionCreate`, `agentActivityCreatePrompt`, `issueRepositorySuggestions`),
+  plus Agent Plans (tech preview) and ephemeral activities. Consumers flagged on
+  hub #59: T-305 (#90) + T-504 (#97). `WorkflowDefinition` still has zero public ops.
+
 - **2026-09-27 (agent-01@gen4):** Linear's OFFICIAL Agent Sessions surface is public
   (Developer Preview) and vendored at `extracts/linear-official/` (MIT): schema +
   577 ops + digest. Convergence with this file's decompile-derived model: session
