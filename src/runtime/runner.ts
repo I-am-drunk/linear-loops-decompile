@@ -101,12 +101,16 @@ interface RunState {
   /** The user's stop signal, captured when cancel lands (T-504). */
   stopSignal: StopSignal | null;
   /**
-   * Set when markStale landed the terminal state while a drive loop was
-   * mid-exchange: the (now-dead) loop must not append parts, transition, or
-   * re-activate the run when its stream eventually wakes (T-504 finding:
-   * fence late stream output). Cleared when a new exchange starts.
+   * Drive-loop epoch (T-504): bumped by `markStale` whenever it lands a
+   * terminal state while a drive loop may be mid-exchange. A drive loop
+   * captures the epoch at start; every later fence check compares epochs, so
+   * a zombie loop (wedged brain, killed by markStale) stays fenced FOREVER —
+   * even after a revive starts a new exchange — and never releases the new
+   * loop's drive lock or settles its waiters.
    */
-  fenced: boolean;
+  epoch: number;
+  /** The epoch of the loop currently holding the drive lock (null = free). */
+  driveEpoch: number | null;
   driving: boolean;
   idle: Promise<Run> | null;
   idleResolve: ((run: Run) => void) | null;
@@ -165,7 +169,8 @@ export class Runner {
       cancelRequested: false,
       staleRequested: false,
       stopSignal: null,
-      fenced: false,
+      epoch: 0,
+      driveEpoch: null,
       driving: false,
       idle: null,
       idleResolve: null,
@@ -214,11 +219,11 @@ export class Runner {
     if (status !== "complete" && status !== "stale") {
       throw new IllegalRunTransitionError(status, "active");
     }
-    // A revive starts with a clean request slate: markStale's flags and the
-    // fence were consumed when the stale status landed.
+    // A revive starts with a clean request slate: markStale's flags were
+    // consumed when the stale status landed, and its epoch bump already
+    // fenced the wedged loop (if any) — nothing else to clear.
     state.cancelRequested = false;
     state.staleRequested = false;
-    state.fenced = false;
     state.stopSignal = null;
     state.brain = brain;
     this.#appendUserTurn(state, message);
@@ -275,7 +280,10 @@ export class Runner {
     state.staleRequested = true;
     if (status === "active") {
       state.abort?.abort(); // cooperative nudge; we do not wait for it
-      state.fenced = true;
+      // Bump the epoch: the wedged drive loop (if any) is fenced from this
+      // instant, forever — late output, transitions, and lock releases from
+      // it are all ignored, across any later revive.
+      state.epoch += 1;
       // Close the dead exchange's dangling turn (streaming → error) so the
       // run history has no open turn while stale.
       const last = state.turns[state.turns.length - 1];
@@ -314,7 +322,8 @@ export class Runner {
       cancelRequested: false,
       staleRequested: false,
       stopSignal: null,
-      fenced: false,
+      epoch: 0,
+      driveEpoch: null,
       driving: false,
       idle: null,
       idleResolve: null,
@@ -447,10 +456,25 @@ export class Runner {
    * guarded anyway.
    */
   #drive(state: RunState, message: string): void {
-    if (state.driving) throw new RunBusyError(state.run.id);
+    // Busy iff the CURRENT epoch holds the lock. A zombie loop (wedged brain
+    // killed by markStale, which bumped the epoch) never blocks a new drive.
+    if (state.driving && state.driveEpoch === state.epoch) throw new RunBusyError(state.run.id);
     const brain = state.brain;
     if (brain === null) throw new Error(`run ${state.run.id} has no brain attached`);
+    const myEpoch = state.epoch;
+    /** True once this loop is a zombie: markStale bumped the epoch under it. */
+    const isDead = (): boolean => state.epoch !== myEpoch;
+    const releaseLock = (): void => {
+      // Only the lock-holder of the current epoch releases or settles — a
+      // zombie's exit never touches the new exchange's lock or waiters.
+      if (state.driveEpoch === myEpoch) {
+        state.driving = false;
+        state.driveEpoch = null;
+        this.#settleIdle(state);
+      }
+    };
     state.driving = true;
+    state.driveEpoch = myEpoch;
     void (async () => {
       try {
         let nextMessage = message;
@@ -464,7 +488,7 @@ export class Runner {
             // A subscriber may have marked the run stale INSIDE the status
             // event (abort was unassigned, so markStale landed immediately)
             // — stop before opening a turn for a dead run.
-            if (state.fenced) return;
+            if (isDead()) return;
           }
           const history = [...state.turns];
           const turn = this.#openTurn(state, "agent");
@@ -472,7 +496,7 @@ export class Runner {
           state.abort = abort;
           // Same fence after the turnStarted event; and requests that fired
           // while abort was unassigned still reach the brain from tick one.
-          if (state.fenced) return;
+          if (isDead()) return;
           if (state.cancelRequested || state.staleRequested) abort.abort();
           let elicited = false;
           try {
@@ -481,9 +505,10 @@ export class Runner {
               abort.signal,
             );
             for await (const part of stream) {
-              // Fenced (markStale landed mid-stream): late stream output is
-              // dropped, never appended — the stale run is immutable.
-              if (state.fenced) break;
+              // Zombie fence (markStale landed mid-stream): late stream
+              // output is dropped, never appended — the stale run is
+              // immutable, even after a later revive starts a new exchange.
+              if (isDead()) break;
               // A part the brain already yielded is KEPT, even if a cancel
               // landed concurrently — cancel stops pulling, it does not
               // roll back (SPECS/agent.md: partial parts survive cancel).
@@ -498,7 +523,7 @@ export class Runner {
           } catch (err) {
             state.abort = null;
             if (turn.status === "streaming") this.#closeTurn(state, turn, "error");
-            if (state.fenced) return; // markStale already landed the terminal state
+            if (isDead()) return; // markStale already landed the terminal state
             if (state.cancelRequested) {
               this.#transition(state, "canceled", { stopSignal: state.stopSignal ?? undefined });
             } else if (state.staleRequested) {
@@ -512,7 +537,7 @@ export class Runner {
           }
           state.abort = null;
           if (turn.status === "streaming") this.#closeTurn(state, turn, "complete");
-          if (state.fenced) return; // markStale landed mid-stream
+          if (isDead()) return; // markStale landed mid-stream
           if (state.cancelRequested) {
             this.#transition(state, "canceled", { stopSignal: state.stopSignal ?? undefined });
             return;
@@ -537,22 +562,21 @@ export class Runner {
           nextMessage = steered;
         }
       } finally {
-        state.driving = false;
-        this.#settleIdle(state);
+        releaseLock();
       }
     })().catch((err: unknown) => {
       // Defensive: the loop above handles brain errors; a throw here means a
       // runtime bug (e.g. an illegal transition). Surface it on the run
-      // rather than crashing the host process.
+      // rather than crashing the host process. A zombie (pre-stale epoch)
+      // never surfaces anything onto the new exchange.
       try {
-        if (state.run.status === "active" || state.run.status === "awaitingInput") {
+        if (!isDead() && (state.run.status === "active" || state.run.status === "awaitingInput")) {
           this.#transition(state, "error", {
             error: `runtime fault: ${err instanceof Error ? err.message : String(err)}`,
           });
         }
       } finally {
-        state.driving = false;
-        this.#settleIdle(state);
+        releaseLock();
       }
     });
   }

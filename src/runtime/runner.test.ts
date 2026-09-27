@@ -262,6 +262,53 @@ describe("Runner", () => {
     assert.equal(turns[turns.length - 1]!.parts[0]!.kind, "response");
   });
 
+  it("revives after a TRULY WEDGED brain — no RunBusyError (T-504, agent-03@gen6 finding)", async () => {
+    const wedged: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        yield { kind: "thought", text: "partial reasoning" };
+        await new Promise<void>(() => {}); // never resolves, ignores abort
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: wedged });
+    await new Promise((r) => setTimeout(r, 0)); // the part lands
+    runner.markStale(run.id);
+    assert.equal(runner.getRun(run.id).status, "stale");
+    // The wedged loop never releases its lock the normal way — the epoch
+    // bump is what frees the run. This call threw RunBusyError pre-fix.
+    runner.continueRun(run.id, "retry", new ScriptBrain([[{ kind: "response", text: "recovered" }]]));
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "complete");
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns[turns.length - 1]!.parts[0]!.kind, "response");
+  });
+
+  it("a zombie loop stays fenced ACROSS a revive (T-504)", async () => {
+    let openGate!: () => void;
+    const gate = new Promise<void>((r) => { openGate = r; });
+    const zombie: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        yield { kind: "thought", text: "partial reasoning" };
+        await gate; // wakes only after the revive completes
+        yield { kind: "response", text: "zombie output" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: zombie });
+    await new Promise((r) => setTimeout(r, 0));
+    runner.markStale(run.id);
+    runner.continueRun(run.id, "retry", new ScriptBrain([[{ kind: "response", text: "recovered" }]]));
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "complete");
+    openGate(); // the zombie wakes into the new epoch
+    await new Promise((r) => setTimeout(r, 10));
+    const after = runner.getRun(run.id);
+    assert.equal(after.status, "complete", "the revived run is never clobbered");
+    const allParts = runner.getTurns(run.id).flatMap((t) => t.parts.map((p) => (p.kind === "response" ? p.text : p.kind)));
+    assert.ok(!allParts.includes("zombie output"), "zombie output never appended");
+    assert.ok(allParts.includes("recovered"));
+  });
+
   it("refuses cancel/markStale on terminal runs, finished runs are never stale (T-504)", async () => {
     const brain = new ScriptBrain([[{ kind: "response", text: "done" }]]);
     const runner = new Runner(deps());
