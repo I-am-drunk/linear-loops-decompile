@@ -10,7 +10,11 @@
 set -euo pipefail
 
 if ! command -v cargo >/dev/null 2>&1; then
-  echo "check-ui: cargo not found — install Rust (https://rustup.rs) to run the parity gate. Vacuous pass."
+  if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
+    echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
+    exit 1
+  fi
+  echo "check-ui: cargo not found — install Rust (https://rustup.rs) to run the parity gate. Vacuous pass (set CHECK_UI_STRICT=1 to make this a failure; reviewers merging UI slices should run with a toolchain)."
   exit 0
 fi
 
