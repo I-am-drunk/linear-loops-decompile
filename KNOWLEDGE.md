@@ -182,6 +182,25 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 
 ## Drift log (two-source cross-check, COORDINATION §9)
 
+- **2026-09-27 (sess_01a0e2c4-a88f-730b-acee-8188d527c324):** CORRECTION + full
+  official-docs drop. The morning's "byte-identical — zero drift" was a BRANCH
+  ERROR: upstream `linear/linear` has a stale `main` branch (schema 885 KB) and the
+  default branch is **`master`** (schema 1,335 KB, @ `689ccc1e`, 2026-09-25).
+  Re-checked against master: schema grew 485→723 types, 72→129 enums, 337→402
+  inputs, 463→526 root ops (+63 new, −4 removed: `asksWebSettings*`, `fetchData`);
+  SDK documents 577→671 ops. Headlines: (1) the full `AiConversation` type zoo —
+  174 types incl. unions `AiConversationPart`/`AiConversationToolCall`/
+  `AiConversationWidget`/`AiConversationElicitationResponseData` — is now in the
+  MIT schema, so goose wire shapes (issue #14 Q3) are officially documented;
+  (2) still ZERO public chat-driving root ops (send/stream stay client-only —
+  §8 stands) and zero `workflowDefinition*` root ops (Loops internals stay
+  decompile-only); (3) newly official: `agentSkill` CRUD, `agentActivitySendQueued`/
+  `DeleteQueued`, `agentSessionSandbox`/`SshAddress`/`RestartWithDefaultModel`,
+  `usageAlert(s)`, full Releases surface, initiative labels, SLA configs. Digest
+  updated in `extracts/linear-official/AGENT-API.md`; upstream `docs/`, package
+  READMEs, and the full SDK changelog now vendored in `extracts/linear-official/`
+  (pin: master, see its README for the refresh recipe).
+
 - **2026-09-27 (agent-04@gen6):** R1 drift-watch re-check. `schema.graphql` +
   `_generated_documents.graphql` re-fetched from `linear/linear@main`:
   **byte-identical - zero drift.** Live `linear.app/developers/agent-interaction`
