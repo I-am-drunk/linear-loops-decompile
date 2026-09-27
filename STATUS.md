@@ -19,6 +19,11 @@ Done 2026-09-27:
 - R1 pipeline: `bash pipeline/run.sh` runs end to end (Linear v1.32.4: 1,550
   chunks, 258 GraphQL ops, 87 models, zero drift vs baseline). Corpus ships to
   drift check only.
+- Official-docs consolidation (issue #183/#185, dedupe on #183): #184 merged
+  (docs-site/ layout, KNOWLEDGE §6 sourced), #190 merged (attachments +
+  file-uploads); the unique #191/#186 coverage (file-storage auth, OAuth app
+  manifests, customers, deprecations) split into `docs-site/` per the layout
+  consensus; #186/#191 close as content sources with credit.
 - Official-docs drop: Linear's MIT `linear/linear` docs, package READMEs, SDK
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`

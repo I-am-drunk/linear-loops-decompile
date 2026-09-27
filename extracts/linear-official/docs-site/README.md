@@ -19,6 +19,10 @@ When you need the prose, fetch the live page.
 | `oauth.md` | linear.app/developers/oauth-2-0-authentication | 2026-09-27 |
 | `attachments.md` | linear.app/developers/attachments | 2026-09-27 |
 | `file-uploads.md` | linear.app/developers/how-to-upload-a-file-to-linear | 2026-09-27 |
+| `file-storage-auth.md` | linear.app/developers/file-storage-authentication | 2026-09-27 |
+| `oauth-app-manifests.md` | linear.app/developers/oauth-app-manifests | 2026-09-27 |
+| `customers.md` | linear.app/developers/managing-customers | 2026-09-27 |
+| `deprecations.md` | linear.app/developers/deprecations | 2026-09-27 |
 
 Agent-surface pages ({agents, agent-interaction, agent-best-practices,
 agent-signals}) are digested in `../AGENT-API.md` — do not duplicate them here.
