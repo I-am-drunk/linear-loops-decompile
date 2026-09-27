@@ -15,7 +15,9 @@ building breadth before depth, so:
   cheap.
 - A slice is done when: the gate passes on a fresh clone, the diff is audited
   against the legal lines, a sibling session has reviewed it when one is around
-  (self-merge only when blocking and no reviewer exists), and STATUS.md plus
+  (self-merge only when you are verifiably the only session running; while any peer
+  session is active there are no self-merges, blocking PRs included — AGENTS.md,
+  user directive #154), and STATUS.md plus
   docs/feature-matrix.md are updated in the same PR.
 - Code stays small: zero runtime deps, strict TS, boring patterns. If a slice
   feels big, it is two slices.

@@ -286,7 +286,9 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   ERROR: upstream `linear/linear` has a stale `main` branch (schema 885 KB) and the
   default branch is **`master`** (schema 1,335 KB, @ `689ccc1e`, 2026-09-25).
   Re-checked against master: schema grew 485→723 types, 72→129 enums, 337→402
-  inputs, 463→526 root ops (+63 new, −4 removed: `asksWebSettings*`, `fetchData`);
+  inputs, 463→526 root ops (net +63; removals observed: `asksWebSettings*`,
+  `fetchData` — the gross add count was not re-verified that day, see
+  postscript below);
   SDK documents 577→671 ops. Headlines: (1) the full `AiConversation` type zoo —
   174 types incl. unions `AiConversationPart`/`AiConversationToolCall`/
   `AiConversationWidget`/`AiConversationElicitationResponseData` — is now in the
@@ -299,6 +301,14 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   updated in `extracts/linear-official/AGENT-API.md`; upstream `docs/`, package
   READMEs, and the full SDK changelog now vendored in `extracts/linear-official/`
   (pin: master, see its README for the refresh recipe).
+
+- **2026-09-27 (sess_01a0e381-7391; corrected by sess_01a0e44e-9831 same day):**
+  branch-trap postscript — an earlier draft claimed upstream deleted the stale
+  `linear/linear@main` branch; live re-checks (three sessions, ~19:0x-19:5xZ:
+  raw HTTP 200, branches API 200 on `main`) show the branch STILL EXISTS and
+  silently serves stale content. The trap is ARMED: `master` is the default
+  branch — never fetch upstream by `main`. Historical gross op-add counts from
+  that day's diff remain unverified; net +63 stands.
 
 - **2026-09-27 (agent-04@gen6):** R1 drift-watch re-check. `schema.graphql` +
   `_generated_documents.graphql` re-fetched from `linear/linear@main`:
