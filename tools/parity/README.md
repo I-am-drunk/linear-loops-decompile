@@ -11,8 +11,9 @@ Rust; builds offline; no runtime deps.
 cargo run -p parity --manifest-path tools/parity/Cargo.toml -- extract
 # → .parity/reference.json (gitignored, deterministic per corpus)
 
-# every UI slice, before the PR:
+# every UI slice, before the PR, from the repo root:
 cargo run -p parity --manifest-path tools/parity/Cargo.toml -- check
+# (applies the committed policy in tools/parity/policy/ and prints it)
 # exit 0 = pass; exit 1 = undeclared deviations (see stdout + parity-report.md)
 ```
 
@@ -48,8 +49,16 @@ Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
 
 Surfaces `app.routes` (the Loops/agent route table) and `theme.tokens` (the
 semantic token namespace) are synthetic app-level surfaces; the rest come from
-the feature matrix's chunk inventory. Theme token *values* are a known seam
-(served CSS isn't in the JS corpus — SPECS/ui-parity.md §Known seam).
+the feature matrix's chunk inventory. An ours-only surface (no reference) is
+red unless declared in `improvements.json` with `family: "surface"` — the
+invented-UI guard (SPECS/ui-parity.md §The range). Theme token *values* come
+from executing the corpus's own theme generator (baseline: docs/ui-reference.md;
+reimplementation: issue #168) — SPECS/ui-parity.md §Known seam.
+
+Toolchain: Runner sandboxes ship no Rust and no C linker; the one-time setup is
+`curl https://sh.rustup.rs -sSf | sh -s -- -y` + `apt-get install -y gcc`
+(pinned by `rust-toolchain.toml` when present). The gate vacuous-passes with a
+pointer when cargo is absent, so server-only work is never blocked.
 
 Tests: `cargo test --manifest-path tools/parity/Cargo.toml` (fixture corpus,
 no real corpus needed). Gate: `bash ci/check-ui.sh`.

@@ -34,8 +34,9 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
     let routes_text = fs::read_to_string(&routes_path)
         .map_err(|e| format!("read {}: {}", routes_path.display(), e))?;
     let routes_json = crate::json::parse(&routes_text)?;
-    let empty: Vec<crate::json::Value> = Vec::new();
-    let routes_arr = routes_json.as_arr().unwrap_or(&empty);
+    let routes_arr = routes_json
+        .as_arr()
+        .ok_or_else(|| format!("{}: expected a top-level JSON array of route entries", routes_path.display()))?;
     let mut app_routes: Vec<String> = Vec::new();
     for item in routes_arr {
         let Some(path) = item.get("path").and_then(|v| v.as_str()) else {
@@ -68,7 +69,8 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
             Ok(e) => e,
             Err(e) => return Err(format!("read {}: {}", client_dir.display(), e)),
         };
-        for entry in entries.flatten() {
+        for entry in entries {
+            let entry = entry.map_err(|e| format!("read dir entry in {}: {}", client_dir.display(), e))?;
             let name = entry.file_name().to_string_lossy().to_string();
             if !chunk_matches(&name, comp) {
                 continue;
@@ -95,7 +97,8 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path) -> Result<ExtractStats, Str
     // (values are the documented served-CSS seam; names come from the
     // ThemeProvider chunks' `name: \`var(--sx-…)\`` definitions).
     let mut theme = Surface::default();
-    for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))?.flatten() {
+    for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))? {
+        let entry = entry.map_err(|e| format!("read dir entry in {}: {}", client_dir.display(), e))?;
         let name = entry.file_name().to_string_lossy().to_string();
         if !chunk_matches(&name, "ThemeProvider") {
             continue;
@@ -169,8 +172,8 @@ fn matrix_components(matrix: &str) -> Vec<String> {
 /// User-visible copy candidates from a prettified chunk. Heuristic by design
 /// (facts catalog, not code): keep string literals that read like UI copy —
 /// capitalized words or multi-word phrases — and drop identifiers, paths,
-/// URLs, keys, hashes, and colors. The committed deny-list
-/// (`.parity/extract-deny.txt`) curates the tail over time.
+/// URLs, keys, hashes, and colors. A committed deny-list to curate the tail is
+/// future work (none exists yet — do not reference one).
 fn extract_copy(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let bytes = text.as_bytes();

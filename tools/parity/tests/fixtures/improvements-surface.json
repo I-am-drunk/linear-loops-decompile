@@ -1,0 +1,9 @@
+[
+  {
+    "surface": "SettingsPage",
+    "family": "surface",
+    "fact": "SettingsPage",
+    "reason": "Self-hosted server settings are our own surface; Linear has no equivalent",
+    "issue": 162
+  }
+]

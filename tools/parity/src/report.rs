@@ -6,10 +6,17 @@ pub fn render(out: &Outcome) -> String {
     let mut s = String::new();
     let violations = out.violations();
     s.push_str("# parity check\n\n");
-    if violations.is_empty() {
+    if violations.is_empty() && out.untracked.is_empty() {
         s.push_str("**PASS** — every compared fact matches the reference within the declared tolerances and improvements.\n\n");
     } else {
-        s.push_str(&format!("**FAIL** — {} undeclared deviation(s).\n\n", violations.len()));
+        let mut parts = Vec::new();
+        if !violations.is_empty() {
+            parts.push(format!("{} undeclared deviation(s)", violations.len()));
+        }
+        if !out.untracked.is_empty() {
+            parts.push(format!("{} undeclared ours-only surface(s)", out.untracked.len()));
+        }
+        s.push_str(&format!("**FAIL** — {}.\n\n", parts.join(", ")));
     }
 
     if !violations.is_empty() {
@@ -18,7 +25,7 @@ pub fn render(out: &Outcome) -> String {
         for d in &violations {
             s.push_str(&format!("| {} | {} | {} | {} |\n", d.surface, d.family, d.kind, escape(&d.fact)));
         }
-        s.push_str("\nFix the slice to match the reference, or — only for a deliberate,\nreviewed improvement — declare it in `.parity/improvements.json`.\n\n");
+        s.push_str("\nFix the slice to match the reference, or — only for a deliberate,\nreviewed improvement — declare it in `tools/parity/policy/improvements.json`.\n\n");
     }
 
     let covered: Vec<_> = out.deviations.iter().filter(|d| d.covered_by.is_some()).collect();
@@ -44,9 +51,16 @@ pub fn render(out: &Outcome) -> String {
     }
 
     if !out.untracked.is_empty() {
-        s.push_str("## Untracked surfaces (ours; no reference surface)\n\n");
+        s.push_str("## Undeclared ours-only surfaces (FAIL — the invented-UI guard)\n\nThese surfaces exist on our side with no corpus reference and no declaration.\nDeclare a deliberate addition in `tools/parity/policy/improvements.json` as\n`{ \"surface\": \"<Name>\", \"family\": \"surface\", \"fact\": \"<Name>\", \"reason\": …, \"issue\": … }`:\n\n");
         for n in &out.untracked {
             s.push_str(&format!("- {}\n", n));
+        }
+        s.push('\n');
+    }
+    if !out.declared_new.is_empty() {
+        s.push_str("## Declared new surfaces (ours by design, reviewed)\n\n");
+        for (n, reason) in &out.declared_new {
+            s.push_str(&format!("- {} — {}\n", n, escape(reason)));
         }
         s.push('\n');
     }

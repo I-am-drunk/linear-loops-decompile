@@ -23,8 +23,12 @@ pub struct Outcome {
     pub deviations: Vec<Deviation>,
     /// Reference surfaces we have no facts for yet (iterative building).
     pub not_built: Vec<String>,
-    /// Our surfaces absent from the reference (new surfaces of ours).
+    /// Our surfaces absent from the reference AND not declared in
+    /// improvements.json — the invented-UI guard: these fail the check.
     pub untracked: Vec<String>,
+    /// Our surfaces absent from the reference but declared via a
+    /// family:"surface" improvements entry: (surface, reason).
+    pub declared_new: Vec<(String, String)>,
     /// Declared improvements that no longer match any deviation.
     pub stale_improvements: Vec<Improvement>,
 }
@@ -57,7 +61,16 @@ pub fn check(ours: &FactFile, reference: &FactFile, improvements: &[Improvement]
 
     for (name, our_surface) in &ours.surfaces {
         let Some(ref_surface) = reference.surfaces.get(name) else {
-            out.untracked.push(name.clone());
+            // Ours-only surface: the invented-UI guard. It is red unless the
+            // slice declares it as a deliberate addition:
+            // { "surface": "<Name>", "family": "surface", "fact": "<Name>", … }
+            match covers(name, "surface", name) {
+                Some(i) => {
+                    used.insert(i);
+                    out.declared_new.push((name.clone(), improvements[i].reason.clone()));
+                }
+                None => out.untracked.push(name.clone()),
+            }
             continue;
         };
         for family in FAMILIES {

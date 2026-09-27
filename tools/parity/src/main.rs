@@ -3,8 +3,8 @@
 //!   parity extract [--corpus pipeline/corpus] [--matrix docs/feature-matrix.md]
 //!                  [--out .parity/reference.json]
 //!   parity check   [--facts src/ui/ui-facts.json] [--ref .parity/reference.json]
-//!                  [--tolerances .parity/tolerances.json]
-//!                  [--improvements .parity/improvements.json]
+//!                  [--tolerances tools/parity/policy/tolerances.json]
+//!                  [--improvements tools/parity/policy/improvements.json]
 //!                  [--report parity-report.md]
 //!
 //! Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
@@ -50,10 +50,13 @@ fn usage() {
          \n\
          extract: corpus → reference facts (gitignored output)\n\
          check:   our facts vs reference; exit 1 on undeclared deviation\n\
+         \x20        (incl. ours-only surfaces undeclared in improvements.json)\n\
          \n\
          defaults: --corpus pipeline/corpus · --matrix docs/feature-matrix.md\n\
          \x20 --out .parity/reference.json · --facts src/ui/ui-facts.json\n\
-         \x20 --ref .parity/reference.json · --report parity-report.md"
+         \x20 --ref .parity/reference.json · --report parity-report.md\n\
+         \x20 --tolerances tools/parity/policy/tolerances.json\n\
+         \x20 --improvements tools/parity/policy/improvements.json (committed policy)"
     );
 }
 
@@ -168,14 +171,40 @@ fn cmd_check(args: &[String]) -> ExitCode {
             return ExitCode::from(2);
         }
     };
-    let tolerances_path = o.tolerances.clone().or_else(|| {
-        let p = PathBuf::from("tools/parity/policy/tolerances.json");
-        p.exists().then_some(p)
-    });
-    let improvements_path = o.improvements.clone().or_else(|| {
-        let p = PathBuf::from("tools/parity/policy/improvements.json");
-        p.exists().then_some(p)
-    });
+    // Policy files: explicit flags win; otherwise the committed policy under
+    // tools/parity/policy/ is REQUIRED (never silently empty — an unapplied
+    // improvements list turns declared deviations into false reds).
+    let policy_default = |flag: &str, p: &str| -> Result<PathBuf, ExitCode> {
+        let pb = PathBuf::from(p);
+        if pb.exists() {
+            Ok(pb)
+        } else {
+            eprintln!(
+                "check failed: committed policy file {} not found (run from the repo root, or pass {} explicitly)",
+                p, flag
+            );
+            Err(ExitCode::from(2))
+        }
+    };
+    let tolerances_path = match o.tolerances.clone() {
+        Some(p) => Some(p),
+        None => match policy_default("--tolerances", "tools/parity/policy/tolerances.json") {
+            Ok(p) => Some(p),
+            Err(c) => return c,
+        },
+    };
+    let improvements_path = match o.improvements.clone() {
+        Some(p) => Some(p),
+        None => match policy_default("--improvements", "tools/parity/policy/improvements.json") {
+            Ok(p) => Some(p),
+            Err(c) => return c,
+        },
+    };
+    println!(
+        "policy: tolerances={} improvements={}",
+        tolerances_path.as_ref().map(|p| p.display().to_string()).unwrap_or_else(|| "(none)".into()),
+        improvements_path.as_ref().map(|p| p.display().to_string()).unwrap_or_else(|| "(none)".into()),
+    );
     let tolerances = match &tolerances_path {
         Some(p) => match read(p, "tolerances").and_then(|t| json::parse(&t)).and_then(|v| model::tolerances_from_value(&v)) {
             Ok(t) => t,
@@ -208,23 +237,32 @@ fn cmd_check(args: &[String]) -> ExitCode {
 
     let violations = outcome.violations();
     println!(
-        "check: {} deviation(s) ({} covered by declared improvements) · {} untracked · {} not-built · {} stale improvements",
+        "check: {} deviation(s) ({} covered by declared improvements) · {} untracked (undeclared new surfaces) · {} declared-new · {} not-built · {} stale improvements",
         outcome.deviations.len(),
         outcome.deviations.len() - violations.len(),
         outcome.untracked.len(),
+        outcome.declared_new.len(),
         outcome.not_built.len(),
         outcome.stale_improvements.len()
     );
-    if violations.is_empty() {
+    if violations.is_empty() && outcome.untracked.is_empty() {
         println!("PASS");
         ExitCode::SUCCESS
     } else {
-        println!("FAIL: {} undeclared deviation(s):", violations.len());
-        for d in violations.iter().take(25) {
-            println!("  [{}:{}:{}] {}", d.surface, d.family, d.kind, d.fact);
+        if !violations.is_empty() {
+            println!("FAIL: {} undeclared deviation(s):", violations.len());
+            for d in violations.iter().take(25) {
+                println!("  [{}:{}:{}] {}", d.surface, d.family, d.kind, d.fact);
+            }
+            if violations.len() > 25 {
+                println!("  … and {} more (see report)", violations.len() - 25);
+            }
         }
-        if violations.len() > 25 {
-            println!("  … and {} more (see report)", violations.len() - 25);
+        if !outcome.untracked.is_empty() {
+            println!("FAIL: {} ours-only surface(s) with no reference and no declaration:", outcome.untracked.len());
+            for s in outcome.untracked.iter().take(25) {
+                println!("  {} — invented-UI guard: declare it in tools/parity/policy/improvements.json (family \"surface\") with reason + issue", s);
+            }
         }
         ExitCode::from(1)
     }

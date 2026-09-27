@@ -72,7 +72,10 @@ pub fn from_value(v: &Value) -> Result<FactFile, String> {
             ("structure", &mut s.structure),
             ("tokens", &mut s.tokens),
         ] {
-            if let Some(arr) = sv.get(family).and_then(Value::as_arr) {
+            if let Some(fv) = sv.get(family) {
+                let arr = fv
+                    .as_arr()
+                    .ok_or_else(|| format!("surface '{}': '{}' must be an array of strings", name, family))?;
                 for item in arr {
                     match item.as_str() {
                         Some(x) => target.push(x.to_string()),
@@ -115,7 +118,10 @@ pub fn tolerances_from_value(v: &Value) -> Result<Tolerances, String> {
     })
 }
 
-/// `.parity/improvements.json` — the ONLY sanctioned deviation channel.
+/// `tools/parity/policy/improvements.json` — the ONLY sanctioned deviation
+/// channel. A deviation entry matches (surface, family, fact) exactly. The
+/// convention `family: "surface"`, `fact: <surface name>` declares a whole
+/// ours-only surface (e.g. our Settings page) as a deliberate addition.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Improvement {
     pub surface: String,

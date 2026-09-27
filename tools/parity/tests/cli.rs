@@ -74,6 +74,8 @@ fn check_passes_when_facts_match() {
         .arg("check")
         .arg("--facts").arg(fixtures().join("ours/ui-facts-clean.json"))
         .arg("--ref").arg(&reference)
+        .arg("--tolerances").arg("policy/tolerances.json")
+        .arg("--improvements").arg("policy/improvements.json")
         .arg("--report").arg(tmp.join("report.md"))
         .output()
         .expect("run parity check");
@@ -97,6 +99,8 @@ fn check_fails_on_undeclared_deviation_and_passes_with_improvement() {
         .arg("check")
         .arg("--facts").arg(&diverged)
         .arg("--ref").arg(&reference)
+        .arg("--tolerances").arg("policy/tolerances.json")
+        .arg("--improvements").arg("policy/improvements.json")
         .output()
         .expect("run parity check");
     assert_eq!(out.status.code(), Some(1), "expected FAIL, stdout: {}", String::from_utf8_lossy(&out.stdout));
@@ -109,6 +113,7 @@ fn check_fails_on_undeclared_deviation_and_passes_with_improvement() {
         .arg("check")
         .arg("--facts").arg(&diverged)
         .arg("--ref").arg(&reference)
+        .arg("--tolerances").arg("policy/tolerances.json")
         .arg("--improvements").arg(fixtures().join("improvements.json"))
         .output()
         .expect("run parity check");
@@ -116,5 +121,56 @@ fn check_fails_on_undeclared_deviation_and_passes_with_improvement() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("Close modal dialog"));
     assert!(!stdout.contains("[AutomationNewDialog:copy:extra] Inference harness"), "declared extra must not be a violation");
+    // …and the declaration is accounted exactly: one covered, none stale.
+    assert!(stdout.contains("(1 covered by declared improvements)"), "stdout: {}", stdout);
+    assert!(stdout.contains("0 stale improvements"), "stdout: {}", stdout);
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
+fn check_fails_on_undeclared_new_surface_and_passes_when_declared() {
+    let tmp = std::env::temp_dir().join(format!("parity-test-newsurface-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let facts = fixtures().join("ours/ui-facts-newsurface.json");
+
+    // Undeclared ours-only surface: FAIL even though every tracked fact matches.
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .arg("--tolerances").arg("policy/tolerances.json")
+        .arg("--improvements").arg("policy/improvements.json")
+        .output()
+        .expect("run parity check");
+    assert_eq!(
+        out.status.code(),
+        Some(1),
+        "expected FAIL on undeclared surface, stdout: {}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("SettingsPage"), "untracked surface named: {}", stdout);
+    assert!(stdout.contains("invented-UI guard"), "guard guidance printed: {}", stdout);
+
+    // Declared via a family:\"surface\" improvement entry: PASS, not stale.
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .arg("--tolerances").arg("policy/tolerances.json")
+        .arg("--improvements").arg(fixtures().join("improvements-surface.json"))
+        .output()
+        .expect("run parity check");
+    assert_eq!(
+        out.status.code(),
+        Some(0),
+        "expected PASS with declared surface, stdout: {}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("1 declared-new"), "stdout: {}", stdout);
+    assert!(stdout.contains("0 stale improvements"), "stdout: {}", stdout);
     let _ = std::fs::remove_dir_all(&tmp);
 }
