@@ -92,8 +92,11 @@ Source: [linear.app/developers/filtering](https://linear.app/developers/filterin
 Sources: [graphql](https://linear.app/developers/graphql), [sdk-errors](https://linear.app/developers/sdk-errors)
 
 - Standard GraphQL error format; check `errors[]` even on HTTP 200.
-- Rate-limit exhaustion arrives two ways: HTTP 429 AND/OR 200 with
-  `errors[].extensions.code === "RATELIMITED"` (both handled in PR #155 — matches).
+- **Rate-limit exhaustion returns HTTP 400** (not 429) with
+  `errors[].extensions.code === "RATELIMITED"` in the body — the official page's
+  "Handling rate limit errors" section states 400 explicitly. (Consequence:
+  PR #155's HTTP-429/`Retry-After` branch is NOT documented behavior; its
+  RATELIMITED-code branch is the documented one. Flagged on that PR.)
 - SDK: `LinearError` carries `.query`, `.variables`, `.status`, `.data`, `.raw`,
   `.errors[]` (each with `message`, `type` = `LinearErrorType`, `userError`, `path`);
   `InvalidInputLinearError` etc. are `instanceof`-comparable subclasses.
