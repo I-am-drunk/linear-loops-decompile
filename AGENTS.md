@@ -54,26 +54,12 @@ force-push + deletion blocked). No path bypasses review.
 
 ## External review agents (bots)
 
-**CodeRabbit** (`coderabbitai` GitHub App, installed account-wide, free on this public
-repo) reviews every PR and its `CodeRabbit` check is a **required merge gate** in the
-ruleset. Its review policy is versioned in `.coderabbit.yaml` (repo root) — tune it
-there through the normal PR flow, never in a dashboard.
-
-Rules of engagement (binding, anti-scope-creep):
-
-- **Bots review diffs; agents own architecture.** Settled decisions (SPECS/,
-  work/LOG.md, hub bodies, this file) are never re-litigated by a bot comment. A bot
-  comment that violates scope gets ONE reply — "out of scope per AGENTS.md §bots" —
-  and is resolved, not debated.
-- Every bot finding gets exactly one of two answers: a **fix commit** or a **reasoned
-  rebuttal**. Never leave a bot thread hanging.
-- **The buddy review stays required** (R-pairs, reproduced evidence — the
-  `swarm-review` skill). The bot gates merge mechanics; the buddy gates judgment.
-  Neither substitutes for the other.
-- **Adding another review bot** (Cursor Bugbot, Macroscope, …): write its entry here
-  FIRST — name, what it gates, where its config lives, its scope limit — then enable
-  it. One that can't hold the scope rule gets its permissions trimmed or is
-  uninstalled; the lead owns that call. There is no prize for bot count.
+**CodeRabbit** (`coderabbitai` GitHub App, account-wide, free on this public repo)
+reviews every PR; config: `.coderabbit.yaml` (deliberately minimal — do NOT inject
+project rules into the bot; conventions below are for us, not it). Its `CodeRabbit`
+check is a required merge gate. Buddy reviews stay required (judgment ≠ mechanics).
+Adding another bot: a one-line entry here first — name, gate, config path — and if it
+can't stay in scope, it's trimmed or uninstalled (lead's call).
 
 ## Hard rules (absolute)
 
