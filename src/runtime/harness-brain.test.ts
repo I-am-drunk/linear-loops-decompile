@@ -169,6 +169,23 @@ test("stream: usage events become positive deltas (cumulative snapshots do not d
   ]);
 });
 
+test("stream: usage arriving AFTER done is still reported (the real OpenAI wire order)", async () => {
+  // stream_options.include_usage sends finish_reason in one chunk, then a
+  // final usage chunk, then [DONE] — so done reaches us before usage.
+  const adapter = new FakeAdapter([[
+    { type: "text", text: "answer" },
+    { type: "done", finishReason: "stop" },
+    { type: "usage", inputTokens: 11, outputTokens: 4 },
+  ]]);
+  const usage: { runId: string; delta: { inputTokens?: number; outputTokens?: number } }[] = [];
+  const brain = new HarnessBrain(adapter, {
+    onUsage: (runId, delta) => usage.push({ runId, delta }),
+  });
+  const parts = await collect(brain.stream(mkInput([], "hi"), new AbortController().signal));
+  assert.deepEqual(parts, [{ kind: "response", text: "answer" }]);
+  assert.deepEqual(usage, [{ runId: "r1", delta: { inputTokens: 11, outputTokens: 4 } }]);
+});
+
 test("stream: no onUsage → no crash; final-total style usage forwarded once", async () => {
   const adapter = new FakeAdapter([[
     { type: "text", text: "x" },
