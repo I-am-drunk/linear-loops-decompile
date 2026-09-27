@@ -24,6 +24,9 @@ function withHash(hash: string, fn: () => void): void {
 const routes: ReadonlyArray<readonly [string, string[], string[]]> = [
   // [hash, mustContain, mustNotContain]
   ["#/loops", ["Loops", "Runs", "Templates", "Settings", "Triage digest", 'role="switch"', "New loop", 'aria-current="page"'], ["Not found", "T-701"]],
+  ["#/loops/new", ["New loop — not published yet", "Identity", "Trigger", "Danger zone"], ["Not found", "T-702"]],
+  ["#/loop/abc", ["Standup scribe", "v3", "Danger zone"], ["Not found", "T-702"]],
+  ["#/templates", ["Templates", "T-704"], ["Not found", "T-702"]],
   ["#/settings/inference", ["Connect inference", "API key", "Probe models", "Environment offline"], ["Not found", "T-802"]],
   // T-1104: runs routes render live containers. SSR/first paint = fixture
   // data (peek), then effects swap live data in a configured browser. An

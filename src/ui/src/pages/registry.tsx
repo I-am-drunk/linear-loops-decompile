@@ -31,6 +31,9 @@ import {
   RunsListContainer,
   RunDetailContainer,
 } from "../live/index.ts";
+import { DemoEditor, demoEditorConfig } from "../features/loops/editor/index.ts";
+import { defaultLoopConfig } from "../../../model/index.ts";
+import { navigate } from "../useHashRoute.ts";
 
 // T-802: settings pages are live. Until R9's connect channel lands, they are
 // wired to fixtures (intents are no-ops) — swap the containers, not the pages.
@@ -55,24 +58,24 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
       </>
     ),
   },
+  // T-803: loop-new is live — the T-702 editor behind its own DemoEditor
+  // fixture container (house pattern: the R9 connect container swaps in
+  // later; the page never changes).
   "loop-new": {
     title: "New loop",
-    render: () => (
-      <PlaceholderPage
-        title="New loop"
-        description="Template library + from-scratch flow."
-        owner="T-702"
-      />
-    ),
+    // key forces a remount on route change: AppShell renders children unkeyed,
+    // and two DemoEditor routes at one position would otherwise share state.
+    render: () => <DemoEditor key="loop-new" initial={defaultLoopConfig()} />,
   },
+  // T-803: loop-detail mounts the same editor on the fixture config;
+  // per-id resolution arrives with the R9 connect container, not here.
   "loop-detail": {
     title: "Loop",
     render: (route) => (
-      <PlaceholderPage
-        title="Loop detail"
-        description="Editor: trigger, schedule, conditions, prompt, trusted sources."
-        owner="T-702"
-        note={route.name === "loop-detail" ? `loopId: ${route.loopId}` : undefined}
+      <DemoEditor
+        key={route.name === "loop-detail" ? `loop-detail:${route.loopId}` : "loop-detail"}
+        initial={demoEditorConfig}
+        publishedVersion={3}
       />
     ),
   },
@@ -105,7 +108,7 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
       <PlaceholderPage
         title="Templates"
         description="Loop template library; using a template prefills a new draft."
-        owner="T-702"
+        owner="T-704"
       />
     ),
   },
