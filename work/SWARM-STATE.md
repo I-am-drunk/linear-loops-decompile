@@ -4,10 +4,13 @@ Maintained by the lead; every session freshens its own row (via its task issue) 
 end of each work block. This file + work/EPOCHS.md + work/handoffs/* are what the next
 generation reads FIRST — but the **hub body (#59) is the live truth** when they differ.
 
-- generation: **4** (gen-3 died 2026-09-27 ~02:00 UTC — account credits, mid-landing,
-  zero code lost)
-- protocol: **v4** = browser-less landing. Commits: the land-bot (`/land` comments →
-  `.github/workflows/land.yml`). Merges: `github.merge_pull_request` after buddy review.
+- generation: **5** (gen-4 died 2026-09-27 — account replaced mid-M5, death
+  user-confirmed; zero code lost: its M5 PRs #81/#83 were merged by gen-5 at 07:08Z)
+- protocol: **v4.5** = browser-less landing + claimed identity. Identity: COORDINATION
+  §11 (register on #1, ~60s confirm, earliest live comment id holds; a generation =
+  ONE Runner account; 1h silence = dead; session title `loops fleet`). Commits: the
+  shared vault token (below); land-bot when Actions unlocks. Merges:
+  `github.merge_pull_request` after buddy review with reproduced evidence.
   Canonical state: hub #59 body + issue bodies (MCP comment paging is broken past
   page 1 — use unauthenticated `curl` on api.github.com for threads).
 - repo visibility: **public** (user decision 2026-09-26). No-Linear-proprietary-material
@@ -15,8 +18,11 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
 - branch protection: ruleset **main-pr-only** ACTIVE (2026-09-27, agent-01@gen4,
   user-directed) — `main` requires a PR (0 approvals), force-pushes + deletions
   blocked. Everyone — bot, lead, any PAT — lands via PR. No exceptions.
-- backlog: **ENTIRE verified queue landed + merged 2026-09-27** (PRs #47–#69,
-  237/237 fresh-clone). Focus is now M5 end-to-end + T-304/T-102 + golden goose.
+- backlog: **M1–M4 landed + merged** (gen-4 sweep, 237/237 fresh-clone). **M5 in
+  flight:** orchestrator (#81) + engine bridge (#83) MERGED 07:08Z; brain binding
+  (#92), UI live seam (#94), registry wiring (#91) in buddy review; **T-1103
+  (composition-root RPC handlers) free = the critical path.** Then T-304 review,
+  T-102, T-704, T-504, golden goose.
 - GitHub connection: **workspace-public** (conn_01a0e089-c248, user-directed) —
   `provider_unavailable` class dead; playbook stays for Project grants.
 - shared git token: **private vault repo `I-am-drunk/linear-loops-vault`** (user-directed
@@ -31,15 +37,16 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
 - Actions: billing-locked (ticket **#4797514**, user has no card — support must
   remove the dead payment method + lift the lock). Land-bot ready; smoke test #60
   re-fires on unlock. Until then: lead break-glass-lands FILE blocks.
-- lead: **agent-01@gen4** (sess_01a0e088-c660-759e-a222-9dcebd33236f) — user-designated
-  (R10 = janitor/tie-breaker/break-glass duty set; attaches to agent-01 in fleet
-  boots, agent-10 is reserve).
+- lead: **agent-01@gen5** (sess_01a0e17b-855f-7481-8648-84066a73a21c) — via §11
+  lowest-free slot (a user in-chat designation always wins; none given for gen-5).
+  R10 = pen/sweeps/tie-breaks/PR-audit duty set; break-glass browser jobs (vault
+  rotation, `.github/**`) need the user's browser slot — none pending.
 
 ## Canonical threads
 
 | thread | what |
 |---|---|
-| issue #59 | **gen-4 swarm hub — canonical state, roster, landing board** |
+| issue #59 | **swarm hub — canonical state, roster, board (gen-5 pen: agent-01@gen5)** |
 | issue #1 | Roster (write-only registration log, all generations) |
 | issue #2 | Questions & blockers |
 | issue #21 | gen-3 hub (tombstoned — archeology) |
@@ -48,16 +55,17 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
 
 ## Task board
 
-Live board: work/STATUS.md. The whole M1–M4 codebase exists as verified FILE blocks +
-3 open PRs; gen-4's first sweep = merge #51/#49/#47, then the `/land` queue in
-dependency order, then M5 end-to-end.
+Live board: work/STATUS.md. M5's remaining legs are the three open PRs (#91/#92/#94)
+plus T-1103 (free, critical path); the full task table with free/claimed states is
+mirrored in the hub #59 body.
 
 ## Transports
 
 - Repo + issues = durable brain. Sandboxes and `/cloud/files` trees die at reset —
   gen-1/gen-2 lost code that way, gen-3 didn't (FILE blocks held).
 - Worker MCP reality (v4-verified): read repo, create/edit issues + comments, create +
-  merge PRs on existing branches. Commits: land-bot ONLY. Browser/PAT: lead break-glass
+  merge PRs on existing branches. Commits: **vault-token git push** (primary, self-serve)
+  or the land-bot (blocked by the Actions billing lock). Browser/PAT: lead break-glass
   ONLY (LEAD.md).
 - Comment paging bug: canonical state lives in ISSUE BODIES; threads via curl.
 
