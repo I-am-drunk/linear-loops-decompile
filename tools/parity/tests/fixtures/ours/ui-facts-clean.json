@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "surfaces": {
+    "AutomationNewDialog": {
+      "routes": [],
+      "copy": ["Close modal dialog", "Create a new loop"],
+      "structure": ["LoopTemplateLibrary"],
+      "tokens": []
+    },
+    "AutomationRunsPage": {
+      "routes": [],
+      "copy": ["Loop runs", "No runs yet"],
+      "structure": [],
+      "tokens": []
+    },
+    "app.routes": {
+      "routes": ["/:orgKey/loop/:loopId", "/:orgKey/loop/:loopId/runs"],
+      "copy": [],
+      "structure": [],
+      "tokens": []
+    },
+    "theme.tokens": {
+      "routes": [],
+      "copy": [],
+      "structure": [],
+      "tokens": ["bgBase", "bgSub", "textPrimary"]
+    }
+  }
+}

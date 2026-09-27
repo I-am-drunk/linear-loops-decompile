@@ -60,6 +60,7 @@ preserved at tag `archive/v0-swarm-era`. Roadmap: `PLAN.md`. Board: `STATUS.md`.
 | `pipeline/` | the decompile harness; its `corpus/` dir is local only, gitignored |
 | `docs/` | feature matrix and deep dives |
 | `archive/` | history (swarm-era docs; code lives at tag `archive/v0-swarm-era`) |
-| `ci/` | the gate: `bash ci/check-src.sh` |
+| `ci/` | the gates: `bash ci/check-src.sh` (code) · `bash ci/check-ui.sh` (UI parity) |
+| `tools/parity/` | the UI parity harness (Rust CLI; SPECS/ui-parity.md) — computes that our UI is the same UI |
 
 Working here: read `AGENTS.md`.

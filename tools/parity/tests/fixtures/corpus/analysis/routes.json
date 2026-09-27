@@ -1,0 +1,6 @@
+[
+  { "path": "/:orgKey/loop/:loopId/runs", "file": "AutomationRunsPage.CwJzxL5C.js" },
+  { "path": "/:orgKey/loop/:loopId", "file": "AutomationNewDialog.Wu-wKkiY.js" },
+  { "path": "/:orgKey/settings/account", "file": "SettingsPage.AAAA.js" },
+  { "path": "weekday", "file": "Avatar.DGwSs61a.js" }
+]
