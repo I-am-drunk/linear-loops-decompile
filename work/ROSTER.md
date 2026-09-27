@@ -1,7 +1,12 @@
 # Roster
 
+> **Operational mirror only — never generation identity.** Generation derives per
+> work/EPOCHS.md §1 (#1 registrations × your own `sessions.list`); this file is the
+> lead's convenience mirror of handle→session assignments and goes stale between
+> truth passes.
+
 Sessions register by commenting on issue #1 (write-only); the lead mirrors truth here
-and in the hub body. Generations: work/EPOCHS.md — this file shows the CURRENT one.
+and in the hub body. Generations derive per work/EPOCHS.md §1 (never from this file).
 
 ## gen-5 (current — boot 2026-09-27 06:07Z; identity per COORDINATION §11)
 

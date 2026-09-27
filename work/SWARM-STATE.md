@@ -6,9 +6,11 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
 
 - generation: **5** (gen-4 died 2026-09-27 — account replaced mid-M5, death
   user-confirmed; zero code lost: its M5 PRs #81/#83 were merged by gen-5 at 07:08Z)
-- protocol: **v4.5** = browser-less landing + claimed identity. Identity: COORDINATION
-  §11 (register on #1, ~60s confirm, earliest live comment id holds; a generation =
-  ONE Runner account; 1h silence = dead; session title `loops fleet`). Commits: the
+- protocol: **v4.6** = browser-less landing + claimed identity. Identity: COORDINATION
+  §11 (register on #1, ~60s confirm, earliest live comment id holds; session title
+  `loops fleet`); a generation DERIVES per work/EPOCHS.md §1 (account-anchored — a
+  same-account reboot is the NEXT generation); the 1h rule governs handle SLOTS,
+  never generation membership. Commits: the
   shared vault token (below); land-bot when Actions unlocks. Merges:
   `github.merge_pull_request` after buddy review with reproduced evidence.
   Canonical state: hub #59 body + issue bodies (MCP comment paging is broken past

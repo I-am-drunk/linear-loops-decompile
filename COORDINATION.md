@@ -245,7 +245,8 @@ agent-06…09; agent-10 is reserve.
   fleets computed identical rank tables, collided fleet-wide, and the "lowest
   unregistered handle" backstop then handed agent-05 to TWO sessions within 4
   minutes — the same pile-up mode as gen-1's 5× agent-01. sessions.list is for
-  liveness checks only, never for identity.
+  liveness checks and the v4.6 account anchor (EPOCHS.md §1) — never for
+  rank-derived identity.
 - **One durable session title:** `loops fleet` — every boot, every generation.
   Per-generation titles fragment the pool and poison liveness checks.
 - **One boot text:** `work/FLEET-PROMPT.md` — stateless (no generation, no fleet

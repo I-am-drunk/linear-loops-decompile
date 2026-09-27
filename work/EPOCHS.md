@@ -45,23 +45,47 @@ boot, no rank math, no user-side assignment.
 
 - **Birth:** a session of the new generation adds ONE line — gen number, account
   marker (boot-batch sess_ prefixes), boot time, declaring #1 comment. Never a
-  roster: the roster lives on #1 and goes stale anywhere else.
-- **Death:** when a generation is confirmed dead — its sessions gone from every
-  account you can see AND silent past the 1-hour rule, or an explicit user void —
-  any living lead compresses its line into a tombstone: cause, what it delivered,
-  what was in flight at death. Tombstones are append-only history; edit only to
-  compress.
-- **You cannot tombstone another account's generation.** Overlap (§10) means
-  "gone from MY sessions.list" ≠ dead. Record only what you can verify.
+  roster: the roster lives on #1 and goes stale anywhere else. Birth lines are
+  IMMUTABLE once written (repair only a factual error at the next tombstone pass).
+- **Append-only beats the pen (explicit COORDINATION §10.3 exception):** like the
+  #1 log, birth lines and tombstones are registrations — ANY generation appends
+  its own birth line, and the pen-holder's truth passes never rewrite them.
+- **Death:** a lead tombstones a generation only when it can VERIFY the death —
+  its sessions gone from every account the lead can see AND silent past the
+  1-hour rule, or an explicit user void. "Gone from MY sessions.list" alone
+  never suffices (overlap is normal — §10). The tombstone compresses the
+  generation's record: cause, what it delivered, what was in flight at death.
+  Tombstones are append-only history; edit only to compress.
+- **No row ever carries a live status** ("living", "current", "active") — that
+  is the staleness this file exists to kill. Whether a generation lives DERIVES
+  (§1); it is never written here.
 
-| gen | account marker (boot-batch sess_ prefixes) | born (UTC) | record |
+### Birth records (immutable)
+
+| gen | account marker (boot-batch sess_ prefixes) | born (UTC) | declaring #1 comment |
 |---|---|---|---|
-| gen-1 | sess_01a0dfb8 / 9 / bb | 2026-09-26 | **DEAD** (account credits). Delivered T-101 (#30), T-201 (#24), T-301 v2 + T-302 (#26), T-601/602 (#25/#27). Cloud-staged work lost at death — the event that created the FILE-block durability rule. |
-| gen-2 | sess_01a0dff7…dffa | 2026-09-26 | **DEAD** 09-27 ~00:37Z (account credits). Landed reset docs (0ab2353) + branches c725991 / ec5d083 / 2eba6d4. Protocol v3. |
-| gen-3 | sess_01a0e04a…e04f | 2026-09-27 00:37Z | **DEAD** ~02:00Z (account credits, mid-landing). **Nothing lost** — the full queue was FILE-blocked and validated 203/203 at 01:57Z. Its rank-collision post-mortem produced v4.4 claimed identity. |
-| gen-4 | other account: sess_01a0e088 / e08c / e141 / e142 — two boots (02:36Z + 05:06Z), ONE generation per v4.5 | 2026-09-27 02:36Z | **DEAD** (account replaced mid-M5, user-confirmed ~06:4xZ; tombstone by agent-01@gen5). Landed the entire M1–M4 queue (PRs #47–#73, 237/237 fresh-clone); its M5 PRs #81 + #83 were merged by gen-5 at 07:08Z. Permanent legacy: protocol v4 / v4.2, vault-token commits, land-bot, main-pr-only ruleset, two-source cross-check, hub #59. Live claims #74/#75 voided at death. |
-| gen-5 | sess_01a0e17b / e179 | 2026-09-27 06:07Z | **LIVING** (parallel account — its sess_ ids are not in the gen-6 account's sessions.list, which under §1 step 2 makes it a distinct generation; active ≥07:18Z: PR #98 truth pass + hub #59 pen). Declared per v4.5 correction (#1 comments 5853502349 / 5853573240). Holds the pen as oldest living generation (§10.3). |
-| gen-6 | sess_01a0e1ae / e1b0 | 2026-09-27 07:05Z | **LIVING.** Established user-directed 2026-09-27 ("you should be v6" — the 07:05Z fleet derives no gen-5 registration of its own fleet, so §1 step 4 → G_max+1). First declarations: #1 comments 5853656413 (agent-01), 5853679389 + 5853709067 (agent-02, after §11 confirm-and-yield). Roster: derive from #1 — never listed here. |
+| gen-1 | sess_01a0dfb8 / 9 / bb | 2026-09-26 ~23:0xZ | the log's opening registrations (pre-v4 naming) |
+| gen-2 | sess_01a0dff7…dffa | 2026-09-26 23:19Z | 5850837135 ("RESET generation 2") |
+| gen-3 | sess_01a0e04a…e04f | 2026-09-27 00:37Z | 5851394142 (00:49Z, "RESET generation 3") |
+| gen-4 | other account: sess_01a0e088 / e08c / e141 / e142 — two boots (02:36Z + 05:06Z), ONE generation per v4.5 | 2026-09-27 02:36Z | 5852011865 |
+| gen-5 | sess_01a0e17b / e179 | 2026-09-27 06:07Z | 5853502349 + 5853573240 (v4.5 corrections) |
+| gen-6 | sess_01a0e1ae / e1b0 | 2026-09-27 07:05Z | 5853656413 (user-directed "you should be v6" — §1 step 4 → G_max+1) |
+
+### Tombstones (append-only)
+
+- **gen-1** — account credits (2026-09-26). Delivered T-101 (#30), T-201 (#24),
+  T-301 v2 + T-302 (#26), T-601/602 (#25/#27). Cloud-staged work lost at death —
+  the event that created the FILE-block durability rule.
+- **gen-2** — account credits (2026-09-27 ~00:37Z). Landed reset docs (0ab2353) +
+  branches c725991 / ec5d083 / 2eba6d4. Protocol v3.
+- **gen-3** — account credits ~02:00Z, mid-landing. **Nothing lost** — the full
+  queue was FILE-blocked and validated 203/203 at 01:57Z. Its rank-collision
+  post-mortem produced v4.4 claimed identity.
+- **gen-4** — account replaced mid-M5, user-confirmed ~06:4xZ (tombstone by
+  agent-01@gen5). Landed the entire M1–M4 queue (PRs #47–#73, 237/237
+  fresh-clone); its M5 PRs #81 + #83 were merged by gen-5 at 07:08Z. Permanent
+  legacy: protocol v4 / v4.2, vault-token commits, land-bot, main-pr-only
+  ruleset, two-source cross-check, hub #59. Live claims #74/#75 voided at death.
 
 ## 3. Conventions that survive every generation
 
