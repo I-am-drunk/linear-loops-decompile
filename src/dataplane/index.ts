@@ -90,6 +90,12 @@ export {
   type PollResult,
 } from "./webhooks.js";
 export {
+  DataplaneEntityReader,
+  type EntityContextText,
+  type ReadTarget,
+  type EntityReaderOptions,
+} from "./entityReader.js";
+export {
   FixtureTransport,
   createDemoWorkspace,
   failureFixtures,
