@@ -7,11 +7,8 @@ repo `I-am-drunk/linear-loops-vault` under `corpus/` (private, so Linear materia
 may live there; it must still NEVER enter THIS public repo). To get it locally:
 
 ```bash
-export GIT_TOKEN='<vault token; see .agents/skills/github/SKILL.md>'
-git -c credential.helper='!f() { echo username=x-access-token; echo password=$GIT_TOKEN; }; f' \
-  clone --depth 1 https://github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
-cp -r /tmp/linear-loops-vault/corpus pipeline/corpus
-unset GIT_TOKEN
+# token: vault GIT-TOKEN.md (see .agents/skills/github/SKILL.md)
+git clone --depth 1 https://x-access-token:<TOKEN>@github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
 ```
 
 **Use a full `git clone` (as above) and nothing else.** API-based fetch paths
@@ -21,11 +18,15 @@ fetch yields a partial corpus with no error, and a partial corpus produces a
 silently wrong parity reference (the 2026-09-27 "vault is incomplete" alarm on
 issue #162 was exactly this: a 1,043-file fetch of a complete 1,550-file vault).
 
-**Then verify the copy before trusting anything built on it:**
+**Then verify the CLONE and swap it in only when the counts match** (validating
+`pipeline/corpus` in place is a trap: `cp -r` into an existing `pipeline/corpus`
+nests as `corpus/corpus` and the checks silently read the stale copy):
 
 ```bash
-python3 -c "import json; print(len(json.load(open('pipeline/corpus/analysis/chunks.json'))))"
-find pipeline/corpus/pretty/client -name '*.js' | wc -l   # must be EQUAL
+c=/tmp/linear-loops-vault/corpus
+python3 -c "import json; print(len(json.load(open('$c/analysis/chunks.json'))))"
+find "$c/pretty/client" -name '*.js' | wc -l   # must be EQUAL to the line above
+rm -rf pipeline/corpus && cp -r "$c" pipeline/corpus
 ```
 
 Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
