@@ -45,11 +45,20 @@ Done 2026-09-27:
   from the corpus via docs/ui-reference.md) with the Settings page wired to the
   R3.3 RPCs. Gate: tsc + vite build; serve smoke through the real server.
 
-Now:
-- R4.1 loops domain slice (unassigned): loops.list/upsert/publish/setEnabled
-  over the store + the loops list page wired live. src/model gains loop.ts.
+Now (the H track — PLAN.md "harness era", the freeze's exit path):
+- H1 parity harness P1: PR #171 (review-complete, reproduced on the full
+  corpus; blocked only on thread resolution) + #180 (stale, needs
+  rebase-or-close) + #177/#181 route completeness.
+- H2 generateTheme exact reimplementation: issue #168 (claimed).
+- H3 matrix-§A fact extraction for the reference (unassigned).
+- H4 official-docs leg: issue #185 / PRs #184+#190 (digests up; citation rule +
+  drift-check step unassigned).
 
-Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
+Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
+trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity.
+
+(Contradiction fixed 2026-09-27: this section previously offered R4.1 as
+unassigned work while the freeze banner above forbade feature code.)
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
 #20); golden-goose next steps after the trace (issue #14): E1 live experiment +

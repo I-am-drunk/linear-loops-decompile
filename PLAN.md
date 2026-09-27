@@ -23,7 +23,8 @@ building breadth before depth, so:
   (`pipeline/corpus/`, via the vault) and the matrix row is noted.
 
 Done: R0 reset (2026-09-27), R1 pipeline harness + corpus in the vault, R2
-feature matrix.
+feature matrix, R3.1-R3.4 foundation slices (R3.4's UI shell subsequently
+failed the exactness audit — see the H track below; the server halves stand).
 
 ## R3: foundation slices (the architecture, perfected)
 
@@ -37,9 +38,42 @@ feature matrix.
   `docs/ui-reference.md`, empty states) with the Settings page wired to the
   R3.3 RPCs.
 
-## R4: loops domain slices
+## H: the harness era (inserted 2026-09-27 — the freeze's exit path)
 
-- R4.1 `loops.list/upsert/publish/setEnabled` + the loops list page.
+The 2026-09-27 audit (docs/audit-2026-09-27.md) froze feature work: the R3.4 UI
+shell failed the exactness bar and nothing could PROVE a slice exact. The H
+track builds that proof, then restarts the R sequence behind it. Work items:
+
+- H1 parity harness P1 (issue #162, PR #171): `tools/parity` extract+check on
+  routes/copy/structure/tokens, wired into `ci/check-ui.sh`. Follow-ups: route
+  extraction from chunk literals (#174/#177 — PR #181 supplies the enriched
+  routes.json) and the reference manifest.
+- H2 generateTheme exact reimplementation (issue #168): reproduces Linear's
+  runtime theme function so token VALUES are exact by construction; golden
+  vectors feed the harness's theme family.
+- H3 corpus fact extraction for the matrix §A surfaces (copy, structure, order,
+  primitives) so the reference covers what the UI rebuild will be checked
+  against.
+- H4 official-docs leg (issue #185): live-site digests under
+  `extracts/linear-official/docs-site/` + citation rule + docs drift check.
+  (The upstream-vendored `docs/*.md` are stubs; never cite them.)
+
+FREEZE EXIT (all four): #171 merged with `parity check` in the gate; #168
+merged with golden vectors matching corpus execution; one surface rebuilt
+end-to-end carrying `src/ui/ui-facts.json` with `parity check` green (the
+pattern every later slice copies); the R3.4 shell either brought to green or
+archived like v0.
+
+## R4: loops domain slices (post-freeze; trigger model CORRECTED)
+
+Trigger entities are PascalCase model values (`Issue`, `Project`, `Document`,
+`Initiative`, `Team`, `Release`, `Cycle`, `Schedule`, `Chat`) — NOT a
+`schedule|chat|event` type with a separate event field. The audit's Finding 2
+killed the R4.1 PRs (#160/#161) that encoded the wrong model; the redo builds
+on `SPECS/loops.md` as corrected by #167/#173.
+
+- R4.1 `loops.list/upsert/publish/setEnabled` + the loops list page (rebuilt
+  against `LoopsManagementPage`/`AutomationsList` facts, parity-checked).
 - R4.2 loop detail + editor blocks (trigger picker, schedule, conditions,
   prompt).
 - R4.3 template library + new-loop prefill.
