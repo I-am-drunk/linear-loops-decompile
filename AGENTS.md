@@ -38,6 +38,9 @@ force-push + deletion blocked). No path bypasses review.
 - Package = `src/<name>/` with its OWN tsconfig; new packages use `.ts`-extension
   imports + type stripping (work/LANDING.md §Conventions).
 - The gate: `bash ci/check-src.sh` on a fresh clone — every package, tsc + tests.
+- Cross-check before building on Linear behavior: `extracts/linear-official/` (official
+  MIT schema/SDK digest — public-API truth) vs `extracts/` + `KNOWLEDGE.md` (decompile
+  truth for Loops internals). Rule: COORDINATION.md §9.
 
 ## PR contract
 

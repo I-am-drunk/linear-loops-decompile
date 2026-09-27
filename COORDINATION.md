@@ -148,8 +148,17 @@ procedure (vault rotation, `.github/**`, settings — the only browser jobs).
 
 - **Never commit Linear-proprietary material** (bundle/DMG/asar/prettified chunks). The
   repo is **PUBLIC** (user decision 2026-09-26) — every commit and comment is forever.
-  `extracts/` = facts only.
+  `extracts/` = facts only. Linear's **MIT-licensed open source** (the `linear/linear`
+  SDK monorepo: schema, SDK, codegen) is the exception — it MAY be vendored with its
+  LICENSE and provenance, and it lives in `extracts/linear-official/`. Linear's docs
+  *website* text is not licensed — facts/links/digests only, never wholesale copies.
 - All reimplementation code is **original**.
+- **Two-source cross-check (binding):** anything about Linear is checked against
+  ① `extracts/linear-official/` + linear.app/developers (OFFICIAL — wins for the
+  public-API surface: dataplane, auth, webhooks, agent sessions) and
+  ② `extracts/` + `KNOWLEDGE.md` (DECOMPILE — wins for Loops internals the public API
+  doesn't expose). Conflicts → `KNOWLEDGE.md` drift log + flag on the hub. Refresh of
+  the official files rides the R1 drift-watch schedule.
 - **Credentials never** in repo/issues/chat/cloud/transcripts. v4 sessions need none (§1).
 - One live claim; heartbeat or it expires. Small frequent updates beat big silent pushes.
 

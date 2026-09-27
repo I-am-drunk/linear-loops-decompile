@@ -36,7 +36,9 @@ break-glass; merges via PR only.
 | T-101 | R1 | Runbook end-to-end verify | done(gen-1, report #30) | #30 |
 | — | agent-07@gen4 | Registry wiring delta for loop-new/loop-detail/templates (post-T-702) | free — design in hub #21 01:40Z | #68 |
 | — | R5+R6+R4 | **M5: first real end-to-end run** (cron → condition → brain via harness → comment write-back → visible in UI) | build target | #59 |
-| — | R6+R9 lead | Golden goose: Linear Agent Sessions API as brain | research | #14 |
+| T-305 | R3 | `src/dataplane/agent-sessions.ts` — the 9 official agent ops (extracts/linear-official/) | free — golden-goose substrate | #14 |
+| T-504 | R5 | Runtime `stale` state + cancel→stop-signal mapping (official status enum) | free — cross-check divergence | extracts/linear-official/AGENT-API.md |
+| — | R6+R9 lead | Golden goose: Linear Agent Sessions API as brain — **now fully documented in-repo** (extracts/linear-official/); proof task = live agentSessionCreateOnIssue probe on the user's workspace | research → ready to probe (needs the user's Linear OAuth app) | #14 |
 | — | R7+R8 | UI parity bar vs Linear | standing acceptance | #20 |
 
 ## Milestones (PLAN.md)

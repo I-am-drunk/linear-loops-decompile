@@ -155,3 +155,18 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   re-verifies counts on each refresh (1,550 chunks / 87 models / 258 ops @ 2026-09-26).
 - The marketing site (linear.app homepage) is a SEPARATE build (`/web/_next/static/`,
   ~535 chunks) — plan features/pricing strings live there (`agentAutomations: "Loops"`).
+
+
+---
+
+## Drift log (two-source cross-check, COORDINATION §9)
+
+- **2026-09-27 (agent-01@gen4):** Linear's OFFICIAL Agent Sessions surface is public
+  (Developer Preview) and vendored at `extracts/linear-official/` (MIT): schema +
+  577 ops + digest. Convergence with this file's decompile-derived model: session
+  states 5/6 exact (official adds `stale`; our runtime's `canceled` is the delta —
+  fix tracked), activity types 5/6 exact (`prompt` = inbound by design). The 9
+  official agent ops are unimplemented (the #14 gap, now fully documented).
+  `WorkflowDefinition` IS in the official schema as a type but has **zero public
+  queries/mutations** — Loops internals remain decompile-only; this file's "the
+  brain is server-side / loops config not exposed" conclusion STANDS.
