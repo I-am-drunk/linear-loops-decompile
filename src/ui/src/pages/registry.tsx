@@ -24,14 +24,18 @@ import {
   demoLinearDisconnected,
   demoSessions,
 } from "../features/settings/fixtures.ts";
-import { LoopsListPage, LoopsStyles, demoLoops } from "../features/loops/index.ts";
-import { navigate } from "../useHashRoute.ts";
-
+import { LoopsStyles } from "../features/loops/index.ts";
+import { RunsStyles } from "../features/loops/runs/index.ts";
+import {
+  LiveStyles,
+  LoopsListLive,
+  RunDetailLive,
+  RunsListLive,
+} from "../live/index.ts";
 // T-802: settings pages are live. Until R9's connect channel lands, they are
 // wired to fixtures (intents are no-ops) — swap the containers, not the pages.
 const noop = (): void => {};
 const noopId = (_id: string): void => {};
-const noopToggle = (_id: string, _enabled: boolean): void => {};
 const noopInput = (..._args: unknown[]): void => {};
 
 export interface PageDef {
@@ -40,22 +44,16 @@ export interface PageDef {
 }
 
 export const PAGE_REGISTRY: Record<string, PageDef> = {
-  // T-701 live: fixture container until R9's channel lands (container swap,
-  // page untouched). Toggle is server-authoritative — intent is a no-op here,
-  // so rows keep showing fixture state until a real container confirms.
+  // T-701 + T-1104: live container over T3 connect (fixture demo fallback
+  // when no server is configured). Page untouched; toggle is
+  // server-authoritative via loops.setEnabled.
   "loops": {
     title: "Loops",
     render: () => (
       <>
+        <LiveStyles />
         <LoopsStyles />
-        <LoopsListPage
-          loops={demoLoops}
-          inferenceConfigured={demoHarnesses.length > 0}
-          onToggle={noopToggle}
-          onOpen={(id) => navigate({ name: "loop-detail", loopId: id })}
-          onNewLoop={() => navigate({ name: "loop-new" })}
-          onOpenInferenceSettings={() => navigate({ name: "settings-inference" })}
-        />
+        <LoopsListLive />
       </>
     ),
   },
@@ -80,26 +78,29 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
       />
     ),
   },
+  // T-703 + T-1104: runs routes mount the live containers (fixture demo
+  // fallback). loopId "all" = aggregate view.
   "loop-runs": {
     title: "Runs",
     render: (route) => (
-      <PlaceholderPage
-        title="Runs"
-        description="Run history with status, target, duration, cost."
-        owner="T-703"
-        note={route.name === "loop-runs" ? `loopId: ${route.loopId} ("all" = aggregate view)` : undefined}
-      />
+      <>
+        <LiveStyles />
+        <RunsStyles />
+        <RunsListLive loopId={route.name === "loop-runs" ? route.loopId : "all"} />
+      </>
     ),
   },
   "run-detail": {
     title: "Run",
     render: (route) => (
-      <PlaceholderPage
-        title="Run detail"
-        description="Live activity stream: thoughts, actions, responses; steer + cancel."
-        owner="T-703"
-        note={route.name === "run-detail" ? `runId: ${route.runId}` : undefined}
-      />
+      <>
+        <LiveStyles />
+        <RunsStyles />
+        <RunDetailLive
+          loopId={route.name === "run-detail" ? route.loopId : "all"}
+          runId={route.name === "run-detail" ? route.runId : ""}
+        />
+      </>
     ),
   },
   "templates": {

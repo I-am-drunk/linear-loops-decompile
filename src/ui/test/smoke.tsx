@@ -23,9 +23,12 @@ function withHash(hash: string, fn: () => void): void {
 
 const routes: ReadonlyArray<readonly [string, string[], string[]]> = [
   // [hash, mustContain, mustNotContain]
-  ["#/loops", ["Loops", "Runs", "Templates", "Settings", "Triage digest", 'role="switch"', "New loop", 'aria-current="page"'], ["Not found", "T-701"]],
+  ["#/loops", ["Loops", "Runs", "Templates", "Settings", "Triage digest", 'role="switch"', "New loop", 'aria-current="page"', "Demo data"], ["Not found", "T-701"]],
   ["#/settings/inference", ["Connect inference", "API key", "Probe models", "Environment offline"], ["Not found", "T-802"]],
-  ["#/loop/abc/run/r9", ["Run detail", "T-703", "runId: r9"], ["Not found"]],
+  // T-1104: the runs routes mount the live containers — SSR shows the demo
+  // fallback (fixtures + the demo note), never the old placeholders.
+  ["#/loop/abc/runs", ["Triage digest", "SUP-214", "Demo data"], ["Not found", "T-703"]],
+  ["#/loop/abc/run/r9", ["Standup scribe", "Answer the loop", "Demo data"], ["Not found", "T-703", "runId: r9"]],
   ["#/bogus", ["Page not found", "/bogus"], ["T-701"]],
 ];
 
