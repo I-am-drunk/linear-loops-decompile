@@ -33,6 +33,14 @@ matters.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
 5. When the board changes, update `STATUS.md` in the same PR.
 
+## Slices (how we build)
+
+One PR = one thin vertical slice, reviewable in minutes. Never a whole layer,
+never the whole stack. Foundation slices (transport, boot, settings) set the
+patterns every later slice copies: give them extra care while change is cheap.
+Keep code small: zero runtime deps, strict TS, boring patterns. If a slice feels
+big, it is two slices. The sequence lives in `PLAN.md`.
+
 ## Hard rules (load bearing)
 
 - This repo is PUBLIC. Never commit Linear proprietary material: no app bundles,
