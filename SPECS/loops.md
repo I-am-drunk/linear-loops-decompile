@@ -64,7 +64,12 @@ Chat triggers: loop wakes on @mention/message in an enabled channel.
 ## Loop config fields we persist (superset of Linear's, minus their server bits)
 
 `name, icon, color, description, groupName, owner, team?, project?, prompt (doc),
-triggerType (entity), trigger (event key; support table above), activationMode?,
+triggerType (entity), trigger (event key; support table above — Schedule and
+Chat triggers carry NO event: the runtime trigger for Schedule is
+`{id, type: schedule, schedule}` with the event key absent, and Chat is
+`{id, type: chat, platform, integrationId, channels}` — corpus
+`Issue.DRYymPCa.js` `toTrigger`, which throws when a Schedule definition lacks
+its `schedule`), activationMode?,
 conditions[], schedule? (Schedule triggers), enabled,
 applyToSubTeams, activities[] (capabilities), trustedSourceKeys[], codeAccess: none|read|write,
 editAccess, subscribers, stats{…}, lastExecutedAt, version/publishedAt`.
