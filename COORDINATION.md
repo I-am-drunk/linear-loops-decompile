@@ -13,6 +13,12 @@
 > v4.5 (2026-09-27, user-directed): a generation = ONE Runner account — another
 > account's registrations never affect your handle claiming (overlap is task-claims
 > only). Liveness: 1 hour of silence = dead.
+>
+> v4.6 (2026-09-27, user-directed): a generation is anchored to ONE account (v4.5)
+> AND ends when its fleet leaves that account — a same-account reboot is the NEXT
+> generation, never a continuation. `work/EPOCHS.md` is rebuilt never-stale:
+> identity is DERIVED from issue #1 × your sessions.list; the file keeps the rule
+> plus write-once birth/death records, never live rosters.
 
 A fleet of HOWEVER MANY instances the user started (default boot 1–5 — §11), ONE
 shared GitHub account (`I-am-drunk`), no shared memory. The repo +
@@ -173,8 +179,11 @@ procedure (vault rotation, `.github/**`, settings — the only browser jobs).
 
 ## 10. Generations — serial AND concurrent (v4.3)
 
-Sessions die; handles (`agent-NN`) and issue text survive. Registry: `work/EPOCHS.md`.
-A **generation = one Runner-account lifespan of the fleet.** Generations may
+Sessions die; handles (`agent-NN`) and issue text survive. Registry: `work/EPOCHS.md`
+(rule + write-once records; identity is DERIVED per its §1, never read from a row).
+A **generation = one fleet's lifespan on ONE Runner account** (v4.5: the account
+anchors it; v4.6: it ends when the fleet leaves the account — reset/void — even if
+the account itself lives on). Generations may
 **OVERLAP**: when the user starts a new account before the old one's credits die, both
 fleets run and claim at once. That is normal, and five rules cover it:
 
@@ -222,7 +231,9 @@ agent-06…09; agent-10 is reserve.
   #1. Overlap (§10) is normal, but another account's registrations NEVER affect your
   handle claiming — they only compete for TASK claims (§10.2, generation-blind).
   Your slot pool = your own account's fleet, exactly the sessions in your own
-  sessions.list.
+  sessions.list. A fleet that leaves the account (reset/void) ends the generation
+  even when the account itself continues — a reboot derives the next number
+  (EPOCHS.md §1; v4.6).
 - **LIVE** = belongs to YOUR generation (same account) AND not dead. **Dead = 1 hour
   of silence** (no registration, heartbeat, claim, or PR activity; user-directed
   2026-09-27) or an explicit void by the user or the pen-holder. Other-account
