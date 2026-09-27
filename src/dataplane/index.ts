@@ -69,6 +69,27 @@ export {
   type IssueFilter,
 } from "./reads.js";
 export {
+  createComment,
+  updateIssue,
+  setIssueState,
+  idempotencyMarker,
+  type WriteResult,
+  type CreatedComment,
+  type CreateCommentInput,
+  type UpdateIssueInput,
+} from "./writes.js";
+export {
+  registerWebhook,
+  listWebhooks,
+  deleteWebhook,
+  verifyWebhookSignature,
+  pollIssueChanges,
+  LOOP_WEBHOOK_RESOURCES,
+  type RegisteredWebhook,
+  type RegisterWebhookInput,
+  type PollResult,
+} from "./webhooks.js";
+export {
   FixtureTransport,
   createDemoWorkspace,
   failureFixtures,
@@ -77,4 +98,5 @@ export {
   type FixtureResponse,
   type RecordedCall,
 } from "./fixtures.js";
+
 

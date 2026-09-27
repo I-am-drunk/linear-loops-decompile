@@ -85,7 +85,7 @@ export interface IssueComment {
 // GraphQL fragments (selection sets in one place so field drift is one edit)
 // ---------------------------------------------------------------------------
 
-const ISSUE_FIELDS = /* GraphQL */ `
+export const ISSUE_FIELDS = /* GraphQL */ `
   id
   identifier
   title
@@ -102,11 +102,11 @@ const ISSUE_FIELDS = /* GraphQL */ `
   labels { nodes { id name } }
 `;
 
-type RawIssue = Omit<IssueSummary, "labels"> & {
+export type RawIssue = Omit<IssueSummary, "labels"> & {
   labels: { nodes: { id: string; name: string }[] };
 };
 
-function toIssueSummary(raw: RawIssue): IssueSummary {
+export function toIssueSummary(raw: RawIssue): IssueSummary {
   const { labels, ...rest } = raw;
   return { ...rest, labels: labels.nodes };
 }
