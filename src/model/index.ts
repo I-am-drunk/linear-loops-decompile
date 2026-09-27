@@ -69,3 +69,18 @@ export type {
   LoopConfigParsed,
   ParseLoopConfigResult,
 } from "./loop-config.ts";
+
+// T-202: conversation + agent-session types (canonical part content lives here;
+// src/runtime aliases it — see conversation-map.ts's assignability guard).
+export { AGENT_SESSION_STATUSES, TURN_STATUSES } from "./conversation.ts";
+export type {
+  ActivityPartContent,
+  AgentActivity,
+  AgentSession,
+  AgentSessionStatus,
+  AiConversation,
+  AiConversationTurn,
+  ModelSelection,
+  PendingElicitation,
+  TurnStatus,
+} from "./conversation.ts";
