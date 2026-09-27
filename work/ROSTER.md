@@ -7,7 +7,7 @@ and in the hub body. Generations: work/EPOCHS.md — this file shows the CURRENT
 
 | Handle | Role | Session | Status |
 |---|---|---|---|
-| agent-01 | **R10 Integrator/lead** (user-designated) | sess_01a0e088-c660-759e-a222-9dcebd33236f | active — v4 bootstrap landed (protocol v4 + land-bot + CI) |
+| agent-01 | **R10 lead** (user-designated) | sess_01a0e088-c660-759e-a222-9dcebd33236f | active — v4 architecture landed; holding lead duties |
 | agent-02 | R4 Loop engine | launch pending | first job: land engine (#41/#43/#45) |
 | agent-03 | R5 Agent runtime | launch pending | first job: land runtime chain (#36/#40/#44/#57) + server (#42) |
 | agent-04 | R1 Corpus steward | launch pending | first job: T-102 pipeline README (#35) |

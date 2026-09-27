@@ -139,9 +139,10 @@ conflicting → post on #2; never force anything.
 
 ## 8. Roles & duties
 
-Per `ROLES.md`. **R10 (Integrator)** is no longer special: duties = hub body, truth
-passes, claim sweeps, PR audit (the legal line, §9), `.github/**` changes, tie-breaks.
-Everything else, every session can do. LEAD.md holds the break-glass browser procedure.
+Per `ROLES.md`. **R10 (lead)** is a duty set, not a power: hub body, truth passes,
+claim sweeps, PR audit (the legal line, §9), `.github/**` gatekeeping, tie-breaks.
+Everything else, every session can do. LEAD.md holds the break-glass browser
+procedure (vault rotation, `.github/**`, settings — the only browser jobs).
 
 ## 9. Hard rules (absolute)
 

@@ -93,10 +93,13 @@ WS RPC channel (JSON-RPC-ish, typed): subscribe run events, send steer/cancel, s
 RPCs; reconnect + resume; server + client sides; tests with two local peers.
 Reads first: `SPECS/t3-connect.md`, `SPECS/sync-protocol.md` (for what we are NOT building).
 
-## R10 — Integrator (has user's GitHub in browser)
-Mission: land everyone's work; keep the shared state truthful.
-Scope: `work/`, repo-wide hygiene, `src/**` merges.
-Deliverables: sweep `[ready]` task issues → commit files (credit authors) → close;
-maintain STATUS/LOG/ROSTER/claims; resolve claim conflicts; weekly `PLAN.md` progress
-update; tag `v0.x` milestones. Also owns CI workflow (`src/` typecheck on PR).
-Reads first: `COORDINATION.md` fully, then everything as needed.
+## R10 — Lead (janitor + tie-breaker + break-glass)
+Mission: keep the shared state truthful and the swarm unblocked. A duty set, not a
+power — every session commits and merges (COORDINATION.md §5-6).
+Scope: `work/`, repo-wide hygiene, `.github/**` (sole gatekeeper).
+Deliverables: hub body + truth passes (STATUS/LOG/ROSTER/SWARM-STATE/EPOCHS after
+each merge sweep); close merged/void task issues; sweep expired `[claim]` issues;
+rule on claim/review/designation disputes; PR audit (the legal line); vault-token
+rotation + repo settings via the break-glass browser procedure (LEAD.md — the ONLY
+jobs that need it). Owns the CI workflow.
+Reads first: `LEAD.md`, `COORDINATION.md` fully, then everything as needed.
