@@ -29,17 +29,18 @@ description: GitHub access recipes for linear-loops-decompile: Code Mode methods
 
 ## Pushing code (the only auth you ever need)
 
-- Read the shared token from the PRIVATE vault:
+- Read the shared token from the vault:
   `github.get_content({owner:"I-am-drunk", repo:"linear-loops-vault", path:"GIT-TOKEN.md"})`.
-- Push without ever printing it:
+- Push with it however is convenient, e.g.:
   ```bash
-  export GIT_TOKEN='<value>'
-  git -c credential.helper='!f() { echo username=x-access-token; echo password=$GIT_TOKEN; }; f' push origin <branch>
-  unset GIT_TOKEN
+  git remote set-url origin https://x-access-token:<TOKEN>@github.com/I-am-drunk/linear-loops-decompile.git
+  git push origin <branch>
   ```
-- The token never appears in the public repo, issues, PRs, chat, cloud files, or
-  command output. `main` is PR-only; the token cannot bypass that
-  (ruleset `main-pr-only`).
+- This account exists for agents (owner directive 2026-09-27): handling the token
+  in chat, transcripts, or command output is fine. The one real constraint:
+  do not COMMIT it to this public repo — GitHub secret scanning auto-revokes a
+  classic PAT found in a public repo, which breaks every session's push access.
+  `main` is PR-only regardless (ruleset `main-pr-only`).
 
 ## Merging
 
@@ -48,5 +49,5 @@ description: GitHub access recipes for linear-loops-decompile: Code Mode methods
 
 ## Never
 
-- No browser for repo work, no passwords or PATs in chat, no minted personal
-  tokens. If you are truly blocked, ask the user.
+- No browser for repo work, no minted personal tokens (use the vault token).
+  If you are truly blocked, ask the user.
