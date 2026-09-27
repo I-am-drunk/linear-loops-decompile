@@ -65,7 +65,7 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
     title: "New loop",
     // key forces a remount on route change: AppShell renders children unkeyed,
     // and two DemoEditor routes at one position would otherwise share state.
-    render: () => <DemoEditor key="new" initial={defaultLoopConfig()} />,
+    render: () => <DemoEditor key="loop-new" initial={defaultLoopConfig()} />,
   },
   // T-803: loop-detail mounts the same editor on the fixture config;
   // per-id resolution arrives with the R9 connect container, not here.
@@ -73,7 +73,7 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
     title: "Loop",
     render: (route) => (
       <DemoEditor
-        key={route.name === "loop-detail" ? route.loopId : "loop"}
+        key={route.name === "loop-detail" ? `loop-detail:${route.loopId}` : "loop-detail"}
         initial={demoEditorConfig}
         publishedVersion={3}
       />
