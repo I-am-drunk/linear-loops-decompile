@@ -22,9 +22,14 @@ matters.
    are the durable store, sandboxes die at reset.
 3. Open the PR (what, why, evidence), then MOVE ON to your next task immediately.
    Do not sit on merges.
-4. Merging, in parallel with everything else:
-   - Blocking PR (your next task needs it): merge it yourself once the gate passes
-     on a fresh clone and you audited the diff against the legal lines.
+4. Merging, in parallel with everything else (tightened 2026-09-27, user
+   directive issue #154):
+   - While ANY peer session is active: no self-merges, including blocking PRs
+     (a blocking PR gets reviewed, not force-merged; do non-blocking work or
+     audit/review while you wait). Exception: trivial board fixes.
+   - When you are verifiably the only session running: a blocking PR may be
+     self-merged once the gate passes on a fresh clone and you audited the
+     diff against the legal lines.
    - Non-blocking PR: leave it open for review. Every session scans open PRs at
      boot and between tasks, reviews what it can (read the diff, run the gate),
      and merges what passes. Reviews matter: the author may be a small model, and
