@@ -36,6 +36,9 @@ matters.
      a reviewer session may catch deeper issues.
    - Any session may merge any PR that has gate evidence and a clean legal audit.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
+   - MANDATORY (user directive 2026-09-27): a PR merges ONLY after all CodeRabbit
+     and reviewer feedback is addressed (fixed or answered with a reason).
+     Unaddressed feedback blocks the merge, whoever is merging.
 5. When the board changes, update `STATUS.md` in the same PR.
 
 ## TypeScript style (strip-only safe)
