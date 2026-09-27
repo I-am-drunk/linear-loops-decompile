@@ -15,6 +15,7 @@ import { ScriptBrain } from "../runtime/brain.ts";
 import { Runner } from "../runtime/runner.ts";
 import type { Run, RunEvent, Turn } from "../runtime/types.ts";
 import { openDatabase } from "./db.ts";
+import { createLoopsServer } from "./index.ts";
 import { createRunEventPublisher, registerDomainRpcs, toWireLoop } from "./rpcs.ts";
 import { Store } from "./store.ts";
 
@@ -273,6 +274,44 @@ describe("runs.* RPCs", () => {
       assert.equal((err as { code: string }).code, "not_found");
       return true;
     });
+  });
+});
+
+describe("createLoopsServer wiring", () => {
+  it("registers the domain RPCs when constructed with a channel (+ orchestrator hook)", async () => {
+    const handlers = new Map<string, Handler>();
+    let reloads = 0;
+    let loopId = 0;
+    const loops = createLoopsServer({
+      dbPath: ":memory:",
+      channel: { register: (m, h) => handlers.set(m, h), lastSeqFor: () => 0 },
+      orchestrator: {
+        reloadLoops: () => {
+          reloads += 1;
+          return { scheduled: 0, event: 0, chat: 0 };
+        },
+      },
+      idgen: () => `wired-${loopId++}`,
+    });
+    try {
+      const upsert = handlers.get("loops.upsert")!;
+      const created = upsert({ config: defaultLoopConfig() }, {}) as { loop: { id: string; enabled: boolean } };
+      assert.equal(created.loop.id, "wired-0");
+      assert.equal(created.loop.enabled, false);
+      assert.equal(reloads, 0);
+      const publish = handlers.get("loops.publish")!;
+      publish({ id: "wired-0" }, {});
+      assert.equal(reloads, 1, "the composition root's orchestrator is the reload target");
+      const list = handlers.get("runs.list")!({}, {}) as { runs: unknown[] };
+      assert.deepEqual(list.runs, []);
+    } finally {
+      await loops.close();
+    }
+  });
+
+  it("constructs fine without a channel (pre-T-1103 shape keeps working)", async () => {
+    const loops = createLoopsServer({ dbPath: ":memory:" });
+    await loops.close();
   });
 });
 
