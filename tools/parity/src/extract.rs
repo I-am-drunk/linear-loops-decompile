@@ -26,6 +26,8 @@ pub struct ExtractStats {
     pub order: usize,
     /// state-alternate facts across surfaces (H3 #213 slice 3)
     pub states: usize,
+    /// surfaces that carry a primitive fact (H3 #213 slice 1)
+    pub primitives: usize,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
@@ -129,7 +131,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, primitives: 0, canaries: None };
     let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
@@ -158,6 +160,19 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             surface.structure.extend(extract_edges(&text));
             surface.tokens.extend(extract_tokens(&text));
             order_candidates.extend(extract_order(&text));
+            // primitive: keep the signal, tracking cross-chunk conflicts
+            // (a surface can split across hash-rotated chunk builds).
+            if let Some(p) = extract_primitive(&text) {
+                match &surface.primitive {
+                    Some(existing) if existing != &p => surface.primitive = Some(String::new()),
+                    Some(_) => {}
+                    None => surface.primitive = Some(p),
+                }
+            }
+        }
+        // the empty marker means "conflicting signals across chunks" — no fact
+        if surface.primitive.as_deref() == Some("") {
+            surface.primitive = None;
         }
         // A surface may match several chunk builds of the same component
         // (hash-rotated duplicates); their order chains are the same fact.
@@ -181,6 +196,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         stats.tokens += surface.tokens.len();
         stats.order += usize::from(!surface.order.is_empty());
         stats.states += surface.states.len();
+        stats.primitives += usize::from(surface.primitive.is_some());
         facts.surfaces.insert(comp.clone(), surface);
         stats.surfaces += 1;
     }
@@ -792,6 +808,40 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
 
 /// Component containment edges: `from "./Child.<hash>.js"` inside a chunk is a
 /// real usage edge "Parent>Child". Only Capitalized children (components).
+/// The surface's interaction primitive, from unambiguous compiled signals
+/// (issue #213 slice 1, corpus recon on Linear 1.32.4):
+/// - `export { … as pageMetadata }` — the routed-page chunk contract
+///   (LoopsManagementPage, LoopLimitsPage, the settings pages) → "page".
+/// - a `role: `dialog`` JSX prop (AutomationNewDialog, AgentPanel) → "dialog".
+/// Anything else — including `onRequestClose` alone, which openers like
+/// AutomationNewButton also carry — is NO fact: an unverifiable value stays
+/// unmarked, never guessed (audit rule; SPECS/ui-parity.md).
+fn extract_primitive(text: &str) -> Option<String> {
+    let is_dialog = text.contains("role: `dialog`");
+    // pageMetadata must appear inside an `export { … }` list, not merely as a
+    // word (dozens of chunks IMPORT it; the routed page chunk EXPORTS it).
+    let is_page = exports_page_metadata(text);
+    match (is_page, is_dialog) {
+        (true, false) => Some("page".to_string()),
+        (false, true) => Some("dialog".to_string()),
+        _ => None, // neither, or both (ambiguous): no fact, never a guess
+    }
+}
+
+/// True when `pageMetadata` appears inside an `export { … }` list.
+fn exports_page_metadata(text: &str) -> bool {
+    let mut rest = text;
+    while let Some(idx) = rest.find("export {") {
+        let after = &rest[idx + 8..];
+        let Some(end) = after.find('}') else { return false };
+        if after[..end].contains("pageMetadata") {
+            return true;
+        }
+        rest = &after[end..];
+    }
+    false
+}
+
 fn extract_edges(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let mut rest = text;

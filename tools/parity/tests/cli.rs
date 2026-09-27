@@ -539,3 +539,29 @@ fn compact_ternary_and_malformed_canary_lines() {
     assert!(String::from_utf8_lossy(&out.stderr).contains("malformed line"));
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn extract_emits_primitives_from_unambiguous_signals() {
+    // issue #213 slice 1: role:`dialog` → dialog; export{…pageMetadata} → page;
+    // no signal → no fact (never guessed).
+    let tmp = std::env::temp_dir().join(format!("parity-test-prim-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    assert!(
+        text.contains(r#""primitive": "dialog""#),
+        "dialog primitive extracted: {}", text
+    );
+    assert!(
+        text.contains(r#""primitive": "page""#),
+        "page primitive extracted: {}", text
+    );
+    // ThemeProvider (theme.tokens) has neither signal → no primitive fact.
+    let theme_at = text.find("\"theme.tokens\"").expect("theme surface present");
+    assert!(
+        !text[theme_at..].contains("primitive"),
+        "no primitive guessed for a signal-less surface: {}", &text[theme_at..]
+    );
+    let _ = std::fs::remove_dir_all(&tmp);
+}
