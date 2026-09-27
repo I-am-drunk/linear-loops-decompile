@@ -19,6 +19,14 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
   237/237 fresh-clone). Focus is now M5 end-to-end + T-304/T-102 + golden goose.
 - GitHub connection: **workspace-public** (conn_01a0e089-c248, user-directed) —
   `provider_unavailable` class dead; playbook stays for Project grants.
+- shared git token: **private vault repo `I-am-drunk/linear-loops-vault`** (user-directed
+  2026-09-27 — public swarm repo + private agent-readable credential store; GitHub
+  secrets are write-only so a vault repo is the only pattern that works). Classic
+  `repo`-scoped PAT, expires 2026-10-27, rotation = lead duty (vault GIT-TOKEN.md).
+  Never in the public repo / issues / chats.
+- Runner skills (Workflow Library): `swarm-session-start`, `swarm-deliver-pr`,
+  `swarm-review`, `swarm-github-playbook`.
+- AGENTS.md + CLAUDE.md at repo root = the session operating manual.
 - Actions: billing-locked (ticket **#4797514**, user has no card — support must
   remove the dead payment method + lift the lock). Land-bot ready; smoke test #60
   re-fires on unlock. Until then: lead break-glass-lands FILE blocks.

@@ -45,18 +45,22 @@ Mechanics:
   home is the branch + PR. FILE blocks (### FILE: <path> + fenced block) are the
   courier: put them INSIDE the /land comment and land immediately. Sandboxes die at
   reset; branches/PRs/issues survive. Never rely on cloud trees or transcripts.
-- Commits: the swarm land-bot — comment
-  /land branch=agent-NN/tNNN-slug pr="T-xxx: <title>" (+ your FILE blocks)
-  IF GitHub Actions is unblocked (hub #59's top bullet tracks the billing lock; check
-  first). If Actions is still locked: do NOT wait — deliver FILE blocks on your task
-  issue + buddy reviews; agent-01 break-glass-lands. Never paste a token anywhere:
-  the repo is public and GitHub auto-revokes leaked PATs in seconds.
+- Commits (self-serve): read the shared git token via
+  github.get_content({owner:"I-am-drunk", repo:"linear-loops-vault", path:"GIT-TOKEN.md"})
+  — a PRIVATE vault only agents can read — then git clone/push over HTTPS. Branches
+  only: main is PR-only for everyone (ruleset main-pr-only). Open the PR per the
+  contract in AGENTS.md (template: load_skill("swarm-deliver-pr")). The token must
+  NEVER appear in the public repo, issues, PRs, chat, or transcripts.
+  Fallbacks: the /land bot once Actions is unblocked (hub #59 tracks the billing
+  lock); agent-01 break-glass last.
 - Merges: github.merge_pull_request (squash) after a buddy review with reproduced
   evidence (bash ci/check-src.sh on a fresh clone). Buddy pairs in COORDINATION.md §4.
 
 MCP NOTES: github.* should just work (the connection is workspace-public). On
 provider_unavailable: connections.list() → projects.set_connection_access to add the
 GitHub connection to your Project → pass connectionId explicitly on every github.* call.
+Runner skills for this swarm (load_skill): swarm-session-start · swarm-deliver-pr ·
+swarm-review · swarm-github-playbook.
 
 HARD RULES: never commit Linear proprietary code (bundle/DMG/asar/prettified); all
 reimplementation code original; the repo is PUBLIC — everything is forever; credentials

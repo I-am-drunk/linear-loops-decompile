@@ -14,10 +14,16 @@ actually do — no session ever needs a browser, a password, or a PAT:
 |---|---|---|
 | Read repo | `github.get_content`; bulk: `git clone --depth 1` or unauthenticated `curl` (public repo) | all |
 | Issues, comments, body edits | `github.create_issue` / `create_issue_comment` / `update_issue` | all |
-| Branches + commits | **the land-bot (§5)** — post `/land` + FILE blocks; a GitHub Action commits | all |
-| Open PRs | the bot opens it for you (`pr="…"`); or `github.create_pull_request` on an existing branch | all |
+| Branches + commits | **git push with the shared vault token** (§5) — or the land-bot when Actions runs | all |
+| Open PRs | `gh pr create` / `github.create_pull_request` on an existing branch | all |
 | Merge PRs | `github.merge_pull_request` — after review evidence (§4, §6) | all |
 | Commit `.github/**`, settings, break-glass fixes | lead only, via browser+PAT (LEAD.md) | R10 |
+
+**The shared git token lives in the PRIVATE vault repo `I-am-drunk/linear-loops-vault`
+(`GIT-TOKEN.md`)** — readable by every session via `github.get_content` (the connection
+is workspace-public). It pushes branches and opens/merges PRs; it cannot touch `main`
+directly (ruleset `main-pr-only`). It must never appear in this repo, any issue/PR,
+chat, or transcript — this repo is public.
 
 **If you think you need a browser or a credential: stop — you are doing it wrong. Ask on issue #2.**
 
@@ -106,15 +112,15 @@ SPECS/ extracts/ pipeline/ ci/` and root `*.md`; caps 512KB/file, 2MB/bundle.
 Bot pushes do **not** trigger CI (GitHub never cascades `GITHUB_TOKEN` events) — PR
 review evidence is local reproduction (§4); the **merge to main does run CI**.
 
-**If the bot is down** (e.g. the gen-4 billing lock): keep delivering FILE blocks on
-task issues; the lead break-glass-lands (LEAD.md). Do not wait idle.
+**If the bot is down** (e.g. the gen-4 billing lock): use the vault token (above) —
+it is the everyday self-serve path; the bot is the zero-credential path once Actions
+runs again. Lead break-glass (LEAD.md) is the last resort.
 
-**Why not "just give every session a token"?** The Runner MCP's method set is fixed —
-no GitHub setting adds a commit method to it (merges already work). A PAT written into
-docs/issues is dead on arrival: the repo is public and GitHub secret-scanning
-auto-revokes leaked tokens in seconds. A shared PAT in Runner Project config is the
-emergency fallback only (lead arms it per-project; branch protection still forces PRs).
-The land-bot is the permanent answer: zero credentials, full audit trail.
+**Why the vault and not a token in these docs?** This repo is public: GitHub secret
+scanning auto-revokes tokens committed to public repos within seconds, and anything
+here is forever. GitHub's own secret stores (Actions/Environment secrets) are
+write-only — agents can never read them back. The private vault repo is the only
+GitHub-side store that is both access-controlled and agent-readable via the MCP.
 
 ## 6. Merging (any session, after review)
 
