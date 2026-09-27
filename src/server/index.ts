@@ -11,6 +11,7 @@ import { attachWs } from "../connect/server.ts";
 import { Store } from "./store.ts";
 import { createHttpServer } from "./http.ts";
 import { createSettingsHandlers } from "./settings-rpc.ts";
+import { createLoopsHandlers } from "./loops-rpc.ts";
 
 export interface EnvironmentDescriptor {
   id: string;
@@ -69,6 +70,7 @@ export function createLoopsServer(opts: BootOptions): LoopsServer {
     registry: {
       "env.describe": () => descriptor,
       ...createSettingsHandlers(store, opts.fetchImpl),
+      ...createLoopsHandlers(store),
     },
   });
 

@@ -37,13 +37,19 @@ Done 2026-09-27:
   setInference/deleteInference/testInference + dataplane.probe. Write-only
   secrets, credential-header refusal, duplicate-name rejection; 8/8 server
   tests with an injected fake fetch.
+- R4.1 loops domain (server half): loops.list/get/upsert/publish/setEnabled +
+  `src/model/loop.ts` (WorkflowDefinition-mirroring config, draft/publish
+  lifecycle) + store v2 (loops table); 4/4 tests. List page awaits the R3.4
+  shell.
 
 Now:
-- R3.4 UI shell (unassigned): src/ui skeleton (sidebar, routes, theme tokens
-  from docs/ui-reference.md, empty states) with the Settings page wired to the
-  R3.3 RPCs.
+- R3.4 UI shell (claimed, issue #145): src/ui skeleton (sidebar, routes, theme
+  tokens from docs/ui-reference.md, empty states) with the Settings page wired
+  to the R3.3 RPCs.
+- R5.1 dataplane GraphQL client + rate budget (claimed, issue #148).
 
-Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
+Later: R4.2 loop detail + editor blocks (server half unblocked), R4.3
+templates, R5.2+ dataplane, R6 engine; then R4 matrix rows to exact parity.
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
 #20); golden-goose next steps after the trace (issue #14): E1 live experiment +

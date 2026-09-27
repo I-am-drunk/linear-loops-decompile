@@ -39,7 +39,7 @@ feature matrix.
 
 ## R4: loops domain slices
 
-- R4.1 `loops.list/upsert/publish/setEnabled` + the loops list page.
+- R4.1 `loops.list/upsert/publish/setEnabled` + the loops list page. (Server half done 2026-09-27: + `loops.get`, draft/publish lifecycle, store v2; list page lands with the R3.4 shell.)
 - R4.2 loop detail + editor blocks (trigger picker, schedule, conditions,
   prompt).
 - R4.3 template library + new-loop prefill.
