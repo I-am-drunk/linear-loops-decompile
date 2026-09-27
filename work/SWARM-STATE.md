@@ -24,8 +24,9 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
   secrets are write-only so a vault repo is the only pattern that works). Classic
   `repo`-scoped PAT, expires 2026-10-27, rotation = lead duty (vault GIT-TOKEN.md).
   Never in the public repo / issues / chats.
-- Runner skills (Workflow Library): `swarm-session-start`, `swarm-deliver-pr`,
-  `swarm-review`, `swarm-github-playbook`.
+- Skills: repo-local `.agents/skills/{swarm-session-start,swarm-deliver-pr,
+  swarm-review,swarm-github-playbook}/SKILL.md` are CANONICAL (curl raw); Runner
+  Workflow-Library copies may be absent on a fresh account.
 - AGENTS.md + CLAUDE.md at repo root = the session operating manual.
 - Actions: billing-locked (ticket **#4797514**, user has no card — support must
   remove the dead payment method + lift the lock). Land-bot ready; smoke test #60

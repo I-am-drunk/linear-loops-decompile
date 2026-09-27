@@ -5,8 +5,13 @@
 > (including old hub bodies), this file wins. Repair history: the v3 file shipped
 > truncated mid-§3 (gen-2) and lived only in hub comments (gen-3) — that class of
 > failure is why v4 lands as one complete, committed document.
+>
+> v4.4 (2026-09-27, user-directed): identity at boot is CLAIMED, never computed — §11.
+> One stateless boot text (`work/FLEET-PROMPT.md`); gen-specific launch prompts and
+> sessions.list rank math are retired bug classes.
 
-~10 sessions, ONE shared GitHub account (`I-am-drunk`), no shared memory. The repo +
+A fleet of HOWEVER MANY instances the user started (default boot 1–5 — §11), ONE
+shared GitHub account (`I-am-drunk`), no shared memory. The repo +
 issue text is the only shared brain. Everything here matches what sessions can
 actually do — no session ever needs a browser, a password, or a PAT:
 
@@ -40,9 +45,9 @@ chat, or transcript — this repo is public.
    - `get_content` text caps at 50k chars → bulk-read via `git clone --depth 1` or
      `curl https://raw.githubusercontent.com/I-am-drunk/linear-loops-decompile/main/<path>`.
 3. Register: comment on **issue #1**:
-   `handle: agent-NN (gen 4) | session: <full sess_ id> | role RN | continuing T-xxx`
+   `handle: agent-NN (gen N per work/EPOCHS.md) | session: <full sess_ id> | role RN | continuing T-xxx`
    — and the same line on the hub. #1 is write-only (you cannot read it back — paging);
-   the lead mirrors live state into the hub body.
+   the lead mirrors live state into the hub body. How you GET the handle: §11.
 4. Claim ONE task (§2) before doing any work.
 
 ## 2. Claims (leases)
@@ -190,6 +195,38 @@ fleets run and claim at once. That is normal, and five rules cover it:
 
 **When to boot the next fleet: whenever** — as soon as credits look thin, or earlier.
 There is no wrong time; the rules absorb the overlap. Boot text:
-`work/FLEET-PROMPT.md` (generation-agnostic). Handle/role assignment: self-derived
-(FLEET-PROMPT STEP 0) — **no rank math by hand, no user-side assignment** (gen-2/3
-lost hours to collisions).
+`work/FLEET-PROMPT.md` (the ONE boot text — stateless by design). Handle/role
+assignment: self-claimed per §11 — no rank math, no user-side assignment (gen-1/2/3/4
+all lost hours or handles to the alternatives).
+
+## 11. Identity at boot (v4.4) — claimed, never computed
+
+**The fleet is however many instances the user started.** No prompt or doc ever states
+a fleet size or an expected headcount; unfilled slots are simply unclaimed work on the
+board. The default boot is 1–5 instances (agent-01…agent-05); larger boots fill
+agent-06…09; agent-10 is reserve.
+
+- **Slots:** agent-01…09 fill lowest-first; the holder of agent-01 carries the R10
+  lead duty set (a user in-chat designation always wins). Agent-10 (R2 models +
+  reserve) is shared by every instance beyond the ninth — sign with full sess_ ids.
+- **Claim, then CONFIRM:** post the registration on issue #1 with the FULL sess_ id,
+  wait ~60s, re-read the #1 tail. Same handle + same generation + LIVE with an
+  EARLIER comment id ⇒ yield (`[yield] agent-NN`) and take the next free slot.
+  Comment ids are a total order — exactly one winner per slot, no arbitration needed.
+- **LIVE** = names the current generation AND (sess_ id in your sessions.list OR
+  activity — registration, heartbeat, claim, PR — within ~2h). Everything colder is
+  void; the user or the pen-holder can void explicitly, sooner.
+- **Rank math is dead (post-mortem 2026-09-27):** sessions.list ordering is stable but
+  MEMBERSHIP is not — during a mass boot, slower instances insert ahead of you for
+  minutes (one session's derived rank moved 1→2 while it worked). A parallel fleet on
+  another account is invisible to your list entirely: the 05:06Z and 06:07Z gen-4
+  fleets computed identical rank tables, collided fleet-wide, and the "lowest
+  unregistered handle" backstop then handed agent-05 to TWO sessions within 4
+  minutes — the same pile-up mode as gen-1's 5× agent-01. sessions.list is for
+  liveness checks only, never for identity.
+- **One durable session title:** `loops fleet` — every boot, every generation.
+  Per-generation titles fragment the pool and poison liveness checks.
+- **One boot text:** `work/FLEET-PROMPT.md` — stateless (no generation, no fleet
+  size, no hub number, no task state; all read from the repo at boot). Gen-specific
+  launch prompts are a retired bug class (work/gen4-launch-prompt.md is the
+  tombstone).

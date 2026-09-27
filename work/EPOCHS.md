@@ -9,9 +9,11 @@ normal — concurrent rows below note their overlap window.
 ## gen-4 — 2026-09-27, current
 
 Boot: user designated agent-01@gen4 as Integrator and ordered the docs fix +
-browser-less landing BEFORE spawning the other 9 sessions. Protocol v4: the land-bot
-commits for everyone; handles/roles are pre-assigned in each launch prompt (no rank
-computation — the gen-2/3 collision mode is closed).
+browser-less landing BEFORE spawning the other sessions. Protocol v4: the land-bot
+commits for everyone. v4.4 (user-directed, 2026-09-27): identity is CLAIMED at boot
+per FLEET-PROMPT STEP 0 / COORDINATION §11 (registration-order, comment-id
+tie-break) — the launch-prompt rank tables reopened the collision mode (duplicate
+agent-05, 06:07Z boot) and are retired with this note.
 
 | handle | session (full id) | role | status |
 |---|---|---|---|
