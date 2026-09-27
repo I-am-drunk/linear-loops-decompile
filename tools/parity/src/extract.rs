@@ -10,7 +10,8 @@
 //! - `pretty/client/<Component>.<HASH>.js` — per-surface copy strings,
 //!   component import edges, and theme-token usage.
 
-use crate::model::{FactFile, Surface};
+use crate::model::{FactFile, RouteMeta, Surface};
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
@@ -41,13 +42,30 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let routes_arr = routes_json
         .as_arr()
         .ok_or_else(|| format!("{}: expected a JSON array", routes_path.display()))?;
-    let mut app_routes: Vec<String> = Vec::new();
+    // Per-route provenance (issue #208): declaredIn = every chunk basename
+    // (or routes.json `file`) carrying the literal; role = where it sits.
+    // The `Root.*` chunk is the app's route table (registration); any other
+    // declaring chunk is a matcher call site ("this URL gates what this
+    // surface renders" — the /:orgKey/loops/new dialog-route nuance, #177).
+    let mut declared_in: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    let mut registered: BTreeSet<String> = BTreeSet::new();
+    let mut matched: BTreeSet<String> = BTreeSet::new();
     for item in routes_arr {
         let Some(path) = item.get("path").and_then(|v| v.as_str()) else {
             continue;
         };
         if path.starts_with('/') && is_loops_route(path) {
-            app_routes.push(path.to_string());
+            let entry = declared_in.entry(path.to_string()).or_default();
+            // the index's `file` names the chunk the literal appears in;
+            // the role follows from WHICH chunk that is, same as scan hits.
+            if let Some(file) = item.get("file").and_then(|v| v.as_str()) {
+                entry.insert(file.to_string());
+                if is_route_table_chunk(file) {
+                    registered.insert(path.to_string());
+                } else {
+                    matched.insert(path.to_string());
+                }
+            }
         }
     }
     // routes.json is a floor, not a ceiling (the analyzer misses route
@@ -63,16 +81,32 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             }
             let text = fs::read_to_string(entry.path())
                 .map_err(|e| format!("read {}: {}", entry.path().display(), e))?;
+            let is_table = is_route_table_chunk(&name);
             for route in extract_route_literals(&text) {
                 if is_loops_route(&route) {
-                    app_routes.push(route);
+                    declared_in.entry(route.clone()).or_default().insert(name.clone());
+                    if is_table {
+                        registered.insert(route);
+                    } else {
+                        matched.insert(route);
+                    }
                 }
             }
         }
     }
-    app_routes.sort();
-    app_routes.dedup();
+    let app_routes: Vec<String> = declared_in.keys().cloned().collect();
     if !app_routes.is_empty() {
+        for (route, chunks) in &declared_in {
+            let role = match (registered.contains(route), matched.contains(route)) {
+                (true, true) => "both",
+                (true, false) => "registration",
+                _ => "matcher",
+            };
+            facts.route_meta.insert(
+                route.clone(),
+                RouteMeta { declared_in: chunks.iter().cloned().collect(), role: role.to_string() },
+            );
+        }
         facts.surfaces.insert(
             "app.routes".to_string(),
             Surface { routes: app_routes.clone(), ..Default::default() },
@@ -279,6 +313,13 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     fs::write(out, crate::json::to_string(&crate::model::to_value(&facts)))
         .map_err(|e| format!("write {}: {}", out.display(), e))?;
     Ok(stats)
+}
+
+/// The app-shell route-table chunk: `Root.<hash>.js` holds the client's route
+/// REGISTRATIONS (verified on 1.32.4: `Root.DfW4FHnP.js` declares 39 of the
+/// 43 Loops/agent routes). Every other declaring chunk is a matcher call site.
+fn is_route_table_chunk(filename: &str) -> bool {
+    chunk_matches(filename, "Root", true)
 }
 
 /// Absolute routes that belong to the Loops/agent surfaces.

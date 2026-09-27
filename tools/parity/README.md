@@ -59,6 +59,10 @@ surface; pinned by `order:<Surface>=<a> > <b> > …` canary lines.
 Synthetic app-level surfaces: `app.routes` (route table — chunk-body scan,
 because the analysis index is a floor) and `theme.tokens` (token namespace;
 VALUES come from the theme-generator golden-vectors slice, #162).
+The reference also carries `routeMeta` (issue #208): per route, `declaredIn`
+(declaring chunk basenames) + `role` (`registration` = in the `Root.*` route
+table; `matcher` = a match() call site; `both`). Informational — `check`
+compares route paths only, and `ui-facts.json` never declares it.
 
 No cargo on a fresh sandbox? `curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal`
 (+ `apt-get install -y gcc` for the linker). The gate skips with a pointer

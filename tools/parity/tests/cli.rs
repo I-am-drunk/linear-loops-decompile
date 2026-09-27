@@ -80,6 +80,28 @@ fn extract_produces_expected_reference_facts() {
     );
     assert!(!text.contains("decoy"), "activeOrderingKey decoy leaked into order");
 
+    // routeMeta (issue #208): declaredIn provenance + registration/matcher
+    // roles. The Root fixture chunk is the route table; matcher call sites
+    // and routes.json-only entries are not registrations.
+    let parsed = json_get(&text);
+    // matcher-only: literal lives in AutomationRunsPage's match(), not Root
+    assert_eq!(
+        route_role(&parsed, "/:orgKey/loops/:viewType?"),
+        "matcher",
+        "matcher-only route: {}", text
+    );
+    // registration-only: literal lives only in the Root route table
+    assert_eq!(route_role(&parsed, "/:orgKey/loops/new"), "registration");
+    // both: registered in Root AND indexed/matched elsewhere
+    assert_eq!(route_role(&parsed, "/:orgKey/loop/:loopId/runs"), "both");
+    // declaredIn carries the chunk basenames
+    assert!(
+        text.contains("Root.Df4Fixture.js"),
+        "declaredIn names the route-table chunk: {}", text
+    );
+    // routes.json-only entry (no chunk literal): matcher role, index file as provenance
+    assert_eq!(route_role(&parsed, "/:orgKey/loop/:loopId"), "matcher");
+
     let _ = std::fs::remove_dir_all(&tmp);
 }
 
@@ -140,6 +162,24 @@ fn order_mismatch_is_a_violation_and_order_canary_fails_loudly() {
     assert!(String::from_utf8_lossy(&out.stderr).contains("extracted NO chain"));
 
     let _ = std::fs::remove_dir_all(&tmp);
+}
+
+/// Minimal JSON poke: full parsing is overkill for a test — slice the
+/// pretty-printed output from `"routeMeta"` and read each path's `"role"`.
+fn json_get(text: &str) -> String {
+    let at = text.find("\"routeMeta\"").expect("reference carries routeMeta");
+    text[at..].to_string()
+}
+
+fn route_role(route_meta: &str, path: &str) -> String {
+    let key = format!("\"{}\":", path);
+    let at = route_meta.find(&key).unwrap_or_else(|| panic!("routeMeta missing {}", path));
+    let after = &route_meta[at..];
+    let role_at = after.find("\"role\":").expect("role field") + 7;
+    let rest = after[role_at..].trim_start();
+    let rest = rest.strip_prefix('"').expect("role is a string");
+    let end = rest.find('"').expect("role terminator");
+    rest[..end].to_string()
 }
 
 #[test]
