@@ -3,7 +3,13 @@
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: R3 (skeleton).**
+**FREEZE (user directive 2026-09-27, issues #157 + #162):** no new app/UI/server
+feature code. All building stops until the UI parity harness (tools/parity,
+plan #162) is planned and landed; every existing file is under audit (#157).
+Valid work: the audit, the harness, review. The Now/Later lines below are
+suspended, not deleted, so the pre-freeze plan stays visible.
+
+**Phase: R3 (skeleton) — SUSPENDED at the freeze.**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
