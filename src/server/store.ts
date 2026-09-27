@@ -39,7 +39,9 @@ export type AuditKind =
   | "run.created"
   | "run.status"
   | "run.usage"
-  | "linear.write";
+  | "linear.write"
+  | "linear.session"
+  | "linear.activity";
 
 export class Store {
   readonly db: Database;
