@@ -125,7 +125,10 @@ where we can measure; never false-red, never silent-green.
   scalar shell values incl. the input hash). Value surfaces ramp like
   component surfaces (not mandatory synthetics); `value:` canaries pin the
   wiring per extraction, and a corpus refresh that changes the theme fails
-  the canary — the theme leg of the ~30-day drift check.
+  the canary — the theme leg of the ~30-day drift check. (Tier authority per
+  #220: these value surfaces are DRIFT CANARIES; the ACCEPTANCE bar for
+  src/ui-theme is its own golden tests executing the corpus generator —
+  already the G3 shape — plus the G2 golden leg when it lands.)
 
 ## The range, for our improvements (declared, never ambient)
 
