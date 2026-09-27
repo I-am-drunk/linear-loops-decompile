@@ -72,8 +72,8 @@ honest v1 (it is exactly what the server's brain binding reads at run time):
 OPENROUTER_KEY=sk-or-… node --experimental-strip-types --input-type=module -e '
 import { openDatabase } from "./src/server/db.ts";
 import { createInferenceStores } from "./src/server/brain.ts";
-const db = openDatabase("./loops.db");
-const { harnessStore } = createInferenceStores(db, "./loops.db");
+const db = openDatabase(process.env.LOOPS_DB ?? "./loops.db");
+const { harnessStore } = createInferenceStores(db, process.env.LOOPS_DB ?? "./loops.db");
 const h = harnessStore.create({
   name: "openrouter-main",
   provider: "openrouter",
