@@ -6,3 +6,8 @@ Find loops…
 My loops
 Loops are available on Business and Enterprise plans
 Notes saved by Linear Agent from previous runs
+
+# Route canaries (issue #177): one matcher-declared route with an optional
+# param, one route-table registration. Route-extraction regression fails red.
+route:/:orgKey/loops/:viewType?
+route:/:orgKey/automation/:automationId/run/:runId

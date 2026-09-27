@@ -150,15 +150,29 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     if let Some(canary_path) = canaries {
         let list_text = fs::read_to_string(canary_path)
             .map_err(|e| format!("read canaries {}: {}", canary_path.display(), e))?;
-        let canary_list: Vec<String> = list_text
+        // Two canary kinds (#177): plain lines are COPY canaries; lines
+        // prefixed `route:` are ROUTE canaries checked against app.routes,
+        // so a route-extraction regression fails as loudly as a copy one.
+        let canary_list: Vec<(bool, String)> = list_text
             .lines()
             .map(str::trim)
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
-            .map(str::to_string)
+            .map(|l| match l.strip_prefix("route:") {
+                Some(r) => (true, r.trim().to_string()),
+                None => (false, l.to_string()),
+            })
             .collect();
         if !canary_list.is_empty() {
             // one pass over every chunk, all canaries at once
             let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
+            // a registration route may live only in analysis/routes.json
+            // (the analyzer's index), not as a chunk literal: count that as
+            // corpus presence for route canaries.
+            for (i, (is_route, c)) in canary_list.iter().enumerate() {
+                if *is_route && routes_text.contains(&format!("\"{}\"", c)) {
+                    in_corpus[i] = true;
+                }
+            }
             for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))? {
                 let entry = entry.map_err(|e| format!("read {}: {}", client_dir.display(), e))?;
                 let name = entry.file_name().to_string_lossy().to_string();
@@ -166,24 +180,40 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                     continue;
                 }
                 let Ok(text) = fs::read_to_string(entry.path()) else { continue };
-                for (i, c) in canary_list.iter().enumerate() {
-                    if !in_corpus[i] && text.contains(c.as_str()) {
+                for (i, (is_route, c)) in canary_list.iter().enumerate() {
+                    if in_corpus[i] {
+                        continue;
+                    }
+                    // a route literal sits in a backtick template string
+                    let hit = if *is_route {
+                        text.contains(&format!("`{}`", c)) || text.contains(&format!("`{}", c))
+                    } else {
+                        text.contains(c.as_str())
+                    };
+                    if hit {
                         in_corpus[i] = true;
                     }
                 }
             }
-            let extracted: std::collections::BTreeSet<&str> = facts
+            let extracted_copy: std::collections::BTreeSet<&str> = facts
                 .surfaces
                 .values()
                 .flat_map(|s| s.copy.iter().map(String::as_str))
                 .collect();
+            let extracted_routes: std::collections::BTreeSet<&str> = facts
+                .surfaces
+                .values()
+                .flat_map(|s| s.routes.iter().map(String::as_str))
+                .collect();
             let mut problems: Vec<String> = Vec::new();
             let mut passed = 0;
-            for (i, c) in canary_list.iter().enumerate() {
+            for (i, (is_route, c)) in canary_list.iter().enumerate() {
+                let extracted = if *is_route { &extracted_routes } else { &extracted_copy };
+                let kind = if *is_route { "route" } else { "copy" };
                 if !in_corpus[i] {
-                    problems.push(format!("canary absent from corpus (drift — refresh the canary list or the corpus): {:?}", c));
+                    problems.push(format!("{} canary absent from corpus (drift — refresh the canary list or the corpus): {:?}", kind, c));
                 } else if !extracted.contains(c.as_str()) {
-                    problems.push(format!("canary in corpus but NOT extracted (copy-grammar regression): {:?}", c));
+                    problems.push(format!("{} canary in corpus but NOT extracted ({}-extraction regression): {:?}", kind, kind, c));
                 } else {
                     passed += 1;
                 }
@@ -296,11 +326,13 @@ fn extract_route_literals(text: &str) -> Vec<String> {
         let Some(end) = after.find('`') else { break };
         let route = &after[..end];
         rest = &after[end + 1..];
-        // route paths: segments of word chars, dashes, and :params
+        // route paths: segments of word chars, dashes, :params, and optional
+        // params (`:viewType?` — issue #177: without `?` the loops LIST route
+        // and `/:orgKey/agent/:conversationId?` were dropped whole).
         if !route.is_empty()
             && route
                 .chars()
-                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '/' | ':' | '-' | '_'))
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '/' | ':' | '-' | '_' | '?'))
         {
             out.push(route.to_string());
         }
