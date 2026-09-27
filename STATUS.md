@@ -3,7 +3,7 @@
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: R2 (feature matrix).**
+**Phase: R3 (skeleton).**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
@@ -19,10 +19,8 @@ Done 2026-09-27:
   drift check only.
 
 Now:
-- R2 feature matrix (in progress: sess_01a0e2c0-4c63-70a3-a057-cc1ded6f0665):
-  enumerate every Loops feature from the corpus (routes, ops, models) plus
-  KNOWLEDGE.md into docs/feature-matrix.md. The golden-goose chat-route trace
-  (issue #14) starts here.
+- R3 skeleton (take it per AGENTS.md): fresh src/ (server, UI shell, connect)
+  per SPECS/target-architecture.md, built against docs/feature-matrix.md.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 

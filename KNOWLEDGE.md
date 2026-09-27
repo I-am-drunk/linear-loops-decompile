@@ -1,16 +1,16 @@
-# KNOWLEDGE — verified by decompiling Linear 1.32.4 (2026-09-26)
+# KNOWLEDGE - verified by decompiling Linear 1.32.4 (2026-09-26)
 
 Ground truth from the session that created this repo. Method: downloaded the macOS app,
 extracted the Electron asar, then crawled the ENTIRE production web client (1,550 chunks,
 29.2 MB) from static.linear.app and read the minified code directly. §=section; specs in
 `SPECS/` build on this. Nothing here is guesswork; where something is inference it says so.
 
-## §1. Desktop app (thin shell — no loops inside)
+## §1. Desktop app (thin shell - no loops inside)
 
 - DMG: `https://releases.linear.app/mac` → `Linear-1.32.4-universal.dmg` (213 MB, HFS+,
   extract with 7z on Linux; it prints a header error but extraction works).
 - `Linear.app` = Electron (`NSPrincipalClass=AtomApplication`), universal x86_64+arm64.
-- `Resources/app.asar` is only **775 KB** — `@linear/desktop@1.32.4`, deps: `@electron/remote`.
+- `Resources/app.asar` is only **775 KB** - `@linear/desktop@1.32.4`, deps: `@electron/remote`.
   It contains: auto-updater (electron-updater/Squirrel.Mac, feed releases.linear.app),
   window/tab/menu management, Sentry, notifications, deep-link routing, terminal launcher.
   **No loop/agent logic whatsoever.**
@@ -22,13 +22,13 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   patching the asar requires editing the plist + ad-hoc re-signing, and auto-update reverts
   it. Pointless anyway (nothing to patch).
 - Full IPC bridge (preload `ElectronBridge`, ~60 channels): tabs/windows/theme/dock badge/
-  updater/file dialogs/notifications — and `runTerminalCommand` (see §5).
+  updater/file dialogs/notifications - and `runTerminalCommand` (see §5).
 - Menu has "Agent chat…" (`desktop-create-agent-chat` → forwarded to the web app).
 
 ## §2. Web client bundle (where everything lives)
 
 - Entry: `https://linear.app/login` (and `/auth/desktop`) loads
-  `https://static.linear.app/client/assets/html.<HASH>.js` — Vite/rolldown build.
+  `https://static.linear.app/client/assets/html.<HASH>.js` - Vite/rolldown build.
   BFS-crawling `assets/*.js` refs (`__vite__mapDeps`) yields the full app:
   **1,550 chunks, 29.2 MB. No source maps published.**
 - **Single config module** (`config.<HASH>.js`) holds ALL endpoints as flat `VITE_*` consts
@@ -38,7 +38,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   `API_SERVER_URL=https://client-api.linear.app`,
   `CLIENT_URL=https://linear.app`, `ASSET_URL=https://static.linear.app/client/`,
   `START_SERVICE_WORKER=true`. Re-pointing the client = rewriting this ONE file.
-- Client architecture: local-first **sync engine (LSE)** — models hydrate from
+- Client architecture: local-first **sync engine (LSE)** - models hydrate from
   `restModelsStream` HTTP endpoints + live updates over the sync socket (§4); mutations go
   out as GraphQL; plan/feature gating is evaluated CLIENT-SIDE from Organization fields.
 - **Client-side gating** (Organization model getters):
@@ -60,7 +60,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   favorite, trustedSourceKeys, prompt, isBasicAutomation, effectiveOwner, effectiveTeamId,
   effectiveTeam, hasUnknownEffectiveTeam, runs`.
 - Schedules: separate **`WorkflowCronJobDefinition`** (`name, description, enabled,
-  activities, schedule, team, creator, sortOrder`) — server-side cron.
+  activities, schedule, team, creator, sortOrder`) - server-side cron.
 - Trigger model (from AutomationHelper): `triggerType` ∈ `schedule | chat | event-ish`;
   events carry `activationMode` ∈ `collectionChanged | watchedPropertyChanged`;
   conditions support `watchedProperties`, `collectionChange{property,operation}`,
@@ -77,7 +77,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   `aiConversationDebugBraintrustUrl`, `evalLogId`; billing: `freeLoopCreditUsd`,
   `loopRunStats { totalRuns, stats { date, completedRuns, failedRuns, amount } }`.
   Braintrust = their LLM observability vendor. The brain CANNOT be swapped; there is no
-  model/provider field anywhere in the loop config — verified.
+  model/provider field anywhere in the loop config - verified.
 - Loop routes: `/:orgKey/loop/:loopId/runs`, `/:orgKey/loop/:loopId/run/:runId`
   (+ `/agent-loops` deep-link path). Pages: `AutomationPage`, `AutomationRunsPage`,
   `AutomationsList`, `AutomationNewButton`, `AutomationInboxView`,
@@ -91,7 +91,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - Notifications for run lifecycle: `agentAutomationRunResponse`,
   `agentAutomationUserMessage`, `agentAutomationFailedToRun`, `agentAutomationDisabled`.
 
-## §4. Sync protocol (LSE) — documented so we know what we are NOT building
+## §4. Sync protocol (LSE) - documented so we know what we are NOT building
 
 - Socket `wss://sync.linear.app`; handshake `{cmd:"hshk", userId, userAccountId,
   clientType, clientDatabaseId, protocolVersion:3, clientVersion, useBinaryProtocol:true,
@@ -108,7 +108,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - **We replace all of this with T3 connect** (SPECS/t3-connect.md): our UI and server are
   both ours, so a small typed WS RPC + server-authoritative SQLite is sufficient.
 
-## §5. Agent sessions & coding harness (adjacent system — reuse ideas)
+## §5. Agent sessions & coding harness (adjacent system - reuse ideas)
 
 - `AgentSession` fields incl. `appUser, issue, comment, sourceComment, status, startedAt,
   endedAt, summary, displayTitle, modelSelection, agentActivities, externalUrls, plan,
@@ -127,7 +127,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   per harness). Sandbox sizes: Small 1vCPU/8GB, Medium 2/16, Large 4/32. Sessions expose
   `AgentSessionSshAddress`, `AgentSessionSandbox`, `AgentSessionCodingHarness(ModelLabel)`.
 - Workspace `linearAgentSettings = { webSearchEnabled, mcpServersEnabled, mcpServersMode,
-  mcpServersAllowlist }` — MCP connectors are workspace-level for Linear Agent + Loops.
+  mcpServersAllowlist }` - MCP connectors are workspace-level for Linear Agent + Loops.
 - Desktop "open in coding tool" hook (the one real local extension point):
   `~/.linear/coding-tools.json` → `{openIssue:{path,args[],env[]}}`; allowlisted commands
   `amp|claude|codex|opencode|custom`; template vars `{{prompt}} {{workDir}}
@@ -139,10 +139,10 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 
 ## §6. Linear public API facts (for our dataplane)
 
-- Public API: `https://api.linear.app/graphql` — PAT (Settings → API) or OAuth2; personal
+- Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
   keys act as the user. Rate limit ≈ 2,500 req/h/user (batch + budget). Webhooks
   configurable per workspace for issue/comment/project/etc. changes.
-- The CLIENT's API (client-api.linear.app) is the sync frontend — not for us.
+- The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /
   `agentSessionCreateOnComment` for proactive sessions; activities (thought/action/
@@ -154,18 +154,39 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - Linear ships the client continuously; chunks are content-hashed. Expect drift; R1
   re-verifies counts on each refresh (1,550 chunks / 87 models / 258 ops @ 2026-09-26).
 - The marketing site (linear.app homepage) is a SEPARATE build (`/web/_next/static/`,
-  ~535 chunks) — plan features/pricing strings live there (`agentAutomations: "Loops"`).
+  ~535 chunks) - plan features/pricing strings live there (`agentAutomations: "Loops"`).
 
 
 ---
+
+## §8. The chat substrate (2026-09-27 corpus re-verification; the golden goose)
+
+- Loop chat and normal AI chat are the SAME substrate: `AiConversation` carries both
+  `workflowDefinition` and `loopExecution` links plus an `isWorkflowRun` flag
+  (models.json). A loop run IS an AiConversation.
+- Sending a message is ONE mutation: `AiConversationSendMessage(input)` returning
+  `success`, `lastSyncId`, `aiConversation.id`, `userMessage.id`,
+  `assistantMessage.id`. Related ops: `AiConversationCancel`,
+  `AiConversationSendElicitationResponses`, `AddUserMessageToAiPromptProgress`,
+  `AiConversationsQuery`.
+- **Zero GraphQL subscriptions exist in the entire 1,550-chunk bundle.** Turn
+  streaming arrives over the LSE sync queue (`wss://sync.linear.app`; the
+  `lastSyncId` acknowledgement model, SPECS/sync-protocol.md). To reproduce the
+  chat exactly we reproduce the sync-channel consumption, not a subscription API.
+- The credit gate lives on the loop/workflow side
+  (`RegisterLoopRunUsageCostTarget`, `FreeLoopCredit`, `LoopLimitsPage`), not on
+  `AiConversationSendMessage` itself. Whether send is credit-gated server-side for
+  loop-linked conversations remains an open probe question (issue #14).
+- 2026-09-27 re-run of the pipeline on Linear v1.32.4: 1,550 chunks, 258 ops,
+  87 models, zero drift vs the 2026-09-26 baseline.
 
 ## Drift log (two-source cross-check, COORDINATION §9)
 
 - **2026-09-27 (agent-04@gen6):** R1 drift-watch re-check. `schema.graphql` +
   `_generated_documents.graphql` re-fetched from `linear/linear@main`:
-  **byte-identical — zero drift.** Live `linear.app/developers/agent-interaction`
+  **byte-identical - zero drift.** Live `linear.app/developers/agent-interaction`
   re-read against the digest: 6 session states, 5 emittable activity types,
-  signals, `externalLink` deprecation — all match. Digest completeness delta FIXED
+  signals, `externalLink` deprecation - all match. Digest completeness delta FIXED
   in `extracts/linear-official/AGENT-API.md`: op inventory 9 → **12**
   (+ `agentSessionCreate`, `agentActivityCreatePrompt`, `issueRepositorySuggestions`),
   plus Agent Plans (tech preview) and ephemeral activities. Consumers flagged on
@@ -174,9 +195,9 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - **2026-09-27 (agent-01@gen4):** Linear's OFFICIAL Agent Sessions surface is public
   (Developer Preview) and vendored at `extracts/linear-official/` (MIT): schema +
   577 ops + digest. Convergence with this file's decompile-derived model: session
-  states 5/6 exact (official adds `stale`; our runtime's `canceled` is the delta —
+  states 5/6 exact (official adds `stale`; our runtime's `canceled` is the delta -
   fix tracked), activity types 5/6 exact (`prompt` = inbound by design). The 9
   official agent ops are unimplemented (the #14 gap, now fully documented).
   `WorkflowDefinition` IS in the official schema as a type but has **zero public
-  queries/mutations** — Loops internals remain decompile-only; this file's "the
+  queries/mutations** - Loops internals remain decompile-only; this file's "the
   brain is server-side / loops config not exposed" conclusion STANDS.
