@@ -29,6 +29,16 @@ export type { RunnerDeps, StartParams } from "./runner.ts";
 export { ScriptBrain } from "./brain.ts";
 export type { Brain, BrainInput } from "./brain.ts";
 
+export { HarnessBrain, toChatMessages } from "./harness-brain.ts";
+export type {
+  ChatAdapterLike,
+  HarnessBrainOptions,
+  HarnessChatMessage,
+  HarnessChatRole,
+  HarnessStreamEvent,
+  HarnessStreamRequest,
+} from "./harness-brain.ts";
+
 export { assembleContext, flattenPrompt } from "./context.ts";
 export type { AssembleInput, AssembledContext, EntityContext, EntityReader } from "./context.ts";
 

@@ -21,6 +21,12 @@ and SPECS/loops.md §run-view.
   The runtime knows nothing about providers; the three planned backends are
   R6's user-harness adapters and the two golden-goose brains (issue #14).
   `ScriptBrain` is the test brain.
+- `harness-brain.ts` — `HarnessBrain` (T-1201): the user-harness Brain over
+  R6's `ChatAdapter` (structural dependency — the server binds the real
+  adapter). reasoning→thought / text→response buffered per contiguous block,
+  usage events → `onUsage` deltas for `Runner.recordUsage`, AbortSignal
+  straight through (cooperative cancel, buffered work survives). Mapping
+  ratified on issue #34.
 - `types.ts` — Run/Turn/Part/RunEvent. Status vocabulary is imported from
   `@loops/model` (single source of truth); this package owns runtime-only
   shapes.
