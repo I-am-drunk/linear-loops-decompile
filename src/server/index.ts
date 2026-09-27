@@ -16,12 +16,16 @@
 
 import type { Server } from "node:http";
 import { Runner } from "../runtime/runner.ts";
+import type { Brain } from "../runtime/brain.ts";
+import type { WorkflowDefinition } from "../model/loop.ts";
+import type { HarnessSettingsStore } from "../inference/src/index.ts";
 import { openDatabase } from "./db.ts";
 import type { Database } from "./db.ts";
 import { createHttpServer } from "./http.ts";
 import type { HttpOptions } from "./http.ts";
 import { Store } from "./store.ts";
 import { restoreRuns } from "./persistence.ts";
+import { createBrainFor, createInferenceStores } from "./brain.ts";
 
 export interface LoopsServerOptions extends HttpOptions {
   /** SQLite file path, or ":memory:" (tests). Defaults to ./loops.db. */
@@ -33,6 +37,13 @@ export interface LoopsServer {
   db: Database;
   store: Store;
   runner: Runner;
+  /**
+   * R6 brain seam (T-1105): per-loop Brain factory bound to the persisted
+   * harness settings — the orchestrator's `brainFor` dependency.
+   */
+  brainFor: (loop: WorkflowDefinition) => Brain;
+  /** Inference harness settings (write-only secrets) — the settings-RPC seam. */
+  harnessStore: HarnessSettingsStore;
   /** Number of runs restored from snapshots at boot. */
   restoredRuns: number;
   listen(port: number, host?: string): Promise<number>;
@@ -40,17 +51,22 @@ export interface LoopsServer {
 }
 
 export function createLoopsServer(options: LoopsServerOptions = {}): LoopsServer {
-  const db = openDatabase(options.dbPath ?? "./loops.db");
+  const dbPath = options.dbPath ?? "./loops.db";
+  const db = openDatabase(dbPath);
   const store = new Store(db);
   const runner = new Runner();
   const restoredRuns = restoreRuns(runner, store);
   const server = createHttpServer(options);
+  const { harnessStore } = createInferenceStores(db, dbPath);
+  const brainFor = createBrainFor({ harnessStore, runner });
 
   return {
     server,
     db,
     store,
     runner,
+    brainFor,
+    harnessStore,
     restoredRuns,
     listen(port, host) {
       return new Promise((resolve, reject) => {
