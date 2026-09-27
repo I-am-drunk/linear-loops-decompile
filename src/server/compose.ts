@@ -39,6 +39,7 @@ import type { WorkflowDefinition } from "../model/loop.ts";
 import { createOrchestrator, definitionFor } from "./orchestrator.ts";
 import type { Orchestrator, WriteBackSink } from "./orchestrator.ts";
 import { createRunEventPublisher, registerDomainRpcs } from "./rpcs.ts";
+import { registerSettingsRpcs } from "./settings-rpc.ts";
 import { createLoopsServer } from "./index.ts";
 import type { LoopsServer, LoopsServerOptions } from "./index.ts";
 import type { Store } from "./store.ts";
@@ -98,6 +99,10 @@ export interface LiveLoopsServerOptions extends LoopsServerOptions {
   descriptor?: Partial<EnvironmentDescriptor> | undefined;
   /** Loop id minting for loops.upsert creates (tests: deterministic ids). */
   idgen?: (() => string) | undefined;
+  /** settings.get's Linear section — agent-08 wires the real status seam. */
+  linearStatus?: (() => unknown) | undefined;
+  /** Inference probe fetch seam (tests); default global fetch. */
+  fetchFn?: typeof fetch | undefined;
 }
 
 export interface LiveLoopsServer extends LoopsServer {
@@ -152,6 +157,11 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     runner: base.runner,
     orchestrator,
     ...(options.idgen !== undefined ? { idgen: options.idgen } : {}),
+  });
+  registerSettingsRpcs(channel, {
+    harnessStore: base.harnessStore,
+    ...(options.linearStatus !== undefined ? { linearStatus: options.linearStatus } : {}),
+    ...(options.fetchFn !== undefined ? { fetchFn: options.fetchFn } : {}),
   });
   channel.attach(base.server);
   const bootLoops = orchestrator.reloadLoops();

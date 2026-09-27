@@ -27,15 +27,20 @@ const ALL_SCOPES: Scope[] = [
 
 const port = Number(process.env["PORT"] ?? 7373);
 const tickMs = Number(process.env["TICK_MS"] ?? 30_000);
-
-const live = createLiveLoopsServer({ dbPath: process.env["LOOPS_DB"] ?? "./loops.db" });
+const live = createLiveLoopsServer({
+  dbPath: process.env["LOOPS_DB"] ?? "./loops.db",
+  // STATIC_DIR serves the built UI same-origin (the UI's connect url derives
+  // from location.host) — e.g. STATIC_DIR=src/ui/dist after `npm run build`.
+  ...(process.env["STATIC_DIR"] !== undefined ? { staticDir: process.env["STATIC_DIR"] } : {}),
+});
 const { token } = live.tokens.mint({ scopes: ALL_SCOPES });
 const bound = await live.listen(port, "127.0.0.1");
 
 console.log(`loops-server listening on http://127.0.0.1:${bound}`);
 console.log(`boot loops: ${live.bootLoops.scheduled} scheduled · ${live.bootLoops.event} event · ${live.bootLoops.chat} chat`);
 console.log(`connect token (operator bootstrap): ${token}`);
-console.log(`UI deep link: ?t3url=ws://127.0.0.1:${bound}/connect&t3token=${token}`);
+// The UI reads ?connectToken= (src/ui/src/live/client.ts) and persists it.
+console.log(`UI deep link: http://127.0.0.1:${bound}/?connectToken=${token}`);
 
 if (tickMs > 0) {
   const timer = setInterval(() => {
