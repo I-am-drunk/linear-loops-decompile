@@ -31,7 +31,7 @@ fn extract(tmp: &std::path::Path) -> PathBuf {
     );
     let text = String::from_utf8(out.stdout).unwrap();
     assert!(text.contains("extract:"), "unexpected stdout: {}", text);
-    assert!(text.contains("canaries: 1/1 pass"), "canary enforcement ran: {}", text);
+    assert!(text.contains("canaries: 3/3 pass"), "canary enforcement ran: {}", text);
     reference
 }
 
@@ -45,6 +45,10 @@ fn extract_produces_expected_reference_facts() {
 
     // routes: loops routes kept, non-loops and fragment routes dropped
     assert!(text.contains("/:orgKey/loop/:loopId/runs"));
+    assert!(
+        text.contains("/:orgKey/loops/:viewType?"),
+        "optional-param matcher route extracted (issue #177)"
+    );
     assert!(text.contains("/:orgKey/loop/:loopId"));
     assert!(text.contains("app.routes"), "routes surface present");
     assert!(text.contains("theme.tokens"), "theme surface present");
