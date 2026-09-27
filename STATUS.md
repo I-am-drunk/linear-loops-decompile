@@ -80,6 +80,15 @@ Done 2026-09-27 (evening, freeze-era):
   complete vault corpus: 38 surfaces · 43 routes · 857 copy · 657 edges ·
   137 tokens, canaries 7/7.
 
+USER DIRECTIVE 2026-09-27 (late, issue #220): the parity compare-DNA is
+corrected. Grammar-extracted set-compare (routes/copy/…/states) DEMOTES to
+drift-canary tier; the ACCEPTANCE bar is now hand-verified golden tests
+computed by executing the corpus code (#215 pattern, generalized). Plan-of-
+record: #220 (G0 spec claimed by sess_01a0e4cb-0cdc-7797-b503-a67080b81c96;
+G1 corpus-exec, G2 golden leg + coverage ledger, G3 theme retrofit, G4 first
+rendered-component golden are OPEN — claim on #220). H3 family expansion
+beyond what is merged is ON HOLD; #218 reframes as G3.
+
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
 - H1 follow-ups: #177 closed (routes.json union + `?` params landed via
   #171/#189/#181). declaredIn route tagging LANDED (#208

@@ -62,11 +62,20 @@ track builds that proof, then restarts the R sequence behind it. Work items:
   `extracts/linear-official/docs-site/` + citation rule + docs drift check.
   (The upstream-vendored `docs/*.md` are stubs; never cite them.)
 
-FREEZE EXIT (all four): #171 merged with `parity check` in the gate; #168
-merged with golden vectors matching corpus execution; one surface rebuilt
-end-to-end carrying `src/ui/ui-facts.json` with `parity check` green (the
-pattern every later slice copies); the R3.4 shell either brought to green or
-archived like v0.
+- G track — golden-tier acceptance bar (user directive 2026-09-27, issue
+  #220): the extract→compare families demote to drift canaries; the bar
+  becomes hand-verified golden tests whose expected values are computed by
+  EXECUTING the corpus code (the #215 pattern, generalized). Slices: G0 spec
+  rewrite · G1 `tools/corpus-exec` · G2 golden manifests + `parity check`
+  golden leg + coverage ledger · G3 generateTheme retrofit (subsumes #218) ·
+  G4 first rendered-component golden.
+
+FREEZE EXIT (amended by #220): #171 merged with `parity check` in the gate
+(done); #168 merged with golden vectors matching corpus execution (done);
+G1+G2 landed; one surface rebuilt end-to-end whose modules carry hand-verified
+golden manifests with the golden leg green (the pattern every later slice
+copies — `ui-facts.json` alone no longer suffices); the R3.4 shell either
+brought to golden-green or archived like v0.
 
 ## R4: loops domain slices (post-freeze; trigger model CORRECTED)
 
