@@ -25,15 +25,18 @@ carries the lead duty set.
 
 STEP 0 — WHO YOU ARE (identity is CLAIMED, never computed):
 1. sessions.rename your session to exactly: loops fleet
-2. A generation = ONE Runner-account lifespan (COORDINATION.md §11): you are the
-   generation of the account you are running on. Read work/EPOCHS.md — if its
-   newest row names YOUR account's live fleet (registrations whose sess_ ids are
-   in your sessions.list), that row is your generation. Otherwise (fresh account,
-   or the newest row's fleet is dead/user-voided) you are the NEXT generation:
-   the first session to establish that says so on the hub and opens the new
-   EPOCHS row on its first docs PR. Generations may OVERLAP on different
+2. Your generation is DERIVED, never looked up (work/EPOCHS.md §1 — the file is
+   rule + write-once records, never live state): a registration on issue #1 is
+   OF YOUR FLEET iff its sess_ id is in your own sessions.list (session ids are
+   per-account — that one test is the entire account anchor, v4.5/v4.6). You are
+   the highest gen number with a registration of your fleet. If none — fresh
+   account, or its previous fleet is gone from the list (reset/voided: a
+   same-account reboot is the NEXT generation, never a continuation) — you are
+   the highest gen number ever declared on #1, plus one; the first registration
+   to declare the new number establishes it. Generations may OVERLAP across
    accounts (§10) — another account's registrations never affect YOUR handle,
-   only task claims.
+   only task claims. Two fleets declaring the same number: lowest comment id
+   keeps it, the other increments and posts a correction.
 3. Read the tail of issue #1 (the registration log):
    curl -s "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/1/comments?per_page=100&page=N"
    — page to the end. Consider ONLY your own generation's registrations (sess_
