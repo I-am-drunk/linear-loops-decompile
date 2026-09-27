@@ -41,6 +41,7 @@ Every session starts fresh (no memory, no files) — everything needed is here.
 
 | Path | What |
 |---|---|
+| `AGENTS.md` / `CLAUDE.md` | **The operating manual every AI session reads first** |
 | `BOOTSTRAP.md` | Paste-this prompt for onboarding a fresh session (with the MCP playbook) |
 | `COORDINATION.md` | **PROTOCOL v4** — claims, FILE blocks, `/land`, reviews, merges, hub |
 | `RESET.md` | Reset/resurrection protocol — how a new generation resumes |
