@@ -278,3 +278,75 @@ test("operator acceptance: after setLinear, an event run writes back through the
     await rig.close();
   }
 });
+
+test("setInference delete/setDefault ops + draft probe + dup-name + credential refusal (agent-06 delta)", async () => {
+  const rig = await makeRig();
+  try {
+    const client = await authed(rig);
+
+    const a = (await client.request("settings.setInference", {
+      input: { name: "A", provider: "openrouter", model: "m1" },
+    })) as { harness: { id: string } };
+    const b = (await client.request("settings.setInference", {
+      input: { name: "B", provider: "openrouter", model: "m2" },
+    })) as { harness: { id: string } };
+
+    // setDefault op
+    const def = (await client.request("settings.setInference", { op: "setDefault", id: b.harness.id })) as {
+      harness: { isDefault: boolean };
+    };
+    assert.equal(def.harness.isDefault, true);
+
+    // delete op (+ unknown id → not_found)
+    const del = (await client.request("settings.setInference", { op: "delete", id: b.harness.id })) as {
+      ok: boolean;
+      harnesses: unknown[];
+    };
+    assert.equal(del.ok, true);
+    assert.equal(del.harnesses.length, 1);
+    const delMissing = await client.request("settings.setInference", { op: "delete", id: "nope" }).then(
+      () => null,
+      (e: Error & { code?: string }) => e,
+    );
+    assert.equal((delMissing as Error & { code?: string }).code, "not_found");
+
+    // duplicate name → invalid_params (never a raw sqlite error)
+    const dup = await client.request("settings.setInference", {
+      input: { name: "A", provider: "openrouter", model: "m9" },
+    }).then(
+      () => null,
+      (e: Error & { code?: string }) => e,
+    );
+    assert.equal((dup as Error & { code?: string }).code, "invalid_params");
+    assert.match((dup as Error).message, /already exists/i);
+
+    // credential-named extraHeaders refused — write path AND draft probe
+    const hdr = await client.request("settings.setInference", {
+      input: { name: "H", provider: "openrouter", model: "m", extraHeaders: { Authorization: "Bearer x" } },
+    }).then(
+      () => null,
+      (e: Error & { code?: string }) => e,
+    );
+    assert.equal((hdr as Error & { code?: string }).code, "invalid_params");
+    const hdrDraft = await client.request("settings.testInference", {
+      draft: { name: "D", provider: "openrouter", model: "m", extraHeaders: { "X-Api-Key": "k" } },
+    }).then(
+      () => null,
+      (e: Error & { code?: string }) => e,
+    );
+    assert.equal((hdrDraft as Error & { code?: string }).code, "invalid_params");
+
+    // draft probe: works, and persists nothing
+    const probe = (await client.request("settings.testInference", {
+      draft: { name: "D", provider: "openrouter", model: "m", apiKey: "sk-draft" },
+    })) as { ok: boolean; models?: string[] };
+    assert.equal(probe.ok, true);
+    assert.deepEqual(probe.models, ["m-1", "m-2"]);
+    const got = (await client.request("settings.get", {})) as { harnesses: unknown[] };
+    assert.equal(got.harnesses.length, 1); // only "A" — the draft never persisted
+
+    client.close();
+  } finally {
+    await rig.close();
+  }
+});

@@ -48,7 +48,7 @@ import type { ChatAdapter } from "../inference/src/adapters/types.ts";
 import type { HarnessSettingsStore } from "../inference/src/store.ts";
 import type { SecretStore } from "../inference/src/secrets.ts";
 import type { HarnessSettings } from "../inference/src/settings.ts";
-import { CreateHarnessInputSchema, UpdateHarnessInputSchema } from "../inference/src/settings.ts";
+import { CreateHarnessInputSchema, DEFAULT_BASE_URLS, UpdateHarnessInputSchema } from "../inference/src/settings.ts";
 import { SettingsValidationError } from "../inference/src/errors.ts";
 import type { EntityReader } from "../runtime/context.ts";
 import type { RunTarget } from "../runtime/types.ts";
@@ -117,6 +117,36 @@ function redact(message: string, secrets: (string | null)[]): string {
   return out;
 }
 
+/**
+ * Header names that carry credentials. Credential material belongs in the
+ * write-only apiKey field (encrypted at rest, never echoed) — an
+ * `authorization`/`x-api-key` entry in extraHeaders WOULD be echoed back by
+ * settings.get (CWE-200), so it is refused at write time and at draft
+ * probe time. Every supported provider's auth rides the apiKey field
+ * already (Bearer / x-api-key set by the adapters themselves).
+ * (agent-06's #128 hardening, ported.)
+ */
+const CREDENTIAL_HEADER_NAMES: ReadonlySet<string> = new Set([
+  "authorization",
+  "x-api-key",
+  "api-key",
+  "apikey",
+  "proxy-authorization",
+]);
+
+function assertNoCredentialHeaders(input: unknown): void {
+  const headers = (input as { extraHeaders?: unknown } | null)?.extraHeaders;
+  if (typeof headers !== "object" || headers === null) return;
+  for (const name of Object.keys(headers as Record<string, unknown>)) {
+    if (CREDENTIAL_HEADER_NAMES.has(name.toLowerCase())) {
+      throw new RpcError(
+        RPC_ERRORS.INVALID_PARAMS,
+        `extraHeaders."${name}" carries credentials — use the write-only apiKey field (credentials are never echoed)`,
+      );
+    }
+  }
+}
+
 export function createSettingsBinding(deps: SettingsBindingDeps): SettingsBinding {
   const now = deps.now ?? (() => new Date());
   let currentClient: LinearClient | null = null;
@@ -179,11 +209,39 @@ export function createSettingsBinding(deps: SettingsBindingDeps): SettingsBindin
 
       channel.register("settings.setInference", (p) => {
         const prm = params(p);
+        // Ops (additive over the {id?, input} upsert shape — T-802's
+        // onDelete/onSetDefault intents; agent-06's #128 delta): absent op
+        // means upsert, exactly as before.
+        const op = prm["op"] ?? "upsert";
         const id = prm["id"];
         if (id !== undefined && (typeof id !== "string" || id.length === 0)) {
           throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "settings.setInference id must be a non-empty string when present");
         }
+        if (op === "delete" || op === "setDefault") {
+          if (id === undefined) {
+            throw new RpcError(RPC_ERRORS.INVALID_PARAMS, `settings.setInference ${String(op)} needs { id }`);
+          }
+          try {
+            if (op === "delete") {
+              if (!deps.harnessStore.remove(id)) {
+                throw new RpcError(RPC_ERRORS.NOT_FOUND, `unknown harness: ${id}`);
+              }
+              return { ok: true, harnesses: deps.harnessStore.list() };
+            }
+            return { harness: deps.harnessStore.setDefault(id) };
+          } catch (error) {
+            if (error instanceof RpcError) throw error;
+            if (error instanceof Error && error.message.includes("not found")) {
+              throw new RpcError(RPC_ERRORS.NOT_FOUND, error.message);
+            }
+            throw error;
+          }
+        }
+        if (op !== "upsert") {
+          throw new RpcError(RPC_ERRORS.INVALID_PARAMS, 'settings.setInference needs { op: "upsert" | "delete" | "setDefault" }');
+        }
         try {
+          assertNoCredentialHeaders(prm["input"] ?? prm);
           if (id !== undefined) {
             const input = UpdateHarnessInputSchema.parse(prm["input"] ?? prm);
             return { harness: deps.harnessStore.update(id, input) };
@@ -191,22 +249,59 @@ export function createSettingsBinding(deps: SettingsBindingDeps): SettingsBindin
           const input = CreateHarnessInputSchema.parse(prm["input"] ?? prm);
           return { harness: deps.harnessStore.create(input) };
         } catch (error) {
+          if (error instanceof RpcError) throw error;
           if (error instanceof SettingsValidationError || (error instanceof Error && error.name === "ZodError")) {
             throw new RpcError(RPC_ERRORS.INVALID_PARAMS, error.message);
+          }
+          if (error instanceof Error && error.message.includes("UNIQUE constraint failed")) {
+            // The store's name UNIQUE gate surfaces as a raw sqlite error —
+            // the wire deserves invalid_params (agent-06's #128 hardening).
+            throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "a harness with that name already exists");
           }
           throw error;
         }
       });
 
       channel.register("settings.testInference", async (p) => {
-        const id = params(p)["id"];
-        if (typeof id !== "string" || id.length === 0) {
-          throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "settings.testInference needs { id }");
+        const prm = params(p);
+        let settings: HarnessSettings;
+        let apiKey: string | null;
+        if (typeof prm["id"] === "string" && prm["id"].length > 0) {
+          const id = prm["id"];
+          const harness = deps.harnessStore.get(id);
+          if (harness === null) throw new RpcError(RPC_ERRORS.NOT_FOUND, `unknown harness: ${id}`);
+          // resolveForAdapter is the ONLY decrypt path (secrets.ts house rule).
+          ({ settings, apiKey } = deps.harnessStore.resolveForAdapter(id));
+        } else {
+          // Draft probe (T-802's onProbeModels on an UNSAVED draft — agent-06's
+          // #128 delta): validate like a create, build in-memory only — the
+          // draft key never touches the DB.
+          assertNoCredentialHeaders(prm["draft"]);
+          const parsed = CreateHarnessInputSchema.safeParse(prm["draft"]);
+          if (!parsed.success) {
+            throw new RpcError(RPC_ERRORS.INVALID_PARAMS, parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; "));
+          }
+          const draft = parsed.data;
+          const baseUrl = draft.baseUrl ?? DEFAULT_BASE_URLS[draft.provider];
+          if (baseUrl === null) {
+            throw new RpcError(RPC_ERRORS.INVALID_PARAMS, `baseUrl is required for provider "${draft.provider}"`);
+          }
+          settings = {
+            id: "draft",
+            name: draft.name,
+            provider: draft.provider,
+            baseUrl,
+            apiKeyRef: null,
+            model: draft.model,
+            effort: draft.effort,
+            extraHeaders: draft.extraHeaders,
+            allowInsecureHttp: draft.allowInsecureHttp,
+            isDefault: false,
+            createdAt: now().toISOString(),
+            updatedAt: now().toISOString(),
+          };
+          apiKey = draft.apiKey ?? null;
         }
-        const harness = deps.harnessStore.get(id);
-        if (harness === null) throw new RpcError(RPC_ERRORS.NOT_FOUND, `unknown harness: ${id}`);
-        // resolveForAdapter is the ONLY decrypt path (secrets.ts house rule).
-        const { settings, apiKey } = deps.harnessStore.resolveForAdapter(id);
         const started = now().getTime();
         try {
           const adapter = deps.chatAdapterFor(settings, apiKey);
