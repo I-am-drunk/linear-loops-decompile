@@ -289,3 +289,56 @@ fn extract_fails_loudly_on_unmatched_matrix_surface() {
     assert!(out.status.success(), "clean matrix passes: {}", String::from_utf8_lossy(&out.stderr));
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn extract_rejects_malformed_inventory_entry() {
+    // A chunks.json record without a string `file` is a broken inventory,
+    // not a skippable row: skipping could hide a missing chunk the matrix
+    // does not name and write an incomplete reference (CodeRabbit #210).
+    let tmp = std::env::temp_dir().join(format!("parity-test-badinv-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let corpus = copy_corpus(&tmp);
+    std::fs::write(
+        corpus.join("analysis/chunks.json"),
+        r#"[
+  { "file": "AutomationNewDialog.Wu-wKkiY.js", "bytes": 100, "components": [] },
+  { "bytes": 100, "components": [] },
+  { "file": "AutomationRunsPage.CwJzxL5C.js", "bytes": 100, "components": [] },
+  { "file": "ThemeProvider.BNrg3wTr.js", "bytes": 100, "components": [] }
+]"#,
+    )
+    .unwrap();
+    let out = extract_on(&corpus, &fixtures().join("docs/feature-matrix.md"), &tmp.join("reference.json"));
+    assert_ne!(out.status.code(), Some(0), "malformed inventory must fail extract");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("malformed inventory entry"), "names the failure: {}", stderr);
+    assert!(!tmp.join("reference.json").exists(), "no reference written");
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
+fn matrix_js_substring_token_is_not_a_surface() {
+    // `.js` must be a SUFFIX to make a token a chunk pattern: a token like
+    // `Component.js.md` in an alternate --matrix must not create a phantom
+    // surface that then fails the unmatched guard (CodeRabbit #210).
+    let tmp = std::env::temp_dir().join(format!("parity-test-jsmid-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let matrix = tmp.join("feature-matrix.md");
+    std::fs::write(
+        &matrix,
+        "# alt matrix — notes in `Component.js.md`\n\n\
+         | Feature | Corpus evidence | Status |\n|---|---|---|\n\
+         | New-loop dialog | `AutomationNewDialog.Wu-wKkiY.js` | corpus |\n\
+         | Runs page | `AutomationRunsPage.CwJzxL5C.js` | corpus |\n",
+    )
+    .unwrap();
+    let out = extract_on(&fixtures().join("corpus"), &matrix, &tmp.join("reference.json"));
+    assert!(
+        out.status.success(),
+        "mid-token .js must not become a surface: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let _ = std::fs::remove_dir_all(&tmp);
+}

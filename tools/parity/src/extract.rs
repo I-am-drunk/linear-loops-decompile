@@ -278,8 +278,16 @@ fn check_corpus_integrity(corpus: &Path) -> Result<(), String> {
     let mut missing: Vec<String> = Vec::new();
     let mut total = 0usize;
     for item in arr {
+        // The pipeline writes a string `file` for every chunk record: a
+        // malformed entry is a broken inventory, not a skippable row — if the
+        // matrix does not name the affected chunk, skipping would let
+        // extraction write an incomplete reference (CodeRabbit #210).
         let Some(file) = item.get("file").and_then(|v| v.as_str()) else {
-            continue;
+            return Err(format!(
+                "{}: malformed inventory entry (missing string `file`): {}",
+                inventory_path.display(),
+                crate::json::to_string(item).trim_end()
+            ));
         };
         total += 1;
         if !client_dir.join(file).is_file() {
@@ -330,7 +338,7 @@ fn chunk_matches(filename: &str, prefix: &str, exact: bool) -> bool {
 /// Surface patterns from the feature matrix. Two kinds:
 /// - exact component: `Name.HASH.js` or `Name.{H1,H2}.js` → matches chunks
 ///   named "<Name>.<anything>.js" (hashes rotate between corpus versions).
-/// - family prefix: any other Capitalized backticked token containing ".js",
+/// - family prefix: any other Capitalized backticked token ending in ".js",
 ///   "*" or "{" (e.g. `WorkspaceAgent(s)SettingsPage.*`, `AgentPanel*`) →
 ///   leading alphanumeric run, matched as a raw prefix.
 /// Returns (prefix, exact) pairs, sorted and deduped.
@@ -384,7 +392,10 @@ fn matrix_components(matrix: &str) -> Vec<(String, bool)> {
         // tokens in the matrix are GraphQL op shorthand
         // (`AutomationTrustedSources(WithUsage)`), not chunk patterns — they
         // parsed into phantom surfaces that match zero chunks (#205).
-        if tok.contains(".js") || tok.contains('*') || tok.contains('{') {
+        // `.js` must be a SUFFIX to trigger (a `Component.js.md` token in an
+        // alternate --matrix would otherwise create a phantom surface —
+        // CodeRabbit #210); `*` and `{` stay as the family/brace triggers.
+        if tok.ends_with(".js") || tok.contains('*') || tok.contains('{') {
             let prefix: String = tok.chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
             if !prefix.is_empty() && !out.iter().any(|(p, _)| p == &prefix) {
                 out.push((prefix, false));
