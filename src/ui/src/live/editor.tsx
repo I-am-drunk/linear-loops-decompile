@@ -3,8 +3,19 @@
  * connect seam. loop-new starts a blank draft and publishes to a fresh id
  * (then navigates to loop-detail); loop-detail loads the loop via loops.get
  * and publishes edits through saveLoop (upsert→publish). Offline/no-server
- * renders the same fixture demo as the pre-T-805 registry — first paint is
- * byte-identical; a failed or demo-mode publish surfaces inline.
+ * renders the fixture demo on the same markers the pre-T-805 smoke asserts;
+ * failures surface inline.
+ *
+ * Safety rules (CodeRabbit #112 pass):
+ * - Under a LIVE source the fixture draft is never publishable: until the
+ *   requested loop's record loads, the route shows a loading state (and on
+ *   failure, a load error) instead of demo data with a live Publish button.
+ * - A publish captures the submitted draft; the post-save reload updates
+ *   baseline/version and only replaces the draft when nothing was typed
+ *   after submission. A failed reload after a successful publish says so —
+ *   it never reports the write itself as failed.
+ * - Source selection retries after a failed initial connect, so a
+ *   transient failure doesn't pin the mounted editor to demo mode.
  *
  * v1 boundaries (deliberately small, revisited after T-1103):
  * - No loops.delete on the wire (METHOD_SCOPES) — the danger zone is a
@@ -36,28 +47,38 @@ export interface EditorContainerProps {
   readonly source?: LoopsSource | undefined;
 }
 
-/** Fixture first, swapping to the live loops source once the client opens. */
+/** Retry cadence after a failed initial connect (the client itself retries
+ *  an established socket; this covers the initial failure only). */
+const SOURCE_RETRY_MS = 5_000;
+
+/** Fixture first, swapping to the live loops source once the client opens;
+ *  retries while an initial connect keeps failing. */
 function useLoopsSource(injected: LoopsSource | undefined): LoopsSource {
   const [source, setSource] = useState<LoopsSource>(injected ?? new FixtureLoopsSource());
+  const [retryTick, setRetryTick] = useState(0);
   useEffect(() => {
     if (injected !== undefined) {
       setSource(injected);
       return;
     }
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const pending = getSharedClient();
     if (pending === null) return;
-    let cancelled = false;
     pending
       .then((client) => {
         if (!cancelled) setSource(selectSources(client).loops);
       })
       .catch(() => {
-        // Connect failed — stay on fixtures; the client retries on its own.
+        // Initial connect failed — the helper cleared the singleton, so a
+        // retry resolves a fresh client; keep the fixtures meanwhile.
+        if (!cancelled) timer = setTimeout(() => setRetryTick((t) => t + 1), SOURCE_RETRY_MS);
       });
     return () => {
       cancelled = true;
+      if (timer !== undefined) clearTimeout(timer);
     };
-  }, [injected]);
+  }, [injected, retryTick]);
   return source;
 }
 
@@ -73,16 +94,19 @@ export function EditorContainer(props: EditorContainerProps): JSX.Element {
   const [version, setVersion] = useState<number | undefined>(isNew ? undefined : 3);
   const [publishing, setPublishing] = useState(false);
   const [note, setNote] = useState<string | undefined>(undefined);
+  /** The loop id whose record the draft currently mirrors (fixture demo
+   *  counts — a fixture publish is refused with the demo note). */
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | undefined>(undefined);
 
-  // Load the loop into the draft. Runs for the fixture source too (its
-  // getLoop returns the same demo record — an identity set), and again when
-  // the live source arrives mid-visit (the live swap reloads, like #94's
-  // list containers). New-loop flow has nothing to load.
+  // Load the loop into the draft. The fixture source resolves immediately
+  // (same demo record — an identity set); the live source reloads when it
+  // arrives. New-loop flow has nothing to load.
   useEffect(() => {
-    if (isNew) return;
     const loopId = props.loopId;
     if (loopId === null) return;
     let cancelled = false;
+    setLoadError(undefined);
     source
       .getLoop(loopId)
       .then((rec) => {
@@ -90,42 +114,70 @@ export function EditorContainer(props: EditorContainerProps): JSX.Element {
         setDraft(rec.config);
         setBaseline(rec.config);
         setVersion(rec.version);
+        setLoadedFor(loopId);
       })
       .catch((err: unknown) => {
-        if (!cancelled) setNote(`Couldn't load the loop: ${message(err)} — editing demo data.`);
+        if (!cancelled) {
+          setLoadedFor(null);
+          setLoadError(message(err));
+        }
       });
     return () => {
       cancelled = true;
     };
-  }, [source, isNew, props.loopId]);
+  }, [source, props.loopId]);
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(baseline);
 
   const onPublish = (): void => {
+    const submitted = draft;
     setPublishing(true);
     setNote(undefined);
     source
-      .saveLoop(props.loopId, draft)
+      .saveLoop(props.loopId, submitted)
       .then(async (id) => {
         if (props.loopId === null) {
           // Created — open the detail route (its container loads the row).
           navigate({ name: "loop-detail", loopId: id });
           return;
         }
-        const rec = await source.getLoop(props.loopId);
-        setBaseline(rec.config);
-        setDraft(rec.config);
-        setVersion(rec.version);
-        setPublishing(false);
+        // The write succeeded even if the reload below fails.
+        setBaseline(submitted);
+        try {
+          const rec = await source.getLoop(props.loopId);
+          setBaseline(rec.config);
+          setVersion(rec.version);
+          // Preserve anything typed after the publish click.
+          setDraft((current) => (current === submitted ? rec.config : current));
+        } catch (err) {
+          setNote(`Published — but reloading the loop failed: ${message(err)}`);
+        }
       })
       .catch((err: unknown) => {
-        setPublishing(false);
         setNote(`Publish failed: ${message(err)}`);
+      })
+      .finally(() => {
+        setPublishing(false);
       });
   };
 
   const onDelete = (): void =>
     setNote("Delete isn't on the wire yet (v1) — tracked for the post-T-1103 contract pass.");
+
+  // Under a live source an existing loop shows NO demo editor: the fixture
+  // draft must never be publishable over a real loop (CodeRabbit #112).
+  if (!isNew && source.kind === "live" && loadedFor !== props.loopId) {
+    return (
+      <>
+        <LoopEditorStyles />
+        {loadError !== undefined ? (
+          <p role="alert">{`Couldn't load the loop: ${loadError}`}</p>
+        ) : (
+          <p role="status">{`Loading loop ${props.loopId}…`}</p>
+        )}
+      </>
+    );
+  }
 
   return (
     <>
