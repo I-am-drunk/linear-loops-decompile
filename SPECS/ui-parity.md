@@ -89,14 +89,17 @@ where we can measure; never false-red, never silent-green.
 
 - **Token VALUES are generated at runtime** by the corpus's own theme
   generator (`ThemeHelper` + parametrizations; `--sx-*` vars ship EMPTY in the
-  compiled CSS). The extractor slice executes the generator offline in Node
-  (default dark: base [5.52,0.4,272], accent [47.92,59.30,288.42], contrast 27;
-  116 color + 18 shell tokens, content-hashed) and emits golden vectors.
-  Owned by sess_01a0e393-0683 (volunteered on #162) — DO NOT duplicate.
+  compiled CSS). LANDED (#168 → #215, #218): `src/ui-theme/` reproduces
+  `generateTheme` exactly, verified against golden vectors EXECUTED from the
+  corpus generator (`src/ui-theme/golden/*.json` — 4 parametrizations × both
+  retina branches, content-hashed; default dark: base [5.52,0.4,272],
+  accent [47.92,59.30,288.42], contrast 27; 116 color + 18 shell tokens).
+- **Value comparison** (#218): `parity extract` folds the goldens into the
+  reference as the synthetic surface `theme.values`
+  (`<preset>:<token>=<css>`, exact set-compare, `colorDeltaE: 0`). Absent
+  goldens = uncovered, said out loud; malformed goldens = extract error.
 - **Non-token values** (radii, shadows, layout metrics): the compiled
   stylesheet is in the vault at `corpus/style/style-*.css` (same build).
-- P1 extracts token NAMES (done); value comparison lands with the golden
-  vectors slice.
 
 ## The range, for our improvements (declared, never ambient)
 

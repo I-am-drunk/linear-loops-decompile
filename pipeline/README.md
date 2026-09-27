@@ -45,6 +45,12 @@ both shipped as doc changes). In the same pass:
 3. Update the digests and bump their `Fetched` dates even when nothing changed.
 4. Log material deltas in `KNOWLEDGE.md` (same rule as corpus drift).
 
+And a THIRD leg (issue #218): the theme. Re-execute the corpus theme generator
+offline against the fresh corpus (recipe on issue #168), diff against
+`src/ui-theme/golden/*.json`, and update goldens + `src/ui-theme` together when
+Linear's theme math moved — the src/ui-theme tests and the `theme.values`
+parity family both pin the old values until then.
+
 ## Running the pipeline (the 30-day job)
 
 ```bash

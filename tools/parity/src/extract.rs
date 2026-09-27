@@ -26,11 +26,14 @@ pub struct ExtractStats {
     pub order: usize,
     /// state-alternate facts across surfaces (H3 #213 slice 3)
     pub states: usize,
+    /// theme token-VALUE facts from the corpus-executed goldens (#218);
+    /// 0 = the goldens were absent and the family is uncovered.
+    pub theme_values: usize,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
 
-pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) -> Result<ExtractStats, String> {
+pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>, goldens: &Path) -> Result<ExtractStats, String> {
     let mut facts = FactFile::default();
 
     // --- corpus integrity: the chunk inventory must be complete -------------
@@ -129,7 +132,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, theme_values: 0, canaries: None };
     let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
@@ -216,6 +219,31 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     if let Some(r) = facts.surfaces.get("app.routes") {
         stats.routes += r.routes.len();
         stats.surfaces += 1;
+    }
+
+    // --- theme VALUES: the corpus-executed golden vectors (#218) ------------
+    // Token VALUES come from executing the corpus's own generateTheme
+    // (src/ui-theme/golden/*.json — corpus-EXECUTED, hash-pinned; the
+    // src/ui-theme tests prove our reimplementation equals them byte-for-byte).
+    // When the goldens are present, they fold into the reference as the
+    // synthetic surface `theme.values` with `<preset>:<token>=<css>` facts in
+    // the tokens family (exact set-compare; tolerances.json colorDeltaE: 0).
+    // Absent goldens = the family stays uncovered (ramp rule) — never
+    // silent-green, and extract says which seam is missing.
+    match extract_theme_values(goldens) {
+        Ok(Some(values)) => {
+            let mut surface = Surface::default();
+            surface.tokens = values;
+            surface.normalize();
+            stats.theme_values = surface.tokens.len();
+            facts.surfaces.insert("theme.values".to_string(), surface);
+            stats.surfaces += 1;
+        }
+        Ok(None) => {
+            // uncovered seam, said out loud (main prints the stats line)
+            stats.theme_values = 0;
+        }
+        Err(e) => return Err(e),
     }
 
     // --- canaries: prove the copy grammar on every extraction --------------
@@ -443,6 +471,41 @@ fn check_corpus_integrity(corpus: &Path) -> Result<(), String> {
         ));
     }
     Ok(())
+}
+
+/// Theme token VALUES from the corpus-executed golden vectors (#218).
+/// Returns Ok(None) when the golden file is absent (uncovered seam — the
+/// ramp rule keeps the family out of the reference); a present-but-malformed
+/// file is an error, never a skip. Facts: `<preset>:<token>=<css>` for the
+/// four first-party parametrizations' ROOT themes (derived themes and the
+/// retina *Thin branches are pinned by src/ui-theme's own tests; the parity
+/// fact set is the stable non-retina root map).
+fn extract_theme_values(golden: &Path) -> Result<Option<Vec<String>>, String> {
+    if !golden.exists() {
+        return Ok(None);
+    }
+    let text = fs::read_to_string(golden).map_err(|e| format!("read {}: {}", golden.display(), e))?;
+    let json = crate::json::parse(&text)?;
+    let presets = json
+        .as_obj()
+        .ok_or_else(|| format!("{}: expected a JSON object of presets", golden.display()))?;
+    let mut out: Vec<String> = Vec::new();
+    for (preset, theme) in presets {
+        let color = theme
+            .get("color")
+            .and_then(|v| v.as_obj())
+            .ok_or_else(|| format!("{}: preset '{}' has no color map", golden.display(), preset))?;
+        for (token, value) in color {
+            let css = value
+                .as_str()
+                .ok_or_else(|| format!("{}: {}.color.{} is not a string", golden.display(), preset, token))?;
+            out.push(format!("{}:{}={}", preset, token, css));
+        }
+    }
+    if out.is_empty() {
+        return Err(format!("{}: golden file carries no token values", golden.display()));
+    }
+    Ok(Some(out))
 }
 
 /// Absolute routes that belong to the Loops/agent surfaces.

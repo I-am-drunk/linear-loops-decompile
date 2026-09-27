@@ -90,8 +90,10 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   byte-for-byte against golden vectors executed FROM the corpus generator
   (4 parametrizations × both retina branches × 116 tokens + 18 shell values +
   derived elevated/sub/menu/selected/focus/sidebar themes + dynamic functions
-  + LCH/P3 formats; 13/13 tests). Remaining for the harness: feed the golden
-  values into the parity theme-values family (#162 ramp).
+  + LCH/P3 formats; 13/13 tests). Harness leg LANDED (#218): `parity extract`
+  folds the goldens into the reference as `theme.values`
+  (`<preset>:<token>=<css>`, exact; 464 values on 1.32.4; absent goldens =
+  uncovered said out loud); drift third leg in pipeline/README.md.
 - H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
   as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
   grammars, 2 chains on 1.32.4); states family in PR #217 (ternary-alternate

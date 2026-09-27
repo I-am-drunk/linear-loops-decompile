@@ -69,8 +69,15 @@ surface; pinned by `order:<Surface>=<a> > <b> > …` canary lines.
 state-alternate facts (the gating variable is minified away; the pair is the
 fact); pinned by `states:<Surface>=alt:<a>|<b>` canary lines.
 Synthetic app-level surfaces: `app.routes` (route table — chunk-body scan,
-because the analysis index is a floor) and `theme.tokens` (token namespace;
-VALUES come from the theme-generator golden-vectors slice, #162).
+because the analysis index is a floor), `theme.tokens` (token namespace), and
+`theme.values` (#218: token VALUES — `<preset>:<token>=<css>` facts folded in
+from `src/ui-theme/golden/golden-derived-retina0.json`, the corpus-EXECUTED
+golden vectors that src/ui-theme's tests prove our generateTheme equals
+byte-for-byte; override with `--goldens FILE`). Absent goldens = the family
+stays uncovered and extract SAYS so; a malformed golden file is an error.
+Drift hook: after a corpus refresh, regenerate the goldens from the new
+corpus (recipe on issue #168), re-run `extract`, and a changed Linear theme
+shows up as `theme.values` deviations in the next `check`.
 The reference also carries `routeMeta` (issue #208): per route, `declaredIn`
 (declaring chunk basenames) + `role` (`registration` = in the `Root.*` route
 table; `matcher` = a match() call site; `both`). Informational — `check`

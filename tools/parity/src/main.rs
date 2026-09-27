@@ -45,6 +45,8 @@ fn usage() {
          \n\
          usage:\n\
          \x20 parity extract [--corpus DIR] [--matrix FILE] [--out FILE]\n\
+         \x20                 [--canaries FILE] [--goldens FILE]\n\
+         \x20                 [--goldens FILE]\n\
          \x20 parity check   [--facts FILE] [--ref FILE] [--tolerances FILE]\n\
          \x20                 [--improvements FILE] [--report FILE]\n\
          \n\
@@ -67,6 +69,7 @@ struct Opts {
     improvements: Option<PathBuf>,
     report: Option<PathBuf>,
     canaries: Option<PathBuf>,
+    goldens: Option<PathBuf>,
 }
 
 impl Default for Opts {
@@ -81,6 +84,7 @@ impl Default for Opts {
             improvements: None,
             report: None,
             canaries: None,
+            goldens: None,
         }
     }
 }
@@ -110,6 +114,7 @@ fn parse_opts(args: &[String]) -> Result<Opts, String> {
             "--improvements" => o.improvements = Some(PathBuf::from(take(&mut i)?)),
             "--report" => o.report = Some(PathBuf::from(take(&mut i)?)),
             "--canaries" => o.canaries = Some(PathBuf::from(take(&mut i)?)),
+            "--goldens" => o.goldens = Some(PathBuf::from(take(&mut i)?)),
             other => return Err(format!("unknown flag: {}", other)),
         }
         i += 1;
@@ -129,10 +134,14 @@ fn cmd_extract(args: &[String]) -> ExitCode {
         let p = PathBuf::from("tools/parity/policy/canaries.txt");
         p.exists().then_some(p)
     });
-    match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref()) {
+    let goldens = o
+        .goldens
+        .clone()
+        .unwrap_or_else(|| PathBuf::from("src/ui-theme/golden/golden-derived-retina0.json"));
+    match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref(), &goldens) {
         Ok(stats) => {
             println!(
-                "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains · {} state alternates → {}",
+                "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains · {} state alternates · {} theme values → {}",
                 stats.surfaces,
                 stats.chunks_read,
                 stats.routes,
@@ -141,8 +150,15 @@ fn cmd_extract(args: &[String]) -> ExitCode {
                 stats.tokens,
                 stats.order,
                 stats.states,
+                stats.theme_values,
                 o.out.display()
             );
+            if stats.theme_values == 0 {
+                println!(
+                    "theme values: UNCOVERED — {} absent (the #218 seam; run from the repo root of a full clone)",
+                    goldens.display()
+                );
+            }
             if let Some((passed, total)) = stats.canaries {
                 println!("canaries: {}/{} pass", passed, total);
             }

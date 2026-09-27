@@ -539,3 +539,86 @@ fn compact_ternary_and_malformed_canary_lines() {
     assert!(String::from_utf8_lossy(&out.stderr).contains("malformed line"));
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn theme_values_fold_in_from_goldens_and_gate_the_check() {
+    // #218: with golden vectors present, the reference gains a theme.values
+    // surface with <preset>:<token>=<css> facts; a diverged value is a
+    // violation; absent goldens = uncovered (never silent-green, printed).
+    let tmp = std::env::temp_dir().join(format!("parity-test-theme-values-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let goldens = tmp.join("goldens.json");
+    std::fs::write(
+        &goldens,
+        r##"{ "darkDefault": { "hash": "abc", "color": { "bgBase": "#08090a", "labelTitle": "#f7f8f8" } },
+            "lightDefault": { "hash": "def", "color": { "bgBase": "#fcfcfd", "labelTitle": "#0f1011" } } }"##,
+    )
+    .unwrap();
+    let reference = tmp.join("reference.json");
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(&reference)
+        .arg("--canaries").arg(fixtures().join("policy/canaries.txt"))
+        .arg("--goldens").arg(&goldens)
+        .output()
+        .expect("run parity extract");
+    assert!(out.status.success(), "extract failed: {}", String::from_utf8_lossy(&out.stderr));
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("4 theme values"), "stats count the values: {}", stdout);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    assert!(text.contains("theme.values"), "synthetic surface present");
+    assert!(text.contains("darkDefault:bgBase=#08090a"), "value fact folded in: {}", text);
+
+    // ours declaring a WRONG value: a violation
+    let facts = tmp.join("ui-facts-theme.json");
+    std::fs::write(
+        &facts,
+        r##"{ "surfaces": { "theme.values": { "tokens": [
+            "darkDefault:bgBase=#08090a",
+            "darkDefault:labelTitle=#ffffff",
+            "lightDefault:bgBase=#fcfcfd",
+            "lightDefault:labelTitle=#0f1011"
+        ] } } }"##,
+    )
+    .unwrap();
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .output()
+        .expect("run parity check");
+    assert_eq!(out.status.code(), Some(1), "diverged theme value must fail: {}", String::from_utf8_lossy(&out.stdout));
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("darkDefault:labelTitle"), "names the diverged token: {}", stdout);
+
+    // absent goldens: uncovered, printed, still exit 0
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(&reference)
+        .arg("--canaries").arg(fixtures().join("policy/canaries.txt"))
+        .arg("--goldens").arg(tmp.join("missing.json"))
+        .output()
+        .expect("run parity extract");
+    assert!(out.status.success());
+    assert!(String::from_utf8_lossy(&out.stdout).contains("theme values: UNCOVERED"), "uncovered said out loud");
+
+    // malformed goldens (no color map): a loud error, never a skip
+    std::fs::write(&goldens, r#"{ "darkDefault": { "hash": "abc" } }"#).unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(&reference)
+        .arg("--canaries").arg(fixtures().join("policy/canaries.txt"))
+        .arg("--goldens").arg(&goldens)
+        .output()
+        .expect("run parity extract");
+    assert_ne!(out.status.code(), Some(0), "malformed goldens must fail");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("no color map"));
+    let _ = std::fs::remove_dir_all(&tmp);
+}
