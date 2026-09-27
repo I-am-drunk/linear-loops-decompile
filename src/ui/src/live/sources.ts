@@ -53,6 +53,9 @@ export type WireEventPayload = Record<string, unknown> & { type: string };
 export interface ChannelRpc {
   request(method: string, params?: unknown): Promise<unknown>;
   onEvent: ((runId: string, seq: number, event: WireEventPayload) => void) | undefined;
+  /** Socket lifecycle — the watch re-subscribes on re-open (the client's own
+   *  #subs resume only covers its subscribeRuns path, not a direct request). */
+  onStateChange: ((state: "connecting" | "open" | "closed") => void) | undefined;
   unsubscribe(runId: string): void;
 }
 
@@ -180,14 +183,29 @@ export class LiveRunsSource implements RunsSource {
       onUpdate(reducer.apply(raw as RunEvent));
     };
     this.#rpc.onEvent = handler;
+    // Server-side subscriptions die with the connection: after a reconnect
+    // re-subscribe from the last applied seq. The replay that follows is
+    // seq-filtered at maxSeq, so catch-up never doubles.
+    const onState = (state: "connecting" | "open" | "closed"): void => {
+      if (state !== "open") return;
+      void this.#rpc
+        .request(RPC.runsSubscribe, { id: runId, sinceSeq: maxSeq })
+        .catch(() => {
+          // A failed re-subscribe surfaces on the next live event gap; the
+          // route's reload is the user-visible recovery. Never throw here.
+        });
+    };
+    this.#rpc.onStateChange = onState;
     try {
       await this.#rpc.request(RPC.runsSubscribe, { id: runId, sinceSeq: result.lastSeq });
     } catch (error) {
       if (this.#rpc.onEvent === handler) this.#rpc.onEvent = undefined;
+      if (this.#rpc.onStateChange === onState) this.#rpc.onStateChange = undefined;
       throw error;
     }
     return () => {
       if (this.#rpc.onEvent === handler) this.#rpc.onEvent = undefined;
+      if (this.#rpc.onStateChange === onState) this.#rpc.onStateChange = undefined;
       // Client-local unsubscribe (no server-side unsub RPC exists); the
       // server-side fan-out ends with the connection.
       this.#rpc.unsubscribe(runId);

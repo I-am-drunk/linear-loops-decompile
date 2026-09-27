@@ -27,6 +27,7 @@ class FakeRpc implements ChannelRpc {
   readonly calls: Call[] = [];
   readonly responses = new Map<string, unknown>();
   onEvent: ((runId: string, seq: number, event: Record<string, unknown> & { type: string }) => void) | undefined;
+  onStateChange: ((state: "connecting" | "open" | "closed") => void) | undefined;
   unsubscribed: string[] = [];
 
   request(method: string, params?: unknown): Promise<unknown> {
@@ -45,6 +46,11 @@ class FakeRpc implements ChannelRpc {
 
   emit(runId: string, event: RunEvent): void {
     this.onEvent?.(runId, event.seq, event);
+  }
+
+  reconnect(): void {
+    this.onStateChange?.("closed");
+    this.onStateChange?.("open");
   }
 }
 
@@ -172,6 +178,25 @@ test("LiveRunsSource.watchRun: snapshot + incremental tail, dedupe, guard, unsub
   unsub();
   assert.deepEqual(rpc.unsubscribed, ["r1"]);
   assert.equal(rpc.onEvent, undefined, "unwatch releases the global handler");
+  assert.equal(rpc.onStateChange, undefined, "unwatch releases the state handler");
+});
+
+test("LiveRunsSource.watchRun: a socket reconnect re-subscribes from the last applied seq", async () => {
+  const rpc = new FakeRpc();
+  rpc.responses.set("loops.list", { loops: [mkLoop({ id: "loop-1" })] });
+  rpc.responses.set("runs.get", { run: mkRun({ id: "r1", status: "active" }), turns: [], lastSeq: 4 });
+  const source = new LiveRunsSource(rpc);
+  await source.watchRun("r1", () => {});
+  const subsBefore = rpc.calls.filter((c) => c.method === "runs.subscribe").length;
+  assert.equal(subsBefore, 1);
+
+  rpc.emit("r1", { seq: 6, runId: "r1", at: "2026-09-27T10:00:09.000Z", type: "usage", usage: { inputTokens: 5, outputTokens: 2, costUsd: 0.001 } });
+  rpc.reconnect();
+  await new Promise((resolve) => setImmediate(resolve));
+
+  const subs = rpc.calls.filter((c) => c.method === "runs.subscribe");
+  assert.equal(subs.length, 2, "reconnect triggers exactly one re-subscribe");
+  assert.deepEqual(subs[1]!.params, { id: "r1", sinceSeq: 6 }, "resumes from the last applied seq");
 });
 
 test("LiveRunsSource.watchRun: a runs.get without lastSeq rejects loudly (contract)", async () => {
