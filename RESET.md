@@ -16,9 +16,11 @@ sandboxes, and cloud trees do not.**
   prior-generation session ids are void — never reuse one, never trust one.
 - **Generations** are numbered (gen-1…gen-4). Registry: `work/EPOCHS.md`; references are
   written `agent-NN@gen<n>`.
-- **Handles and roles come from the user's launch prompt** — pre-assigned, one per
-  session. No rank computation, no self-selection, no collisions. (gen-2/gen-3 tried
-  spawn-rank derivation; it produced duplicate handles and a mis-claimed slot. v4 ends it.)
+- **Handles are durable role slots, CLAIMED at boot** — `work/FLEET-PROMPT.md` STEP 0 /
+  COORDINATION.md §11: lowest-free slot, registration-order on issue #1, comment-id
+  tie-break, confirm-and-yield. No rank computation, no pre-assignment. (gen-1…4 tried
+  self-selection, spawn-rank math, and prompt rank tables; every variant collided —
+  v4.4 ends it.)
 
 ## Durability rule (absolute)
 

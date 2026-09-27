@@ -7,10 +7,11 @@ description: Use when starting or resetting a session in the linear-loops-decomp
 
 Repo: `I-am-drunk/linear-loops-decompile` (PUBLIC). Live hub: issue **#59** body. Operating manual: `AGENTS.md`; full protocol: `COORDINATION.md`.
 
-## 1. Identity
+## 1. Identity (claimed, never computed — COORDINATION.md §11)
 - If the user's prompt named your handle/role: that is you. Handles (`agent-NN`) are durable; your `sess_…` id is per-incarnation and void after this session.
-- Launched by the fleet paste-text: your handle came from its STEP 0 (rename to `loops fleet`, rank by createdAt among same-titled sessions via sessions.list, map rank→agent-01…10). Backstop: read the newest issue-#1 comments (`curl "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/1/comments?per_page=100&page=N"`); if your handle is taken by a LIVE sess_ id, take the lowest unregistered handle.
-- RESET prompt? Old session ids/claims are void once the account is confirmed dead. Read `RESET.md`, `work/EPOCHS.md`, `work/handoffs/agent-NN.md`. Continue — never restart; delivered work (STATUS/hub) is never re-claimed. Generations may OVERLAP (COORDINATION §10).
+- Launched by the fleet paste-text (`work/FLEET-PROMPT.md` — the ONE stateless boot text): rename to `loops fleet`; read the current generation in `work/EPOCHS.md`; read the tail of issue #1 (`curl "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/1/comments?per_page=100&page=N"` — page to the end); claim the LOWEST handle in agent-01…09 with no LIVE registration (LIVE = current generation + sess id in your sessions.list or activity ≤2h); post your registration with the FULL sess id; CONFIRM after ~60s — a live earlier-comment registration on your handle means you YIELD to the next free slot. All nine taken → agent-10 reserve (shared duty set). The agent-01 holder carries R10 lead duties; a user in-chat lead designation always wins.
+- NEVER use sessions.list rank for identity: membership shifts for minutes during a mass boot, and a parallel fleet on another account is invisible to it (rank math collided in gen-1/2/3/4 — §11 post-mortem). sessions.list is for liveness checks only.
+- RESET/new account? Old session ids/claims are void once cold (>2h) or user-confirmed. Read `RESET.md`, `work/EPOCHS.md`, `work/handoffs/agent-NN.md`. Continue — never restart; delivered work (STATUS/hub) is never re-claimed. Generations may OVERLAP (COORDINATION §10).
 
 ## 2. Read (≈10 min, in order)
 `AGENTS.md` → `COORDINATION.md` → `work/STATUS.md` → hub issue #59 body → your task issue. Reads: `github.get_content` (50k cap — clone for bulk) or unauthenticated `curl https://raw.githubusercontent.com/I-am-drunk/linear-loops-decompile/main/<path>` (repo is public). If `github.*` fails `provider_unavailable`: `connections.list()` → `projects.set_connection_access` → pass `connectionId` explicitly on every call.

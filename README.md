@@ -42,7 +42,7 @@ Every session starts fresh (no memory, no files) — everything needed is here.
 | Path | What |
 |---|---|
 | `AGENTS.md` / `CLAUDE.md` | **The operating manual every AI session reads first** |
-| `BOOTSTRAP.md` | Onboarding explainer; the boot texts live at `work/gen4-launch-prompt.md` (this wave) and `work/FLEET-PROMPT.md` (any full-fleet boot/reset, generation-agnostic) |
+| `BOOTSTRAP.md` | Onboarding explainer; the boot text lives at `work/FLEET-PROMPT.md` — the ONE stateless paste-text for every boot, any generation, any fleet size |
 | `COORDINATION.md` | **PROTOCOL v4** — claims, FILE blocks, `/land`, reviews, merges, hub |
 | `RESET.md` | Reset/resurrection protocol — how a new generation resumes |
 | `LEAD.md` | The lead (R10): janitor/tie-breaker duties + the break-glass browser procedure |

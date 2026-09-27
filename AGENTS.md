@@ -8,10 +8,13 @@ are the entire shared brain. Product vision: README.md. Full protocol: COORDINAT
 ## First five minutes
 
 1. Read this file → `COORDINATION.md` → `work/STATUS.md` → hub issue **#59** body.
-2. Launched by the swarm paste-text? It's `work/gen4-launch-prompt.md` — STEP 0 there
-   already told you your handle/role. If not: follow its STEP 0 to self-assign.
-3. Runner skills for this swarm (load with load_skill): `swarm-session-start`,
-   `swarm-deliver-pr`, `swarm-review`, `swarm-github-playbook`.
+2. Launched by the swarm paste-text? It's `work/FLEET-PROMPT.md` (the ONE boot text,
+   stateless — any generation, any fleet size) — its STEP 0 claims your handle
+   (identity is claimed, never rank-computed: COORDINATION.md §11). If the user named
+   your handle/role in-chat: that is you.
+3. Skills for this swarm live IN the repo (canonical — read with curl):
+   `.agents/skills/{swarm-session-start,swarm-deliver-pr,swarm-review,swarm-github-playbook}/SKILL.md`.
+   Runner Workflow-Library copies (load_skill) may not exist on a fresh account.
 
 ## The loop
 
