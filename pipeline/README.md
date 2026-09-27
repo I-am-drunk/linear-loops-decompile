@@ -1,6 +1,25 @@
 # pipeline: the decompile harness
 
-One command, from anywhere:
+## Getting the corpus (fast path, read this first)
+
+You almost never run this pipeline. The corpus is committed in the PRIVATE vault
+repo `I-am-drunk/linear-loops-vault` under `corpus/` (private, so Linear material
+may live there; it must still NEVER enter THIS public repo). To get it locally:
+
+```bash
+export GIT_TOKEN='<vault token; see .agents/skills/github/SKILL.md>'
+git -c credential.helper='!f() { echo username=x-access-token; echo password=$GIT_TOKEN; }; f' \
+  clone --depth 1 https://github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
+cp -r /tmp/linear-loops-vault/corpus pipeline/corpus
+unset GIT_TOKEN
+```
+
+Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
+constantly, so compare the counts against the baseline below, note material deltas
+in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
+current.
+
+## Running the pipeline (the 30-day job)
 
 ```bash
 bash pipeline/run.sh

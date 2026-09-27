@@ -12,7 +12,7 @@ ls -la Linear-universal.dmg
 
 echo "== 2. Extract DMG (HFS+) =="
 if ! command -v 7z >/dev/null; then
-  if command -v sudo >/dev/null; then sudo apt-get install -y p7zip-full; else apt-get install -y p7zip-full; fi
+  if command -v sudo >/dev/null; then sudo apt-get update && sudo apt-get install -y p7zip-full; else apt-get update && apt-get install -y p7zip-full; fi
 fi
 7z x -oextracted Linear-universal.dmg || true   # 7z reports a header error on HFS; extraction still succeeds
 APP="extracted/Linear/Linear.app/Contents"

@@ -11,7 +11,7 @@ skip() { [ "$FORCE" != "--force" ] && [ -e "$1" ]; }
 
 echo "== deps =="
 command -v 7z >/dev/null || {
-  if command -v sudo >/dev/null; then sudo apt-get install -y p7zip-full; else apt-get install -y p7zip-full; fi
+  if command -v sudo >/dev/null; then sudo apt-get update && sudo apt-get install -y p7zip-full; else apt-get update && apt-get install -y p7zip-full; fi
 }
 npm install --no-audit --no-fund   # js-beautify (pipeline/package.json)
 
