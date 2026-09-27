@@ -10,6 +10,7 @@ import type { AddressInfo } from "node:net";
 import { attachWs } from "../connect/server.ts";
 import { Store } from "./store.ts";
 import { createHttpServer } from "./http.ts";
+import { createSettingsHandlers } from "./settings-rpc.ts";
 
 export interface EnvironmentDescriptor {
   id: string;
@@ -35,6 +36,8 @@ export interface BootOptions {
   label?: string;
   /** Reuse an explicit token (tests); otherwise persisted/generated. */
   token?: string;
+  /** Inject a fake fetch in tests (probes never hit the network there). */
+  fetchImpl?: typeof fetch;
 }
 
 export function createLoopsServer(opts: BootOptions): LoopsServer {
@@ -65,6 +68,7 @@ export function createLoopsServer(opts: BootOptions): LoopsServer {
     authorize: (t) => (t === token ? { token: t } : null),
     registry: {
       "env.describe": () => descriptor,
+      ...createSettingsHandlers(store, opts.fetchImpl),
     },
   });
 

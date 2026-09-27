@@ -31,10 +31,11 @@ feature matrix.
   client + round-trip test).
 - R3.2 boot: `src/server` (http + static + environment descriptor + dev token +
   node:sqlite store + health).
-- R3.3 settings vertical: `settings.*` RPCs + `dataplane.probe` + the Settings
-  page in `src/ui`. First real user path; write-only secrets.
+- R3.3 settings vertical (server): `settings.*` RPCs + `dataplane.probe`.
+  Write-only secrets; probes never hit the network in tests.
 - R3.4 UI shell: `src/ui` skeleton (sidebar, routes, theme tokens from
-  `docs/ui-reference.md`, empty states).
+  `docs/ui-reference.md`, empty states) with the Settings page wired to the
+  R3.3 RPCs.
 
 ## R4: loops domain slices
 
