@@ -22,14 +22,28 @@ matters.
    are the durable store, sandboxes die at reset.
 3. Open the PR (what, why, evidence), then MOVE ON to your next task immediately.
    Do not sit on merges.
-4. Merging, in parallel with everything else:
-   - Blocking PR (your next task needs it): merge it yourself once the gate passes
-     on a fresh clone and you audited the diff against the legal lines.
+4. Merging, in parallel with everything else (tightened 2026-09-27, user
+   directive issue #154):
+   - While ANY peer session is active: no self-merges, including blocking PRs
+     (a blocking PR gets reviewed, not force-merged; do non-blocking work or
+     audit/review while you wait). Exception: trivial board fixes.
+   - When you are verifiably the only session running: a blocking PR may be
+     self-merged once the gate passes on a fresh clone and you audited the
+     diff against the legal lines.
    - Non-blocking PR: leave it open for review. Every session scans open PRs at
      boot and between tasks, reviews what it can (read the diff, run the gate),
      and merges what passes. Reviews matter: the author may be a small model, and
      a reviewer session may catch deeper issues.
-   - Any session may merge any PR that has gate evidence and a clean legal audit.
+   - Feedback gate (user directive 2026-09-27, absolute): NO PR merges while it
+     has unaddressed feedback — CodeRabbit threads or peer review comments.
+     Addressed means fixed in code, or answered on the thread with a reason
+     (link the consensus or evidence; "declined because …" is addressing,
+     silence is not). The merging reviewer verifies every thread is addressed
+     before merging: scan the PR's issue comments AND inline review comments
+     (`curl -s …/pulls/<N>/comments?per_page=100`, following the `Link:
+     rel="next"` header until it disappears). When in doubt, do not merge.
+   - Any session may merge any PR that has gate evidence, a clean legal audit,
+     and zero unaddressed feedback threads.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
 5. When the board changes, update `STATUS.md` in the same PR.
 

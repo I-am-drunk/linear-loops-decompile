@@ -37,13 +37,34 @@ for (const f of files) {
   for (const m of d.matchAll(/C\(\[M\(`([A-Za-z0-9]+)`\)\],\s*([A-Za-z$_][\w$]*)\)/g)) addModel(d, m[1], m[2], m.index, f);
   for (const m of d.matchAll(/Gt\(`([^`]+)`/g)) routes.push({ path: m[1], file: f });
   for (const m of d.matchAll(/path:\s*`(\/[^`]*)`/g)) routes.push({ path: m[1], file: f });
+  // Org-scoped route literals anywhere (match helpers, redirects, deep
+  // links) — the table registrations above miss these; issue #174. Scoped to
+  // the /:orgKey/ prefix deliberately: unscoped '/' literals are dominated by
+  // API endpoints and asset paths, while Linear's app routes are all
+  // orgKey-scoped. Route charset only; no dots (assets), no '//' (URLs).
+  for (const m of d.matchAll(/`(\/:orgKey\/[^`\\]{1,120})`/g)) {
+    const p = m[1];
+    if (!/^\/:orgKey\/[A-Za-z0-9:][A-Za-z0-9/:_*?&=-]*\??$/.test(p)) continue;
+    if (p.includes('.') || p.includes('//')) continue;
+    routes.push({ path: p, file: f });
+  }
   const comps = [...d.matchAll(/\.displayName\s*=\s*`([A-Za-z0-9]+)`/g)].map(x => x[1]);
   chunkInfo.push({ file: f, bytes: d.length, components: [...new Set(comps)].slice(0, 8) });
 }
 
 fs.writeFileSync('analysis/graphql-ops.json', JSON.stringify([...graphqlOps.entries()].map(([name, v]) => ({ name, ...v })), null, 2));
 fs.writeFileSync('analysis/models.json', JSON.stringify(Object.entries(models).map(([name, v]) => ({ name, ...v })), null, 2));
-fs.writeFileSync('analysis/routes.json', JSON.stringify(routes, null, 2));
+// Dedupe by (path, file): the literal extractor above re-finds routes the
+// table patterns already caught.
+const seenRoutes = new Set();
+const routesDeduped = routes.filter(r => {
+  const k = `${r.path}${r.file}`;
+  if (seenRoutes.has(k)) return false;
+  seenRoutes.add(k);
+  return true;
+});
+
+fs.writeFileSync('analysis/routes.json', JSON.stringify(routesDeduped, null, 2));
 fs.writeFileSync('analysis/chunks.json', JSON.stringify(chunkInfo, null, 2));
 
 // ---- extracts/ markdown (regenerate repo artifacts) ----
@@ -65,4 +86,5 @@ for (const [name, op] of [...graphqlOps.entries()].sort()) {
   gd += `- **${op.type}** \`${name}\`${sig ? ' `(' + sig + ')`' : ''}\n`;
 }
 fs.writeFileSync(`${EXTRACTS}/graphql-ops.md`, gd);
-console.log(`ops: ${graphqlOps.size}, models: ${names.length} (${names.filter(n=>models[n].fields.length).length} with fields), routes: ${routes.length}, chunks: ${chunkInfo.length}`);
+const uniqueRoutePaths = new Set(routesDeduped.map(r => r.path)).size;
+console.log(`ops: ${graphqlOps.size}, models: ${names.length} (${names.filter(n=>models[n].fields.length).length} with fields), routes: ${uniqueRoutePaths} unique paths (${routesDeduped.length} path-and-file records), chunks: ${chunkInfo.length}`);

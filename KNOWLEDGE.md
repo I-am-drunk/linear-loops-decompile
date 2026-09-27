@@ -61,11 +61,38 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   effectiveTeam, hasUnknownEffectiveTeam, runs`.
 - Schedules: separate **`WorkflowCronJobDefinition`** (`name, description, enabled,
   activities, schedule, team, creator, sortOrder`) - server-side cron.
-- Trigger model (from AutomationHelper): `triggerType` ∈ `schedule | chat | event-ish`;
-  events carry `activationMode` ∈ `collectionChanged | watchedPropertyChanged`;
-  conditions support `watchedProperties`, `collectionChange{property,operation}`,
-  `commentMatch`; triage variants exist (`entityInTriage`). `defaultAutomationSchedule`
-  exists; validation is zod (`$e.safeParse({type,event,activationMode,...})`).
+- Trigger model (AutomationHelper chunk `Issue.DRYymPCa.js`; CORRECTED 2026-09-27,
+  sess_01a0e381-7391 — the earlier `schedule|chat|event-ish` reading was wrong):
+  - `triggerType` IS the entity, PascalCase, 9 values: `Issue | Project | Document |
+    Initiative | Team | Release | Cycle | Schedule | Chat`.
+  - Trigger events (12): `entityCreated, entityUpdated, entityCreatedOrUpdated,
+    entityRemoved, entityUnarchived, cycleStarted, cycleEnded, commentAdded,
+    updatePosted, chatMessagePosted, chatReactionAdded, customerRequestAdded`.
+    Support is per triggerType, enforced client-side (unsupported pair throws):
+    Issue = entityCreated/Updated/CreatedOrUpdated + commentAdded +
+    customerRequestAdded; Project = entity events + commentAdded + updatePosted +
+    customerRequestAdded; Initiative = entity events + commentAdded + updatePosted;
+    Cycle = entityCreated + cycleStarted + cycleEnded only; Release = entity events
+    only; Document/Team/Chat event support UNVERIFIED; Schedule carries no event.
+  - `activationMode` has FOUR values: `conditionsStartedMatching | anyUpdate |
+    watchedPropertyChanged | collectionChanged` (earlier notes listed two).
+    Only `entityUpdated`/`entityCreatedOrUpdated` support an activationMode.
+    `collectionChanged` requires exactly one condition with `collectionChange` and
+    none with `watchedProperties`; `watchedPropertyChanged` requires a non-empty
+    watchedProperties set (`activationModeMatchesConditions`).
+  - `collectionChange`: `{ property: labels|assignee|delegate|state|team|priority|
+    project, operation: "added"|"removed", qualifier? }`.
+  - `schedule` is a STRUCTURED object, NOT an rrule: `{ startAt: TimelessDate,
+    type: hours|days|weeks|months|years, interval: positive int, hour?: 0-23,
+    minute?: 0-59, timezone?: IANA, daysOfWeek?: int 1..7 unique (weeks only),
+    lastRecurredAt?, lastRecurredAtTimestamp? }`; "timed" = hour AND timezone
+    present. `defaultAutomationSchedule` = next top of the hour, days x1, creator
+    timezone. Client validation is zod.
+  - Limits (AutomationHelper constants): name <= 64 chars, groupName <= 64,
+    description <= 255.
+  - Team scope (`applyToSubTeams`) supported for Issue|Project|Initiative|Cycle|
+    Team; manual runs unsupported for commentAdded/updatePosted/
+    customerRequestAdded triggers (`supportsManualRun`).
 - **A run = an `AiConversation`** with `initialSource: workflow`, plus
   `workflowDefinition`, `loopExecution`, `isWorkflowRun` set. `AiConversationInitialSource`
   enum: `slack, microsoftTeams, mcp, directChat, entityChat, comment, pullRequestComment,

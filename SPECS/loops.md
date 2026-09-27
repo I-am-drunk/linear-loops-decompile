@@ -16,16 +16,39 @@ Behavioral spec for OUR reimplementation, derived from decompiling Linear 1.32.4
 
 ## Trigger model (faithful)
 
+CORRECTED 2026-09-27 (audit, docs/audit-2026-09-27.md — the old "event"
+triggerType was wrong). Corpus enum (`fD` in `Issue.DRYymPCa.js`, switched on in
+`AutomationHelper.B0HEcOoo.js`): triggerType IS the entity, PascalCase strings:
+
 ```
-triggerType: "schedule" | "chat" | "event"
-schedule:    { rrule-ish; default exists (defaultAutomationSchedule) }   # when schedule
-event:       entity (issue|project|initiative|document|comment|team|cycle|release|…)
-activationMode (for event): "collectionChanged" | "watchedPropertyChanged"
+triggerType: "Issue" | "Project" | "Document" | "Initiative" | "Team"
+           | "Release" | "Cycle" | "Schedule" | "Chat"
+trigger:     entity event, 12 values; per-type support table in KNOWLEDGE §3
+             (unsupported pair = client-side error); Schedule carries no event
+activationMode: "conditionsStartedMatching" | "anyUpdate"
+              | "watchedPropertyChanged" | "collectionChanged"   # FOUR values;
+             # only on entityUpdated / entityCreatedOrUpdated
 conditions:  [ { watchedProperties: [...],
-                 collectionChange: { property, operation },
-                 commentMatch: <string/regex>,
+                 collectionChange: { property: labels|assignee|delegate|state|
+                                     team|priority|project,
+                                     operation: "added" | "removed", qualifier? },
+                 commentMatch: <string>,
                  filters… } ]
+             # coherence (corpus): collectionChanged => exactly one condition
+             # with collectionChange and none with watchedProperties
+schedule:    { startAt: TimelessDate, type: hours|days|weeks|months|years,
+               interval: positive int, hour?: 0-23, minute?: 0-59,
+               timezone?: IANA, daysOfWeek?: 1..7 unique (weeks only),
+               lastRecurredAt?, lastRecurredAtTimestamp? }        # when Schedule
+             # structured object, NOT an rrule string; "timed" = hour+timezone;
+             # default = next top of hour, days x1, creator timezone
 ```
+
+Field limits (corpus constants): name <= 64, groupName <= 64, description <= 255.
+Team scope (applyToSubTeams): Issue|Project|Initiative|Cycle|Team. Manual run:
+unsupported for commentAdded/updatePosted/customerRequestAdded triggers.
+
+Triage is a condition/variant (`entityInTriage`), not a triggerType value.
 
 Chat triggers: loop wakes on @mention/message in an enabled channel.
 Triage variant: event `entityInTriage` with triage-state conditions.
