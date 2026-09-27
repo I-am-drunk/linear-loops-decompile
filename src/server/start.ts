@@ -13,6 +13,7 @@
  * commit it; mint scoped session tokens via pairing for real clients.
  */
 import { createLiveLoopsServer } from "./compose.ts";
+import type { SettingsBindingDeps } from "./settings-rpc.ts";
 import type { Scope } from "../connect/tokens.ts";
 
 const ALL_SCOPES: Scope[] = [
@@ -28,7 +29,38 @@ const ALL_SCOPES: Scope[] = [
 const port = Number(process.env["PORT"] ?? 7373);
 const tickMs = Number(process.env["TICK_MS"] ?? 30_000);
 
-const live = createLiveLoopsServer({ dbPath: process.env["LOOPS_DB"] ?? "./loops.db" });
+/**
+ * The dataplane is a compile-first package (.js-extension imports) — nobody
+ * imports its sources at runtime. The deployment binds its compiled dist;
+ * build it once with: `npx tsc -p src/dataplane/tsconfig.build.json`.
+ * Without it the server still runs, but setLinear/dataplane.probe answer
+ * `unavailable` and run context/write-back throw visibly.
+ */
+async function dataplaneDeps(): Promise<Partial<SettingsBindingDeps>> {
+  const dist = (f: string): string => `../dataplane/dist/${f}`;
+  try {
+    const [{ LinearClient }, { getIssue }, { createComment }] = await Promise.all([
+      import(dist("client.js")),
+      import(dist("reads.js")),
+      import(dist("writes.js")),
+    ]);
+    return {
+      verifyLinear: async (token: string) => new LinearClient({ credential: { kind: "pat", token } }).verifyAuth(),
+      linearClientFor: (token: string) => new LinearClient({ credential: { kind: "pat", token } }),
+      readIssue: getIssue,
+      writeComment: createComment,
+    };
+  } catch {
+    console.error("dataplane dist not found — Linear features unavailable until you run:");
+    console.error("  npx tsc -p src/dataplane/tsconfig.build.json");
+    return {};
+  }
+}
+
+const live = createLiveLoopsServer({
+  dbPath: process.env["LOOPS_DB"] ?? "./loops.db",
+  settingsDeps: await dataplaneDeps(),
+});
 const { token } = live.tokens.mint({ scopes: ALL_SCOPES });
 const bound = await live.listen(port, "127.0.0.1");
 

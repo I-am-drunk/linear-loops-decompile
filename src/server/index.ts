@@ -18,7 +18,7 @@ import type { Server } from "node:http";
 import { Runner } from "../runtime/runner.ts";
 import type { Brain } from "../runtime/brain.ts";
 import type { WorkflowDefinition } from "../model/loop.ts";
-import type { HarnessSettingsStore } from "../inference/src/index.ts";
+import type { HarnessSettingsStore, SecretStore } from "../inference/src/index.ts";
 import { openDatabase } from "./db.ts";
 import type { Database } from "./db.ts";
 import { createHttpServer } from "./http.ts";
@@ -59,6 +59,8 @@ export interface LoopsServer {
   brainFor: (loop: WorkflowDefinition) => Brain;
   /** Inference harness settings (write-only secrets) — the settings-RPC seam. */
   harnessStore: HarnessSettingsStore;
+  /** The encrypted secret store (T-1106: Linear PAT persistence shares it). */
+  secretStore: SecretStore;
   /** Number of runs restored from snapshots at boot. */
   restoredRuns: number;
   listen(port: number, host?: string): Promise<number>;
@@ -72,7 +74,7 @@ export function createLoopsServer(options: LoopsServerOptions = {}): LoopsServer
   const runner = new Runner();
   const restoredRuns = restoreRuns(runner, store);
   const server = createHttpServer(options);
-  const { harnessStore } = createInferenceStores(db, dbPath);
+  const { harnessStore, secretStore } = createInferenceStores(db, dbPath);
   const brainFor = createBrainFor({ harnessStore, runner });
 
   if (options.channel !== undefined) {
@@ -91,6 +93,7 @@ export function createLoopsServer(options: LoopsServerOptions = {}): LoopsServer
     runner,
     brainFor,
     harnessStore,
+    secretStore,
     restoredRuns,
     listen(port, host) {
       return new Promise((resolve, reject) => {

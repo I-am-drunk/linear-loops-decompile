@@ -40,10 +40,21 @@ Original code; behavior per SPECS/target-architecture.md.
   parked run IS the elicitation answer; continue resolves the loop's brain)
   and `runnerRegistryView` (the channel's liveness gate over the Runner's
   `has()`/`activeRunIds()`).
+- `settings-rpc.ts` (T-1106) — the last METHOD_SCOPES rows:
+  `settings.get/setLinear/setInference/testInference` + `dataplane.probe`,
+  plus the live dataplane binding (lazy reader/write-back consulted PER
+  CALL — configuring Linear mid-run needs no restart). Write-only secrets
+  discipline is absolute: PATs and harness keys live in the SecretStore,
+  the settings table holds only the opaque ref + public viewer data, and
+  no RPC payload ever contains token/key/ref (asserted in tests). The
+  dataplane is a compile-first package — bound structurally by the
+  deployment (start.ts binds its compiled dist; tests bind fakes).
 - `start.ts` — the entry point:
   `node --experimental-strip-types src/server/start.ts` (PORT/LOOPS_DB/
   TICK_MS envs) — boots compose, mints an operator bootstrap token
-  (printed to the operator's own terminal), ticks the scheduler.
+  (printed to the operator's own terminal), ticks the scheduler. Binds the
+  dataplane's compiled dist (`npx tsc -p src/dataplane/tsconfig.build.json`
+  first for Linear features).
 
 ## Wiring contract
 

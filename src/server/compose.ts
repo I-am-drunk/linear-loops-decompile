@@ -38,7 +38,14 @@ import type { Runner } from "../runtime/runner.ts";
 import type { WorkflowDefinition } from "../model/loop.ts";
 import { createOrchestrator, definitionFor } from "./orchestrator.ts";
 import type { Orchestrator, WriteBackSink } from "./orchestrator.ts";
+import { createChatAdapter } from "../inference/src/index.ts";
 import { createRunEventPublisher, registerDomainRpcs } from "./rpcs.ts";
+import {
+  createSettingsBinding,
+  dataplaneEntityReader,
+  dataplaneWriteBack,
+} from "./settings-rpc.ts";
+import type { SettingsBinding, SettingsBindingDeps } from "./settings-rpc.ts";
 import { createLoopsServer } from "./index.ts";
 import type { LoopsServer, LoopsServerOptions } from "./index.ts";
 import type { Store } from "./store.ts";
@@ -98,6 +105,15 @@ export interface LiveLoopsServerOptions extends LoopsServerOptions {
   descriptor?: Partial<EnvironmentDescriptor> | undefined;
   /** Loop id minting for loops.upsert creates (tests: deterministic ids). */
   idgen?: (() => string) | undefined;
+  /**
+   * T-1106 settings seams. `settings` overrides the whole binding (tests);
+   * otherwise the binding is built from the base stores with these dataplane
+   * seams (the real Linear/providers by default — production hits
+   * api.linear.app and the configured harness).
+   */
+  settings?: SettingsBinding | undefined;
+  /** Partial: any seam omitted falls back to the real constructor/default. */
+  settingsDeps?: Partial<SettingsBindingDeps> | undefined;
 }
 
 export interface LiveLoopsServer extends LoopsServer {
@@ -106,6 +122,8 @@ export interface LiveLoopsServer extends LoopsServer {
   readonly tokens: TokenStore;
   readonly queue: RunQueue;
   readonly registry: ScheduleRegistry;
+  /** T-1106: the settings binding (connection view, live LinearClient). */
+  readonly settings: SettingsBinding;
   /** Boot reloadLoops() result (scheduled/event/chat counts). */
   readonly bootLoops: { scheduled: number; event: number; chat: number };
 }
@@ -128,6 +146,23 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     ...(options.descriptor ?? {}),
   } as EnvironmentDescriptor;
 
+  // T-1106: the settings binding comes FIRST — the orchestrator's default
+  // reader/write-back consult it per call (lazy: configuring Linear mid-run
+  // takes effect without a restart). chatAdapterFor defaults to R6's real
+  // factory (inference is strip-types-safe); the dataplane seams are bound
+  // by the DEPLOYMENT (start.ts binds the compiled dist; tests bind fakes)
+  // — the dataplane is a compile-first package nobody imports at runtime.
+  const settings =
+    options.settings ??
+    createSettingsBinding({
+      store: base.store,
+      harnessStore: base.harnessStore,
+      secretStore: base.secretStore,
+      descriptor,
+      chatAdapterFor: (settings, apiKey) => createChatAdapter({ settings, apiKey }),
+      ...(options.settingsDeps ?? {}),
+    });
+
   const channel = new ChannelServer({
     tokens,
     registry: runnerRegistryView(base.runner),
@@ -142,8 +177,8 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     queue,
     registry,
     brainFor,
-    reader: options.reader,
-    writeBack: options.writeBack,
+    reader: options.reader ?? dataplaneEntityReader(settings, options.settingsDeps?.readIssue),
+    writeBack: options.writeBack ?? dataplaneWriteBack(settings, options.settingsDeps?.writeComment),
     publish: createRunEventPublisher(channel),
   });
 
@@ -153,6 +188,7 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     orchestrator,
     ...(options.idgen !== undefined ? { idgen: options.idgen } : {}),
   });
+  settings.register(channel);
   channel.attach(base.server);
   const bootLoops = orchestrator.reloadLoops();
 
@@ -163,9 +199,14 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     tokens,
     queue,
     registry,
+    settings,
     bootLoops,
-    close() {
+    async close() {
       channel.closeAll();
+      // Drain in-flight starts/write-backs before the db closes — a
+      // write-back landing after close is an unhandled rejection, not a
+      // clean shutdown (found by the operator-acceptance test).
+      await orchestrator.flush();
       return base.close();
     },
   };
