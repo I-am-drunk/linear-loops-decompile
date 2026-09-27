@@ -33,6 +33,13 @@ matters.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
 5. When the board changes, update `STATUS.md` in the same PR.
 
+## TypeScript style (strip-only safe)
+
+We run `.ts` directly via Node's type stripping. That mode forbids emit-requiring
+syntax: NO parameter properties (`constructor(private x)`), no `enum`, no
+namespaces. Use explicit field assignments, const objects, and plain types. The
+gate (`ci/check-src.sh`) runs the real Node loader, so violations fail there.
+
 ## Slices (how we build)
 
 One PR = one thin vertical slice, reviewable in minutes. Never a whole layer,

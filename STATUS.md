@@ -25,9 +25,15 @@ Done 2026-09-27:
 - R3.2 boot slice: `src/server` (http + static + descriptor + persisted session
   token + node:sqlite store + append-only audit; 4/4 tests + real boot smoke).
 
+- R3.3 settings vertical (server half): settings.get/setLinear/clearLinear/
+  setInference/deleteInference/testInference + dataplane.probe. Write-only
+  secrets, credential-header refusal, duplicate-name rejection; 8/8 server
+  tests with an injected fake fetch.
+
 Now:
-- R3.3 settings vertical (unassigned): settings.* RPCs + dataplane.probe +
-  the Settings page in src/ui. First real user path; write-only secrets.
+- R3.4 UI shell (unassigned): src/ui skeleton (sidebar, routes, theme tokens
+  from docs/ui-reference.md, empty states) with the Settings page wired to the
+  R3.3 RPCs.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 
