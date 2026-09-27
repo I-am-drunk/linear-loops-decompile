@@ -84,8 +84,9 @@ test("RATELIMITED extension maps to rate_limited with retry hint from the reset 
 });
 
 test("http 429 honors Retry-After (seconds) and marks the window exhausted", async () => {
+  // 429 without informative budget headers: ambiguous → conservative zero.
   const fakeFetch = (async () =>
-    new Response("Too Many Requests", { status: 429, headers: { "retry-after": "30", ...HEADERS } })) as typeof fetch;
+    new Response("Too Many Requests", { status: 429, headers: { "retry-after": "30" } })) as typeof fetch;
   const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch });
   await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
     assert.equal(e.kind, "rate_limited");
@@ -94,6 +95,95 @@ test("http 429 honors Retry-After (seconds) and marks the window exhausted", asy
     return true;
   });
   assert.equal(client.budget().requestsRemaining, 0);
+});
+
+test("429 keeps a still-positive global budget the headers report", async () => {
+  // Endpoint/complexity-only 429: headers still show global requests left —
+  // the global budget must survive (CodeRabbit #155).
+  const fakeFetch = (async () =>
+    new Response("Too Many Requests", {
+      status: 429,
+      headers: { ...HEADERS, "x-ratelimit-endpoint-requests-remaining": "0", "x-ratelimit-endpoint-requests-reset": "3600000", "x-ratelimit-endpoint-name": "IssueCreate" },
+    })) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => e.kind === "rate_limited");
+  const b = client.budget();
+  assert.equal(b.requestsRemaining, 2499);
+  assert.equal(b.endpointRequestsRemaining, 0);
+});
+
+test("RATELIMITED beats partial data and marks the header-exhausted window", async () => {
+  const fakeFetch = (async () =>
+    jsonResponse(
+      { data: { viewer: { id: "u1" } }, errors: [{ message: "Complexity limit reached", extensions: { code: "RATELIMITED" } }] },
+      { headers: { ...HEADERS, "x-ratelimit-complexity-remaining": "0", "x-ratelimit-complexity-reset": "3600000" } },
+    )) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    return true;
+  });
+  assert.equal(client.budget().complexityRemaining, 0);
+  assert.equal(client.budget().requestsRemaining, 2499); // untouched window kept
+});
+
+test("endpoint budget gates before firing (never earns the 429)", async () => {
+  let now = 1_000_000;
+  let fired = 0;
+  const fakeFetch = (async () => {
+    fired += 1;
+    return jsonResponse({ data: { ok: true } }, {
+      headers: { ...HEADERS, "x-ratelimit-endpoint-requests-remaining": "0", "x-ratelimit-endpoint-requests-reset": "2000000", "x-ratelimit-endpoint-name": "AgentSessionCreate" },
+    });
+  }) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch, now: () => now });
+  await client.query("query { viewer { id } }");
+  assert.equal(fired, 1);
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    assert.match(e.message, /AgentSessionCreate/);
+    return true;
+  });
+  assert.equal(fired, 1);
+  now = 2_000_001;
+  await client.query("query { viewer { id } }");
+  assert.equal(fired, 2);
+});
+
+test("credential swap invalidates the cached budget (budgets are per-user)", async () => {
+  let token = "userA";
+  let now = 0;
+  const fakeFetch = (async () =>
+    jsonResponse({ data: { ok: true } }, {
+      headers: { ...HEADERS, "x-ratelimit-requests-remaining": "0", "x-ratelimit-requests-reset": "3600000" },
+    })) as typeof fetch;
+  const client = new LinearClient({ getToken: () => token, fetchImpl: fakeFetch, now: () => now });
+  await client.query("query { viewer { id } }");
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => e.kind === "rate_limited");
+  token = "userB"; // different user, different quota — the stale window must not block
+  await client.query("query { viewer { id } }");
+});
+
+test("a stale in-flight response must not repopulate the new credential's budget", async () => {
+  let token = "userA";
+  const resolvers: Array<(r: Response) => void> = [];
+  const fakeFetch = (async () => new Promise<Response>((r) => resolvers.push(r))) as typeof fetch;
+  const client = new LinearClient({ getToken: () => token, fetchImpl: fakeFetch, maxConcurrency: 2 });
+  const p1 = client.query("query { viewer { id } }"); // fired as userA
+  token = "userB";
+  const p2 = client.query("query { viewer { id } }"); // fired as userB
+  await new Promise((r) => setImmediate(r)); // let both fetchImpl calls land
+  assert.equal(resolvers.length, 2);
+  // userB's response arrives FIRST, healthy budget
+  resolvers[1](jsonResponse({ data: { ok: true } }));
+  await p2;
+  assert.equal(client.budget().requestsRemaining, 2499);
+  // now userA's stale response lands: exhausted window — must be discarded
+  resolvers[0](jsonResponse({ data: { ok: true } }, {
+    headers: { ...HEADERS, "x-ratelimit-requests-remaining": "0", "x-ratelimit-requests-reset": "3600000" },
+  }));
+  await p1;
+  assert.equal(client.budget().requestsRemaining, 2499);
 });
 
 test("gate: a known-exhausted window refuses to fire until the reset passes", async () => {
