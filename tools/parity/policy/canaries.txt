@@ -21,3 +21,8 @@ order:LoopsManagementPage=Enabled > Team > Owner > Trusted external source
 # the empty-state pair proves the ternary-alternate grammar per extraction.
 states:LoopsManagementPage=alt:No matching loops|No loops yet
 states:AutomationRunsPage=alt:Failed|Completed
+
+# Value canaries (#218): one golden token value per theme mode, pinned so a
+# goldens-wiring regression or theme drift on a corpus refresh fails red.
+value:theme.values.darkDefault.retina0=bgBase=#111212
+value:theme.values.darkDefault.retina0=hash=f4ac7a583d9525072ff197abaefc16701f7817d1

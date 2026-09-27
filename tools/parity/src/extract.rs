@@ -26,11 +26,20 @@ pub struct ExtractStats {
     pub order: usize,
     /// state-alternate facts across surfaces (H3 #213 slice 3)
     pub states: usize,
+    /// theme token VALUES from the corpus-executed golden vectors (#218):
+    /// (parametrization surfaces, value facts). None when no goldens dir.
+    pub theme_values: Option<(usize, usize)>,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
 
-pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) -> Result<ExtractStats, String> {
+pub fn run(
+    corpus: &Path,
+    matrix: &Path,
+    out: &Path,
+    canaries: Option<&Path>,
+    goldens: Option<&Path>,
+) -> Result<ExtractStats, String> {
     let mut facts = FactFile::default();
 
     // --- corpus integrity: the chunk inventory must be complete -------------
@@ -129,7 +138,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, canaries: None, theme_values: None };
     let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
@@ -218,6 +227,73 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         stats.surfaces += 1;
     }
 
+    // --- theme VALUES from the corpus-executed golden vectors (#218) --------
+    // src/ui-theme/golden/*.json hold token values EXECUTED from the corpus
+    // generator (H2 #168, byte-verified by src/ui-theme tests). Each
+    // parametrization becomes one synthetic surface `theme.values.<name>`
+    // whose tokens family carries exact `token=value` facts — riding the
+    // existing set compare, improvements channel, and report. Absent goldens
+    // dir = no value surfaces (uncovered by the ramp rule, and the stats line
+    // says so); a malformed goldens file is a loud error, never a skip.
+    if let Some(goldens_dir) = goldens {
+        let mut value_surfaces = 0usize;
+        let mut value_facts = 0usize;
+        let entries = fs::read_dir(goldens_dir)
+            .map_err(|e| format!("read goldens {}: {}", goldens_dir.display(), e))?;
+        let mut files: Vec<std::path::PathBuf> = Vec::new();
+        for entry in entries {
+            let entry = entry.map_err(|e| format!("read goldens {}: {}", goldens_dir.display(), e))?;
+            let name = entry.file_name().to_string_lossy().to_string();
+            if name.ends_with(".json") && name.starts_with("golden-derived-") {
+                files.push(entry.path());
+            }
+        }
+        files.sort();
+        for path in &files {
+            // retina suffix: golden-derived-retina0.json → "retina0"
+            let fname = path.file_stem().unwrap_or_default().to_string_lossy().to_string();
+            let retina = fname.trim_start_matches("golden-derived-").to_string();
+            let text = fs::read_to_string(path).map_err(|e| format!("read {}: {}", path.display(), e))?;
+            let json = crate::json::parse(&text).map_err(|e| format!("{}: {}", path.display(), e))?;
+            let obj = match &json {
+                crate::json::Value::Obj(pairs) => pairs,
+                _ => return Err(format!("{}: expected an object of parametrizations", path.display())),
+            };
+            for (param, theme) in obj {
+                let colors = theme.get("color");
+                let Some(crate::json::Value::Obj(colors)) = colors else {
+                    return Err(format!("{}: parametrization {:?} has no color map", path.display(), param));
+                };
+                let mut surface = Surface::default();
+                for (token, value) in colors {
+                    let Some(v) = value.as_str() else {
+                        return Err(format!("{}: {}.color.{} is not a string", path.display(), param, token));
+                    };
+                    surface.tokens.push(format!("{}={}", token, v));
+                }
+                // shell values (scalars: shadows, input metrics, hash) are the
+                // same exactness bar — string/number/bool scalars only
+                for (key, value) in match theme { crate::json::Value::Obj(p) => p.iter(), _ => unreachable!() } {
+                    let fact = match value {
+                        crate::json::Value::Str(v) => Some(v.clone()),
+                        crate::json::Value::Num(n) => Some(crate::json::to_string(&crate::json::Value::Num(*n)).trim().to_string()),
+                        crate::json::Value::Bool(b) => Some(b.to_string()),
+                        _ => None,
+                    };
+                    if let Some(v) = fact {
+                        surface.tokens.push(format!("{}={}", key, v));
+                    }
+                }
+                surface.normalize();
+                value_facts += surface.tokens.len();
+                facts.surfaces.insert(format!("theme.values.{}.{}", param, retina), surface);
+                value_surfaces += 1;
+                stats.surfaces += 1;
+            }
+        }
+        stats.theme_values = Some((value_surfaces, value_facts));
+    }
+
     // --- canaries: prove the copy grammar on every extraction --------------
     // A canary absent from the CORPUS = drift alarm (refresh canaries or
     // corpus); present in corpus but absent from the EXTRACTED reference =
@@ -232,6 +308,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         // order-grammar regression fails as loudly as a copy one.
         let mut order_canaries: Vec<(String, String)> = Vec::new(); // (surface, chain)
         let mut states_canaries: Vec<(String, String)> = Vec::new(); // (surface, alt fact)
+        let mut value_canaries: Vec<(String, String)> = Vec::new(); // (surface, token=value fact)
         // A malformed `order:`/`states:` line (no `=`) silently dropping
         // would let extraction pass while the intended canary never ran
         // (CodeRabbit #217): configuration errors are loud.
@@ -263,6 +340,18 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                     }
                     return None;
                 }
+                // `value:<theme.values.surface>=<token>=<value>` (#218): pins
+                // one golden token value per extraction, so a goldens-wiring
+                // regression (or theme drift on a corpus refresh) fails red.
+                if let Some(v) = l.strip_prefix("value:") {
+                    match v.split_once('=') {
+                        Some((surface, fact)) if fact.contains('=') => {
+                            value_canaries.push((surface.trim().to_string(), fact.trim().to_string()))
+                        }
+                        _ => bad_lines.push(l.to_string()),
+                    }
+                    return None;
+                }
                 Some(match l.strip_prefix("route:") {
                     Some(r) => (true, r.trim().to_string()),
                     None => (false, l.to_string()),
@@ -271,7 +360,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             .collect();
         if !bad_lines.is_empty() {
             return Err(format!(
-                "canary config: malformed line(s) (expected `order:<Surface>=<chain>` / `states:<Surface>=<fact>`):\n  {}",
+                "canary config: malformed line(s) (expected `order:<Surface>=<chain>` / `states:<Surface>=<fact>` / `value:<Surface>=<token>=<value>`):\n  {}",
                 bad_lines.join("\n  ")
             ));
         }
@@ -287,6 +376,25 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             } else {
                 order_problems.push(format!(
                     "states canary: surface {:?} did not extract {:?} (states-grammar regression or corpus drift)",
+                    surface, fact
+                ));
+            }
+        }
+        for (surface, fact) in &value_canaries {
+            let hit = facts
+                .surfaces
+                .get(surface)
+                .is_some_and(|s| s.tokens.iter().any(|f| f == fact));
+            if hit {
+                order_passed += 1;
+            } else if stats.theme_values.is_none() {
+                order_problems.push(format!(
+                    "value canary: {:?} configured but no goldens were loaded (pass --goldens or ship src/ui-theme/golden)",
+                    surface
+                ));
+            } else {
+                order_problems.push(format!(
+                    "value canary: surface {:?} did not carry {:?} (goldens-wiring regression or theme drift on corpus refresh)",
                     surface, fact
                 ));
             }
@@ -311,7 +419,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                 ));
             }
         }
-        if !canary_list.is_empty() || !order_canaries.is_empty() || !states_canaries.is_empty() {
+        if !canary_list.is_empty() || !order_canaries.is_empty() || !states_canaries.is_empty() || !value_canaries.is_empty() {
             // one pass over every chunk, all canaries at once
             let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
             // a registration route may live only in analysis/routes.json
@@ -369,7 +477,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             }
             problems.extend(order_problems);
             passed += order_passed;
-            stats.canaries = Some((passed, canary_list.len() + order_canaries.len() + states_canaries.len()));
+            stats.canaries = Some((passed, canary_list.len() + order_canaries.len() + states_canaries.len() + value_canaries.len()));
             if !problems.is_empty() {
                 return Err(format!("canary check failed:\n  {}", problems.join("\n  ")));
             }

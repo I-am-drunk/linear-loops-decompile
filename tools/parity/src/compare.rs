@@ -113,7 +113,11 @@ pub fn check(ours: &FactFile, reference: &FactFile, improvements: &[Improvement]
             // App-level synthetic surfaces (route table, token namespace) exist
             // in every UI build — omitting them from our facts is a violation
             // (accidental deletion must be loud), not iterative ramp.
-            if name.starts_with("app.") || name.starts_with("theme.") {
+            // Scoped to the two P1 surfaces by exact name: theme VALUE
+            // surfaces (`theme.values.*`, #218) ramp like component surfaces —
+            // a UI build that has not adopted a parametrization yet is
+            // not-built there, not broken.
+            if name == "app.routes" || name == "theme.tokens" {
                 push_deviation(&mut out, improvements, &mut used, name, "surface", "missing", "surface not declared".to_string());
             } else {
                 out.not_built.push(name.clone());

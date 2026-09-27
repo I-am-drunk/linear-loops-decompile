@@ -65,6 +65,10 @@ A family compares only where the reference has facts for it (ramp rule).
 `order` extraction (H3 #207): `` orderingKey: `k` `` chains (column order) and
 `` key:/name: `` options-array chains (filter/section order); longest chain per
 surface; pinned by `order:<Surface>=<a> > <b> > …` canary lines.
+Theme VALUES (#218): `src/ui-theme/golden/golden-derived-*.json` (corpus-
+executed, H2) become `theme.values.<param>.<retina>` surfaces with exact
+`token=value` facts; `value:<Surface>=<token>=<value>` canaries pin the wiring;
+absent goldens = uncovered, named on the stats line.
 `states` extraction (H3 #213): copy-arm ternary literals → `alt:<a>|<b>`
 state-alternate facts (the gating variable is minified away; the pair is the
 fact); pinned by `states:<Surface>=alt:<a>|<b>` canary lines.

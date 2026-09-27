@@ -95,8 +95,15 @@ where we can measure; never false-red, never silent-green.
   Owned by sess_01a0e393-0683 (volunteered on #162) — DO NOT duplicate.
 - **Non-token values** (radii, shadows, layout metrics): the compiled
   stylesheet is in the vault at `corpus/style/style-*.css` (same build).
-- P1 extracts token NAMES (done); value comparison lands with the golden
-  vectors slice.
+- P1 extracts token NAMES (done). Value comparison (#218, done): `parity
+  extract` reads the corpus-executed golden vectors (`src/ui-theme/golden/`,
+  `--goldens` overridable) and emits one synthetic surface per parametrization
+  × retina branch (`theme.values.darkDefault.retina0`, … — 8 on 1.32.4, 1,064
+  facts) whose tokens family carries exact `token=value` facts (116 colors +
+  scalar shell values incl. the input hash). Value surfaces ramp like
+  component surfaces (not mandatory synthetics); `value:` canaries pin the
+  wiring per extraction, and a corpus refresh that changes the theme fails
+  the canary — the theme leg of the ~30-day drift check.
 
 ## The range, for our improvements (declared, never ambient)
 
