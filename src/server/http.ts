@@ -5,6 +5,9 @@
  * - `GET /.well-known/t3/environment` — mounted from R9's connect package
  *   (the caller passes the handler; the server doesn't import connect, so
  *   the dependency direction stays connect → server, never circular).
+ * - `POST /webhooks/linear-agent` — T-605's AgentSessionEvent surface
+ *   (golden-goose inbound), mounted by the composition root via the same
+ *   caller-passed pattern.
  * - static files from `staticDir` (the webui build output; index.html
  *   fallback for SPA routes).
  * - WebSocket upgrade is NOT handled here: `createLoopsServer` returns the
@@ -25,6 +28,8 @@ export interface HttpOptions {
   staticDir?: string | undefined;
   /** R9's environment descriptor handler (T-901). Mounted when present. */
   environmentHandler?: ((req: IncomingMessage, res: ServerResponse) => void) | undefined;
+  /** T-605's AgentSessionEvent handler (golden goose inbound). Mounted when present. */
+  agentWebhookHandler?: ((req: IncomingMessage, res: ServerResponse) => void) | undefined;
   version?: string;
 }
 
@@ -63,6 +68,14 @@ export function createHttpServer(options: HttpOptions): Server {
           options.environmentHandler(req, res);
         } else {
           sendJson(res, 404, { error: "connect package not mounted" });
+        }
+        return;
+      }
+      if (path === "/webhooks/linear-agent") {
+        if (options.agentWebhookHandler !== undefined) {
+          options.agentWebhookHandler(req, res);
+        } else {
+          sendJson(res, 404, { error: "agent webhooks not mounted" });
         }
         return;
       }

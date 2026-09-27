@@ -329,3 +329,39 @@ test("unknown action → 200-and-skip", async () => {
   assert.equal(skips.length, 1);
   assert.match(String(skips[0]!["reason"]), /unhandled action: refreshed/);
 });
+
+// ---- http.ts mount (the caller-passed-handler route) -------------------------
+
+test("mounted on the real http server: signed created over the wire → 200 + run started", async () => {
+  const { createHttpServer } = await import("./http.ts");
+  const fx = fixtureCommands();
+  const store = new Store(openDatabase(":memory:"));
+  const server = createHttpServer({
+    agentWebhookHandler: createAgentWebhookHandler({
+      secrets: { getSigningSecret: () => SECRET },
+      inboundLoop: { getInboundLoopId: () => "loop-inbound" },
+      commands: fx.commands,
+      store,
+    }),
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const address = server.address();
+    const port = typeof address === "object" && address !== null ? address.port : 0;
+    const raw = Buffer.from(JSON.stringify(CREATED_PAYLOAD));
+    const res = await fetch(`http://127.0.0.1:${port}/webhooks/linear-agent`, {
+      method: "POST",
+      headers: { "content-type": "application/json", "linear-signature": sign(SECRET, raw), "linear-delivery": "del_http" },
+      body: raw,
+    });
+    assert.equal(res.status, 200);
+    assert.equal(fx.started.length, 1);
+    assert.equal(readRunForSession(store, "sess_linear_1"), "run_1");
+
+    // Unmounted paths still 404 through the same server.
+    const nope = await fetch(`http://127.0.0.1:${port}/webhooks/other`, { method: "POST" });
+    assert.equal(nope.status, 404);
+  } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
