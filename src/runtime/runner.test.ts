@@ -180,25 +180,86 @@ describe("Runner", () => {
     assert.equal(stale.stopSignal, undefined, "a sweeper halt is not a user stop");
   });
 
-  it("marks a mid-stream run stale cooperatively, keeping partial parts (T-504)", async () => {
+  it("markStale settles a HUNG brain immediately and fences late output (T-504)", async () => {
     let openGate!: () => void;
     const gate = new Promise<void>((r) => { openGate = r; });
     const brain: Brain = {
-      async *stream(_input: BrainInput, signal: AbortSignal) {
+      async *stream(_input: BrainInput, _signal: AbortSignal) {
         yield { kind: "thought", text: "partial reasoning" };
-        await gate;
-        if (signal.aborted) return;
-        yield { kind: "response", text: "should never arrive" };
+        await gate; // the hung provider: wakes long after abort, ignoring it
+        yield { kind: "response", text: "late output" }; // fenced on arrival
       },
     };
     const runner = new Runner(deps());
     const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await new Promise((r) => setTimeout(r, 0)); // the first part lands on the run
     runner.markStale(run.id);
-    openGate();
-    const done = await runner.whenIdle(run.id);
-    assert.equal(done.status, "stale");
+    // Settles NOW — never waiting on the brain that went silent.
+    const stale = await runner.whenIdle(run.id);
+    assert.equal(stale.status, "stale");
+    assert.ok(stale.endedAt !== undefined);
     const turns = runner.getTurns(run.id);
+    assert.equal(turns[0]!.status, "error", "dangling turn closed (interrupted rule)");
     assert.deepEqual(turns[0]!.parts, [{ kind: "thought", text: "partial reasoning" }], "partial kept");
+    // The dead stream wakes later: fenced — nothing changes.
+    openGate();
+    await new Promise((r) => setTimeout(r, 10));
+    const after = runner.getRun(run.id);
+    assert.equal(after.status, "stale");
+    assert.equal(runner.getTurns(run.id)[0]!.parts.length, 1, "late output never appended");
+  });
+
+  it("markStale inside a runStatus callback stops the drive before the brain starts (T-504)", async () => {
+    let streamStarted = false;
+    const parked = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: parked });
+    await runner.whenIdle(run.id);
+    const turnCount = runner.getTurns(run.id).length;
+    let skippedReplay = false;
+    runner.subscribe(run.id, (e) => {
+      if (e.type === "runStatus" && e.status === "active") {
+        // The subscription replays the first exchange's buffered active
+        // event — only the LIVE one (from respond's drive) is the test target.
+        if (!skippedReplay) { skippedReplay = true; return; }
+        runner.markStale(run.id);
+      }
+    });
+    const brain2: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        streamStarted = true;
+        yield { kind: "response", text: "should never stream" };
+      },
+    };
+    runner.respond(run.id, "connected", brain2);
+    await runner.whenIdle(run.id);
+    assert.equal(runner.getRun(run.id).status, "stale");
+    assert.equal(streamStarted, false, "no exchange starts for a dead run");
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns.length, turnCount + 1, "only the user's answer turn is appended");
+    assert.equal(turns[turns.length - 1]!.role, "user");
+  });
+
+  it("revives a stale run via continueRun with its full history (T-504)", async () => {
+    const parked = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: parked });
+    await runner.whenIdle(run.id);
+    const startedAt = runner.getRun(run.id).startedAt;
+    runner.markStale(run.id);
+    const events = recorder(runner, run.id);
+    runner.continueRun(run.id, "retry the exchange", new ScriptBrain([[{ kind: "response", text: "recovered" }]]));
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "complete");
+    assert.equal(done.startedAt, startedAt, "the original start survives the revive");
+    assert.ok(done.endedAt !== undefined, "re-terminated cleanly");
+    assert.deepEqual(statuses(events).slice(-3), ["stale", "active", "complete"], "stale → active → complete");
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns[turns.length - 1]!.parts[0]!.kind, "response");
   });
 
   it("refuses cancel/markStale on terminal runs, finished runs are never stale (T-504)", async () => {

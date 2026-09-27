@@ -13,13 +13,14 @@
  *   between exchanges as a new user turn — the run never flickers through
  *   `complete` while a steer is pending (active→active self-transition).
  * - `cancel` is the user's `stop` signal (T-504): cooperative — the brain's
- *   AbortSignal fires, parts already streamed are kept, the signal is
- *   recorded on the run, and the run lands in `canceled`.
+ *   AbortSignal fires, parts already streamed are kept, the drive loop lands
+ *   `canceled`, and the signal is recorded on the run.
  * - `markStale` is the sweeper's halt (T-504): a run whose runner stopped
- *   reporting lands in `stale` (same cooperative abort; an explicit user
- *   stop wins if both land mid-exchange). `stale → active` revives.
- * - `continueRun` re-activates a `complete` run with its full history
- *   (continuation — the same context plus the new message).
+ *   reporting lands in `stale` IMMEDIATELY — it never waits on the brain
+ *   that went silent. The dead exchange is fenced: a late-waking stream
+ *   cannot change the stale run. `continueRun` revives (`stale → active`).
+ * - `continueRun` re-activates a `complete` run (continuation) or a `stale`
+ *   run (revival) with its full history.
  *
  * Subscriptions: `subscribe(runId, listener, sinceSeq?)` replays missed
  * events from a per-run ring buffer, then delivers live events. `seq` is
@@ -99,6 +100,13 @@ interface RunState {
   staleRequested: boolean;
   /** The user's stop signal, captured when cancel lands (T-504). */
   stopSignal: StopSignal | null;
+  /**
+   * Set when markStale landed the terminal state while a drive loop was
+   * mid-exchange: the (now-dead) loop must not append parts, transition, or
+   * re-activate the run when its stream eventually wakes (T-504 finding:
+   * fence late stream output). Cleared when a new exchange starts.
+   */
+  fenced: boolean;
   driving: boolean;
   idle: Promise<Run> | null;
   idleResolve: ((run: Run) => void) | null;
@@ -157,6 +165,7 @@ export class Runner {
       cancelRequested: false,
       staleRequested: false,
       stopSignal: null,
+      fenced: false,
       driving: false,
       idle: null,
       idleResolve: null,
@@ -192,15 +201,25 @@ export class Runner {
   }
 
   /**
-   * Continue a COMPLETE run with a follow-up message: appends a user turn
-   * and re-activates the run with its full history (SPECS/agent.md
-   * §continuation). Requires the brain (stateless runtime, pluggable brain).
+   * Continue a COMPLETE run with a follow-up message, or REVIVE a `stale`
+   * one (T-504): appends a user turn and re-activates the run with its full
+   * history (SPECS/agent.md §continuation). Revival is how the UI's
+   * "Continue" action works on an unresponsive run — same follow-up path,
+   * the dead exchange's request slate wiped clean. Requires the brain
+   * (stateless runtime, pluggable brain).
    */
   continueRun(runId: EntityId, message: string, brain: Brain): void {
     const state = this.#state(runId);
-    if (state.run.status !== "complete") {
-      throw new IllegalRunTransitionError(state.run.status, "active");
+    const status = state.run.status;
+    if (status !== "complete" && status !== "stale") {
+      throw new IllegalRunTransitionError(status, "active");
     }
+    // A revive starts with a clean request slate: markStale's flags and the
+    // fence were consumed when the stale status landed.
+    state.cancelRequested = false;
+    state.staleRequested = false;
+    state.fenced = false;
+    state.stopSignal = null;
     state.brain = brain;
     this.#appendUserTurn(state, message);
     this.#drive(state, message);
@@ -210,9 +229,11 @@ export class Runner {
    * Cooperative cancel — the user's `stop` signal (T-504, official
    * AgentActivitySignal.stop semantics: halt immediately; partial parts are
    * kept, never rolled back). Active run: the brain's signal fires and the
-   * exchange unwinds into `canceled`. Parked or queued runs transition
-   * immediately. The signal is recorded on the run (`stopSignal`) so
-   * persistence and the golden-goose adapter can surface it.
+   * DRIVE LOOP lands the exchange into `canceled` (deferring to the loop —
+   * never landing mid-callback — is what keeps the state machine single-
+   * writer). Parked or queued runs transition immediately. The signal is
+   * recorded on the run (`stopSignal`) so persistence and the golden-goose
+   * adapter can surface it.
    */
   cancel(runId: EntityId): void {
     const state = this.#state(runId);
@@ -222,9 +243,9 @@ export class Runner {
     }
     state.cancelRequested = true;
     state.stopSignal = { at: this.#iso(), source: "user" };
-    if (status === "active" && state.abort !== null) {
+    if (status === "active") {
       state.brain?.cancel?.(runId);
-      state.abort.abort();
+      state.abort?.abort(); // may be unassigned mid-setup; #drive re-fires it
       return; // the drive loop lands the transition
     }
     this.#transition(state, "canceled", { stopSignal: state.stopSignal });
@@ -235,9 +256,15 @@ export class Runner {
    * Mark a run `stale` — the sweeper's halt (T-504): the run was live or
    * queued but its runner/brain stopped reporting without reaching a
    * terminal signal (process death without a snapshot, a hung provider).
-   * Active runs are aborted cooperatively (same mechanism as cancel; a
-   * user stop wins if both land mid-exchange). Terminal runs throw — a
-   * finished run is never stale. `stale → active` revives (run-machine).
+   *
+   * Unlike cancel, this does NOT wait for stream cooperation — waiting on
+   * the very brain that went silent would defeat the purpose. An active
+   * run's dangling turn is closed as `error` (the fromSnapshot
+   * "interrupted" rule), the run lands `stale` immediately, `whenIdle`
+   * settles, and the dead drive loop is FENCED: a late-waking stream
+   * cannot append parts, transition, or re-activate the run. Terminal
+   * runs throw — a finished run is never stale. Revive via
+   * `continueRun` (stale → active).
    */
   markStale(runId: EntityId): void {
     const state = this.#state(runId);
@@ -246,9 +273,15 @@ export class Runner {
       throw new IllegalRunTransitionError(status, "stale");
     }
     state.staleRequested = true;
-    if (status === "active" && state.abort !== null) {
-      state.abort.abort();
-      return; // the drive loop lands the transition
+    if (status === "active") {
+      state.abort?.abort(); // cooperative nudge; we do not wait for it
+      state.fenced = true;
+      // Close the dead exchange's dangling turn (streaming → error) so the
+      // run history has no open turn while stale.
+      const last = state.turns[state.turns.length - 1];
+      if (last !== undefined && last.status === "streaming") {
+        this.#closeTurn(state, last, "error");
+      }
     }
     this.#transition(state, "stale");
     this.#settleIdle(state);
@@ -281,6 +314,7 @@ export class Runner {
       cancelRequested: false,
       staleRequested: false,
       stopSignal: null,
+      fenced: false,
       driving: false,
       idle: null,
       idleResolve: null,
@@ -427,11 +461,19 @@ export class Runner {
               "active",
               state.run.status === "awaitingInput" ? { pendingElicitation: undefined } : undefined,
             );
+            // A subscriber may have marked the run stale INSIDE the status
+            // event (abort was unassigned, so markStale landed immediately)
+            // — stop before opening a turn for a dead run.
+            if (state.fenced) return;
           }
           const history = [...state.turns];
           const turn = this.#openTurn(state, "agent");
           const abort = new AbortController();
           state.abort = abort;
+          // Same fence after the turnStarted event; and requests that fired
+          // while abort was unassigned still reach the brain from tick one.
+          if (state.fenced) return;
+          if (state.cancelRequested || state.staleRequested) abort.abort();
           let elicited = false;
           try {
             const stream = brain.stream(
@@ -439,6 +481,9 @@ export class Runner {
               abort.signal,
             );
             for await (const part of stream) {
+              // Fenced (markStale landed mid-stream): late stream output is
+              // dropped, never appended — the stale run is immutable.
+              if (state.fenced) break;
               // A part the brain already yielded is KEPT, even if a cancel
               // landed concurrently — cancel stops pulling, it does not
               // roll back (SPECS/agent.md: partial parts survive cancel).
@@ -452,7 +497,8 @@ export class Runner {
             }
           } catch (err) {
             state.abort = null;
-            this.#closeTurn(state, turn, "error");
+            if (turn.status === "streaming") this.#closeTurn(state, turn, "error");
+            if (state.fenced) return; // markStale already landed the terminal state
             if (state.cancelRequested) {
               this.#transition(state, "canceled", { stopSignal: state.stopSignal ?? undefined });
             } else if (state.staleRequested) {
@@ -465,7 +511,8 @@ export class Runner {
             return;
           }
           state.abort = null;
-          this.#closeTurn(state, turn, "complete");
+          if (turn.status === "streaming") this.#closeTurn(state, turn, "complete");
+          if (state.fenced) return; // markStale landed mid-stream
           if (state.cancelRequested) {
             this.#transition(state, "canceled", { stopSignal: state.stopSignal ?? undefined });
             return;
