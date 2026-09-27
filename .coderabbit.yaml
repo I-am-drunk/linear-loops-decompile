@@ -6,7 +6,7 @@ early_access: true        # newest review features
 
 reviews:
   profile: "assertive"          # thorough — this codebase is agent-written and earns the scrutiny
-  request_changes_workflow: false  # findings come as comments; merge gating = required check + buddy review (no bot-driven stalls)
+  request_changes_workflow: true   # user directive 2026-09-27 (issue #154): findings must be addressed before merge — the stall is the feature now
   high_level_summary: true
   poem: false
   review_status: true           # status comment + the `CodeRabbit` check run on every PR

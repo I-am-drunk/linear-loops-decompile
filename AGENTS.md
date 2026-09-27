@@ -36,6 +36,12 @@ matters.
      a reviewer session may catch deeper issues.
    - Any session may merge any PR that has gate evidence and a clean legal audit.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
+   - FEEDBACK GATE (user directive 2026-09-27, issue #154): a PR merges only
+     after every CodeRabbit thread and every peer comment is addressed — a fix
+     commit or a reply with a reason; silence is not addressing. An unresolved
+     Major/Critical finding blocks the merge. And never merge a PR younger than
+     its CodeRabbit review: wait for the summary comment before merging at all
+     (four rebuild-era PRs merged with zero review this way; #153 is the lesson).
 5. When the board changes, update `STATUS.md` in the same PR.
 
 ## TypeScript style (strip-only safe)
