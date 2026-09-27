@@ -25,8 +25,8 @@ fi
 echo "== 2/4 client bundle crawl (resumable) =="
 (cd "$CORPUS" && node ../crawl-client.mjs)
 
-COUNT_CLIENT=$(find "$CORPUS/client" -name '*.js' 2>/dev/null | wc -l)
-COUNT_PRETTY=$(find "$CORPUS/pretty/client" -name '*.js' 2>/dev/null | wc -l)
+COUNT_CLIENT=$(find "$CORPUS/client" -name '*.js' 2>/dev/null | wc -l || true)
+COUNT_PRETTY=$(find "$CORPUS/pretty/client" -name '*.js' 2>/dev/null | wc -l || true)
 if [ "$COUNT_PRETTY" -ge "$COUNT_CLIENT" ] && [ "$COUNT_PRETTY" -gt 0 ] && [ "$FORCE" != "--force" ]; then
   echo "== 3/4 prettify: cached ($COUNT_PRETTY files) =="
 else

@@ -23,6 +23,8 @@ import plistlib,sys
 d = plistlib.load(open(sys.argv[1],'rb'))
 print("version:", d["CFBundleShortVersionString"])
 print("asar integrity:", d.get("ElectronAsarIntegrity"))
+import datetime,json
+json.dump({"version": d["CFBundleShortVersionString"], "date": datetime.date.today().isoformat()}, open("VERSION.json","w"))
 PY
 
 echo "== 4. Extract app.asar (Electron shell) =="

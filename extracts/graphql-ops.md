@@ -1,264 +1,262 @@
 # Linear Client GraphQL Operations (condensed catalog)
 
-Source: production client bundle, v1.32.4 (2026-09-26). 258 operations.
-Full operation documents are regenerated locally by the runbook (they are extracted
-from the prettified bundle on demand — see RUNBOOK-decompile.md §extracts).
+Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual interface data for interoperability. Regenerate with pipeline/run.sh. 258 operations.
 
-- **mutation** `AccessKeyCreate` — `($pipelineId: String!)`
-- **mutation** `AccessKeyRevoke` — `($id: String!, $immediate: Boolean)`
-- **mutation** `AccessKeyRotate` — `($id: String!, $revokeImmediately: Boolean)`
-- **mutation** `AddUserMessageToAiPromptProgress` — `($progressId: String!, $message: String!)`
-- **query** `AgentSessionCodingHarness` — `($id: String!)`
-- **query** `AgentSessionCodingHarnessModelLabel` — `($id: String!)`
-- **mutation** `AgentSessionRestartWithDefaultModel` — `($id: String!)`
-- **query** `AgentSessionSandbox` — `($agentSessionId: String!)`
-- **query** `AgentSessionSshAddress` — `($agentSessionId: String!)`
-- **query** `AgentSkillDetailSuggestion` — `($input: AgentSkillDetailSuggestionInput!)`
-- **query** `AgentsWithSessionSupport` — `(filter: { app: { eq: true } })`
-- **mutation** `AiConversationCancel` — `($id: String!)`
-- **query** `AiConversationDebugExecutions` — `($limit: Int, $userId: String, $sourceType: AiConversationInitialSource!)`
-- **query** `AiConversationDebugThreadState` — `($id: String!)`
-- **mutation** `AiConversationSendElicitationResponses` — `($input: AiConversationSendElicitationResponsesInput!)`
-- **mutation** `AiConversationSendMessage` — `($input: AiConversationSendMessageInput!)`
-- **query** `AiConversationsQuery` — `( $first: Int $after: String $last: Int $before: String $filter: AiConversationFilter )`
-- **query** `ApplicationInfoQuery` — `($clientId: String!)`
-- **query** `ApplicationWithAuthorizationQuery` — `( $clientId: String! $scope: [String!]! $redirectUri: String! $actor: String )`
-- **query** `ArchivedCustomerNeedsCount` — `($customerId: String!)`
+- **mutation** `AccessKeyCreate` `($pipelineId: String!)`
+- **mutation** `AccessKeyRevoke` `($id: String!, $immediate: Boolean)`
+- **mutation** `AccessKeyRotate` `($id: String!, $revokeImmediately: Boolean)`
+- **mutation** `AddUserMessageToAiPromptProgress` `($progressId: String!, $message: String!)`
+- **query** `AgentSessionCodingHarness` `($id: String!)`
+- **query** `AgentSessionCodingHarnessModelLabel` `($id: String!)`
+- **mutation** `AgentSessionRestartWithDefaultModel` `($id: String!)`
+- **query** `AgentSessionSandbox` `($agentSessionId: String!)`
+- **query** `AgentSessionSshAddress` `($agentSessionId: String!)`
+- **query** `AgentSkillDetailSuggestion` `($input: AgentSkillDetailSuggestionInput!)`
+- **query** `AgentsWithSessionSupport` `(filter: { app: { eq: true } })`
+- **mutation** `AiConversationCancel` `($id: String!)`
+- **query** `AiConversationDebugExecutions` `($limit: Int, $userId: String, $sourceType: AiConversationInitialSource!)`
+- **query** `AiConversationDebugThreadState` `($id: String!)`
+- **mutation** `AiConversationSendElicitationResponses` `($input: AiConversationSendElicitationResponsesInput!)`
+- **mutation** `AiConversationSendMessage` `($input: AiConversationSendMessageInput!)`
+- **query** `AiConversationsQuery` `( $first: Int $after: String $last: Int $before: String $filter: AiConversationFilter )`
+- **query** `ApplicationInfoQuery` `($clientId: String!)`
+- **query** `ApplicationWithAuthorizationQuery` `( $clientId: String! $scope: [String!]! $redirectUri: String! $actor: String )`
+- **query** `ArchivedCustomerNeedsCount` `($customerId: String!)`
 - **query** `ArchivedIntegrationsQuery`
 - **query** `ArchivedTeamsQuery`
-- **mutation** `AsksWebSettingsCustomHostnameRefreshMutation` — `($asksWebSettingsId: String!)`
-- **mutation** `AttachmentLinkFront` — `($issueId: String!, $conversationId: String!)`
-- **mutation** `AttachmentLinkGitHubIssue` — `($issueId: String!, $url: String!)`
-- **mutation** `AttachmentLinkGitHubPR` — `($issueId: String!, $url: String!, $linkKind: GitLinkKind)`
-- **mutation** `AttachmentLinkGitLabMR` — `( $issueId: String! $url: String! $projectPathWithNamespace: String! $number: Float! )`
-- **mutation** `AttachmentLinkSlack` — `($url: String!, $issueId: String!, $syncToCommentThread: Boolean)`
-- **mutation** `AttachmentSyncToSlack` — `($id: String!)`
-- **query** `AuditLogSettingsPage` — `($first: Int, $last: Int, $after: String, $before: String, $type: String, $notType: String)`
-- **query** `AuditLogWebhookFailureEventsQuery` — `($webhookId: String!)`
+- **mutation** `AsksWebSettingsCustomHostnameRefreshMutation` `($asksWebSettingsId: String!)`
+- **mutation** `AttachmentLinkFront` `($issueId: String!, $conversationId: String!)`
+- **mutation** `AttachmentLinkGitHubIssue` `($issueId: String!, $url: String!)`
+- **mutation** `AttachmentLinkGitHubPR` `($issueId: String!, $url: String!, $linkKind: GitLinkKind)`
+- **mutation** `AttachmentLinkGitLabMR` `( $issueId: String! $url: String! $projectPathWithNamespace: String! $number: Float! )`
+- **mutation** `AttachmentLinkSlack` `($url: String!, $issueId: String!, $syncToCommentThread: Boolean)`
+- **mutation** `AttachmentSyncToSlack` `($id: String!)`
+- **query** `AuditLogSettingsPage` `($first: Int, $last: Int, $after: String, $before: String, $type: String, $notType: String)`
+- **query** `AuditLogWebhookFailureEventsQuery` `($webhookId: String!)`
 - **query** `AuthenticationSessions`
 - **query** `AuthorizedApplicationsQuery`
 - **query** `AutomationTrustedSources`
 - **query** `AutomationTrustedSourcesWithUsage`
 - **query** `CachedBillingDetails`
 - **query** `CachedBillingInvoices`
-- **query** `CachedUsageAnalytics` — `( $from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatu)`
-- **query** `CachedUsageLimitRecentHighSpend` — `($subjectType: UsageLimitSubjectType!)`
-- **query** `CachedUsageLimitSpend` — `($subjectType: UsageLimitSubjectType!, $fallbackPeriod: UsageLimitPeriod!)`
-- **query** `CachedUsageSourceBreakdown` — `($range: UsageSummaryRange!, $cursor: String)`
-- **query** `CachedUsageSummary` — `($range: UsageSummaryRange!, $cursor: String)`
-- **query** `CodingEnvironmentLatestSnapshotStatus` — `($id: String!)`
-- **mutation** `CodingEnvironmentRefresh` — `($id: String!)`
-- **mutation** `CodingEnvironmentSecretKeyCreate` — `($codingEnvironmentId: String!)`
-- **query** `CodingEnvironmentSnapshots` — `($id: String!, $first: Int!, $offset: Int!)`
-- **mutation** `CodingEnvironmentTerminalStart` — `($codingEnvironmentId: String!)`
-- **mutation** `CodingEnvironmentTerminalStop` — `($codingEnvironmentId: String!, $sandboxHandle: String!)`
+- **query** `CachedUsageAnalytics` `( $from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatu)`
+- **query** `CachedUsageLimitRecentHighSpend` `($subjectType: UsageLimitSubjectType!)`
+- **query** `CachedUsageLimitSpend` `($subjectType: UsageLimitSubjectType!, $fallbackPeriod: UsageLimitPeriod!)`
+- **query** `CachedUsageSourceBreakdown` `($range: UsageSummaryRange!, $cursor: String)`
+- **query** `CachedUsageSummary` `($range: UsageSummaryRange!, $cursor: String)`
+- **query** `CodingEnvironmentLatestSnapshotStatus` `($id: String!)`
+- **mutation** `CodingEnvironmentRefresh` `($id: String!)`
+- **mutation** `CodingEnvironmentSecretKeyCreate` `($codingEnvironmentId: String!)`
+- **query** `CodingEnvironmentSnapshots` `($id: String!, $first: Int!, $offset: Int!)`
+- **mutation** `CodingEnvironmentTerminalStart` `($codingEnvironmentId: String!)`
+- **mutation** `CodingEnvironmentTerminalStop` `($codingEnvironmentId: String!, $sandboxHandle: String!)`
 - **query** `CommitSigningKey`
-- **mutation** `CommitSigningKeyCreate` — `($name: String!, $privateKey: String!)`
+- **mutation** `CommitSigningKeyCreate` `($name: String!, $privateKey: String!)`
 - **mutation** `CommitSigningKeyDelete`
 - **mutation** `CompleteMcpOAuth`
-- **query** `ContributorRunsQuery` — `($input: AiConversationRootReferencesInput!)`
-- **mutation** `CreateCsvExportReport` — `($includePrivateTeamIds: [String!], $includeRestrictedTeamIds: [String!])`
+- **query** `ContributorRunsQuery` `($input: AiConversationRootReferencesInput!)`
+- **mutation** `CreateCsvExportReport` `($includePrivateTeamIds: [String!], $includeRestrictedTeamIds: [String!])`
+- **query** `CustomViewHasSubscribers` `($id: String!)`
+- **query** `CustomViewSuggestions` `($input: JSONObject!, $modelName: String)`
 - **query** `CustomerAttributesSyncProgressQuery`
-- **mutation** `CustomerAttributesTriggerRefreshMutation` — `($customerId: String!)`
+- **mutation** `CustomerAttributesTriggerRefreshMutation` `($customerId: String!)`
 - **mutation** `CustomerAttributesTriggerSyncMutation`
-- **query** `CustomViewHasSubscribers` — `($id: String!)`
-- **query** `CustomViewSuggestions` — `($input: JSONObject!, $modelName: String)`
-- **mutation** `CycleShiftAll` — `($id: String!, $daysToShift: Float!)`
-- **mutation** `CycleStartUpcomingCycleToday` — `($id: String!)`
-- **mutation** `DebugAddUsageCredit` — `($input: DebugAddUsageCreditInput!)`
-- **query** `DebugAgentSessionUsage` — `($agentSessionId: String!)`
-- **query** `DebugAiConversationUsage` — `($aiConversationId: String!)`
+- **mutation** `CycleShiftAll` `($id: String!, $daysToShift: Float!)`
+- **mutation** `CycleStartUpcomingCycleToday` `($id: String!)`
+- **mutation** `DebugAddUsageCredit` `($input: DebugAddUsageCreditInput!)`
+- **query** `DebugAgentSessionUsage` `($agentSessionId: String!)`
+- **query** `DebugAiConversationUsage` `($aiConversationId: String!)`
 - **mutation** `DebugCreateAgentUser`
-- **mutation** `DebugFillInbox` — `($input: DebugFillInboxInput!)`
+- **mutation** `DebugFillInbox` `($input: DebugFillInboxInput!)`
+- **mutation** `DebugFlagOverrideSet` `($flag: String!, $value: JSONObject)`
 - **query** `DebugFlagOverrides`
-- **mutation** `DebugFlagOverridesClear` — `($flags: [String!])`
-- **mutation** `DebugFlagOverrideSet` — `($flag: String!, $value: JSONObject)`
-- **mutation** `DebugKeepFlagOverridesSet` — `($keepFlagOverrides: Boolean!)`
+- **mutation** `DebugFlagOverridesClear` `($flags: [String!])`
+- **mutation** `DebugKeepFlagOverridesSet` `($keepFlagOverrides: Boolean!)`
 - **mutation** `DebugRecomputeUsageEntitlements`
-- **mutation** `DebugReleaseChannelOverrideSet` — `($releaseChannel: ReleaseChannel)`
+- **mutation** `DebugReleaseChannelOverrideSet` `($releaseChannel: ReleaseChannel)`
 - **mutation** `DebugResetUsageData`
 - **mutation** `DebugSeedUsageEventBreakdowns`
-- **mutation** `DebugSimulateUsageSpend` — `($input: DebugSimulateUsageSpendInput!)`
-- **mutation** `DebugTriggerUsageAlert` — `($input: DebugTriggerUsageAlertInput!)`
-- **mutation** `DesktopTerminalHandoffConsume` — `($token: String!)`
-- **mutation** `DesktopTerminalHandoffCreate` — `($input: DesktopTerminalHandoffCreateInput!)`
-- **query** `DiffFiles` — `($id: String!)`
-- **mutation** `DocumentContentAgentCheckpointCompact` — `($aiConversationId: String!)`
-- **mutation** `DocumentContentAgentCheckpointRestoreTurn` — `($aiConversationId: String!, $aiConversationTurnId: String!)`
-- **mutation** `DocumentContentAgentCheckpointRevert` — `( $documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String! )`
-- **mutation** `DocumentContentAgentCheckpointRevertTurn` — `($aiConversationId: String!, $aiConversationTurnId: String!)`
-- **mutation** `DocumentContentRevisionReview` — `($id: String!)`
-- **query** `EmailIntakeAddressDnsRecordsQuery` — `($emailIntakeAddressId: String!)`
-- **mutation** `EmailIntakeAddressRefreshSesDomainStatusMutation` — `($emailIntakeAddressId: String!)`
-- **mutation** `EmailIntakeAddressRotate` — `($id: String!)`
-- **query** `EmbedInfo` — `($url: String!)`
-- **query** `EmojiSearch` — `($input: EmojiSearchInput!)`
-- **query** `FailuresForOauthWebhooksQuery` — `($oauthClientId: String!)`
-- **mutation** `FeatureFlagDefaultIntegration` — `($integrationId: String)`
-- **mutation** `FeatureFlagIntegrationUpdate` — `($integrationId: String!, $allowFlagCreation: Boolean!)`
-- **query** `FeatureFlagSegmentsQuery` — `($integrationId: String)`
-- **query** `FigmaEmbedInfo` — `($fileId: String!, $nodeId: String)`
-- **mutation** `FileUploadMutation` — `( $filename: String! $contentType: String! $size: Int! $metaData: JSON $makePublic: Boolean )`
-- **query** `filteredUsersLastSeen` — `($cursor: String, $first: Int, $filter: UserFilter!)`
-- **query** `Flags` — `($releaseChannelOverride: ReleaseChannel, $flagClient: FlagClient)`
-- **query** `FlashcardsRecentWork` — `($userId: ID!, $since: DateTimeOrDuration!)`
-- **mutation** `FlashcardsWhatIf` — `($input: FlashcardsWhatIfInput!)`
+- **mutation** `DebugSimulateUsageSpend` `($input: DebugSimulateUsageSpendInput!)`
+- **mutation** `DebugTriggerUsageAlert` `($input: DebugTriggerUsageAlertInput!)`
+- **mutation** `DesktopTerminalHandoffConsume` `($token: String!)`
+- **mutation** `DesktopTerminalHandoffCreate` `($input: DesktopTerminalHandoffCreateInput!)`
+- **query** `DiffFiles` `($id: String!)`
+- **mutation** `DocumentContentAgentCheckpointCompact` `($aiConversationId: String!)`
+- **mutation** `DocumentContentAgentCheckpointRestoreTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
+- **mutation** `DocumentContentAgentCheckpointRevert` `( $documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String! )`
+- **mutation** `DocumentContentAgentCheckpointRevertTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
+- **mutation** `DocumentContentRevisionReview` `($id: String!)`
+- **query** `EmailIntakeAddressDnsRecordsQuery` `($emailIntakeAddressId: String!)`
+- **mutation** `EmailIntakeAddressRefreshSesDomainStatusMutation` `($emailIntakeAddressId: String!)`
+- **mutation** `EmailIntakeAddressRotate` `($id: String!)`
+- **query** `EmbedInfo` `($url: String!)`
+- **query** `EmojiSearch` `($input: EmojiSearchInput!)`
+- **query** `FailuresForOauthWebhooksQuery` `($oauthClientId: String!)`
+- **mutation** `FeatureFlagDefaultIntegration` `($integrationId: String)`
+- **mutation** `FeatureFlagIntegrationUpdate` `($integrationId: String!, $allowFlagCreation: Boolean!)`
+- **query** `FeatureFlagSegmentsQuery` `($integrationId: String)`
+- **query** `FigmaEmbedInfo` `($fileId: String!, $nodeId: String)`
+- **mutation** `FileUploadMutation` `( $filename: String! $contentType: String! $size: Int! $metaData: JSON $makePublic: Boolean )`
+- **query** `Flags` `($releaseChannelOverride: ReleaseChannel, $flagClient: FlagClient)`
+- **query** `FlashcardsRecentWork` `($userId: ID!, $since: DateTimeOrDuration!)`
+- **mutation** `FlashcardsWhatIf` `($input: FlashcardsWhatIfInput!)`
 - **query** `FreeLoopCredit`
-- **mutation** `GithubArchivedIntegrationDismissMutation` — `($id: String!, $dismissed: Boolean)`
 - **mutation** `GitHubCommitIntegrationCreate`
-- **mutation** `GitlabIntegrationConnect` — `( $accessToken: String! $gitlabUrl: String! $validationProjectPath: String $readonly: Boolean $expiresAt: String )`
-- **mutation** `GitlabIntegrationTestConnection` — `($integrationId: String!)`
-- **mutation** `GitlabRotateToken` — `($integrationId: String!)`
-- **mutation** `GitlabUpdateRotationSettings` — `($integrationId: String!, $enabled: Boolean!)`
-- **mutation** `GitlabUpdateToken` — `( $integrationId: String! $accessToken: String! $readonly: Boolean $expiresAt: DateTime )`
-- **query** `IconSearch` — `($input: IconSearchInput!)`
-- **query** `IconSuggestion` — `($input: IconSuggestionInput!)`
-- **mutation** `IdentityProviderConfigureSamlViaXml` — `($id: String!, $samlConfigXml: String, $samlConfigXmlUrl: String)`
-- **mutation** `IdentityProviderDisableScimRolePush` — `($id: String!, $role: UserRoleType!)`
-- **mutation** `IdentityProviderRotateScimToken` — `($id: String!)`
-- **mutation** `IdentityProviderUpdateScimRoleGroupName` — `($id: String!, $role: UserRoleType!, $groupName: String!)`
-- **query** `InaccessiblePrivateAsksChannelIds` — `($integrationId: String!)`
-- **query** `Insight` — `($payload: InsightPayload!)`
-- **mutation** `IntegrationAsksNotifyAutoCreateEnabled` — `($integrationId: String!, $channelId: String!, $channelName: String!)`
-- **mutation** `IntegrationCustomerDataAttributesRefreshMutation` — `($input: IntegrationCustomerDataAttributesRefreshInput!)`
-- **mutation** `IntegrationDatadogConnect` — `( $site: String! $apiKey: String! $applicationKey: String! $environmentId: String! )`
-- **mutation** `IntegrationDatadogEnvironments` — `($site: String!, $apiKey: String!, $applicationKey: String!)`
-- **mutation** `IntegrationGithubConnect` — `( $installationId: String! $code: String! $codeAccess: Boolean $githubHost: String $confirmReplace: Boolean )`
-- **mutation** `IntegrationGitHubEnterpriseServerConnect` — `($githubUrl: String!, $organizationName: String!)`
+- **mutation** `GithubArchivedIntegrationDismissMutation` `($id: String!, $dismissed: Boolean)`
+- **mutation** `GitlabIntegrationConnect` `( $accessToken: String! $gitlabUrl: String! $validationProjectPath: String $readonly: Boolean $expiresAt: String )`
+- **mutation** `GitlabIntegrationTestConnection` `($integrationId: String!)`
+- **mutation** `GitlabRotateToken` `($integrationId: String!)`
+- **mutation** `GitlabUpdateRotationSettings` `($integrationId: String!, $enabled: Boolean!)`
+- **mutation** `GitlabUpdateToken` `( $integrationId: String! $accessToken: String! $readonly: Boolean $expiresAt: DateTime )`
+- **query** `IconSearch` `($input: IconSearchInput!)`
+- **query** `IconSuggestion` `($input: IconSuggestionInput!)`
+- **mutation** `IdentityProviderConfigureSamlViaXml` `($id: String!, $samlConfigXml: String, $samlConfigXmlUrl: String)`
+- **mutation** `IdentityProviderDisableScimRolePush` `($id: String!, $role: UserRoleType!)`
+- **mutation** `IdentityProviderRotateScimToken` `($id: String!)`
+- **mutation** `IdentityProviderUpdateScimRoleGroupName` `($id: String!, $role: UserRoleType!, $groupName: String!)`
+- **query** `InaccessiblePrivateAsksChannelIds` `($integrationId: String!)`
+- **query** `Insight` `($payload: InsightPayload!)`
+- **mutation** `IntegrationAsksNotifyAutoCreateEnabled` `($integrationId: String!, $channelId: String!, $channelName: String!)`
+- **mutation** `IntegrationCustomerDataAttributesRefreshMutation` `($input: IntegrationCustomerDataAttributesRefreshInput!)`
+- **mutation** `IntegrationDatadogConnect` `( $site: String! $apiKey: String! $applicationKey: String! $environmentId: String! )`
+- **mutation** `IntegrationDatadogEnvironments` `($site: String!, $apiKey: String!, $applicationKey: String!)`
+- **mutation** `IntegrationGitHubEnterpriseServerConnect` `($githubUrl: String!, $organizationName: String!)`
 - **query** `IntegrationGitHubEnterpriseServerPreviouslyConnected`
-- **mutation** `IntegrationGithubImportRefreshMutation` — `($id: String!)`
-- **query** `IntegrationJiraProjectStatuses` — `($integrationId: String!, $projectId: String!)`
-- **mutation** `IntegrationSalesforceMetadataRefreshMutation` — `($id: String!)`
-- **query** `IntegrationWorkflowChatTriggerChannels` — `($integrationId: String!)`
-- **mutation** `IntegrationZendeskBearerTokenConnect` — `( $subdomain: String! $accessToken: String! $botUserRole: String $botUserId: String $customApiUrl: String )`
-- **mutation** `IssueDelete` — `($issueId: String!)`
-- **mutation** `IssueExternalSyncDisable` — `($attachmentId: String!)`
-- **query** `IssueImportCheckCSV` — `($csvUrl: String!, $service: String!)`
-- **query** `IssueImportCheckSync` — `($issueImportId: String!)`
-- **mutation** `IssueImportCreateAsana` — `( $teamId: String $teamName: String $includeClosedIssues: Boolean $asanaToken: String! $asanaTeamName: String! )`
-- **mutation** `IssueImportCreateClubhouse` — `( $teamId: String $teamName: String $includeClosedIssues: Boolean $clubhouseToken: String! $clubhouseGroupName: String! )`
-- **mutation** `IssueImportCreateCSVJira` — `( $organizationId: String $teamId: String $teamName: String $csvUrl: String! $jiraToken: String $jiraHostname: String $jiraEmail: String )`
-- **mutation** `IssueImportCreateGithub` — `( $teamId: String $teamName: String $includeClosedIssues: Boolean $githubRepoIds: [Int!]! $githubLabels: [String!] )`
-- **mutation** `IssueImportCreateJira` — `( $teamId: String $teamName: String $includeClosedIssues: Boolean $jiraEmail: String! $jiraHostname: String! $jiraProject: String! $jiraToken: String! $jql: Stri)`
-- **mutation** `IssueImportCreateLinearV2` — `($linearSourceOrganizationId: String!)`
-- **mutation** `IssueImportDelete` — `($issueImportId: String!)`
-- **query** `IssueImportJqlCheckQuery` — `( $jiraHostname: String! $jiraEmail: String! $jiraToken: String! $jiraProject: String! $jql: String! )`
-- **mutation** `IssueImportProcess` — `($issueImportId: String!, $mapping: JSONObject!)`
-- **query** `IssueSuggestions` — `($issueId: String, $text: String)`
-- **query** `IssueTitleSuggestion` — `($description: String!)`
-- **query** `IssueTitleSuggestionFromCustomerRequest` — `($input: String!)`
+- **mutation** `IntegrationGithubConnect` `( $installationId: String! $code: String! $codeAccess: Boolean $githubHost: String $confirmReplace: Boolean )`
+- **mutation** `IntegrationGithubImportRefreshMutation` `($id: String!)`
+- **query** `IntegrationJiraProjectStatuses` `($integrationId: String!, $projectId: String!)`
+- **mutation** `IntegrationSalesforceMetadataRefreshMutation` `($id: String!)`
+- **query** `IntegrationWorkflowChatTriggerChannels` `($integrationId: String!)`
+- **mutation** `IntegrationZendeskBearerTokenConnect` `( $subdomain: String! $accessToken: String! $botUserRole: String $botUserId: String $customApiUrl: String )`
+- **mutation** `IssueDelete` `($issueId: String!)`
+- **mutation** `IssueExternalSyncDisable` `($attachmentId: String!)`
+- **query** `IssueImportCheckCSV` `($csvUrl: String!, $service: String!)`
+- **query** `IssueImportCheckSync` `($issueImportId: String!)`
+- **mutation** `IssueImportCreateAsana` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $asanaToken: String! $asanaTeamName: String! )`
+- **mutation** `IssueImportCreateCSVJira` `( $organizationId: String $teamId: String $teamName: String $csvUrl: String! $jiraToken: String $jiraHostname: String $jiraEmail: String )`
+- **mutation** `IssueImportCreateClubhouse` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $clubhouseToken: String! $clubhouseGroupName: String! )`
+- **mutation** `IssueImportCreateGithub` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $githubRepoIds: [Int!]! $githubLabels: [String!] )`
+- **mutation** `IssueImportCreateJira` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $jiraEmail: String! $jiraHostname: String! $jiraProject: String! $jiraToken: String! $jql: Stri)`
+- **mutation** `IssueImportCreateLinearV2` `($linearSourceOrganizationId: String!)`
+- **mutation** `IssueImportDelete` `($issueImportId: String!)`
+- **query** `IssueImportJqlCheckQuery` `( $jiraHostname: String! $jiraEmail: String! $jiraToken: String! $jiraProject: String! $jql: String! )`
+- **mutation** `IssueImportProcess` `($issueImportId: String!, $mapping: JSONObject!)`
+- **query** `IssueSuggestions` `($issueId: String, $text: String)`
+- **query** `IssueTitleSuggestion` `($description: String!)`
+- **query** `IssueTitleSuggestionFromCustomerRequest` `($input: String!)`
 - **mutation** `LogoutOtherSessions`
-- **mutation** `LogoutSession` — `($sessionId: String!)`
-- **query** `LoopRunStats` — `($id: String!, $startDate: DateTime!, $endDate: DateTime!, $dateAggregation: DateAggregation!)`
-- **mutation** `McpServerDefinitionCreate` — `($input: McpServerDefinitionCreateInput!)`
-- **mutation** `MoveMilestone` — `($id: String!, $input: ProjectMilestoneMoveInput!)`
-- **mutation** `OauthAuthStringAuthorizeMutation` — `($appId: String!, $authString: String!)`
-- **mutation** `OAuthClientApprovalCreateMutation` — `($input: OauthClientApprovalCreateInput!)`
-- **query** `oauthClientExternalWorkspaceCountQuery` — `($id: String!)`
-- **query** `OauthClientGetAppUserRequestedSyncGroups` — `($id: String!)`
-- **mutation** `OauthClientRotateSecret` — `($id: String!)`
-- **mutation** `OauthClientRotateWebhookSecret` — `($id: String!)`
-- **mutation** `OauthClientUpdateAppUserRequestedSyncGroups` — `( $oauthClientId: String! $appUserId: String! $teamIds: [String!]! $requestAllPublicTeams: Boolean! )`
-- **mutation** `OauthCreateDeveloperToken` — `($oauthClientId: String!, $actorMode: String!, $scope: [String!])`
-- **mutation** `OauthTokenRevoke` — `($appId: String!, $scope: [String!]!)`
-- **mutation** `OauthTokenWorkspaceRevoke` — `($appId: String!)`
-- **query** `oauthWebhookSecretQuery` — `($id: String!)`
+- **mutation** `LogoutSession` `($sessionId: String!)`
+- **query** `LoopRunStats` `($id: String!, $startDate: DateTime!, $endDate: DateTime!, $dateAggregation: DateAggregation!)`
+- **mutation** `McpServerDefinitionCreate` `($input: McpServerDefinitionCreateInput!)`
+- **mutation** `MoveMilestone` `($id: String!, $input: ProjectMilestoneMoveInput!)`
+- **mutation** `OAuthClientApprovalCreateMutation` `($input: OauthClientApprovalCreateInput!)`
+- **mutation** `OauthAuthStringAuthorizeMutation` `($appId: String!, $authString: String!)`
+- **query** `OauthClientGetAppUserRequestedSyncGroups` `($id: String!)`
+- **mutation** `OauthClientRotateSecret` `($id: String!)`
+- **mutation** `OauthClientRotateWebhookSecret` `($id: String!)`
+- **mutation** `OauthClientUpdateAppUserRequestedSyncGroups` `( $oauthClientId: String! $appUserId: String! $teamIds: [String!]! $requestAllPublicTeams: Boolean! )`
+- **mutation** `OauthCreateDeveloperToken` `($oauthClientId: String!, $actorMode: String!, $scope: [String!])`
+- **mutation** `OauthTokenRevoke` `($appId: String!, $scope: [String!]!)`
+- **mutation** `OauthTokenWorkspaceRevoke` `($appId: String!)`
 - **mutation** `OrganizationAllowScimOverride`
 - **mutation** `OrganizationCancelDelete`
-- **mutation** `OrganizationDelete` — `($deletionCode: String!)`
+- **mutation** `OrganizationDelete` `($deletionCode: String!)`
 - **mutation** `OrganizationDeleteChallenge`
-- **mutation** `OrganizationDomainClaimMutation` — `($id: String!)`
-- **query** `OrganizationDomainClaimRequest` — `($id: String!)`
-- **mutation** `OrganizationDomainVerify` — `($organizationDomainId: String!, $verificationCode: String!)`
+- **mutation** `OrganizationDomainClaimMutation` `($id: String!)`
+- **query** `OrganizationDomainClaimRequest` `($id: String!)`
+- **mutation** `OrganizationDomainVerify` `($organizationDomainId: String!, $verificationCode: String!)`
 - **query** `OrganizationInviteLink`
-- **query** `OrganizationInviteLinkDetails` — `($inviteLink: String!)`
+- **query** `OrganizationInviteLinkDetails` `($inviteLink: String!)`
 - **mutation** `OrganizationInviteLinkDisable`
 - **mutation** `OrganizationInviteLinkEnable`
-- **mutation** `OrganizationOverrideQuota` — `($id: String!, $input: AdminOverrideQuotaInput!)`
-- **mutation** `organizationStartTrialForPlan` — `($planType: String!)`
-- **mutation** `OrganizationUpdateSamlSettings` — `($settings: OrganizationSamlSettingsInput!)`
+- **mutation** `OrganizationOverrideQuota` `($id: String!, $input: AdminOverrideQuotaInput!)`
+- **mutation** `OrganizationUpdateSamlSettings` `($settings: OrganizationSamlSettingsInput!)`
 - **mutation** `PartnerOfferCheckoutSessionCreate`
-- **mutation** `PartnerOfferRedemptionCancel` — `($id: String!)`
-- **mutation** `PasskeyDelete` — `($id: String!)`
-- **mutation** `PasskeyRegisterFinish` — `($response: JSONObject!)`
+- **mutation** `PartnerOfferRedemptionCancel` `($id: String!)`
+- **mutation** `PasskeyDelete` `($id: String!)`
+- **mutation** `PasskeyRegisterFinish` `($response: JSONObject!)`
 - **mutation** `PasskeyRegisterStart`
+- **mutation** `PasskeyUpdate` `($id: String!, $input: PasskeyUpdateInput!)`
 - **query** `PasskeysQuery`
-- **mutation** `PasskeyUpdate` — `($id: String!, $input: PasskeyUpdateInput!)`
-- **mutation** `PullRequestAgentFixDispatch` — `($input: PullRequestAgentFixDispatchInput!)`
-- **mutation** `PullRequestAgentSessionCreate` — `($input: PullRequestAgentSessionCreateInput!)`
-- **query** `PullRequestByGitHubInfo` — `($owner: String!, $repo: String!, $number: Int!)`
-- **mutation** `PullRequestClose` — `($id: String!)`
-- **mutation** `PullRequestCommentDispatchToAgent` — `($input: PullRequestCommentDispatchToAgentInput!)`
-- **mutation** `PullRequestConvertToDraft` — `($id: String!)`
-- **mutation** `PullRequestDisableAutoMerge` — `($id: String!)`
-- **mutation** `PullRequestDismissReview` — `($id: String!, $reviewerId: String!, $reason: String!)`
-- **mutation** `PullRequestEnableAutoMerge` — `($id: String!, $mergeMethod: PullRequestMergeMethod)`
-- **query** `PullRequestIdByIdentifier` — `($id: String!)`
-- **mutation** `PullRequestMarkReadyForReview` — `($id: String!)`
-- **mutation** `PullRequestMerge` — `($id: String!, $mergeMethod: PullRequestMergeMethod)`
-- **mutation** `PullRequestRemoveFromMergeQueue` — `($id: String!)`
-- **mutation** `PullRequestReopen` — `($id: String!)`
-- **query** `PullRequestStackTitle` — `($input: PullRequestStackTitleInput!)`
-- **mutation** `PullRequestSuggestIssue` — `($id: String!)`
-- **query** `PushSubscriptionTest` — `($strategy: SendStrategy)`
-- **mutation** `ReactionCreate` — `( $id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pu)`
-- **mutation** `ReactionDelete` — `($id: String!)`
-- **mutation** `RegisterOAuthState` — `($state: String!)`
-- **query** `ReleasePipelineAccessKey` — `($id: String!)`
-- **query** `ReleasesQuery` — `($first: Int, $after: String, $filter: ReleaseFilter)`
-- **mutation** `RemindAboutInitiativeUpdate` — `($initiativeId: String!, $userId: String!)`
-- **mutation** `RemindAboutProjectUpdate` — `($projectId: String!, $userId: String!)`
-- **mutation** `ResendOrganizationInviteByEmailMutation` — `($email: String!)`
-- **query** `RetrieveDeepSearchCandidates` — `($query: String!, $retrieverType: String!, $options: DeepSearchOptionsInput)`
-- **query** `SearchAll` — `( $term: String! $first: Int $modelNames: [String!] $includeArchived: Boolean $boosts: SearchAllBoosts )`
-- **query** `SearchAllByFilter` — `( $includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $init)`
-- **query** `SearchCombined` — `( $term: String! $includeArchived: Boolean $filter: JSONObject $type: SearchResultType $orderBy: PaginationOrderBy $useSearchAgent: Boolean )`
-- **query** `SearchCustomViewsByFilter` — `( $includeArchived: Boolean $filter: CustomViewFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchDashboardsByFilter` — `( $includeArchived: Boolean $filter: DashboardFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchDocumentsByFilter` — `( $includeArchived: Boolean $filter: DocumentFilter $orderBy: PaginationOrderBy $first: Int )`
+- **mutation** `PullRequestAgentFixDispatch` `($input: PullRequestAgentFixDispatchInput!)`
+- **mutation** `PullRequestAgentSessionCreate` `($input: PullRequestAgentSessionCreateInput!)`
+- **query** `PullRequestByGitHubInfo` `($owner: String!, $repo: String!, $number: Int!)`
+- **mutation** `PullRequestClose` `($id: String!)`
+- **mutation** `PullRequestCommentDispatchToAgent` `($input: PullRequestCommentDispatchToAgentInput!)`
+- **mutation** `PullRequestConvertToDraft` `($id: String!)`
+- **mutation** `PullRequestDisableAutoMerge` `($id: String!)`
+- **mutation** `PullRequestDismissReview` `($id: String!, $reviewerId: String!, $reason: String!)`
+- **mutation** `PullRequestEnableAutoMerge` `($id: String!, $mergeMethod: PullRequestMergeMethod)`
+- **query** `PullRequestIdByIdentifier` `($id: String!)`
+- **mutation** `PullRequestMarkReadyForReview` `($id: String!)`
+- **mutation** `PullRequestMerge` `($id: String!, $mergeMethod: PullRequestMergeMethod)`
+- **mutation** `PullRequestRemoveFromMergeQueue` `($id: String!)`
+- **mutation** `PullRequestReopen` `($id: String!)`
+- **query** `PullRequestStackTitle` `($input: PullRequestStackTitleInput!)`
+- **mutation** `PullRequestSuggestIssue` `($id: String!)`
+- **query** `PushSubscriptionTest` `($strategy: SendStrategy)`
+- **mutation** `ReactionCreate` `( $id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pu)`
+- **mutation** `ReactionDelete` `($id: String!)`
+- **mutation** `RegisterOAuthState` `($state: String!)`
+- **query** `ReleasePipelineAccessKey` `($id: String!)`
+- **query** `ReleasesQuery` `($first: Int, $after: String, $filter: ReleaseFilter)`
+- **mutation** `RemindAboutInitiativeUpdate` `($initiativeId: String!, $userId: String!)`
+- **mutation** `RemindAboutProjectUpdate` `($projectId: String!, $userId: String!)`
+- **mutation** `ResendOrganizationInviteByEmailMutation` `($email: String!)`
+- **query** `RetrieveDeepSearchCandidates` `($query: String!, $retrieverType: String!, $options: DeepSearchOptionsInput)`
+- **query** `SearchAll` `( $term: String! $first: Int $modelNames: [String!] $includeArchived: Boolean $boosts: SearchAllBoosts )`
+- **query** `SearchAllByFilter` `( $includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $init)`
+- **query** `SearchCombined` `( $term: String! $includeArchived: Boolean $filter: JSONObject $type: SearchResultType $orderBy: PaginationOrderBy $useSearchAgent: Boolean )`
+- **query** `SearchCustomViewsByFilter` `( $includeArchived: Boolean $filter: CustomViewFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SearchDashboardsByFilter` `( $includeArchived: Boolean $filter: DashboardFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SearchDocumentsByFilter` `( $includeArchived: Boolean $filter: DocumentFilter $orderBy: PaginationOrderBy $first: Int )`
 - **mutation** `SearchIndexWarmup`
-- **query** `SearchInitiativesByFilter` — `( $includeArchived: Boolean $filter: InitiativeFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchIssuesByFilter` — `( $includeArchived: Boolean $filter: IssueFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchProjectsByFilter` — `( $includeArchived: Boolean $filter: ProjectFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SimilarIssues` — `($issueId: String!, $topK: Int = 5, $minSimilarity: Float)`
+- **query** `SearchInitiativesByFilter` `( $includeArchived: Boolean $filter: InitiativeFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SearchIssuesByFilter` `( $includeArchived: Boolean $filter: IssueFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SearchProjectsByFilter` `( $includeArchived: Boolean $filter: ProjectFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SimilarIssues` `($issueId: String!, $topK: Int = 5, $minSimilarity: Float)`
 - **query** `SlackProfileTitle`
-- **query** `SyncCheck` — `( $id: String! $issueUpdatedAt: DateTime! $commentCount: Int! $issueHistoryCount: Int! $contentStateLength: Int! )`
+- **query** `SyncCheck` `( $id: String! $issueUpdatedAt: DateTime! $commentCount: Int! $issueHistoryCount: Int! $contentStateLength: Int! )`
 - **query** `SyncEntityCount`
-- **mutation** `TeamCyclesDelete` — `($teamId: String!)`
-- **mutation** `TimeScheduleUpdate` — `($id: String!, $input: TimeScheduleUpdateInput!)`
-- **mutation** `TimeScheduleUpsertExternal` — `($externalId: String!, $input: TimeScheduleUpdateInput!)`
-- **mutation** `UpdateTeamParent` — `($teamId: String!, $mapping: InheritanceEntityMapping, $input: TeamUpdateInput!)`
+- **mutation** `TeamCyclesDelete` `($teamId: String!)`
+- **mutation** `TimeScheduleUpdate` `($id: String!, $input: TimeScheduleUpdateInput!)`
+- **mutation** `TimeScheduleUpsertExternal` `($externalId: String!, $input: TimeScheduleUpdateInput!)`
+- **mutation** `UpdateTeamParent` `($teamId: String!, $mapping: InheritanceEntityMapping, $input: TeamUpdateInput!)`
 - **query** `UsageAutoTopup`
-- **mutation** `UsageAutoTopupCreate` — `($input: UsageAutoTopupCreateInput!)`
+- **mutation** `UsageAutoTopupCreate` `($input: UsageAutoTopupCreateInput!)`
 - **mutation** `UsageAutoTopupPause`
-- **query** `UsageAutoTopupPaymentMethods`
 - **mutation** `UsageAutoTopupPaymentMethodSetupSessionCreate`
+- **query** `UsageAutoTopupPaymentMethods`
 - **mutation** `UsageAutoTopupResume`
 - **mutation** `UsageAutoTopupRetry`
-- **mutation** `UsageAutoTopupUpdate` — `($input: UsageAutoTopupUpdateInput!)`
-- **query** `UsageFilteredHistory` — `( $range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinition)`
-- **mutation** `UsageLimitGroupPeriodUpdate` — `($input: UsageLimitGroupPeriodUpdateInput!)`
-- **mutation** `UsageLimitResetScheduleUpdate` — `($input: UsageLimitResetScheduleInput!)`
-- **query** `UsageSessionCostBreakdowns` — `( $sessions: [UsageSessionCostBreakdownInput!]! $periodStart: DateTime! $periodEnd: DateTime! )`
-- **mutation** `userAccountEmailChangeCancel`
-- **query** `userAccountEmailChangeFind`
-- **mutation** `userAccountEmailChangeVerifyCode` — `($email: String!, $code: String!)`
-- **query** `UserAccountExists` — `($email: String!)`
-- **mutation** `UserChangeRole` — `($id: String!, $role: UserRoleType!)`
-- **mutation** `UserFlagUpdate` — `(flag: ${e}, operation: ${t})`
+- **mutation** `UsageAutoTopupUpdate` `($input: UsageAutoTopupUpdateInput!)`
+- **query** `UsageFilteredHistory` `( $range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinition)`
+- **mutation** `UsageLimitGroupPeriodUpdate` `($input: UsageLimitGroupPeriodUpdateInput!)`
+- **mutation** `UsageLimitResetScheduleUpdate` `($input: UsageLimitResetScheduleInput!)`
+- **query** `UsageSessionCostBreakdowns` `( $sessions: [UsageSessionCostBreakdownInput!]! $periodStart: DateTime! $periodEnd: DateTime! )`
+- **query** `UserAccountExists` `($email: String!)`
+- **mutation** `UserChangeRole` `($id: String!, $role: UserRoleType!)`
+- **mutation** `UserFlagUpdate` `(flag: ${e}, operation: ${t})`
 - **mutation** `UserSettingsFlagsReset`
-- **query** `usersLastSeen` — `($cursor: String, $first: Int)`
-- **mutation** `UserSuspend` — `($id: String!)`
-- **mutation** `UserUnsuspend` — `($id: String!)`
-- **mutation** `ValidateOAuthState` — `($state: String, $callbackPath: String, $integration: OAuthIntegrationInput)`
-- **query** `VerifyGitHubEnterpriseServerInstallation` — `($integrationId: String!)`
-- **query** `WebhookFailureEventsQuery` — `($webhookId: String!)`
-- **mutation** `WebhookRotateSecret` — `($id: String!)`
-- **query** `webhookSecretQuery` — `($id: String!)`
-- **mutation** `WorkflowDefinitionMcpApprovalUpdate` — `($id: String!, $input: WorkflowDefinitionMcpApprovalInput!)`
-- **mutation** `WorkflowDefinitionSourceTrustUpdate` — `($id: String!, $sourceKey: String!)`
-- **mutation** `WorkflowDefinitionStatsRefresh` — `($id: String!)`
-- **query** `WorkspaceAuthorizedApplication` — `($clientId: String!)`
+- **mutation** `UserSuspend` `($id: String!)`
+- **mutation** `UserUnsuspend` `($id: String!)`
+- **mutation** `ValidateOAuthState` `($state: String, $callbackPath: String, $integration: OAuthIntegrationInput)`
+- **query** `VerifyGitHubEnterpriseServerInstallation` `($integrationId: String!)`
+- **query** `WebhookFailureEventsQuery` `($webhookId: String!)`
+- **mutation** `WebhookRotateSecret` `($id: String!)`
+- **mutation** `WorkflowDefinitionMcpApprovalUpdate` `($id: String!, $input: WorkflowDefinitionMcpApprovalInput!)`
+- **mutation** `WorkflowDefinitionSourceTrustUpdate` `($id: String!, $sourceKey: String!)`
+- **mutation** `WorkflowDefinitionStatsRefresh` `($id: String!)`
+- **query** `WorkspaceAuthorizedApplication` `($clientId: String!)`
 - **query** `WorkspaceAuthorizedApplicationsWithAppUserQuery`
 - **query** `WorkspaceMcpServerConnections`
-- **mutation** `WorkspaceMcpServerConnectionsDisconnectAll` — `($serverUrl: String!)`
+- **mutation** `WorkspaceMcpServerConnectionsDisconnectAll` `($serverUrl: String!)`
+- **query** `filteredUsersLastSeen` `($cursor: String, $first: Int, $filter: UserFilter!)`
+- **query** `oauthClientExternalWorkspaceCountQuery` `($id: String!)`
+- **query** `oauthWebhookSecretQuery` `($id: String!)`
+- **mutation** `organizationStartTrialForPlan` `($planType: String!)`
+- **mutation** `userAccountEmailChangeCancel`
+- **query** `userAccountEmailChangeFind`
+- **mutation** `userAccountEmailChangeVerifyCode` `($email: String!, $code: String!)`
+- **query** `usersLastSeen` `($cursor: String, $first: Int)`
+- **query** `webhookSecretQuery` `($id: String!)`

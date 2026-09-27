@@ -1,8 +1,6 @@
 # Linear Sync Model Registry (extracted reference)
 
-Source: production web client bundle, desktop v1.32.4 (2026-09-26). Client-side sync (LSE)
-models with their decorated fields — factual interface data for interoperability.
-Regenerate with pipeline/analyze.mjs. Total models: 87
+Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual interface data for interoperability. Regenerate with pipeline/run.sh. Total models: 87
 
 ## Activity
 
@@ -391,7 +389,7 @@ Regenerate with pipeline/analyze.mjs. Total models: 87
 
 ## DiaryEntry
 
-- (fields not statically extractable — see prettified source)
+- (not statically extractable; see prettified source)
 
 ## Diff
 
@@ -546,7 +544,7 @@ Regenerate with pipeline/analyze.mjs. Total models: 87
 
 ## Favorite
 
-- (fields not statically extractable — see prettified source)
+- (not statically extractable; see prettified source)
 
 ## FeedItem
 
@@ -648,7 +646,7 @@ Regenerate with pipeline/analyze.mjs. Total models: 87
 
 ## Integration
 
-- (fields not statically extractable — see prettified source)
+- (not statically extractable; see prettified source)
 
 ## Issue
 
@@ -958,7 +956,7 @@ Regenerate with pipeline/analyze.mjs. Total models: 87
 
 ## NotificationSubscription
 
-- (fields not statically extractable — see prettified source)
+- (not statically extractable; see prettified source)
 
 ## OauthClient
 
@@ -2286,3 +2284,4 @@ Regenerate with pipeline/analyze.mjs. Total models: 87
 - `documentContent`
 - `notifications`
 - `markNotificationAsRead`
+
