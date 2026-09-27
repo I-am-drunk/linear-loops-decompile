@@ -12,12 +12,13 @@
 import type { InferenceHarness, SettingsView } from "../model/settings.ts";
 import type { Registry } from "../connect/server.ts";
 import type { Store } from "./store.ts";
-import { probeLinear } from "./linear.ts";
+import { LINEAR_TOKEN_KEY, LinearClient, type RateLimitSnapshot } from "./linear-client.ts";
+import { probeLinear, probeLinearWithClient } from "./linear.ts";
 import { probeInference } from "./inference.ts";
 
 type FetchImpl = typeof fetch;
 
-const K_LINEAR_TOKEN = "linear.token";
+const K_LINEAR_TOKEN = LINEAR_TOKEN_KEY;
 const K_LINEAR_VIEWER = "linear.viewer";
 const K_HARNESSES = "inference.harnesses";
 
@@ -62,7 +63,7 @@ function settingsView(store: Store): SettingsView {
   };
 }
 
-export function createSettingsHandlers(store: Store, fetchImpl: FetchImpl = fetch): Registry {
+export function createSettingsHandlers(store: Store, fetchImpl: FetchImpl = fetch, linear?: LinearClient): Registry {
   return {
     "settings.get": () => settingsView(store),
 
@@ -146,7 +147,16 @@ export function createSettingsHandlers(store: Store, fetchImpl: FetchImpl = fetc
     "dataplane.probe": async () => {
       const token = store.getSetting(K_LINEAR_TOKEN);
       if (!token) throw new RpcError("invalid_params", "Linear not connected");
-      return probeLinear(token, fetchImpl);
+      // Shared client when wired (budget continuity across calls); the
+      // ephemeral path only exists for tests that hand no client in.
+      return linear ? probeLinearWithClient(linear) : probeLinear(token, fetchImpl);
+    },
+
+    // Last known rate budget from Linear's response headers (KNOWLEDGE §6).
+    // Read-only: never a network call, so the UI can poll it freely.
+    "dataplane.rateBudget": (): { configured: boolean; budget: RateLimitSnapshot | null } => {
+      const token = store.getSetting(K_LINEAR_TOKEN);
+      return { configured: Boolean(token), budget: linear ? linear.budget() : null };
     },
   };
 }

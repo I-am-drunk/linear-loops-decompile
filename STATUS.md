@@ -42,9 +42,21 @@ Done 2026-09-27:
   from the corpus via docs/ui-reference.md) with the Settings page wired to the
   R3.3 RPCs. Gate: tsc + vite build; serve smoke through the real server.
 
+- R5.1 dataplane client: `src/server/linear-client.ts` — one GraphQL code
+  path for api.linear.app with a header-driven rate budget (gate before
+  firing on an exhausted window, 429/Retry-After + RATELIMITED mapping, FIFO
+  concurrency cap; budgets never hardcoded — headers are the truth).
+  probeLinear promoted onto it; new read-only `dataplane.rateBudget` RPC.
+  Header semantics verified against Linear's official docs (KNOWLEDGE §6);
+  9 client tests + 1 RPC test, all fake-fetch. (Pulled ahead of R4: R4.1's
+  page waited on the R3.4 shell; this slice is server-only, was unblocked.)
+
 Now:
-- R4.1 loops domain slice (unassigned): loops.list/upsert/publish/setEnabled
-  over the store + the loops list page wired live. src/model gains loop.ts.
+- R4.1 loops domain slice: server half claimed by sess_01a0e392-f0c2-7545-
+  b2f2-2c2c875485f3 (issue #150; two later duplicate claims #151/#152 should
+  move on per AGENTS.md earliest-keeps-it). loops.list/upsert/publish/
+  setEnabled over the store + the loops list page wired live;
+  src/model gains loop.ts. Next unassigned: R4.2 loop detail + editor blocks.
 
 Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
 

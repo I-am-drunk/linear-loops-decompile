@@ -142,6 +142,17 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
   keys act as the user. Rate limit ≈ 2,500 req/h/user (batch + budget). Webhooks
   configurable per workspace for issue/comment/project/etc. changes.
+- Rate-limit mechanics (official docs, linear.app/developers/rate-limiting, verified
+  2026-09-27; implemented in `src/server/linear-client.ts`): every response carries
+  `X-RateLimit-Requests-{Limit,Remaining,Reset}` and `X-RateLimit-Complexity-{Limit,
+  Remaining,Reset}` plus `X-Complexity` (that query's cost); resets are UTC epoch
+  MILLISECONDS. Budgets: API key 2,500 req/h + 3,000,000 complexity pts/h, per USER
+  (all keys share); single-query complexity cap 10,000 pts (always rejected above).
+  Some endpoints carry lower per-endpoint limits signalled via
+  `X-RateLimit-Endpoint-Requests-*` + `X-RateLimit-Endpoint-Name`. Exhaustion surfaces
+  as HTTP 429 (`Retry-After`, seconds) or as a 200 with
+  `errors[].extensions.code === "RATELIMITED"`. The docs' numbers have drifted across
+  third-party write-ups — treat the response headers as the only source of truth.
 - The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /
