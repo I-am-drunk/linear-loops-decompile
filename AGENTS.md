@@ -82,6 +82,15 @@ big, it is two slices. The sequence lives in `PLAN.md`.
   directly and reproduce its behavior, structure, and values precisely, writing
   our own original code. (The legal line is about Linear's code, never about its
   behavior: behavior, values, and algorithms are reproduced exactly.)
+- Every Linear-API claim in `KNOWLEDGE.md`, `SPECS/`, or a `src/` comment NAMES
+  its source: a corpus chunk, an `extracts/linear-official/docs-site/<page>.md`
+  digest, `extracts/linear-official/AGENT-API.md`, or the vendored schema. The
+  upstream `extracts/linear-official/docs/*.md` files are one-line redirect
+  stubs and are NEVER citable (issue #185; they are how the hollow-docs gap
+  survived unnoticed). Two-source discipline: the corpus says what the CLIENT
+  does; the official docs say what the PUBLIC API guarantees. A dataplane/server
+  behavior claim needs the docs citation; corpus-only citations suffice only for
+  client-api/sync-route work the docs do not cover.
 
 ## GitHub tooling
 
