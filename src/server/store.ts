@@ -41,7 +41,8 @@ export type AuditKind =
   | "run.usage"
   | "linear.write"
   | "linear.session"
-  | "linear.activity";
+  | "linear.activity"
+  | "linear.inbound";
 
 export class Store {
   readonly db: Database;
@@ -287,6 +288,16 @@ export class Store {
       return this.db.prepare("SELECT * FROM audit_events WHERE loop_id = ? ORDER BY id ASC").all(filter.loopId) as Record<string, unknown>[];
     }
     return this.db.prepare("SELECT * FROM audit_events ORDER BY id ASC").all() as Record<string, unknown>[];
+  }
+
+  /**
+   * Newest-first scan of one audit kind, bounded (T-605's delivery rail):
+   * the webhook dedupe reads only its own rows, never the whole table.
+   */
+  listAuditByKind(kind: AuditKind, limit = 500): Record<string, unknown>[] {
+    return this.db
+      .prepare("SELECT * FROM audit_events WHERE kind = ? ORDER BY id DESC LIMIT ?")
+      .all(kind, limit) as Record<string, unknown>[];
   }
 
   #iso(): ISODateTime {
