@@ -17,6 +17,8 @@ When you need the prose, fetch the live page.
 | `pagination-filtering.md` | linear.app/developers/pagination + /filtering | 2026-09-27 |
 | `webhooks.md` | linear.app/developers/webhooks | 2026-09-27 |
 | `oauth.md` | linear.app/developers/oauth-2-0-authentication | 2026-09-27 |
+| `attachments.md` | linear.app/developers/attachments | 2026-09-27 |
+| `file-uploads.md` | linear.app/developers/how-to-upload-a-file-to-linear | 2026-09-27 |
 
 Agent-surface pages ({agents, agent-interaction, agent-best-practices,
 agent-signals}) are digested in `../AGENT-API.md` — do not duplicate them here.
