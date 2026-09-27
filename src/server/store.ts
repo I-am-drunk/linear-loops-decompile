@@ -156,6 +156,42 @@ export class Store {
       );
   }
 
+  // ---- runs / turns reads (T-1103 — the RPC read seam) ---------------------
+
+  /**
+   * One run by id, or null. The RPC layer (rpcs.ts) tries the live Runner
+   * first; this is the durable fallback. Gap vs the live record: the runs
+   * table has no pending_elicitation column, so a parked run's question is
+   * only on the Runner's record.
+   */
+  getRun(id: string): Run | null {
+    const row = this.db.prepare("SELECT * FROM runs WHERE id = ?").get(id) as Record<string, unknown> | undefined;
+    return row === undefined ? null : runRow(row);
+  }
+
+  /**
+   * Runs newest-first (the runs list's order). `loopId` restricts to one
+   * loop; `limit` defaults to 50 and clamps to 1..500 (the wire never pages
+   * — rpcs.ts validates at the boundary, this clamps belt-and-suspenders).
+   */
+  listRuns(filter: { loopId?: string | undefined; limit?: number | undefined } = {}): Run[] {
+    const limit = Math.min(Math.max(filter.limit ?? 50, 1), 500);
+    const rows = (
+      filter.loopId !== undefined
+        ? this.db.prepare("SELECT * FROM runs WHERE loop_id = ? ORDER BY created_at DESC, id DESC LIMIT ?").all(filter.loopId, limit)
+        : this.db.prepare("SELECT * FROM runs ORDER BY created_at DESC, id DESC LIMIT ?").all(limit)
+    ) as Record<string, unknown>[];
+    return rows.map(runRow);
+  }
+
+  /** A run's full turn history, oldest first (position order). */
+  listTurns(runId: string): Turn[] {
+    const rows = this.db
+      .prepare("SELECT * FROM turns WHERE run_id = ? ORDER BY position ASC")
+      .all(runId) as Record<string, unknown>[];
+    return rows.map(turnRow);
+  }
+
   // ---- snapshots ---------------------------------------------------------
 
   saveSnapshot(runId: string, savedAt: ISODateTime, json: string): void {
@@ -259,5 +295,47 @@ function loopRow(row: Record<string, unknown>): LoopRow {
     configJson: String(row["config_json"]),
     createdAt: String(row["created_at"]),
     updatedAt: String(row["updated_at"]),
+  };
+}
+
+/**
+ * Row → runtime Run. The rows were written from runtime records by
+ * insertRun/updateRun (persistence.ts), so the status/usage/target casts are
+ * honest — the same rule as saveLoop's zod-validated configJson.
+ */
+function runRow(row: Record<string, unknown>): Run {
+  const targetJson = row["target_json"];
+  const startedAt = row["started_at"];
+  const endedAt = row["ended_at"];
+  const summary = row["summary"];
+  const error = row["error"];
+  const conversationId = row["conversation_id"];
+  return {
+    id: String(row["id"]),
+    loopId: String(row["loop_id"]),
+    status: String(row["status"]) as Run["status"],
+    iteration: Number(row["iteration"]),
+    ...(targetJson !== null ? { target: JSON.parse(String(targetJson)) as Run["target"] } : {}),
+    createdAt: String(row["created_at"]),
+    ...(startedAt !== null ? { startedAt: String(startedAt) } : {}),
+    ...(endedAt !== null ? { endedAt: String(endedAt) } : {}),
+    ...(summary !== null ? { summary: String(summary) } : {}),
+    ...(error !== null ? { error: String(error) } : {}),
+    usage: JSON.parse(String(row["usage_json"])) as Run["usage"],
+    ...(conversationId !== null ? { conversationId: String(conversationId) } : {}),
+  };
+}
+
+function turnRow(row: Record<string, unknown>): Turn {
+  const endedAt = row["ended_at"];
+  return {
+    id: String(row["id"]),
+    runId: String(row["run_id"]),
+    position: Number(row["position"]),
+    role: String(row["role"]) as Turn["role"],
+    status: String(row["status"]) as Turn["status"],
+    parts: JSON.parse(String(row["parts_json"])) as Turn["parts"],
+    startedAt: String(row["started_at"]),
+    ...(endedAt !== null ? { endedAt: String(endedAt) } : {}),
   };
 }

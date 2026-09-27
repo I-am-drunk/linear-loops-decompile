@@ -24,8 +24,17 @@ function withHash(hash: string, fn: () => void): void {
 const routes: ReadonlyArray<readonly [string, string[], string[]]> = [
   // [hash, mustContain, mustNotContain]
   ["#/loops", ["Loops", "Runs", "Templates", "Settings", "Triage digest", 'role="switch"', "New loop", 'aria-current="page"'], ["Not found", "T-701"]],
+  ["#/loops/new", ["New loop — not published yet", "Identity", "Trigger", "Danger zone"], ["Not found", "T-702"]],
+  ["#/loop/abc", ["Standup scribe", "v3", "Danger zone"], ["Not found", "T-702"]],
+  ["#/templates", ["Templates", "T-704"], ["Not found", "T-702"]],
   ["#/settings/inference", ["Connect inference", "API key", "Probe models", "Environment offline"], ["Not found", "T-802"]],
-  ["#/loop/abc/run/r9", ["Run detail", "T-703", "runId: r9"], ["Not found"]],
+  // T-1104: runs routes render live containers. SSR/first paint = fixture
+  // data (peek), then effects swap live data in a configured browser. An
+  // unknown run shows the loading state (fixture miss → fetch).
+  ["#/loop/abc/run/r9", ["Loading run r9"], ["Not found", "T-703"]],
+  ["#/loop/abc/runs", ["No runs"], ["Not found", "T-703"]],
+  ["#/loop/all/runs", ["SUP-214", "Triage digest"], ["Not found", "No runs"]],
+  ["#/loop/abc/run/run-7", ["Triage digest", "SUP-214"], ["Not found", "Loading run"]],
   ["#/bogus", ["Page not found", "/bogus"], ["T-701"]],
 ];
 

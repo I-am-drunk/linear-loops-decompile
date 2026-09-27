@@ -3,3 +3,6 @@
 node_modules/
 dist/
 package-lock.json
+
+# ui smoke-bundle output (test/run-smoke.mjs)
+.test-out/

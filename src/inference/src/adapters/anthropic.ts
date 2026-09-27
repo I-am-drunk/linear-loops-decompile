@@ -220,18 +220,28 @@ export async function* parseMessagesStream(
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       let nl: number;
+      let terminal = false;
       while ((nl = buffer.indexOf("\n")) !== -1) {
         const line = buffer.slice(0, nl).replace(/\r$/, "");
         buffer = buffer.slice(nl + 1);
         if (!line.startsWith("data:")) continue;
-        for (const ev of eventsFromPayload(line.slice(5).trim(), state)) yield ev;
+        for (const ev of eventsFromPayload(line.slice(5).trim(), state)) {
+          yield ev;
+          // message_stop is protocol-terminal — stop reading right after
+          // it so a held-open stream can never keep the run alive.
+          if (ev.type === "done") terminal = true;
+        }
       }
+      if (terminal) break;
     }
     const tail = buffer.trim();
     if (tail.startsWith("data:")) {
       for (const ev of eventsFromPayload(tail.slice(5).trim(), state)) yield ev;
     }
   } finally {
+    // Tear the body down on every exit path (terminal event, error, early
+    // consumer return) — never leak an open stream.
+    await reader.cancel().catch(() => {});
     reader.releaseLock();
   }
 }
