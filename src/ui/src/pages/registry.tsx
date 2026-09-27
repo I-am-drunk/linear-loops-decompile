@@ -27,12 +27,11 @@ import {
 import { LoopsStyles } from "../features/loops/index.ts";
 import { RunsStyles } from "../features/loops/runs/index.ts";
 import {
+  EditorContainer,
   LoopsListContainer,
   RunsListContainer,
   RunDetailContainer,
 } from "../live/index.ts";
-import { DemoEditor, demoEditorConfig } from "../features/loops/editor/index.ts";
-import { defaultLoopConfig } from "../../../model/index.ts";
 import { navigate } from "../useHashRoute.ts";
 
 // T-802: settings pages are live. Until R9's connect channel lands, they are
@@ -58,24 +57,22 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
       </>
     ),
   },
-  // T-803: loop-new is live — the T-702 editor behind its own DemoEditor
-  // fixture container (house pattern: the R9 connect container swaps in
-  // later; the page never changes).
+  // T-805: loop-new is live — the T-702 editor behind the connect-backed
+  // EditorContainer (fixture demo offline; saveLoop publishes over the wire).
   "loop-new": {
     title: "New loop",
     // key forces a remount on route change: AppShell renders children unkeyed,
-    // and two DemoEditor routes at one position would otherwise share state.
-    render: () => <DemoEditor key="loop-new" initial={defaultLoopConfig()} />,
+    // and two editor routes at one position would otherwise share state.
+    render: () => <EditorContainer key="loop-new" loopId={null} />,
   },
-  // T-803: loop-detail mounts the same editor on the fixture config;
-  // per-id resolution arrives with the R9 connect container, not here.
+  // T-805: loop-detail loads the loop through the same container
+  // (loops.get); per-id remount via the namespaced key.
   "loop-detail": {
     title: "Loop",
     render: (route) => (
-      <DemoEditor
+      <EditorContainer
         key={route.name === "loop-detail" ? `loop-detail:${route.loopId}` : "loop-detail"}
-        initial={demoEditorConfig}
-        publishedVersion={3}
+        loopId={route.name === "loop-detail" ? route.loopId : ""}
       />
     ),
   },

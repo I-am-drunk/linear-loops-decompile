@@ -40,7 +40,9 @@ export {
   FixtureRunsSource,
   selectSources,
 } from "./sources.ts";
-export type { ChannelRpc, LoopsSource, RunsSource, Sources } from "./sources.ts";
+export type { ChannelRpc, EditorLoopRecord, LoopsSource, RunsSource, Sources } from "./sources.ts";
+export { EditorContainer } from "./editor.tsx";
+export type { EditorContainerProps } from "./editor.tsx";
 export { LoopsListContainer, RunsListContainer, RunDetailContainer } from "./containers.tsx";
 export type {
   LoopsListContainerProps,
