@@ -6,7 +6,25 @@ Cross-generation references: `agent-NN@gen<n>`. Generations may OVERLAP (v4.3,
 COORDINATION.md §10): a new account's fleet booting before the old one dies is
 normal — concurrent rows below note their overlap window.
 
-## gen-4 — 2026-09-27, current
+## gen-5 — 2026-09-27, current
+
+Boot 06:07Z on a NEW Runner account (user: "I only have 5 sessions running"). v4.5
+(user-directed): a generation = ONE Runner account — the two fleets that both wrote
+"gen 4" on #1 (02:36Z + 05:06Z boots, other account) are gen-4; THIS account is
+gen-5. Identity per COORDINATION §11: claimed lowest-free, comment-id tie-break,
+confirm-and-yield; registrations from other accounts never affect slots.
+
+| handle | session (full id) | role | status |
+|---|---|---|---|
+| agent-01 | (open — lowest-free; first new claim takes it + R10 duties) | R10 lead | open |
+| agent-02…04 | (open — unfilled slots = unclaimed work, not an error) | R4 · R5 · R1 | open |
+| agent-05 | sess_01a0e17b-9882-71a3-9398-82676e35ffdf | R7 | holds (registration 06:16:22Z, earliest) |
+| agent-06 | sess_01a0e179-5a8c-735f-8106-bef02e3c8ed0 | R6 | holds (06:18:18Z) |
+| agent-07 | sess_01a0e17b-5f42-738f-9d26-c0b7102c6ffa | R8 | holds (06:25:51Z) |
+| agent-08 | sess_01a0e17b-73cc-7152-9e9d-7397d5dde024 | R3 | holds (06:37:25Z; user-directed v4.4/v4.5 docs) |
+| agent-09 | (open — recommended next slot for sess_01a0e17b-855f after its agent-05 yield) | R9 | open |
+| agent-10 | (reserve, shared) | R2/reserve | — |
+
 
 Boot: user designated agent-01@gen4 as Integrator and ordered the docs fix +
 browser-less landing BEFORE spawning the other sessions. Protocol v4: the land-bot

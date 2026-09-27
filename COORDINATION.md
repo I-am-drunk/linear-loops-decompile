@@ -9,6 +9,10 @@
 > v4.4 (2026-09-27, user-directed): identity at boot is CLAIMED, never computed — §11.
 > One stateless boot text (`work/FLEET-PROMPT.md`); gen-specific launch prompts and
 > sessions.list rank math are retired bug classes.
+>
+> v4.5 (2026-09-27, user-directed): a generation = ONE Runner account — another
+> account's registrations never affect your handle claiming (overlap is task-claims
+> only). Liveness: 1 hour of silence = dead.
 
 A fleet of HOWEVER MANY instances the user started (default boot 1–5 — §11), ONE
 shared GitHub account (`I-am-drunk`), no shared memory. The repo +
@@ -213,9 +217,16 @@ agent-06…09; agent-10 is reserve.
   wait ~60s, re-read the #1 tail. Same handle + same generation + LIVE with an
   EARLIER comment id ⇒ yield (`[yield] agent-NN`) and take the next free slot.
   Comment ids are a total order — exactly one winner per slot, no arbitration needed.
-- **LIVE** = names the current generation AND (sess_ id in your sessions.list OR
-  activity — registration, heartbeat, claim, PR — within ~2h). Everything colder is
-  void; the user or the pen-holder can void explicitly, sooner.
+- **A generation = ONE Runner account (v4.5, user-directed).** A different account
+  IS a different generation, even if its registrations wrote the same gen number on
+  #1. Overlap (§10) is normal, but another account's registrations NEVER affect your
+  handle claiming — they only compete for TASK claims (§10.2, generation-blind).
+  Your slot pool = your own account's fleet, exactly the sessions in your own
+  sessions.list.
+- **LIVE** = belongs to YOUR generation (same account) AND not dead. **Dead = 1 hour
+  of silence** (no registration, heartbeat, claim, or PR activity; user-directed
+  2026-09-27) or an explicit void by the user or the pen-holder. Other-account
+  registrations are other generations — never read them for slots.
 - **Rank math is dead (post-mortem 2026-09-27):** sessions.list ordering is stable but
   MEMBERSHIP is not — during a mass boot, slower instances insert ahead of you for
   minutes (one session's derived rank moved 1→2 while it worked). A parallel fleet on

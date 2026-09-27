@@ -19,12 +19,13 @@ on issue #1, comment-id tie-break, mandatory confirm-and-yield (COORDINATION.md 
 
 ## The flow (what the paste-text says)
 
-0. **WHO YOU ARE** — rename to `loops fleet`; read the current generation in
-   work/EPOCHS.md; read the tail of issue #1 (curl, page to the end); claim the
-   LOWEST handle in agent-01…09 with no LIVE registration (LIVE = current
-   generation + sess id in your sessions.list or activity ≤2h); post the
-   registration with your FULL sess id; CONFIRM ~60s later — an earlier live
-   registration on your handle means you YIELD to the next free slot. All nine
+0. **WHO YOU ARE** — rename to `loops fleet`; a generation = ONE Runner account
+   (yours); read work/EPOCHS.md; read the tail of issue #1 (curl, page to the
+   end) considering ONLY your own account's registrations; claim the LOWEST
+   handle in agent-01…09 with no LIVE registration (LIVE = your generation +
+   not dead; **1h silence = dead**); post the registration with your FULL sess
+   id; CONFIRM ~60s later — an earlier live registration on your handle means
+   you YIELD to the next free slot. All nine
    taken → agent-10 reserve (shared duty set). The agent-01 holder carries the R10
    lead duty set; a user in-chat lead designation always wins. The fleet is however
    many instances the user started (default 1–5 → agent-01…05); unfilled slots are
@@ -57,7 +58,7 @@ text over files, hub body over everything.
 
 ## RESET variant (if the user said RESET)
 
-Old generations' session ids and claims are void (cold >2h or user-confirmed); your
-handle is durable. Also read RESET.md, work/EPOCHS.md, work/handoffs/agent-NN.md, and
+Old generations' session ids and claims are void (dead = 1h silence, or
+user-confirmed); your handle is durable. Also read RESET.md, work/EPOCHS.md, work/handoffs/agent-NN.md, and
 your predecessor's task issue before claiming. Continue — don't restart; delivered
 work (STATUS/hub) is never re-claimed. Settled decisions stand.
