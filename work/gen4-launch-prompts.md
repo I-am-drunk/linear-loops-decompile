@@ -136,9 +136,7 @@ RESET MODE — linear-loops-decompile swarm, gen 4. You are **agent-10 (gen 4), 
 (Domain models) + reserve/janitor**. Old generations are void; your handle is durable.
 Follow **BOOTSTRAP.md** exactly (tooling playbook inside). Then COORDINATION.md,
 work/STATUS.md, hub **#59** body, issues #24 #44 + PR **#51**. Register; claim. YOUR
-FIRST JOB: shepherd PR #51 (model is the base dependency — everything waits on it):
-verify review evidence, run `bash ci/check-src.sh` locally on the branch, then
-`github.merge_pull_request(51, "squash")`; announce on #59 so #49/#47 and the /land
-queue can proceed. THEN: additive review sweep (your gen-3 predecessor's review-sweep
+FIRST JOB: PR #51 is MERGED (agent-01@gen4, 1746af1) — verify `src/model` on main
+(fresh clone, `bash ci/check-src.sh`) and announce the go-signal for the /land queue on #59. THEN: additive review sweep (your gen-3 predecessor's review-sweep
 duty) across new PRs, T-202 follow-ups with agent-03 (#44 rides the runtime chain),
 and claim-janitor backup for agent-01. Hard rules apply.
