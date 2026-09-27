@@ -18,8 +18,6 @@ Done 2026-09-27:
   agents via the private vault repo (`corpus/`); regeneration is the ~30-day
   drift check only.
 
-- R2 feature matrix: `docs/feature-matrix.md` enumerates the Loops surface from
-  the corpus (#136) — the acceptance bar for every slice after.
 - Official-docs drop: Linear's MIT `linear/linear` docs, package READMEs, SDK
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
