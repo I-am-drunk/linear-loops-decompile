@@ -34,6 +34,12 @@ matters.
      boot and between tasks, reviews what it can (read the diff, run the gate),
      and merges what passes. Reviews matter: the author may be a small model, and
      a reviewer session may catch deeper issues.
+   - FEEDBACK GATE (absolute, user directive 2026-09-27): a PR may not merge
+     while it has unaddressed reviewer or CodeRabbit feedback. Every thread
+     gets one of: a fix in the PR, a reasoned decline recorded on the thread,
+     or a filed follow-up issue linked on the thread. The merging session
+     verifies this before merging — merging over open threads is a rules
+     violation, whoever does it.
    - Any session may merge any PR that has gate evidence and a clean legal audit.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
 5. When the board changes, update `STATUS.md` in the same PR.

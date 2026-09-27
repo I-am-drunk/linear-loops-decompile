@@ -6,7 +6,7 @@ Behavioral spec for OUR reimplementation, derived from decompiling Linear 1.32.4
 ## Concepts
 
 - **Loop** — a named automation owned by an org/team/project, with: trigger, conditions,
-  prompt (rich text), schedule (when triggerType=schedule), activities (what it may do),
+  prompt (rich text), schedule (when triggerType=Schedule), activities (what it may do),
   trusted sources, enabled flag, drafts + publish lifecycle, run history.
 - **Loop run** — one execution. Has status, started/ended, target entity (issue/project/
   initiative/document/team/cycle/release), a conversation (turns of activities), stats
@@ -48,6 +48,11 @@ Field limits (corpus constants): name <= 64, groupName <= 64, description <= 255
 Team scope (applyToSubTeams): Issue|Project|Initiative|Cycle|Team. Manual run:
 unsupported for commentAdded/updatePosted/customerRequestAdded triggers.
 
+Corpus rule (addresses CodeRabbit on #167): an activationMode of
+`watchedPropertyChanged` requires a NON-EMPTY `watchedProperties` set on the
+condition — the client validates this; a property trigger with nothing watched
+is rejected.
+
 Triage is a condition/variant (`entityInTriage`), not a triggerType value.
 
 Chat triggers: loop wakes on @mention/message in an enabled channel.
@@ -64,7 +69,7 @@ Triage variant: event `entityInTriage` with triage-state conditions.
 ## Loop config fields we persist (superset of Linear's, minus their server bits)
 
 `name, icon, color, description, groupName, owner, team?, project?, prompt (doc),
-triggerType, trigger(event+activationMode), conditions[], schedule?, enabled,
+triggerType, triggerConfig, activationMode, conditions[], schedule?, enabled,
 applyToSubTeams, activities[] (capabilities), trustedSourceKeys[], codeAccess: none|read|write,
 editAccess, subscribers, stats{…}, lastExecutedAt, version/publishedAt`.
 
