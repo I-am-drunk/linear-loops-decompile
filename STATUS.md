@@ -17,7 +17,6 @@ Done 2026-09-27:
   chunks, 258 GraphQL ops, 87 models, zero drift vs baseline). Corpus ships to
   agents via the private vault repo (`corpus/`); regeneration is the ~30-day
   drift check only.
-
 - Official-docs drop: Linear's MIT `linear/linear` docs, package READMEs, SDK
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
