@@ -41,9 +41,17 @@ against master: **22 agent-surface root ops** (was 12).
   replaced when the next activity arrives. For transient progress states.
 - Activities are frozen-in-time snapshots — read session history from activities, NOT
   comments (editable).
-- `enum AgentActivitySignal` + `signalMetadata`: **`stop`** (user → agent: halt
-  immediately, then emit final response/error), **`auth`** (agent → user: account-
-  linking UI with a URL), **`select`** (elicitation with structured options).
+- `enum AgentActivitySignal` + `signalMetadata` (page: /developers/agent-signals,
+  fetched 2026-09-27): **`stop`** (human → agent, only on `prompt` activities:
+  halt immediately — no further actions/API calls — then emit a final
+  `response` or `error` confirming the stop; generated when a user hits stop in
+  Linear), **`auth`** (agent → user, only on `elicitation`: Linear renders an
+  ephemeral account-linking UI from `signalMetadata: { url, userId?, providerName? }`,
+  dismissed by the next agent activity; resume with a `thought`), **`select`**
+  (agent → user, only on `elicitation`: `signalMetadata: { options: [{ label,
+  value }] }`; label and value may differ; GitHub repo URLs render enriched;
+  users may ignore the options and reply free-text — the reply arrives as a
+  normal `prompt`, so always interpret with an LLM).
 
 ## Agent Plans (technology preview; added to this digest 2026-09-27)
 
@@ -88,7 +96,33 @@ is useful for our brain's repo-selection step.)
 - `AgentSessionEvent` webhook category (enable on the OAuth app): actions `created`
   (start a loop — payload carries `agentSession` incl. issue/comment/guidance +
   `promptContext`) and `prompted` (new user message in `agentActivity.body`).
-- ACK within 5 seconds; first `thought` within 10 seconds.
+- ACK within 5 seconds; first `thought` within **10 seconds** of the `created`
+  event or the agent shows as unresponsive; follow-up activities may flow for
+  up to **30 minutes** before the session goes `stale` — recoverable by sending
+  another activity (page: /developers/agent-best-practices, fetched 2026-09-27).
+- Best-practice rules from the same page: if delegated onto an issue not in a
+  `started|completed|canceled` status type, move it to the team's first
+  `started` state (query `team.states(filter:{type:{eq:"started"}})`, pick
+  lowest `position`); set yourself as `Issue.delegate` when implementing and no
+  delegate is set — but when an AUTOMATION delegated, keep triage state and
+  leave assignment to a human; on completion emit `response` (Linear
+  auto-creates the comment), else `elicitation`/`error`; read conversation
+  history from activities, never comments (editable).
+- Adjacent webhook categories an agent can enable on its OAuth app (same page):
+  **Inbox Notifications** — payload `{ type: "AppUserNotification", action:
+  NotificationType, createdAt, organizationId, oauthClientId, appUserId,
+  notification }`; useful actions: `issueMention`, `issueEmojiReaction`,
+  `issueCommentMention`, `issueCommentReaction`, `issueAssignedToYou`,
+  `issueUnassignedFromYou`, `issueNewComment`, `issueStatusChanged`.
+  **Permission changes** — `{ type: "PermissionChange", action:
+  "teamAccessChanged", …, canAccessAllPublicTeams, addedTeamIds[],
+  removedTeamIds[] }`. **App revocation** — `{ type: "OAuthApp", action:
+  "revoked", … }`.
+- Integration-vs-agent guidance: read-mostly or user-attributed actions =
+  integration; distinct workspace member = agent. `actor=application` (legacy)
+  tokens used ONLY for app-attributed issue/comment creation are
+  parameter-compatible with `actor=app`; dual-purpose tokens require users to
+  authenticate twice after migration.
 - Auth: standard OAuth2 + **`actor=app`** (workspace-admin install; agent appears as
   its own workspace member). Legacy `actor=application` = dual-purpose tokens.
 
