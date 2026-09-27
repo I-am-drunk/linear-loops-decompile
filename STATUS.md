@@ -1,9 +1,9 @@
-# STATUS — the board
+# STATUS: the board
 
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: R1 (pipeline harness).**
+**Phase: R2 (feature matrix).**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
@@ -13,11 +13,16 @@ Done 2026-09-27:
   not the Agent Sessions API.
 - R0 docs reset: README, AGENTS, PLAN, this board; skills rewritten as
   `boot`, `ship`, `github`.
+- R1 pipeline: `bash pipeline/run.sh` runs end to end (Linear v1.32.4: 1,550
+  chunks, 258 GraphQL ops, 87 models, zero drift vs baseline). Corpus ships to
+  agents via the private vault repo (`corpus/`); regeneration is the ~30-day
+  drift check only.
 
 Now:
-- R1 pipeline harness (unassigned; take it per AGENTS.md): one command that
-  downloads the latest Linear release, decompiles into `pipeline/corpus/`
-  (gitignored), and refreshes `extracts/`.
+- R2 feature matrix (in progress: sess_01a0e2c0-4c63-70a3-a057-cc1ded6f0665):
+  enumerate every Loops feature from the corpus (routes, ops, models) plus
+  KNOWLEDGE.md into docs/feature-matrix.md. The golden-goose chat-route trace
+  (issue #14) starts here.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 

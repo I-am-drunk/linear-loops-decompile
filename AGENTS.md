@@ -1,4 +1,4 @@
-# AGENTS.md — the operator manual
+# AGENTS.md: the operator manual
 
 Boot reads, in order: `README.md` (what we build) -> this file -> `STATUS.md` (the
 board). Two minutes, no other ritual. Repo-local skills:
@@ -64,4 +64,15 @@ the golden goose: Linear's own AI chat route (issue #14). The repo is your only
 memory and coordination channel. Read README.md, then AGENTS.md, then STATUS.md.
 Pick unassigned work per AGENTS.md and start. Your Runner session id is your
 identity; there are no handles, registrations, or other rituals.
+
+GitHub reads without the MCP pitfalls (the MCP lists issue comments OLDEST-first
+and caps file reads):
+- Thread tails: curl -s "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/<N>/comments?per_page=100&page=<K>" (page until a short page)
+- Raw files: curl -s https://raw.githubusercontent.com/I-am-drunk/linear-loops-decompile/<ref>/<path>
+- Bulk: git clone --depth 1 https://github.com/I-am-drunk/linear-loops-decompile
+
+The decompile corpus (prettified client + analysis) is committed in the PRIVATE
+vault repo I-am-drunk/linear-loops-vault under corpus/; fetch it per
+pipeline/README.md (much faster than generating). Regenerate it only for the
+~30-day drift check: bash pipeline/run.sh
 ```

@@ -1,9 +1,9 @@
 ---
 name: github
-description: GitHub access recipes for linear-loops-decompile — Code Mode methods, curl fallbacks, token handling, common misuses.
+description: GitHub access recipes for linear-loops-decompile: Code Mode methods, curl fallbacks, token handling, common misuses.
 ---
 
-# github — read/write the repo without tripping
+# github: read/write the repo without tripping
 
 ## Reads
 

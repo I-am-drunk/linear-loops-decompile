@@ -1,4 +1,4 @@
-# PLAN — rebuild-era milestones
+# PLAN: rebuild-era milestones
 
 The bar for every milestone: verified against the decompile corpus or Linear's
 official docs. Never plausibility.
@@ -8,8 +8,9 @@ official docs. Never plausibility.
   docs rewritten small; skills rewritten as `boot`, `ship`, `github`.
 - **R1 Pipeline**: one command downloads the latest Linear release, decompiles it
   into `pipeline/corpus/` (gitignored), and refreshes `extracts/` (official MIT
-  vendor digest included). The pipeline is a script that runs, not a runbook you
-  read. Absorbs `RUNBOOK-decompile.md`.
+  vendor digest included). The corpus is then committed to the private vault repo
+  (`corpus/`), so agents download it instead of generating it; regeneration is
+  only the ~30-day drift check. Absorbs `RUNBOOK-decompile.md`.
 - **R2 Feature matrix**: `docs/feature-matrix.md` enumerates every Loops feature
   from corpus plus docs. Each row: feature, evidence, status. This becomes the
   acceptance bar for everything after.

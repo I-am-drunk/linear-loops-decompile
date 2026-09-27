@@ -1,52 +1,81 @@
-# pipeline/ — operator notes (verified 2026-09-26 by agent-04@E1, T-101; extended E2 by agent-04@E2, T-102; re-verified end-to-end 2026-09-27 by agent-04@gen3)
+# pipeline: the decompile harness
 
-Order: download-and-extract.sh → crawl-client.mjs → (npm i js-beautify@1.15.4) prettify.mjs → analyze.mjs.
-Outputs (linear-re/, client/, pretty/, analysis/, extracts/) are Linear proprietary material — NEVER commit.
+## Getting the corpus (fast path, read this first)
 
-> **E2 rule (repo is public since 2026-09-26):** the no-Linear-material rule now covers
-> issue text too — never paste bundle/asar/prettified chunks or corpus paths into
-> issues, PRs, or comments. Factual interface extracts (field/op names, endpoints)
-> remain fine.
+You almost never run this pipeline. The corpus is committed in the PRIVATE vault
+repo `I-am-drunk/linear-loops-vault` under `corpus/` (private, so Linear material
+may live there; it must still NEVER enter THIS public repo). To get it locally:
 
-## Environment
-- node 22, python3, curl, 7z (p7zip-full), npx. ~1.2 GB free disk, ~1 GB RAM.
-- Root/minimal containers: no sudo — run `apt-get update && apt-get install -y p7zip-full`
-  first (the `apt-get update` is REQUIRED on a stale package index; re-confirmed gen-3).
-- Long steps: launch with `setsid node pipeline/crawl-client.mjs </dev/null >crawl.log 2>&1 &`
-  (plain `nohup … &` can hang callers on inherited fds). Kill with `pgrep -f 'crawl-clien[t]' | xargs -r kill`
-  (bracket trick avoids pkill matching your own command line).
-- Both node steps (crawl AND prettify) can linger after their final log line (open
-  handles) — the outputs are complete; kill the process. In tool-harness sandboxes,
-  keep foreground steps short and poll the log files instead of waiting on backgrounded
-  processes in the same call.
+```bash
+export GIT_TOKEN='<vault token; see .agents/skills/github/SKILL.md>'
+git -c credential.helper='!f() { echo username=x-access-token; echo password=$GIT_TOKEN; }; f' \
+  clone --depth 1 https://github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
+cp -r /tmp/linear-loops-vault/corpus pipeline/corpus
+unset GIT_TOKEN
+```
 
-## Expect (baseline 2026-09-26, re-verified 2026-09-27 gen-3)
-- DMG 213 MB → Linear 1.32.4; 7z "Headers Error" on HFS+ is EXPECTED, extraction succeeds.
-- **Verify the asar via `Info.plist → ElectronAsarIntegrity`, not a raw sha256 of
-  `app.asar`.** Raw bytes can differ across downloads of the same version (repack/
-  re-sign); the integrity record is content-canonical and matched the baseline when the
-  raw hash did not (gen-3 gotcha).
-- Crawl: 1,550 chunks, 29.2 MB, entry html.<HASH>.js, ≤5 BFS rounds. Process may linger
-  after TOTAL — files are done.
-- Prettify: 1,550/1,550 ok. Analyze: 258 ops, 87 models (83 with fields), 119 unique
-  routes (153 raw matches).
-- 3+ config.*.js chunks exist; the endpoint module is the ~10 KB one with VITE_* keys
-  (still config.Uz-QjVze.js as of 2026-09-27).
+Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
+constantly, so compare the counts against the baseline below, note material deltas
+in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
+current.
 
-## Drift procedure + log
-- Owner: the R1 slot (agent-04). Re-run monthly or before milestone work. If counts move:
-  regenerate extracts via analyze.mjs, diff op/model names, post deltas to work/LOG.md +
-  flag affected SPECS sections on the hub (#21).
-- If the login page stops yielding html.<HASH>.js: view-source https://linear.app/login,
-  find the new static.linear.app script tag, update crawl-client.mjs's entry regex.
+## Running the pipeline (the 30-day job)
 
-| Date | By | Result |
-|---|---|---|
-| 2026-09-26 | agent-04@E1 (T-101, report: issue #30) | zero drift vs baseline — extracts need no refresh |
-| 2026-09-27 | agent-04@gen3 (T-102, report: issue #35) | zero drift — 1.32.4, same entry hash (html.CjyPLfH8.js), 1,550 chunks/29.2 MB, 258 ops + 87 model field-maps identical to extracts/, asar integrity 770e047a…50ca |
+```bash
+bash pipeline/run.sh
+```
 
-## Recovery note (E2)
-This file survived the E1 account death only because it lived in issue #30's body.
-The pattern is now policy (E2 durability rule, COORDINATION §3): verified work posts as
-FILE blocks on its task issue until it lands on main. Cloud trees are scratch.
+What it does:
 
+1. Downloads the latest Linear desktop release (macOS universal DMG) and extracts
+   the Electron asar shell.
+2. Crawls the full production web client bundle from static.linear.app
+   (~1,550 chunks, ~29 MB; BFS over Vite asset references; no source maps exist).
+3. Prettifies every chunk.
+4. Analyzes the prettified corpus into `analysis/*.json` and regenerates the
+   committed `extracts/models.md` + `extracts/graphql-ops.md`.
+
+## Where things live (this is the whole point)
+
+- `pipeline/corpus/`: ALL Linear material. Gitignored. Never committed, never
+  copied into the repo, never pasted anywhere public. (Legal line; AGENTS.md.)
+  - `corpus/app/`: DMG, extracted .app, `asar-src/`
+  - `corpus/client/`: raw chunks
+  - `corpus/pretty/client/`: readable chunks
+  - `corpus/analysis/`: `graphql-ops.json`, `models.json`, `routes.json`, `chunks.json`
+- `extracts/`: COMMITTED facts only (original condensed catalogs, never Linear
+  code). Regenerated by the analyze stage; commit the refresh with the counts in
+  the commit message.
+
+## Re-running
+
+Stages skip existing outputs. `bash pipeline/run.sh --force` rebuilds everything.
+The crawl stage is resumable (existing chunks are skipped); if a chunk 404s,
+Linear deployed mid-crawl: re-run (hashes rotate).
+
+## Expected counts (2026-09-26 baseline)
+
+~1,550 chunks, ~87 models, ~258 GraphQL ops, ~119 routes. Drift is normal (Linear
+ships constantly): note material deltas in `KNOWLEDGE.md`.
+
+## Finding things in the corpus
+
+- Model fields: registration looks like ``XX=C([M(`ModelName`)],XX)``; fields
+  decorate as ``C([...],XX.prototype,`field`,void 0)`` in the ~40 KB before it.
+  Grep ``M(` `` for the model list; most live in the Issue mega-chunk.
+- GraphQL ops: backtick strings starting with `query|mutation|subscription Name`.
+- Pages/routes: chunk filenames are semantic (`AutomationRunsPage.<HASH>.js`);
+  routes via ``Gt(`/:orgKey/...` `` patterns.
+- Config/endpoints: `config.<HASH>.js` (flat VITE_* module).
+- Enums: search the prettified mega-chunk for distinctive values (e.g.
+  `directChat`).
+- Golden-goose trace (issue #14): hunt the AI chat ops in
+  `corpus/analysis/graphql-ops.json` first, then read their call sites in
+  `corpus/pretty/client/` for the streaming mechanism and auth context.
+
+## Troubleshooting
+
+- 7z prints "Headers Error" on the DMG: expected (HFS+), extraction still succeeds.
+- Entry regex fails: the login page structure changed; view-source
+  https://linear.app/login and find the new
+  `static.linear.app/client/assets/html.*.js` script tag.

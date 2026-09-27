@@ -1,0 +1,8 @@
+{
+  "name": "linear-loops-pipeline",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "js-beautify": "1.15.4"
+  }
+}

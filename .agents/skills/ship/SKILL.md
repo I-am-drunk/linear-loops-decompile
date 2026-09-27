@@ -1,9 +1,9 @@
 ---
 name: ship
-description: Land work in linear-loops-decompile — branch, commit, PR, gate evidence, merge policy, board update.
+description: Land work in linear-loops-decompile: branch, commit, PR, gate evidence, merge policy, board update.
 ---
 
-# ship — branch -> PR -> gate -> merge -> next task
+# ship: branch -> PR -> gate -> merge -> next task
 
 1. Branch from `main`: `<task>-<slug>` (example: `r1-pipeline-harness`). One task,
    one branch, one PR.

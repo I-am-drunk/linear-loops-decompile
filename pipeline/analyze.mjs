@@ -47,18 +47,22 @@ fs.writeFileSync('analysis/routes.json', JSON.stringify(routes, null, 2));
 fs.writeFileSync('analysis/chunks.json', JSON.stringify(chunkInfo, null, 2));
 
 // ---- extracts/ markdown (regenerate repo artifacts) ----
-fs.mkdirSync('extracts', { recursive: true });
+const EXTRACTS = process.env.EXTRACTS_DIR || 'extracts';
+let prov = 'production web client bundle';
+try { const v = JSON.parse(fs.readFileSync('app/VERSION.json', 'utf8')); prov = `production web client bundle, desktop v${v.version} (${v.date})`; } catch {}
+const stamp = `Source: ${prov}. Factual interface data for interoperability. Regenerate with pipeline/run.sh`;
+fs.mkdirSync(EXTRACTS, { recursive: true });
 const names = Object.keys(models).sort();
-let md = `# Linear Sync Model Registry (extracted reference)\n\nSource: production web client bundle. Total models: ${names.length}\n\n`;
+let md = `# Linear Sync Model Registry (extracted reference)\n\n${stamp}. Total models: ${names.length}\n\n`;
 for (const n of names) {
   md += `## ${n}\n\n`;
-  md += models[n].fields.length ? models[n].fields.map(f => `- \`${f}\``).join('\n') + '\n\n' : '- (not statically extractable — see prettified source)\n\n';
+  md += models[n].fields.length ? models[n].fields.map(f => `- \`${f}\``).join('\n') + '\n\n' : '- (not statically extractable; see prettified source)\n\n';
 }
-fs.writeFileSync('extracts/models.md', md);
-let gd = `# Linear Client GraphQL Operations (condensed catalog)\n\n${graphqlOps.size} operations.\n\n`;
+fs.writeFileSync(`${EXTRACTS}/models.md`, md);
+let gd = `# Linear Client GraphQL Operations (condensed catalog)\n\n${stamp}. ${graphqlOps.size} operations.\n\n`;
 for (const [name, op] of [...graphqlOps.entries()].sort()) {
   const sig = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1].replace(/\s+/g, ' ').slice(0, 160);
-  gd += `- **${op.type}** \`${name}\`${sig ? ' — `(' + sig + ')`' : ''}\n`;
+  gd += `- **${op.type}** \`${name}\`${sig ? ' `(' + sig + ')`' : ''}\n`;
 }
-fs.writeFileSync('extracts/graphql-ops.md', gd);
+fs.writeFileSync(`${EXTRACTS}/graphql-ops.md`, gd);
 console.log(`ops: ${graphqlOps.size}, models: ${names.length} (${names.filter(n=>models[n].fields.length).length} with fields), routes: ${routes.length}, chunks: ${chunkInfo.length}`);
