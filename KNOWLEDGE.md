@@ -135,13 +135,23 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   packer classes in `Logger.qFaEBF6-.js`). Incoming: text frames parse as JSON;
   binary frames: byte0==1 → zstd payload (byte1 = dictionary id), byte0==0 → raw
   payload from byte1, anything else → whole frame is msgpack.
-- Compression: zstd with a **client-embedded static dictionary** (a mock sync-message
-  vocabulary blob compiled into the client, `LATEST_VERSION = 1`), behind feature
-  flag `enableSyncMessageCompression`; frames must declare content size, 64 MB
-  decoded cap. Omitting the capability is accepted: the server then never sends
-  `syncDictionary`/`syncCompressed`. (An earlier revision said "server-sent,
-  SHA256-pinned dictionary; custom packer" — wrong on all three counts; corrected
-  2026-09-27, audit issue #157.)
+- Compression: zstd, two layers (both corpus-verified, `RefreshManager.DpVjn8XM.js`):
+  the dictionary CONTENT is a static, versioned, client-embedded vocabulary blob
+  (every cmd/model/field name + defaults; `LATEST_VERSION = 1`,
+  `byVersion = Map([[1, encode(...)]])`, ~:10002-10010); the DELIVERY is
+  server-sent and identity-pinned — `cmd:"syncDictionary"` → `setDictionary`
+  computes SHA-256(dictionary) and throws `Sync compression dictionary identity
+  mismatch` on a dictionaryId mismatch (:10088, :10114-10121), and later
+  `syncCompressed` frames reference that dictionaryId (:10092-10093). Advertised
+  only when flag `enableSyncMessageCompression` is on (URL `syncCompression=zstd-v1`
+  + handshake `compressionDictionaryVersion`, :10807); frames must declare content
+  size, 64 MB decoded cap. NOT advertising is a first-class mode: the server never
+  sends `syncDictionary`/`syncCompressed` (the client even throws on an
+  unrequested one, :10844), and Linear itself falls back to it via `zstdFailed`
+  (:10799, :10830). **Sync-reader v1: do not advertise; zero zstd handling needed.**
+  (Earlier revisions were each half right: the wire IS SHA-256-pinned server
+  delivery, the content IS a static embedded blob, and the packer is stock
+  msgpackr; reconciled 2026-09-27, audit #157 + #169 review.)
 - Liveness: ping every 20 s after handshake; idle disconnect at 30 min (activity
   polled per 5 min); `noauth` gets ONE retry inside a 2-min window, then the client
   treats the token as rejected (→ re-import); reconnect backoff
