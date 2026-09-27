@@ -166,9 +166,30 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 
 ## §6. Linear public API facts (for our dataplane)
 
+Precise, sourced versions of everything below live in
+`extracts/linear-official/docs-site/` (fact digests of the LIVE
+linear.app/developers pages, fetched 2026-09-27 — the vendored
+`extracts/linear-official/docs/*.md` are one-line upstream stubs and must never
+be cited as a source).
+
 - Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
-  keys act as the user. Rate limit ≈ 2,500 req/h/user (batch + budget). Webhooks
-  configurable per workspace for issue/comment/project/etc. changes.
+  keys act as the user. Auth header shapes DIFFER: PAT = `Authorization: <key>`
+  (no Bearer); OAuth = `Authorization: Bearer <token>` (docs-site/graphql-basics.md).
+- Rate limits (docs-site/rate-limiting.md): requests/h — API key 2,500/user,
+  OAuth 5,000/user, unauth 600/IP; complexity/h — 3M / 2M / 100k, single query
+  hard cap 10,000. Budget headers `X-RateLimit-Requests-{Limit,Remaining,Reset}`
+  + `X-Complexity` / `X-RateLimit-Complexity-*` on every response (Reset = epoch
+  ms); endpoint-specific `X-RateLimit-Endpoint-*` when a per-op limit is hit.
+  Exhaustion = HTTP **400** with `errors[].extensions.code = "RATELIMITED"`
+  (the header-driven budget + both exhaustion mappings in PR #155 are now
+  officially sourced).
+- Webhooks (docs-site/webhooks.md): org-scoped, admin-only to manage; entity
+  coverage list, 5s/200 consumer contract, 3 retries (1min/1h/6h), HMAC-SHA256
+  `Linear-Signature` over the RAW body + `webhookTimestamp` replay guard.
+- OAuth (docs-site/oauth.md): token exchange/refresh at
+  `api.linear.app/oauth/token` (form-encoded), access tokens 24h + refresh
+  token (mandatory since 2026-04-01), 30-min refresh replay grace;
+  `client_credentials` app-actor tokens 30 days, no refresh.
 - The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /

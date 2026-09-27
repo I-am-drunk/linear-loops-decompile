@@ -20,6 +20,7 @@ commit dated 2026-09-25), retrieved 2026-09-27.
 | `LICENSE` | MIT, upstream repo root | `LICENSE` |
 | `UPSTREAM-README.md` | Upstream repo README (SDK + import tool overview) | `README.md` |
 | `docs/` | Upstream `docs/` verbatim: `API.md`, `OAuth2.md`, `Webhooks.md`, `Attachments.md`, webhook settings screenshots, markdown-magic config/transforms | `docs/` |
+| `docs-site/` | **OUR fact digests of the LIVE linear.app/developers pages** (rate limiting, GraphQL basics, pagination/filtering, webhooks, OAuth). Exists because the upstream `docs/*.md` are ONE-LINE STUBS pointing at the website — never cite them as a source. | see `docs-site/README.md` |
 | `packages/*/README.md` | Package docs: `sdk` (client usage), `import` (CLI importer), `codegen-doc`, `codegen-sdk`, `codegen-test` | `packages/<pkg>/README.md` |
 | `packages/sdk/CHANGELOG.md` | Full SDK changelog (2.1 MB): release-by-release public-API history — the drift-forensics source ("when did op X appear?") | `packages/sdk/CHANGELOG.md` |
 | `AGENT-API.md` | OUR digest of the official Agent Sessions surface (+ divergences) | curated from the schema + linear.app/developers (links inside) |

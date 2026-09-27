@@ -23,6 +23,13 @@ Done 2026-09-27:
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
   (a stale `main` branch produced a false "zero drift" on 2026-09-27 morning).
+- Official-docs gap closed (2026-09-27): the vendored upstream `docs/*.md` turned
+  out to be one-line stubs — the real docs moved to linear.app/developers. Fact
+  digests of the live pages (rate limiting incl. RATELIMITED-on-400 + all budget
+  headers, GraphQL auth-header shapes, pagination/filtering, webhooks contract +
+  HMAC verification, OAuth token lifecycle) now live in
+  `extracts/linear-official/docs-site/`; KNOWLEDGE §6 rewritten from them; the
+  audit's UNVERIFIED flag on `src/server/linear.ts` rate headers resolved.
 - Golden-goose trace (issue #14, PR #141): Q1-Q4 answered in
   `docs/golden-goose-chat-route.md` + KNOWLEDGE.md §8a — send op + input fields,
   streamData subscribe envelope, auth, wire shapes (now MIT-documented), meter
