@@ -23,7 +23,7 @@ function withHash(hash: string, fn: () => void): void {
 
 const routes: ReadonlyArray<readonly [string, string[], string[]]> = [
   // [hash, mustContain, mustNotContain]
-  ["#/loops", ["Loops", "Runs", "Templates", "Settings", "T-701", 'aria-current="page"'], ["Not found"]],
+  ["#/loops", ["Loops", "Runs", "Templates", "Settings", "Triage digest", 'role="switch"', "New loop", 'aria-current="page"'], ["Not found", "T-701"]],
   ["#/settings/inference", ["Connect inference", "API key", "Probe models", "Environment offline"], ["Not found", "T-802"]],
   ["#/loop/abc/run/r9", ["Run detail", "T-703", "runId: r9"], ["Not found"]],
   ["#/bogus", ["Page not found", "/bogus"], ["T-701"]],
@@ -57,4 +57,3 @@ if (failures > 0) {
   process.exit(1);
 }
 console.log(`smoke: ${routes.length} routes rendered, all assertions passed`);
-

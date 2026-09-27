@@ -24,11 +24,14 @@ import {
   demoLinearDisconnected,
   demoSessions,
 } from "../features/settings/fixtures.ts";
+import { LoopsListPage, LoopsStyles, demoLoops } from "../features/loops/index.ts";
+import { navigate } from "../useHashRoute.ts";
 
 // T-802: settings pages are live. Until R9's connect channel lands, they are
 // wired to fixtures (intents are no-ops) — swap the containers, not the pages.
 const noop = (): void => {};
 const noopId = (_id: string): void => {};
+const noopToggle = (_id: string, _enabled: boolean): void => {};
 const noopInput = (..._args: unknown[]): void => {};
 
 export interface PageDef {
@@ -37,15 +40,23 @@ export interface PageDef {
 }
 
 export const PAGE_REGISTRY: Record<string, PageDef> = {
+  // T-701 live: fixture container until R9's channel lands (container swap,
+  // page untouched). Toggle is server-authoritative — intent is a no-op here,
+  // so rows keep showing fixture state until a real container confirms.
   "loops": {
     title: "Loops",
     render: () => (
-      <PlaceholderPage
-        title="Loops"
-        description="Grouped loops list with enabled toggle and last-run status."
-        owner="T-701"
-        note="props contract: loops: LoopSummary[], onToggle(id, enabled), onOpen(id)"
-      />
+      <>
+        <LoopsStyles />
+        <LoopsListPage
+          loops={demoLoops}
+          inferenceConfigured={demoHarnesses.length > 0}
+          onToggle={noopToggle}
+          onOpen={(id) => navigate({ name: "loop-detail", loopId: id })}
+          onNewLoop={() => navigate({ name: "loop-new" })}
+          onOpenInferenceSettings={() => navigate({ name: "settings-inference" })}
+        />
+      </>
     ),
   },
   "loop-new": {
@@ -169,4 +180,3 @@ export function renderRoute(route: Route): { title: string; page: JSX.Element } 
   if (!def) return { title: "Not found", page: <NotFoundPage path={route.name} /> };
   return { title: def.title, page: def.render(route) };
 }
-
