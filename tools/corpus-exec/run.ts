@@ -14,9 +14,17 @@ import { serialize, stringify } from "./serialize.ts";
 
 export type CaseFile = {
   unit: string;
+  /** Chunk reference: a full basename or a prefix up to the first dot
+   * (`ThemeHelper`); prefixes survive hash rotation across corpus refreshes
+   * (#225 red-team R2-1). The resolved full name lands in provenance. */
   chunk: string;
   stubs?: Record<string, Stub>;
   invoke?: { export: string; exportMeaning: string; args?: unknown[] };
+  /** Escape hatch for setups JSON args cannot express (multi-step calls,
+   * memoization checks — #225 red-team R2-2): a sibling hand-written ESM
+   * driver whose default export is `async (sandbox: { load(chunkRef) }) =>
+   * value-to-serialize`. Reviewed like a stub; the runner stays dumb. */
+  drive?: { file: string; exportMeaning: string };
   /** Optional projection: keep only these top-level keys of the output.
    * For outputs that carry live function members (e.g. the theme object's
    * lazy derived-theme functions), the author names the value regions this
@@ -53,15 +61,22 @@ export function loadCase(path: string): CaseFile {
   if (typeof c.unit !== `string` || typeof c.chunk !== `string`) {
     throw new Error(`case file needs string "unit" and "chunk": ${path}`);
   }
-  const modes = [c.invoke, c.render].filter((m) => m !== undefined).length;
-  if (modes !== 1) throw new Error(`case file needs exactly one of "invoke" | "render": ${path}`);
-  const mode = c.invoke ?? c.render;
-  if (typeof mode?.export !== `string` || typeof mode?.exportMeaning !== `string`) {
-    throw new Error(`the mode needs "export" and "exportMeaning" (identify the minified export with corpus evidence): ${path}`);
+  const modes = [c.invoke, c.render, c.drive].filter((m) => m !== undefined).length;
+  if (modes !== 1) throw new Error(`case file needs exactly one of "invoke" | "render" | "drive": ${path}`);
+  if (c.drive !== undefined) {
+    if (typeof c.drive.file !== `string` || typeof c.drive.exportMeaning !== `string`) {
+      throw new Error(`drive mode needs "file" and "exportMeaning": ${path}`);
+    }
+  } else {
+    const mode = c.invoke ?? c.render;
+    if (typeof mode?.export !== `string` || typeof mode?.exportMeaning !== `string`) {
+      throw new Error(`the mode needs "export" and "exportMeaning" (identify the minified export with corpus evidence): ${path}`);
+    }
   }
   for (const [name, stub] of Object.entries(c.stubs ?? {})) {
-    if (typeof stub.source !== `string` || typeof stub.why !== `string`) {
-      throw new Error(`stub "${name}" needs "source" and "why": ${path}`);
+    const forms = [typeof stub.source === `string`, typeof stub.file === `string`].filter(Boolean).length;
+    if (forms !== 1 || typeof stub.why !== `string`) {
+      throw new Error(`stub "${name}" needs exactly one of "source" | "file", plus "why": ${path}`);
     }
   }
   return c;
@@ -95,40 +110,56 @@ function makeDispatcher(contextValue: unknown): Record<string, unknown> {
   };
 }
 
-export async function runCase(corpusDir: string, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
+/** `caseDir` anchors relative stub/driver file paths (the case file's dir). */
+export async function runCase(corpusDir: string, caseDir: string, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
   const chunksDir = join(corpusDir, `pretty`, `client`);
-  const closure: Closure = buildSandbox(chunksDir, c.chunk, c.stubs ?? {});
+  const closure: Closure = buildSandbox(chunksDir, caseDir, c.chunk, c.stubs ?? {});
   try {
-    return await runInSandbox(corpusDir, closure, c, log);
+    return await runInSandbox(corpusDir, caseDir, closure, c, log);
   } finally {
     rmSync(closure.dir, { recursive: true, force: true });
   }
 }
 
-async function runInSandbox(corpusDir: string, closure: Closure, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
+async function runInSandbox(corpusDir: string, caseDir: string, closure: Closure, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
   log(`sandbox: ${closure.chunks.length} chunks (${closure.stubbed.length} stubbed) at ${closure.dir}`);
   for (const name of closure.chunks) {
     log(`  ${closure.stubbed.includes(name) ? `[stub] ` : ``}${name}`);
   }
 
-  const entryUrl = pathToFileURL(join(closure.dir, c.chunk)).href;
+  const entryUrl = pathToFileURL(join(closure.dir, closure.entry)).href;
   const mod = (await import(entryUrl)) as Record<string, unknown>;
 
   let output: unknown;
-  if (c.invoke !== undefined) {
+  if (c.drive !== undefined) {
+    const driverUrl = pathToFileURL(join(caseDir, c.drive.file)).href;
+    const driver = (await import(driverUrl)) as { default?: unknown };
+    if (typeof driver.default !== `function`) {
+      throw new Error(`driver ${c.drive.file} must default-export a function`);
+    }
+    const sandboxApi = {
+      entry: mod,
+      load: async (ref: string): Promise<unknown> => {
+        const name = closure.chunks.includes(ref) ? ref : closure.chunks.find((n) => n.startsWith(`${ref}.`));
+        if (name === undefined) throw new Error(`driver load("${ref}"): not in the sandbox closure`);
+        return import(pathToFileURL(join(closure.dir, name)).href);
+      },
+    };
+    output = await (driver.default as (s: typeof sandboxApi) => unknown)(sandboxApi);
+  } else if (c.invoke !== undefined) {
     // "export" takes a dotted path for object exports, e.g. "t.generateTheme".
     const path = c.invoke.export.split(`.`);
     let fn: unknown = mod;
     for (const seg of path) fn = (fn as Record<string, unknown> | undefined)?.[seg];
     if (typeof fn !== `function`) {
-      throw new Error(`export "${c.invoke.export}" of ${c.chunk} is ${typeof fn}, not a function (exports: ${Object.keys(mod).join(`, `)})`);
+      throw new Error(`export "${c.invoke.export}" of ${closure.entry} is ${typeof fn}, not a function (exports: ${Object.keys(mod).join(`, `)})`);
     }
     output = (fn as (...a: unknown[]) => unknown)(...(c.invoke.args ?? []));
   } else {
     const r = c.render as NonNullable<CaseFile[`render`]>;
     const component = mod[r.export];
     if (typeof component !== `function`) {
-      throw new Error(`export "${r.export}" of ${c.chunk} is ${typeof component}, not a function component`);
+      throw new Error(`export "${r.export}" of ${closure.entry} is ${typeof component}, not a function component`);
     }
     const reactChunk = r.reactChunk ?? closure.chunks.find((n) => /^react\./.test(n));
     if (reactChunk === undefined) {
@@ -184,7 +215,7 @@ async function runInSandbox(corpusDir: string, closure: Closure, c: CaseFile, lo
     provenance: {
       tool: `corpus-exec/g1`,
       corpusHead: gitHead(corpusDir),
-      entry: c.chunk,
+      entry: closure.entry, // resolved full name (case may declare a prefix)
       closureSize: closure.chunks.length,
       stubbed: closure.stubbed,
       chunkHashes: closure.hashes,

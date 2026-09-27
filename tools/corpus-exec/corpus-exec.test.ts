@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { expectedBytes, loadCase, runCase, type CaseFile } from "./run.ts";
-import { buildSandbox, closureSize } from "./sandbox.ts";
+import { buildSandbox, closureSize, resolveChunk } from "./sandbox.ts";
 import { serialize, stringify } from "./serialize.ts";
 
 const here = fileURLToPath(new URL(`.`, import.meta.url));
@@ -22,12 +22,12 @@ const noLog = (): void => undefined;
 // --- sandbox ---------------------------------------------------------------
 
 test(`closure walk finds transitive imports and substitutes stubs`, () => {
-  const closure = buildSandbox(fixtureChunks, `math.AAAA.js`, {});
+  const closure = buildSandbox(fixtureChunks, join(here, `fixtures`), `math.AAAA.js`, {});
   assert.deepEqual(closure.chunks, [`config.BBBB.js`, `math.AAAA.js`]);
   assert.deepEqual(closure.stubbed, []);
   assert.equal(Object.keys(closure.hashes).length, 2);
 
-  const stubbed = buildSandbox(fixtureChunks, `Widget.CCCC.js`, {
+  const stubbed = buildSandbox(fixtureChunks, join(here, `fixtures`), `Widget.CCCC.js`, {
     "provider.DDDD.js": { source: `export const l = false;`, why: `matchMedia` },
   });
   assert.deepEqual(stubbed.chunks, [`Widget.CCCC.js`, `provider.DDDD.js`, `react.FAKE.js`]);
@@ -37,19 +37,19 @@ test(`closure walk finds transitive imports and substitutes stubs`, () => {
 });
 
 test(`side-effect imports join the closure (import "./x" without from)`, async () => {
-  const closure = buildSandbox(fixtureChunks, `effects.EEEE.js`, {});
+  const closure = buildSandbox(fixtureChunks, join(here, `fixtures`), `effects.EEEE.js`, {});
   assert.deepEqual(closure.chunks, [`config.BBBB.js`, `effects.EEEE.js`, `sideeffect.FFFF.js`]);
   const c: CaseFile = {
     unit: `fixture/effects`,
     chunk: `effects.EEEE.js`,
     invoke: { export: `n`, exportMeaning: `get (effects.EEEE.js: export { get as n })`, args: [1] },
   };
-  const result = await runCase(fixtureCorpus, c, noLog);
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
   assert.equal(result.output, 103); // 100 (side-effect global) + 2 (config k) + 1
 });
 
 test(`a missing chunk fails loudly, naming it`, () => {
-  assert.throws(() => buildSandbox(fixtureChunks, `nope.ZZZZ.js`, {}), /chunk not found in corpus: nope\.ZZZZ\.js/);
+  assert.throws(() => buildSandbox(fixtureChunks, join(here, `fixtures`), `nope.ZZZZ.js`, {}), /chunk not found in corpus: nope\.ZZZZ\.js/);
 });
 
 test(`closureSize probes without building`, () => {
@@ -83,12 +83,12 @@ test(`invoke mode executes the corpus function on case args`, async () => {
     chunk: `math.AAAA.js`,
     invoke: { export: `n`, exportMeaning: `add (math.AAAA.js: export { add as n })`, args: [2, 3] },
   };
-  const result = await runCase(fixtureCorpus, c, noLog);
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
   assert.deepEqual(serialize(result.output), { parts: [2, 3], sum: 10 });
   assert.equal(result.provenance.entry, `math.AAAA.js`);
   assert.equal(result.provenance.closureSize, 2);
   // byte-stable across runs
-  const again = await runCase(fixtureCorpus, c, noLog);
+  const again = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
   assert.equal(expectedBytes(result), expectedBytes(again));
 });
 
@@ -98,7 +98,7 @@ test(`a wrong export name fails naming the real exports`, async () => {
     chunk: `math.AAAA.js`,
     invoke: { export: `zz`, exportMeaning: `wrong`, args: [] },
   };
-  await assert.rejects(runCase(fixtureCorpus, c, noLog), /export "zz" .* not a function \(exports: n\)/);
+  await assert.rejects(runCase(fixtureCorpus, join(here, `fixtures`), c, noLog), /export "zz" .* not a function \(exports: n\)/);
 });
 
 // --- run: render mode ----------------------------------------------------------
@@ -115,7 +115,7 @@ test(`render mode executes a component under the micro-dispatcher with the case 
       context: { value: { color: { labelBase: `#111` } }, why: `theme context; token value pinned by the case` },
     },
   };
-  const result = await runCase(fixtureCorpus, c, noLog);
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
   assert.deepEqual(serialize(result.output), {
     $element: true,
     type: `div`,
@@ -141,18 +141,54 @@ test(`render mode with the other stub branch flips exactly the stub-derived valu
       context: { value: { color: { labelBase: `#111` } }, why: `theme` },
     },
   };
-  const result = await runCase(fixtureCorpus, c, noLog);
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
   const tree = serialize(result.output) as { props: { className: string }; children: { children: string } };
   assert.equal(tree.props.className, `retina`);
   assert.equal(tree.children.children, `Untitled`); // the ?? fallback on missing props.name
+});
+
+test(`chunk references resolve by basename prefix; ambiguity is loud`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/add`,
+    chunk: `math`, // prefix — survives hash rotation (#225 red-team R2-1)
+    invoke: { export: `n`, exportMeaning: `add`, args: [1, 1] },
+  };
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  assert.equal(result.provenance.entry, `math.AAAA.js`); // resolved full name in provenance
+  assert.throws(() => resolveChunk(fixtureChunks, `nope`), /chunk not found in corpus: nope/);
+});
+
+test(`drive mode runs a hand-written driver for multi-step setups`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/add-chained`,
+    chunk: `math.AAAA.js`,
+    drive: { file: `drivers/twice.mjs`, exportMeaning: `chained add: second call consumes the first's sum` },
+  };
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  assert.deepEqual(serialize(result.output), {
+    first: { parts: [1, 2], sum: 6 },
+    second: { parts: [6, 4], sum: 20 },
+  });
+});
+
+test(`stubs can live in sibling files (reviewable ESM, not escaped strings)`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/widget`,
+    chunk: `Widget`,
+    stubs: { "provider.DDDD.js": { file: `stubs/flag-true.mjs`, why: `matchMedia boolean; true branch, as a reviewable sibling file` } },
+    render: { export: `t`, exportMeaning: `Widget`, props: {}, context: { value: { color: { labelBase: `#111` } }, why: `theme` } },
+  };
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  const tree = serialize(result.output) as { props: { className: string } };
+  assert.equal(tree.props.className, `retina`);
 });
 
 // --- case-file validation -------------------------------------------------------
 
 test(`loadCase rejects a case without exactly one mode and stubs without why`, () => {
   const dir = join(here, `fixtures`);
-  assert.throws(() => loadCase(join(dir, `bad-two-modes.json`)), /exactly one of "invoke" \| "render"/);
-  assert.throws(() => loadCase(join(dir, `bad-stub.json`)), /stub "x\.js" needs "source" and "why"/);
+  assert.throws(() => loadCase(join(dir, `bad-two-modes.json`)), /exactly one of "invoke" \| "render" \| "drive"/);
+  assert.throws(() => loadCase(join(dir, `bad-stub.json`)), /stub "x\.js" needs exactly one of "source" \| "file", plus "why"/);
   const ok = loadCase(join(dir, `ok-case.json`));
   assert.equal(ok.unit, `fixture/add`);
 });
@@ -179,7 +215,7 @@ test(`corpus smoke: re-derive a generateTheme shell value against the H2 goldens
       args: [{ base: [5.52, 0.4, 272], accent: [47.917542332560124, 59.30267706856808, 288.42138382943733], contrast: 27, colorFormat: `RGB` }],
     },
   };
-  const mod = await runCase(corpus, c, noLog);
+  const mod = await runCase(corpus, join(here, `fixtures`), c, noLog);
   const theme = mod.output as { color: Record<string, string>; hash: string };
   // pick projected away the live derived-theme functions; color+hash are the pinned regions
   assert.equal(theme.color[`labelBase`], want[`darkDefault`].color[`labelBase`]);

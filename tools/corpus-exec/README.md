@@ -31,10 +31,14 @@ missing corpus, missing chunk, sandbox failure).
 ```jsonc
 {
   "unit": "ui-theme/generateTheme",        // the src module this golden proves
-  "chunk": "ThemeHelper.CeMKYPhf.js",      // entry chunk in corpus pretty/client
-  "stubs": {                                // chunk basename -> replacement ESM
-    "ThemeProvider.BNrg3wTr.js": {
-      "source": "export const l = false;",
+  "chunk": "ThemeHelper",                  // full basename OR prefix up to the first dot —
+                                           // prefixes survive hash rotation across corpus
+                                           // refreshes; the resolved full name + hash land in
+                                           // provenance; ambiguity is a loud error, never a pick
+  "stubs": {                                // chunk name/prefix -> replacement ESM
+    "ThemeProvider": {
+      "source": "export const l = false;", // inline for one-liners …
+      // "file": "stubs/theme-provider.mjs", // … or a sibling file for real, reviewable ESM
       "why": "retina matchMedia boolean; both branch values pinned across the retina0/retina1 case pair"
     }
   },
@@ -46,6 +50,11 @@ missing corpus, missing chunk, sandbox failure).
   // … OR render mode (render-phase-pure React components only):
   // "render": { "export": "t", "exportMeaning": "…", "props": {},
   //             "context": { "value": { "color": {} }, "why": "…" } },
+  // … OR drive mode, for setups JSON args cannot express (multi-step calls,
+  // memoization checks): a hand-written sibling ESM driver, reviewed like a stub:
+  // "drive": { "file": "drivers/derived-themes.mjs",
+  //            "exportMeaning": "calls generateTheme then its elevatedTheme() member" },
+  // the driver default-exports async ({ entry, load }) => value-to-serialize
   "notes": "what this case pins and why these inputs were chosen"
 }
 ```

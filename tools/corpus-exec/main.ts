@@ -60,7 +60,7 @@ async function main(): Promise<number> {
   }
 
   const c = loadCase(casePath);
-  const result = await runCase(corpus, c, (line) => console.error(line));
+  const result = await runCase(corpus, dirname(casePath), c, (line) => console.error(line));
   const bytes = expectedBytes(result);
 
   if (cmd === `run`) {
