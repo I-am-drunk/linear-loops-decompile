@@ -32,7 +32,7 @@ then). (Corpus: `useSendAiMessage.B5bGsmqN.js`, `Issue.DRYymPCa.js`.)
 | `userMessageId` | Client-generated message/turn id (idempotency handle) |
 | `bodyData` | Message body — a ProseMirror document JSON |
 | `prompt` | Optional prompt override |
-| `context` | Pinned entity context: `[{ type: "Issue"|"Project"|"Initiative"|"Cycle"|…, id }]` |
+| `context` | Pinned entity context: `[{ type: "Issue"\|"Project"\|"Initiative"\|"Cycle"\|…, id }]` |
 | `issueId` / `projectId` / `initiativeId` / `documentId` / `pullRequestId` / `diffId` | Owning-entity links (one drives the conversation's owner) |
 | `userId` | Set only for ephemeral/private-session sends |
 | `resume` | Client always sends `true` |

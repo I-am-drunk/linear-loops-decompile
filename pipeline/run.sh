@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # pipeline/run.sh: the one command: download Linear, build the local corpus
 # (gitignored), refresh the committed extracts/. Stages skip existing outputs;
-# `--force` rebuilds everything. Run from anywhere:  bash pipeline/run.sh
+# `--force` rebuilds everything. Invoke from the repo root:  bash pipeline/run.sh
+#   (the script self-locates once launched; the invocation path is relative).
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT="$PWD/.."
