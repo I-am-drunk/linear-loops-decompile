@@ -18,7 +18,7 @@ pub fn render(out: &Outcome) -> String {
         for d in &violations {
             s.push_str(&format!("| {} | {} | {} | {} |\n", d.surface, d.family, d.kind, escape(&d.fact)));
         }
-        s.push_str("\nFix the slice to match the reference, or — only for a deliberate,\nreviewed improvement — declare it in `.parity/improvements.json`.\n\n");
+        s.push_str("\nFix the slice to match the reference, or — only for a deliberate,\nreviewed improvement — declare it in `tools/parity/policy/improvements.json`.\n\n");
     }
 
     let covered: Vec<_> = out.deviations.iter().filter(|d| d.covered_by.is_some()).collect();

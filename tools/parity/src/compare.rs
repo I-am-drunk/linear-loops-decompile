@@ -100,7 +100,14 @@ pub fn check(ours: &FactFile, reference: &FactFile, improvements: &[Improvement]
     }
     for name in reference.surfaces.keys() {
         if !ours.surfaces.contains_key(name) {
-            out.not_built.push(name.clone());
+            // App-level synthetic surfaces (route table, token namespace) exist
+            // in every UI build — omitting them from our facts is a violation
+            // (accidental deletion must be loud), not iterative ramp.
+            if name.starts_with("app.") || name.starts_with("theme.") {
+                push_deviation(&mut out, improvements, &mut used, name, "surface", "missing", "surface not declared".to_string());
+            } else {
+                out.not_built.push(name.clone());
+            }
         }
     }
     for (i, imp) in improvements.iter().enumerate() {

@@ -102,9 +102,14 @@ where we can measure; never false-red, never silent-green.
 - Runner sandboxes ship node but NO cargo: install once with
   `curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal`
   (+ `apt-get install -y gcc` for the linker). `ci/check-ui.sh` SKIPS with a
-  printed pointer when cargo is absent — vacuous pass, mirroring the
-  corpus-absence rule. `ci/check-src.sh` stays untouched: the UI gate and the
-  server gate red independently.
+  printed pointer when cargo is absent (peer-mandated fail-soft: the gate must
+  not red sessions that cannot install Rust; the vacuous pass is deliberate,
+  not a hole — UI PRs from cargo-capable sessions still run the full check).
+  `ci/check-src.sh` stays untouched: the gates red independently.
+- Gate modes, exactly: no cargo → skip with pointer · no corpus → vacuous ·
+  corpus, no `src/ui` → extract (canaries enforced), vacuous check ·
+  `src/ui` without `ui-facts.json` → **FAIL** (declared facts are part of the
+  slice) · facts present → full check.
 
 ## Repo fit and the legal line
 

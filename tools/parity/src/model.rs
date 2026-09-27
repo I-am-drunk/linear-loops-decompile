@@ -139,7 +139,10 @@ pub fn from_value(v: &Value) -> Result<FactFile, String> {
     for (name, sv) in pairs {
         let mut s = Surface::default();
         for family in SET_FAMILIES {
-            if let Some(arr) = sv.get(family).and_then(Value::as_arr) {
+            if let Some(v) = sv.get(family) {
+                let arr = v
+                    .as_arr()
+                    .ok_or_else(|| format!("surface '{}': '{}' must be an array of strings", name, family))?;
                 let target = s.set_list_mut(family).unwrap();
                 for item in arr {
                     match item.as_str() {
@@ -149,7 +152,10 @@ pub fn from_value(v: &Value) -> Result<FactFile, String> {
                 }
             }
         }
-        if let Some(arr) = sv.get("order").and_then(Value::as_arr) {
+        if let Some(v) = sv.get("order") {
+            let arr = v
+                .as_arr()
+                .ok_or_else(|| format!("surface '{}': 'order' must be an array of strings", name))?;
             for item in arr {
                 match item.as_str() {
                     Some(x) => s.order.push(x.to_string()),

@@ -25,7 +25,11 @@ echo "=== parity extract (corpus → reference; canaries enforced) ==="
 cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
 if [ ! -f src/ui/ui-facts.json ]; then
-  echo "check-ui: src/ui/ui-facts.json not present — extraction healthy, no UI facts to check yet. Vacuous pass."
+  if [ -d src/ui ]; then
+    echo "check-ui: FAIL — src/ui exists but declares no ui-facts.json (SPECS/ui-parity.md: every UI slice ships its facts)." >&2
+    exit 1
+  fi
+  echo "check-ui: no src/ui package — extraction healthy, nothing to check yet. Vacuous pass."
   exit 0
 fi
 

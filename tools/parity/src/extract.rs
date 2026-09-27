@@ -36,8 +36,9 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let routes_text = fs::read_to_string(&routes_path)
         .map_err(|e| format!("read {}: {}", routes_path.display(), e))?;
     let routes_json = crate::json::parse(&routes_text)?;
-    let empty: Vec<crate::json::Value> = Vec::new();
-    let routes_arr = routes_json.as_arr().unwrap_or(&empty);
+    let routes_arr = routes_json
+        .as_arr()
+        .ok_or_else(|| format!("{}: expected a JSON array", routes_path.display()))?;
     let mut app_routes: Vec<String> = Vec::new();
     for item in routes_arr {
         let Some(path) = item.get("path").and_then(|v| v.as_str()) else {
@@ -53,6 +54,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let client_for_routes = corpus.join("pretty/client");
     if let Ok(entries) = fs::read_dir(&client_for_routes) {
         for entry in entries.flatten() {
+            // routes-from-bodies is best-effort: unreadable entries skip
             let name = entry.file_name().to_string_lossy().to_string();
             if !name.ends_with(".js") {
                 continue;
@@ -90,7 +92,8 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             Ok(e) => e,
             Err(e) => return Err(format!("read {}: {}", client_dir.display(), e)),
         };
-        for entry in entries.flatten() {
+        for entry in entries {
+            let entry = entry.map_err(|e| format!("read {}: {}", client_dir.display(), e))?;
             let name = entry.file_name().to_string_lossy().to_string();
             if !chunk_matches(&name, comp, *exact) {
                 continue;
@@ -117,7 +120,8 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     // (values are the documented served-CSS seam; names come from the
     // ThemeProvider chunks' `name: \`var(--sx-…)\`` definitions).
     let mut theme = Surface::default();
-    for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))?.flatten() {
+    for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))? {
+        let entry = entry.map_err(|e| format!("read {}: {}", client_dir.display(), e))?;
         let name = entry.file_name().to_string_lossy().to_string();
         if !chunk_matches(&name, "ThemeProvider", true) {
             continue;
@@ -154,7 +158,8 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         if !canary_list.is_empty() {
             // one pass over every chunk, all canaries at once
             let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
-            for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))?.flatten() {
+            for entry in fs::read_dir(&client_dir).map_err(|e| format!("read {}: {}", client_dir.display(), e))? {
+                let entry = entry.map_err(|e| format!("read {}: {}", client_dir.display(), e))?;
                 let name = entry.file_name().to_string_lossy().to_string();
                 if !name.ends_with(".js") {
                     continue;

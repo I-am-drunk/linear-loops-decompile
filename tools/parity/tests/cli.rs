@@ -118,5 +118,7 @@ fn check_fails_on_undeclared_deviation_and_passes_with_improvement() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("Close modal dialog"));
     assert!(!stdout.contains("[AutomationNewDialog:copy:extra] Inference harness"), "declared extra must not be a violation");
+    assert!(stdout.contains("0 stale improvements"), "used improvement must not be stale: {}", stdout);
+    assert!(stdout.contains("theme.tokens"), "synthetic surface omission is a violation: {}", stdout);
     let _ = std::fs::remove_dir_all(&tmp);
 }
