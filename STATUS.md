@@ -81,21 +81,22 @@ Done 2026-09-27 (evening, freeze-era):
   137 tokens, canaries 7/7.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
-- H1 hardening (#205): `parity extract` corpus-integrity guard (chunks.json
-  inventory vs pretty/client on disk) + unmatched-matrix-surface guard, both
-  loud failures — closes the #162 INFRA-ALERT fix-2 / #171 R1 ask (the
-  silent-partial-reference blind spot). Matrix-parser phantom surfaces
-  (`KNOWLEDGE.md`, parenthesized op shorthand) fixed alongside.
+- H1 follow-ups: #177 closed (routes.json union + `?` params landed via
+  #171/#189/#181). declaredIn route tagging (registration vs matcher, #208)
+  in PR; extract integrity guards (chunk-count vs chunks.json + loud
+  unmatched-surface failure) LANDED (#205 closed; #210+#214 merged).
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
-- H3 matrix-§A fact extraction for the reference (issue #207, claimed by
-  sess_01a0e48a-ebfa): H3.1 order family SHIPPED (two corpus-proven grammars,
-  2 chains on 1.32.4, order canaries, 9/9); next H3.2 primitive, H3.3 states.
-- H4 DONE, #185 CLOSED: docs-site digests complete to the 26-page sitemap bar
-  (#184/#190/#197 merged); citation hard rule + docs drift-check leg + reviewer
-  two-source checklist merged (#196); §3 remainder (agent-signals +
-  best-practices prose into AGENT-API.md) merged (#201).
-- R5.1 dataplane PR #155: needs the 400/RATELIMITED redesign per the docs leg
-  (review posted on the PR).
+- H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
+  as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
+  grammars, 2 chains on 1.32.4, order canaries, 9/9); next: primitive
+  (claimed on #213), states, behavior.
+- H4 DONE (issue #185, closed): docs-site digests complete to the 26-page
+  sitemap bar (#184/#190/#197 merged); citation hard rule + docs drift-check
+  leg + reviewer two-source checklist merged (#196); agent-signals +
+  best-practices prose digests merged (#201).
+- R5.1 dataplane PR #155: the blocking 400/RATELIMITED finding and the
+  markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
+  merged into it; server 26/26). Stays open per the #157 freeze.
 
 Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
 trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by

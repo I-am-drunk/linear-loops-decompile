@@ -30,7 +30,15 @@ Per UI surface. Set families (compared as sets; missing/extra are deviations):
 1. **routes** — the Loops/agent route table (synthetic surface `app.routes`).
    Extraction reads `analysis/routes.json` AND scans chunk bodies for
    `` `/:orgKey/…` `` literals — the index is a floor, not a ceiling (#157
-   meta finding).
+   meta finding). The reference additionally carries per-route provenance
+   (`routeMeta`, issue #208): `declaredIn` (the chunk basenames holding the
+   literal) and a derived `role` — `registration` (the literal sits in the
+   `Root.*` route-table chunk: the app shell must route this URL), `matcher`
+   (a `match(route, pathname)` call site: this URL gates what a surface
+   renders — e.g. `/:orgKey/agent/:agentId`), or `both` (e.g.
+   `/:orgKey/loops/new`, a registered route that renders a DIALOG). Compare
+   is unchanged (paths as a set); role is informational until the primitive
+   family (H3, #207) consumes it. `ui-facts.json` never declares routeMeta.
 2. **copy** — user-visible strings, exact-compared (zero tolerance; copy is
    the cheapest sameness). Extraction grammar: all three string-literal forms
    (compiled JSX carries copy as `children:` props, backtick literals, and
