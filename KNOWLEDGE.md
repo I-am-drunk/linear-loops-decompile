@@ -180,6 +180,43 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - 2026-09-27 re-run of the pipeline on Linear v1.32.4: 1,550 chunks, 258 ops,
   87 models, zero drift vs the 2026-09-26 baseline.
 
+### §8a. Goose trace answers (2026-09-27, sess_01a0e2c4-a88f-730b-acee-8188d527c324; full trace: `docs/golden-goose-chat-route.md`)
+
+- **Q1 ops/stream:** `AiConversationSendMessage(input)` is the only way in (no
+  create op; first send persists). Input: `conversationId, userMessageId,
+  bodyData (ProseMirror doc), prompt?, context[] {type,id}, issueId/projectId/
+  initiativeId/documentId/pullRequestId/diffId, userId? (ephemeral), resume:true,
+  rollbackToTurnId?, fallbackMode? (steer|queue|fail)`. Responses stream over
+  the sync socket: subscribe `{cmd:"streamData", action:"subscribe", modelName,
+  modelId, propertyName, cursor}` on `AiConversation.parts` (status active) and
+  `AiConversationTurn.parts` (flag `aiConversationTurnStreaming` + role
+  assistant + status active); chunks `{modelName, modelId, propertyName, data,
+  cursor}` fold via reducer. Binary+zstd are client-negotiated — a minimal JSON
+  reader may be enough (live-check).
+- **Q2 auth:** client-api GraphQL rides cookies + headers `user`, `userAccount`,
+  `organization`, `authorization` = the login-born session token; the SAME token
+  is the socket `hshk` token. Interactive login only (email-link/SAML/Google);
+  headless plan = user pastes/imports a session token, stored write-only. Public
+  API (PAT/OAuth) has ZERO chat ops — re-verified on master @ 2026-09-25.
+  Loop run = same conversation with `initialSource: workflow` +
+  `workflowDefinition` link + entity context; normal chat = `directChat` /
+  `entityChat`. Same send op, same stream for every source.
+- **Q3 wire shapes:** now MIT-documented — the 2026-09-25 official schema added
+  the 174-type `AiConversation` zoo: part types `ack|elicitation|
+  elicitationResponse|error|event|prompt|reasoning|text|toolCall|widget|
+  widgetPlaceholder`; 48-member tool-call union (Bash, WebSearch, InvokeMcpTool,
+  RunLoop, SpawnSubagent, coding-session tools, entity CRUD, …); statuses
+  `active|awaitingInput|complete|error|pending|waiting`. Stream deltas are
+  ProseMirror STEPS applied to part `bodyData` (not raw tokens); parts are
+  keyed by id, `discarded` status removes one.
+- **Q4 meter:** client send gate checks feature flags/access only — NO credit
+  check on send (corpus `sendUnavailableReason`). Credit surfaces hang on the
+  loop wrapper (`freeLoopCreditUsd`, `loopRunStats`, `LoopLimitsPage`);
+  server-side limits arrive as `AiConversationErrorPart` with
+  `errorType: billing|usageLimit` and `usageLimitScope: loop|workspace`.
+  Whether chat-source conversations bill on the user's plan: UNVERIFIED — E1
+  live experiment on the user's account.
+
 ## Drift log (two-source cross-check, COORDINATION §9)
 
 - **2026-09-27 (sess_01a0e2c4-a88f-730b-acee-8188d527c324):** CORRECTION + full

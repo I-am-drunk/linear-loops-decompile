@@ -58,6 +58,8 @@ Loop chat and normal AI chat are one substrate: the `AiConversation` entity
 carries BOTH `workflowDefinition` and `loopExecution` links plus `isWorkflowRun`.
 Sending is one mutation; responses ride the sync queue. The credit gate lives on
 the loop/workflow side (`RegisterLoopRunUsageCostTarget`), not on send.
+Full route trace (send input fields, auth headers, stream subscribe envelope,
+part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 
 | Feature | Corpus evidence | Status |
 |---|---|---|
