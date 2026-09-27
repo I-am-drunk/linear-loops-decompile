@@ -34,7 +34,16 @@ matters.
      boot and between tasks, reviews what it can (read the diff, run the gate),
      and merges what passes. Reviews matter: the author may be a small model, and
      a reviewer session may catch deeper issues.
-   - Any session may merge any PR that has gate evidence and a clean legal audit.
+   - Feedback gate (user directive 2026-09-27, absolute): NO PR merges while it
+     has unaddressed feedback — CodeRabbit threads or peer review comments.
+     Addressed means fixed in code, or answered on the thread with a reason
+     (link the consensus or evidence; "declined because …" is addressing,
+     silence is not). The merging reviewer verifies every thread is addressed
+     before merging: scan the PR's issue comments AND inline review comments
+     (`curl -s …/pulls/<N>/comments?per_page=100`, following the `Link:
+     rel="next"` header until it disappears). When in doubt, do not merge.
+   - Any session may merge any PR that has gate evidence, a clean legal audit,
+     and zero unaddressed feedback threads.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
 5. When the board changes, update `STATUS.md` in the same PR.
 
@@ -66,6 +75,10 @@ big, it is two slices. The sequence lives in `PLAN.md`.
   EXACT: the same Linear Loops UI and behavior, not a plausible version of it. If
   a behavior cannot be verified against the corpus or Linear's docs, mark it
   unverified. Do not guess.
+- Our method is EXACT REPRODUCTION, not clean-room: we read the decompiled app
+  directly and reproduce its behavior, structure, and values precisely, writing
+  our own original code. (The legal line is about Linear's code, never about its
+  behavior: behavior, values, and algorithms are reproduced exactly.)
 
 ## GitHub tooling
 

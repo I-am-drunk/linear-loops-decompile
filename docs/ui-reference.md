@@ -25,7 +25,7 @@ theme-token family of the parity harness (issue #162).
 - The tables below were produced by EXECUTING the corpus generator with those
   parameters (`node` on the two chunks, sandbox only) and recording the output
   values. Values are facts; generator code stays in the vault, never committed.
-  The clean-room reimplementation of `generateTheme` (audit Finding 1
+  The exact reimplementation of `generateTheme` (audit Finding 1
   recommendation) can be verified token-for-token against these tables.
 - `pipeline/corpus/style/style-YZZHHG9P.css` (vault): the compiled app
   stylesheet (~565 KB lightningcss output) for font stacks and global rules;

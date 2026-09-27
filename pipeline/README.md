@@ -69,7 +69,10 @@ Linear deployed mid-crawl: re-run (hashes rotate).
 
 ## Expected counts (2026-09-26 baseline)
 
-~1,550 chunks, ~87 models, ~258 GraphQL ops, ~119 routes. Drift is normal (Linear
+~1,550 chunks, ~87 models, ~258 GraphQL ops, ~490 routes (unique paths; the
+pre-2026-09-27 baseline said ~119 because only route-table registrations were
+extracted — issue #174 added match-helper route literals, recovering e.g. the
+Loops list route `/:orgKey/loops/:viewType?`). Drift is normal (Linear
 ships constantly): note material deltas in `KNOWLEDGE.md`.
 
 ## Finding things in the corpus

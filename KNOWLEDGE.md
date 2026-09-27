@@ -118,22 +118,52 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - Notifications for run lifecycle: `agentAutomationRunResponse`,
   `agentAutomationUserMessage`, `agentAutomationFailedToRun`, `agentAutomationDisabled`.
 
-## §4. Sync protocol (LSE) - documented so we know what we are NOT building
+## §4. Sync protocol (LSE) - reference for the goose sync-reader (we consume it; we do NOT rebuild the server side)
 
-- Socket `wss://sync.linear.app`; handshake `{cmd:"hshk", userId, userAccountId,
-  clientType, clientDatabaseId, protocolVersion:3, clientVersion, useBinaryProtocol:true,
-  compressionDictionaryVersion, supportsSpectatorMode:true, cellName, token}`; then
-  `sync` messages (model deltas, lastSyncId), `ephm`/`ephp` (ephemeral), `streamData`
-  (AI streaming), `presence`, `ping/pong`, `noauth`.
-- Compression: zstd with a server-sent dictionary (`syncCompression=zstd-v1`, dictionary
-  SHA256-pinned, frames declare content size; 64 MB cap). Binary frames: `[type][dictVer]
-  [payload]`, type 0 = raw, 1 = zlib-dict-compressed; inner payload is a custom packer
-  (records off, bundleStrings off).
+- Socket `wss://sync.linear.app` (URL params `userId`, `userAccountId`, plus
+  `syncCompression=zstd-v1` when the client advertises zstd); handshake
+  `{cmd:"hshk", userId, userAccountId, clientType, flagClient, clientDatabaseId,
+  protocolVersion:3, clientVersion, releaseChannelOverride, useBinaryProtocol:true,
+  compressionDictionaryVersion?, supportsSpectatorMode:true, cellName, token}`; then
+  `sync` messages (model deltas keyed by lastSyncId), `ephm`/`ephp` (ephemeral),
+  `streamData` (AI streaming), `presence`, `ping/pong`, `noauth`, `refresh`,
+  `syncCatchup`. (Corpus: `RefreshManager.DpVjn8XM.js`.)
+- Framing: hshk goes out as a JSON text frame; after auth the client switches to
+  **msgpack** binary frames — the "custom packer" is stock msgpackr (socket:
+  `{useRecords:false, bundleStrings:false, sequential:false}`; REST
+  `application/octet-stream` model streams: `{useRecords:true, sequential:true}`;
+  packer classes in `Logger.qFaEBF6-.js`). Incoming: text frames parse as JSON;
+  binary frames: byte0==1 → zstd payload (byte1 = dictionary id), byte0==0 → raw
+  payload from byte1, anything else → whole frame is msgpack.
+- Compression: zstd, two layers (both corpus-verified, `RefreshManager.DpVjn8XM.js`):
+  the dictionary CONTENT is a static, versioned, client-embedded vocabulary blob
+  (every cmd/model/field name + defaults; `LATEST_VERSION = 1`,
+  `byVersion = Map([[1, encode(...)]])`, ~:10002-10010); the DELIVERY is
+  server-sent and identity-pinned — `cmd:"syncDictionary"` → `setDictionary`
+  computes SHA-256(dictionary) and throws `Sync compression dictionary identity
+  mismatch` on a dictionaryId mismatch (:10088, :10114-10121), and later
+  `syncCompressed` frames reference that dictionaryId (:10092-10093). Advertised
+  only when flag `enableSyncMessageCompression` is on (URL `syncCompression=zstd-v1`
+  + handshake `compressionDictionaryVersion`, :10807); frames must declare content
+  size, 64 MB decoded cap. NOT advertising is a first-class mode: the server never
+  sends `syncDictionary`/`syncCompressed` (the client even throws on an
+  unrequested one, :10844), and Linear itself falls back to it via `zstdFailed`
+  (:10799, :10830). **Sync-reader v1: do not advertise; zero zstd handling needed.**
+  (Earlier revisions were each half right: the wire IS SHA-256-pinned server
+  delivery, the content IS a static embedded blob, and the packer is stock
+  msgpackr; reconciled 2026-09-27, audit #157 + #169 review.)
+- Liveness: ping every 20 s after handshake; idle disconnect at 30 min (activity
+  polled per 5 min); `noauth` gets ONE retry inside a 2-min window, then the client
+  treats the token as rejected (→ re-import); reconnect backoff
+  `min(30s, (200+rand·100)·n²)` capped at n=12 and healed 2 levels per `pong`;
+  commands sent pre-auth (all except `collab`/`ephp`) queue and flush after auth.
 - Mutations: client transactions → GraphQL `mutation <Model>{Create,Update,Delete,Archive}`
   built per model class; batched; offline queue with rollback; lock-timeout/ratelimit
   retries. Hydration: `restModelsStream(path, {lastSyncId, clientDatabaseId})`.
-- **We replace all of this with T3 connect** (SPECS/t3-connect.md): our UI and server are
-  both ours, so a small typed WS RPC + server-authoritative SQLite is sufficient.
+- **What we build of this:** a minimal sync READER for the goose (hshk + `streamData`
+  subscribe + the parts reducer — §8 and `docs/golden-goose-chat-route.md`). Our own
+  UI↔server transport stays ours; its design is under re-review in the #157/#164
+  audits. We never implement the server side of LSE.
 
 ## §5. Agent sessions & coding harness (adjacent system - reuse ideas)
 
@@ -159,8 +189,10 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   `~/.linear/coding-tools.json` → `{openIssue:{path,args[],env[]}}`; allowlisted commands
   `amp|claude|codex|opencode|custom`; template vars `{{prompt}} {{workDir}}
   {{issue.identifier}} {{issue.branchName}} {{project.name}} {{pullRequestComment.id}}`;
-  env mapping `LINEAR_PROMPT, LINEAR_WORK_DIR, LINEAR_ISSUE_IDENTIFIER,
-  LINEAR_ISSUE_BRANCH_NAME, LINEAR_PROJECT_NAME, LINEAR_PULL_REQUEST_COMMENT_ID`;
+  env mapping (verified in the asar 2026-09-27, audit #157): `LINEAR_PROMPT,
+  LINEAR_WORK_DIR, LINEAR_PROJECT_NAME` — the `{{issue.*}}`/`{{pullRequestComment.*}}`
+  template vars exist, but `LINEAR_ISSUE_*`/`LINEAR_PULL_REQUEST_*` env names do NOT
+  appear in the desktop source (an earlier revision listed them; wrong);
   launches via Terminal/Ghostty/Warp/iTerm (mac) or PowerShell (win). First run scaffolds
   an example config and opens it in `$EDITOR`.
 
@@ -169,7 +201,10 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
   keys act as the user. Rate limit ≈ 2,500 req/h/user (batch + budget). Webhooks
   configurable per workspace for issue/comment/project/etc. changes.
-- The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
+- The CLIENT's API (client-api.linear.app) is the sync + chat frontend — and it IS the
+  golden-goose path (§8): chat ops ride it with the login-born user session token.
+  api.linear.app stays the dataplane/write-back surface (PAT/OAuth). (Line corrected
+  2026-09-27, audit #157: the earlier "not for us" predated the goose ruling, #14.)
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /
   `agentSessionCreateOnComment` for proactive sessions; activities (thought/action/
@@ -198,7 +233,7 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   `AiConversationsQuery`.
 - **Zero GraphQL subscriptions exist in the entire 1,550-chunk bundle.** Turn
   streaming arrives over the LSE sync queue (`wss://sync.linear.app`; the
-  `lastSyncId` acknowledgement model, SPECS/sync-protocol.md). To reproduce the
+  `lastSyncId` acknowledgement model — §4, corpus `RefreshManager.DpVjn8XM.js`). To reproduce the
   chat exactly we reproduce the sync-channel consumption, not a subscription API.
 - The credit gate lives on the loop/workflow side
   (`RegisterLoopRunUsageCostTarget`, `FreeLoopCredit`, `LoopLimitsPage`), not on
