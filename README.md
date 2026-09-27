@@ -15,6 +15,9 @@ session starts fresh (no memory, no files) — everything needed is here.
 ## Start here
 
 1. **Every session:** read [`BOOTSTRAP.md`](BOOTSTRAP.md) → [`COORDINATION.md`](COORDINATION.md) → [`work/STATUS.md`](work/STATUS.md) → claim work per [`ROLES.md`](ROLES.md).
+   If the prompt says **RESET**: read [`RESET.md`](RESET.md) FIRST (you are a successor
+   incarnation — resume, don't restart). The Integrator (browser session) reads
+   [`LEAD.md`](LEAD.md).
 2. **Domain knowledge** (verified by decompiling Linear 1.32.4 on 2026-09-26): [`KNOWLEDGE.md`](KNOWLEDGE.md) — read the sections your role touches. Treat it as ground truth.
 3. **Reproducing the decompile corpus** (required — no Linear code lives in this repo): [`RUNBOOK-decompile.md`](RUNBOOK-decompile.md) + [`pipeline/`](pipeline/).
 4. **What we are building:** [`SPECS/target-architecture.md`](SPECS/target-architecture.md).
@@ -24,6 +27,8 @@ session starts fresh (no memory, no files) — everything needed is here.
 | Path | What |
 |---|---|
 | `BOOTSTRAP.md` | Paste-this prompt for onboarding a fresh session |
+| `RESET.md` | Reset/resurrection protocol — how a new generation resumes (account deaths) |
+| `LEAD.md` | The Integrator (R10): browser access, designation, sign-in, duties |
 | `COORDINATION.md` | The text-file coordination protocol (claims, leases, inbox, log) |
 | `ROLES.md` | The 10 roles and their scopes/deliverables |
 | `PLAN.md` | Master plan, milestones, task breakdown |
@@ -42,7 +47,9 @@ session starts fresh (no memory, no files) — everything needed is here.
   factual interface references (field names, operation names, endpoints) — fine.
 - **All reimplementation code must be original.** We study Linear's behavior and reproduce
   it; we do not transliterate their source. Comment *what* it does, not *how their code looks*.
-- **Keep this repo private.** Decompilation for interoperability/personal research; do not
-  distribute Linear-derived material publicly.
+- **Repo visibility is user-controlled.** (Made public by the user 2026-09-26.) The ban on
+  committing Linear-derived material is unchanged and absolute — treat every commit as
+  public forever. Decompilation is for interoperability/personal research.
 - Coordinate only through the repo text files + GitHub issues. No side channels.
 - Small, frequent updates to `work/STATUS.md` and `work/LOG.md` beat big silent pushes.
+

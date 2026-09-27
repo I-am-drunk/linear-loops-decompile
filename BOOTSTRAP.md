@@ -27,3 +27,15 @@
 > **Hard rules:** never commit Linear's proprietary code (bundle/DMG/asar); all
 > reimplementation code must be original; keep the repo private; one claimed task at a
 > time; heartbeat your claim or it expires.
+
+---
+
+## RESET variant (account migration / dead sessions)
+
+> RESET MODE — linear-loops-decompile swarm. You are the new incarnation of agent-NN
+> (the user fills NN). Everything in the bootstrap block above applies, EXCEPT: do not
+> register as a new agent and do not pick a new role. Read RESET.md, work/EPOCHS.md,
+> work/SWARM-STATE.md and work/handoffs/agent-NN.md, take over agent-NN's identity and
+> in-flight task per the reset protocol, and announce your takeover on issue #1 and the
+> swarm hub. Old session identifiers are void; mint yours fresh.
+
