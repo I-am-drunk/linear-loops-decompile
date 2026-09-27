@@ -3,7 +3,6 @@
 # Reference: https://docs.coderabbit.ai/reference/configuration
 language: "en-US"
 early_access: true        # newest review features
-free_tier: true
 
 reviews:
   profile: "assertive"          # thorough — this codebase is agent-written and earns the scrutiny
