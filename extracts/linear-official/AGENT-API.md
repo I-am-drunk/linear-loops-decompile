@@ -3,9 +3,14 @@
 Sources: `schema.graphql` + `_generated_documents.graphql` (this dir, MIT) and
 linear.app/developers ({agents, agent-interaction, agent-best-practices, agent-signals}
 — Developer Preview; fetch the live pages for prose, this file is the fact sheet).
-This is the golden-goose substrate (issue #14): Linear's own documented way to be a brain.
-Last verified 2026-09-27 (agent-04@gen6): vendored files byte-identical to
-`linear/linear@main`; op inventory below re-counted against the schema (12 ops).
+This is the presenter/write-back substrate for the golden goose (issue #14): Linear's
+own documented way to show an agent run inside Linear. (The goose itself — the normal
+AI chat route — remains decompile-only; see "What is still NOT public" below.)
+Last verified 2026-09-27 (sess_01a0e2c4-a88f-730b-acee-8188d527c324) against
+`linear/linear@689ccc1e` (**`master`, the default branch**, 2026-09-25). Correction: the
+earlier "byte-identical, zero drift" check pinned the STALE upstream branch `main`
+(885 KB schema); `master` carries a 1,335 KB schema. Op inventory below re-counted
+against master: **22 agent-surface root ops** (was 12).
 
 ## AgentSession (lifecycle of one agent run)
 
@@ -47,18 +52,36 @@ Session-level checklist the agent maintains: `agentSessionUpdate` input field `p
 Updates REPLACE the entire plan (no per-item patch). Rendered to users as the
 session's task list.
 
-## The 12 official agent ops (schema root fields, verified 2026-09-27)
+## The 22 official agent-surface root ops (schema root fields, master @ 2026-09-25)
 
-mutations: `agentActivityCreate` · `agentActivityCreatePrompt` · `agentSessionCreate` ·
-`agentSessionCreateOnComment` · `agentSessionCreateOnIssue` · `agentSessionUpdate` ·
-`agentSessionUpdateExternalUrl`
+mutations: `agentActivityCreate` · `agentActivityCreatePrompt` ·
+`agentActivityDeleteQueued` · `agentActivitySendQueued` · `agentSessionCreate` ·
+`agentSessionCreateOnComment` · `agentSessionCreateOnIssue` ·
+`agentSessionRestartWithDefaultModel` · `agentSessionUpdate` ·
+`agentSessionUpdateExternalUrl` · `agentSkillCreate` · `agentSkillUpdate` ·
+`agentSkillDelete`
 queries: `agentActivity` · `agentActivities` · `agentSession` · `agentSessions` ·
+`agentSessionSandbox` · `agentSessionSshAddress` · `agentSkill` · `agentSkills` ·
 `issueRepositorySuggestions`
+
+New since the (stale-branch) 2026-09-27 morning check, all load-bearing for us:
+
+- **Queued activities are now officially controllable**: `agentActivitySendQueued`
+  / `agentActivityDeleteQueued` pair with the decompile-derived `AgentActivity.queued`
+  field — an external agent can hold activities in a queue and flush on its own tick.
+- **Coding-harness surface went official**: `agentSessionSandbox`,
+  `agentSessionSshAddress`, `agentSessionRestartWithDefaultModel` (the same ops the
+  web client uses; KNOWLEDGE §5).
+- **Agent skills are now public API**: `agentSkill(s)` + create/update/delete —
+  org skills are manageable programmatically. Pairs with the workspace MCP allowlist
+  finding (KNOWLEDGE §5) for putting OUR tools/prompts onto Linear's brain.
+- **Usage metering watch**: new root queries `usageAlert` / `usageAlerts` — the
+  public side of Linear's usage-alerting surface.
 
 (The SDK's `_generated_documents.graphql` wraps the common ones as
 `createAgentActivity` / `updateAgentSession` etc. `issueRepositorySuggestions` —
 ranked repo matches for an issue, LLM-backed, candidates supplied by the agent —
-was added to this digest 2026-09-27; useful for our brain's repo-selection step.)
+is useful for our brain's repo-selection step.)
 
 ## Webhooks + auth
 
@@ -75,13 +98,23 @@ was added to this digest 2026-09-27; useful for our brain's repo-selection step.
 |---|---|---|
 | runtime state `canceled` | `AgentSessionStatus.stale` | Add `stale` (unresponsive) to src/runtime; map user-cancel to the `stop` signal → terminal state. Task: **T-504** (claimed #97, agent-01@gen6) |
 | activities: thought/action/response/elicitation/error | + `prompt` (inbound) | Convergent by design — prompt = inbound user turn |
-| 0 agent-session ops in src/dataplane | 12 official ops | The golden-goose gap — implement as `src/dataplane/agent-sessions.ts` (R3). Task: **T-305** (claimed #90, agent-08@gen5) — note the inventory grew 9 → 12 at the 2026-09-27 re-check |
+| 0 agent-session ops in src/dataplane | 22 official ops | The presenter/write-back gap — implement as `src/dataplane/agent-sessions.ts` (R3+). Inventory grew 9 → 12 (2026-09-27 morning) → **22** (master re-check same day, branch fix) |
 
-## Loops definitions: STILL not public
+## What is still NOT public (re-verified on master @ 2026-09-25)
 
-`type WorkflowDefinition` IS in the official schema (activities/conditions as
-`JSONObject`, `enabled`, context links) — but the schema exposes **no query or
-mutation** for it (verified 2026-09-27: zero `workflowDefinition*` ops). Loops
-internals remain decompile-only knowledge; our engine over our own loop configs
-remains the correct architecture. Watch this type on every schema refresh — the day
-ops appear, the golden goose doubles (issue #14 note).
+**Loops definitions.** `type WorkflowDefinition` IS in the official schema
+(activities/conditions as `JSONObject`, `enabled`, context links) — but the schema
+exposes **no query or mutation** for it (zero `workflowDefinition*` root ops;
+`favorite_workflowDefinition` in the SDK documents is a Favorite field selection,
+not a root op). Loops internals remain decompile-only knowledge; our engine over
+our own loop configs remains the correct architecture. Watch this type on every
+schema refresh — the day ops appear, the golden goose doubles (issue #14 note).
+
+**The AI chat route (the golden goose itself).** The 2026-09-25 schema added the
+FULL `AiConversation` type zoo — 174 `AiConversation*` types, including the unions
+`AiConversationPart`, `AiConversationToolCall`, `AiConversationWidget`, and
+`AiConversationElicitationResponseData`. So the turn/activity WIRE SHAPES the goose
+trace needs (issue #14 Q3) are now officially specified, in MIT-licensed SDL. But
+there are still **zero public root ops to drive chat**: no `aiConversation` query,
+no send-message mutation. Driving the normal chat route remains client-api +
+sync-socket territory — decompile-only (KNOWLEDGE §8), unchanged.
