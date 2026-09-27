@@ -83,7 +83,47 @@ function mapStoreError(error: unknown): never {
   if (error instanceof HarnessNotFoundError) {
     throw new RpcError(RPC_ERRORS.NOT_FOUND, error.message);
   }
+  if (error instanceof Error && error.message.includes("UNIQUE constraint failed")) {
+    // The store's name UNIQUE gate surfaces as a raw sqlite error — the wire
+    // deserves invalid_params, not a generic internal error.
+    throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "a harness with that name already exists");
+  }
   throw error;
+}
+
+/**
+ * Header names that carry credentials. Credential material belongs in the
+ * write-only apiKey field (encrypted at rest, never echoed) — an
+ * `authorization`/`x-api-key` entry in extraHeaders WOULD be echoed back by
+ * settings.get (CWE-200), so it is rejected at write time and at draft
+ * probe time. Every supported provider's auth rides the apiKey field
+ * already (Bearer / x-api-key set by the adapters themselves).
+ */
+const CREDENTIAL_HEADER_NAMES: ReadonlySet<string> = new Set([
+  "authorization",
+  "x-api-key",
+  "api-key",
+  "apikey",
+  "proxy-authorization",
+]);
+
+function assertNoCredentialHeaders(input: unknown): void {
+  const headers = (input as { extraHeaders?: unknown } | null)?.extraHeaders;
+  if (typeof headers !== "object" || headers === null) return;
+  for (const name of Object.keys(headers as Record<string, unknown>)) {
+    if (CREDENTIAL_HEADER_NAMES.has(name.toLowerCase())) {
+      throw new RpcError(
+        RPC_ERRORS.INVALID_PARAMS,
+        `extraHeaders."${name}" carries credentials — use the write-only apiKey field (credentials are never echoed)`,
+      );
+    }
+  }
+}
+
+/** Scrub a secret out of an error string before it crosses the wire. */
+function redact(text: string, secret: string | null): string {
+  if (secret === null || secret === "") return text;
+  return text.split(secret).join("***");
 }
 
 export interface ProbeResult {
@@ -112,6 +152,7 @@ export function registerSettingsRpcs(channel: DomainChannel, deps: SettingsRpcDe
         if (input === undefined || typeof input !== "object" || input === null) {
           throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "settings.setInference upsert needs { input }");
         }
+        assertNoCredentialHeaders(input);
         const id = p["id"];
         if (id !== undefined && (typeof id !== "string" || id.length === 0)) {
           throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "settings.setInference id must be a non-empty string when present");
@@ -155,6 +196,7 @@ export function registerSettingsRpcs(channel: DomainChannel, deps: SettingsRpcDe
     } else {
       // Draft probe: validate exactly like a create (honest editor errors),
       // build in-memory only — the draft key never touches the DB.
+      assertNoCredentialHeaders(p["draft"]);
       const parsed = CreateHarnessInputSchema.safeParse(p["draft"]);
       if (!parsed.success) {
         throw new RpcError(RPC_ERRORS.INVALID_PARAMS, formatZodIssues(parsed.error).join("; "));
@@ -187,7 +229,10 @@ export function registerSettingsRpcs(channel: DomainChannel, deps: SettingsRpcDe
       return { ok: true, models, latencyMs: Date.now() - started };
     } catch (error) {
       // A failed probe is a result, not an RPC fault — the page reports it.
-      return { ok: false, latencyMs: Date.now() - started, error: error instanceof Error ? error.message : String(error) };
+      // The error text is scrubbed first: a provider that quotes the request
+      // (or its own auth failure detail) must never hand the key back (CWE-200).
+      const raw = error instanceof Error ? error.message : String(error);
+      return { ok: false, latencyMs: Date.now() - started, error: redact(raw, apiKey) };
     }
   });
 

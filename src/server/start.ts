@@ -41,6 +41,10 @@ console.log(`boot loops: ${live.bootLoops.scheduled} scheduled · ${live.bootLoo
 console.log(`connect token (operator bootstrap): ${token}`);
 // The UI reads ?connectToken= (src/ui/src/live/client.ts) and persists it.
 console.log(`UI deep link: http://127.0.0.1:${bound}/?connectToken=${token}`);
+// Jupyter-style operator bootstrap, intentional for a self-hosted single
+// user — but keep it out of anything you sync: the token is printed here,
+// once, for your terminal only (never log-forward it, never commit it).
+console.log("(bootstrap token shown here only — do not log it, sync it, or commit it)");
 
 if (tickMs > 0) {
   const timer = setInterval(() => {

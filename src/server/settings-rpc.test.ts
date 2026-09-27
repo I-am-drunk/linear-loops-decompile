@@ -130,6 +130,25 @@ test("upsert update / delete / setDefault + unknown-id and invalid-input errors"
       /invalid|provider/i,
     );
     await assert.rejects(call("settings.setInference", { op: "teleport" }), /op/);
+    // duplicate name → invalid_params (not a raw sqlite error)
+    await assert.rejects(
+      call("settings.setInference", { op: "upsert", input: { name: "a", provider: "openrouter", model: "m9" } }),
+      /already exists/i,
+    );
+    // credential-named extra headers are refused (write-only apiKey instead)
+    await assert.rejects(
+      call("settings.setInference", {
+        op: "upsert",
+        input: { name: "hdr", provider: "openrouter", model: "m", extraHeaders: { Authorization: "Bearer x" } },
+      }),
+      /write-only apiKey/i,
+    );
+    await assert.rejects(
+      call("settings.testInference", {
+        draft: { name: "d", provider: "openrouter", model: "m", extraHeaders: { "X-Api-Key": "k" } },
+      }),
+      /write-only apiKey/i,
+    );
   } finally {
     db.close();
   }
@@ -176,6 +195,24 @@ test("testInference { id }: a provider failure is a RESULT, not an RPC error", a
     assert.equal(result.ok, false);
     assert.match(result.error, /401|model probe failed/i);
     assert.equal(typeof result.latencyMs, "number");
+  } finally {
+    db.close();
+  }
+});
+
+test("testInference: a provider error quoting the key is scrubbed before it crosses the wire", async () => {
+  const leakyFetch = (async () =>
+    new Response(JSON.stringify({ error: { message: "invalid api key sk-leaky-key provided" } }), { status: 401 })) as typeof fetch;
+  const { db, call } = setup({ fetchFn: leakyFetch });
+  try {
+    const created = (await call("settings.setInference", {
+      op: "upsert",
+      input: { name: "main", provider: "openrouter", apiKey: "sk-leaky-key", model: "m" },
+    })) as { harnesses: { id: string }[] };
+    const result = (await call("settings.testInference", { id: created.harnesses[0]!.id })) as { ok: boolean; error: string };
+    assert.equal(result.ok, false);
+    assert.equal(result.error.includes("sk-leaky-key"), false);
+    assert.match(result.error, /\*\*\*/);
   } finally {
     db.close();
   }
