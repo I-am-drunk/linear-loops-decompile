@@ -166,11 +166,12 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 
 ## §6. Linear public API facts (for our dataplane)
 
-Precise, sourced versions of everything below live in
-`extracts/linear-official/docs-site/` (fact digests of the LIVE
+Precise, sourced versions of the GraphQL, rate-limit, webhook, and OAuth
+facts below live in `extracts/linear-official/docs-site/` (fact digests of the LIVE
 linear.app/developers pages, fetched 2026-09-27 — the vendored
 `extracts/linear-official/docs/*.md` are one-line upstream stubs and must never
-be cited as a source).
+be cited as a source). The Agent API facts below are sourced from
+`extracts/linear-official/AGENT-API.md`.
 
 - Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
   keys act as the user. Auth header shapes DIFFER: PAT = `Authorization: <key>`
@@ -183,7 +184,8 @@ be cited as a source).
   Exhaustion = HTTP **400** with `errors[].extensions.code = "RATELIMITED"`
   (the header-driven budget + both exhaustion mappings in PR #155 are now
   officially sourced).
-- Webhooks (docs-site/webhooks.md): org-scoped, admin-only to manage; entity
+- Webhooks (docs-site/webhooks.md): org-scoped; only workspace admins or
+  OAuth apps with the `admin` scope can create/read them; entity
   coverage list, 5s/200 consumer contract, 3 retries (1min/1h/6h), HMAC-SHA256
   `Linear-Signature` over the RAW body + `webhookTimestamp` replay guard.
 - OAuth (docs-site/oauth.md): token exchange/refresh at
