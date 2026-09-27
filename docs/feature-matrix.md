@@ -10,7 +10,8 @@ Status values: `corpus` (exists in the decompile, evidence named) -> `spec`
 (behavior documented in SPECS/KNOWLEDGE) -> `built` (implemented in src/) ->
 `exact` (verified against the corpus; release bar, issue #20).
 
-All rows are currently `corpus`; nothing is built (rebuild era, R3 pending).
+All rows are `corpus` unless a row says otherwise; the first rows reached
+`built` in R4.1a (2026-09-27).
 
 ## A. Loops management UI
 
@@ -34,8 +35,8 @@ All rows are currently `corpus`; nothing is built (rebuild era, R3 pending).
 
 | Feature | Corpus evidence | Status |
 |---|---|---|
-| WorkflowDefinition model (trigger, triggerType, activationMode, intelligence, conditions, schedule, triggerConfig, enabled, applyToSubTeams, editAccess, stats, policies) | `models.json` | corpus |
-| Draft lifecycle | `WorkflowDefinitionDraft` model | corpus |
+| WorkflowDefinition model (trigger, triggerType, activationMode, intelligence, conditions, schedule, triggerConfig, enabled, applyToSubTeams, editAccess, stats, policies) | `models.json`; R4.1a: `src/model/loop.ts` + `src/server/loops-rpc.ts` (config subset per SPECS/loops.md; intelligence/triggerConfig/stats/policies = Linear server/runtime bits, later slices) | built |
+| Draft lifecycle | `WorkflowDefinitionDraft` model; R4.1a: draft mirrors config, publish replaces live + bumps version, `hasChanges` | built |
 | Definition history | `WorkflowDefinitionHistory` model | corpus |
 | Cron scheduling | `WorkflowCronJobDefinition` model | corpus |
 | Trusted sources | ops `AutomationTrustedSources(WithUsage)`, `WorkflowDefinitionSourceTrustUpdate`; chunks `AutomationTrustedSource{Display,EditorOptions}` | corpus |

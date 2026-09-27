@@ -38,10 +38,18 @@ Done 2026-09-27:
   secrets, credential-header refusal, duplicate-name rejection; 8/8 server
   tests with an injected fake fetch.
 
+- R4.1a loops domain (server half, issue #152): `src/model/loop.ts`
+  (WorkflowDefinition-faithful config) + `loops.list/get/upsert/publish/
+  setEnabled` + loops table (user_version 2). Draft/publish lifecycle per
+  WorkflowDefinitionDraft (edits land on the draft; publish replaces live,
+  version bumps); 3/3 server tests, gate green.
+
 Now:
-- R3.4 UI shell (unassigned): src/ui skeleton (sidebar, routes, theme tokens
-  from docs/ui-reference.md, empty states) with the Settings page wired to the
-  R3.3 RPCs.
+- R3.4 UI shell (claimed, issue #145): src/ui skeleton (sidebar, routes, theme
+  tokens from docs/ui-reference.md, empty states) with the Settings page wired
+  to the R3.3 RPCs.
+- R4.1b loops list page (unassigned; lands on the R3.4 shell): the loops.*
+  RPCs wired into the Loops page (grouped list, enabled toggle, empty state).
 
 Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
 
