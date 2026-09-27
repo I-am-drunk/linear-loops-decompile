@@ -252,6 +252,16 @@ export class ChannelServer {
     this.#buffers.delete(runId);
   }
 
+  /**
+   * The run's current channel-scale event tip (0 = no events published).
+   * Read-only; the composition root answers runs.get's `lastSeq` with it so
+   * a client can subscribe with `sinceSeq: lastSeq` and never double-render
+   * (T-1103).
+   */
+  runSeqTip(runId: string): number {
+    return this.#buffers.get(runId)?.seq ?? 0;
+  }
+
   connectionCount(): number {
     return this.#conns.size;
   }

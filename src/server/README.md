@@ -25,7 +25,24 @@ Original code; behavior per SPECS/target-architecture.md.
   fallback, and the `/.well-known/t3/environment` mount passed in by the
   caller (connect → server dependency direction; never circular).
 - `index.ts` — `createLoopsServer({ dbPath?, staticDir?, environmentHandler? })`
-  → `{ server, db, store, runner, restoredRuns, listen, close }`.
+  → `{ server, db, store, runner, brainFor, harnessStore, restoredRuns, listen, close }`.
+- `rpc.ts` (T-1103) — the composition-root RPC handlers the T-902 channel was
+  designed for: `loops.list/get/upsert/publish/setEnabled` + `runs.list/get`
+  (Store-backed; every loop write hooks `orchestrator.reloadLoops()`;
+  `runs.get` returns the channel's `lastSeq` tip so the UI's
+  get→subscribe join is gapless). Plus `runtimeCommandsFor` (steer on a
+  parked run IS the elicitation answer; continue resolves the loop's brain)
+  and `runnerRegistryView` (the channel's liveness gate over the Runner).
+  `store.ts` gained the run/turn read side (`getRun/listRuns/getTurns`;
+  a parked run's `pendingElicitation` is reconstructed from its snapshot).
+- `compose.ts` (T-1103) — `createLiveLoopsServer(...)`: the full M5 wiring —
+  TokenStore + ChannelServer (attached to the http upgrade) + the RPC
+  handlers + the orchestrator (publish sink = the channel) + boot
+  `reloadLoops()`. Tick driving is the deployment's choice.
+- `start.ts` (T-1103) — the entry point:
+  `node --experimental-strip-types src/server/start.ts` (PORT/LOOPS_DB/
+  TICK_MS envs) — boots compose, mints an operator bootstrap token
+  (printed to the operator's own terminal), ticks the scheduler.
 
 ## Wiring contract
 

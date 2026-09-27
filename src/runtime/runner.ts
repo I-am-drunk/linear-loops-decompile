@@ -28,7 +28,7 @@
  * Original code.
  */
 
-import { transitionRun, assertRunInvariants, IllegalRunTransitionError } from "./run-machine.ts";
+import { transitionRun, assertRunInvariants, IllegalRunTransitionError, isTerminalStatus } from "./run-machine.ts";
 import type { Brain } from "./brain.ts";
 import { fromSnapshot } from "./snapshot.ts";
 import type { RunSnapshot } from "./snapshot.ts";
@@ -118,6 +118,20 @@ export class Runner {
   /** All turns of a run, in order. Throws RunNotFoundError. */
   getTurns(runId: EntityId): readonly Turn[] {
     return this.#state(runId).turns;
+  }
+
+  /** Existence check — the T3 channel's RunRegistry gate (T-1103). */
+  has(runId: EntityId): boolean {
+    return this.#runs.has(runId);
+  }
+
+  /** Ids of runs in non-terminal states — presence-lite for the channel (T-1103). */
+  activeRunIds(): EntityId[] {
+    const ids: EntityId[] = [];
+    for (const [id, state] of this.#runs) {
+      if (!isTerminalStatus(state.run.status)) ids.push(id);
+    }
+    return ids;
   }
 
   /**

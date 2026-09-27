@@ -156,6 +156,55 @@ export class Store {
       );
   }
 
+  // ---- run/turn reads (T-1103 — the RPC surface's read side) --------------
+
+  /** One run as the runtime's record, or null. */
+  getRun(id: string): Run | null {
+    const row = this.db.prepare("SELECT * FROM runs WHERE id = ?").get(id) as Record<string, unknown> | undefined;
+    if (row === undefined) return null;
+    const run = runRecord(row);
+    // The runs table has no elicitation column — a parked run's question is
+    // reconstructed from its snapshot (the freshest parked state).
+    if (run.status === "awaitingInput") {
+      const snap = this.db.prepare("SELECT json FROM snapshots WHERE run_id = ?").get(id) as Record<string, unknown> | undefined;
+      if (snap !== undefined) {
+        try {
+          const parsed = JSON.parse(String(snap["json"])) as { run?: { pendingElicitation?: Run["pendingElicitation"] } };
+          if (parsed.run?.pendingElicitation !== undefined) run.pendingElicitation = parsed.run.pendingElicitation;
+        } catch {
+          /* a torn snapshot never blocks the read path */
+        }
+      }
+    }
+    return run;
+  }
+
+  /** Runs newest-first; optionally one loop, optionally capped (default 100). */
+  listRuns(options?: { loopId?: string | undefined; limit?: number | undefined }): Run[] {
+    const limit = options?.limit ?? 100;
+    const rows = (
+      options?.loopId !== undefined
+        ? this.db.prepare("SELECT * FROM runs WHERE loop_id = ? ORDER BY created_at DESC LIMIT ?").all(options.loopId, limit)
+        : this.db.prepare("SELECT * FROM runs ORDER BY created_at DESC LIMIT ?").all(limit)
+    ) as Record<string, unknown>[];
+    return rows.map(runRecord);
+  }
+
+  /** A run's turns in position order, with parts rehydrated. */
+  getTurns(runId: string): Turn[] {
+    const rows = this.db.prepare("SELECT * FROM turns WHERE run_id = ? ORDER BY position ASC").all(runId) as Record<string, unknown>[];
+    return rows.map((row) => ({
+      id: String(row["id"]),
+      runId: String(row["run_id"]),
+      position: Number(row["position"]),
+      role: String(row["role"]) as Turn["role"],
+      status: String(row["status"]) as Turn["status"],
+      parts: JSON.parse(String(row["parts_json"])) as Turn["parts"],
+      startedAt: String(row["started_at"]),
+      endedAt: row["ended_at"] === null ? undefined : String(row["ended_at"]),
+    }));
+  }
+
   // ---- snapshots ---------------------------------------------------------
 
   saveSnapshot(runId: string, savedAt: ISODateTime, json: string): void {
@@ -259,5 +308,22 @@ function loopRow(row: Record<string, unknown>): LoopRow {
     configJson: String(row["config_json"]),
     createdAt: String(row["created_at"]),
     updatedAt: String(row["updated_at"]),
+  };
+}
+
+function runRecord(row: Record<string, unknown>): Run {
+  return {
+    id: String(row["id"]),
+    loopId: String(row["loop_id"]),
+    status: String(row["status"]) as Run["status"],
+    iteration: Number(row["iteration"]),
+    target: row["target_json"] === null ? undefined : (JSON.parse(String(row["target_json"])) as Run["target"]),
+    createdAt: String(row["created_at"]),
+    startedAt: row["started_at"] === null ? undefined : String(row["started_at"]),
+    endedAt: row["ended_at"] === null ? undefined : String(row["ended_at"]),
+    summary: row["summary"] === null ? undefined : String(row["summary"]),
+    error: row["error"] === null ? undefined : String(row["error"]),
+    usage: JSON.parse(String(row["usage_json"])) as Run["usage"],
+    conversationId: row["conversation_id"] === null ? undefined : String(row["conversation_id"]),
   };
 }
