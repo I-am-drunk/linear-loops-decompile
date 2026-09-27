@@ -3,8 +3,8 @@
 //!   parity extract [--corpus pipeline/corpus] [--matrix docs/feature-matrix.md]
 //!                  [--out .parity/reference.json]
 //!   parity check   [--facts src/ui/ui-facts.json] [--ref .parity/reference.json]
-//!                  [--tolerances .parity/tolerances.json]
-//!                  [--improvements .parity/improvements.json]
+//!                  [--tolerances tools/parity/policy/tolerances.json]
+//!                  [--improvements tools/parity/policy/improvements.json]
 //!                  [--report parity-report.md]
 //!
 //! Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
