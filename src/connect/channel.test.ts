@@ -382,3 +382,23 @@ test("channel: broadcast with requiredScope skips connections whose token lacks 
   noRuns.close();
   await rig.close();
 });
+
+test("channel: broadcast skips connections whose token is revoked mid-session", async () => {
+  const rig = await makeRig();
+  const { token, record } = rig.tokens.mint({ scopes: FULL });
+  const ws = new WebSocket(rig.url, [`t3.${token}`]);
+  const frames: Record<string, unknown>[] = [];
+  ws.addEventListener("message", (ev) => frames.push(JSON.parse(ev.data as string)));
+  await new Promise<void>((r) => ws.addEventListener("open", () => r(), { once: true }));
+  await wait(50);
+  const before = rig.channel.broadcast("runs.created", { run: { id: "run-1" } }, "runs:read");
+  assert.equal(before, 1, "valid token receives");
+  // Revocation takes effect on the next notification, not just the next call.
+  assert.equal(rig.tokens.revoke(record.id), true);
+  const after = rig.channel.broadcast("runs.created", { run: { id: "run-2" } }, "runs:read");
+  assert.equal(after, 0, "revoked mid-session: open socket or not, nothing flows");
+  await wait(50);
+  assert.equal(frames.filter((f) => f["method"] === "runs.created").length, 1, "only the pre-revocation frame arrived");
+  ws.close();
+  await rig.close();
+});

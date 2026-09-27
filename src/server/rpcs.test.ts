@@ -161,10 +161,13 @@ describe("loops.* RPCs", () => {
       assert.equal((err as { code: string }).code, "unavailable");
       return true;
     });
-    assert.throws(() => call("loops.setEnabled", { id: "loop-x", enabled: true }), (err: unknown) => {
+    assert.throws(() => call("loops.setEnabled", { id: "loop-x", enabled: false }), (err: unknown) => {
       assert.equal((err as { code: string }).code, "unavailable");
       return true;
     });
+    // saveLoop birthed the row enabled: true — a handler that wrote before
+    // throwing would have flipped it to false. The assertion must be able to
+    // catch that (CodeRabbit: make the unavailable-path assertion detect a write).
     assert.equal(store.getLoop("loop-x")!.enabled, true, "no write happened behind the failure");
     // Reads still work without one.
     const list = call("loops.list") as { loops: unknown[] };

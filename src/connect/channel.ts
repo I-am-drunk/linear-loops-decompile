@@ -275,6 +275,9 @@ export class ChannelServer {
     let sent = 0;
     for (const state of this.#conns) {
       if (state.record === null) continue;
+      // Revocation/expiry fails the next notification too, not just the next
+      // request — the channel's own invariant extended to the fan-out.
+      if (this.#tokens.checkValidity(state.record) !== null) continue;
       if (requiredScope !== undefined && !state.record.scopes.includes(requiredScope)) continue;
       state.conn.sendText(frame);
       sent += 1;
