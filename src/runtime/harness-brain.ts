@@ -15,7 +15,9 @@
  *   text { text }               →  one `response` part per contiguous block
  *   usage { input, output }     →  onUsage hook (server folds it into
  *                                  runner.recordUsage) — never a part
- *   done { finishReason }       →  stream end (no part)
+ *   done { finishReason }       →  no part; consumption runs to the
+ *                                  adapter's natural end (usage may follow
+ *                                  done — the OpenAI wire order)
  *   (none in v1)                →  elicitation/action parts arrive with
  *                                  tool-calling, later
  *
@@ -216,8 +218,13 @@ export class HarnessBrain implements Brain {
         } else if (event.type === "usage") {
           reportUsage(event.inputTokens, event.outputTokens);
         } else {
-          // "done" — stream end. Flush happens below, once.
-          break;
+          // "done" — no part (v1 ignores finishReason). Do NOT break here:
+          // the OpenAI wire sends the usage chunk AFTER the finish_reason
+          // chunk, so usage events legitimately follow `done`. Consume to
+          // the adapter's natural end (both adapters terminate at [DONE] /
+          // stream end); flush happens below, once. (Regression found by
+          // the T-1105 end-to-end test: breaking on done dropped every
+          // OpenAI-style usage report.)
         }
         // Cooperative cancel: stop pulling AFTER handling the event in hand —
         // a pulled delta is work already done; discarding it loses text.

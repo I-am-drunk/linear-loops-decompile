@@ -3,7 +3,7 @@ import { build } from "esbuild";
 import { execFileSync } from "node:child_process";
 
 await build({
-  entryPoints: ["test/smoke.tsx", "test/settings.test.tsx", "test/loops-smoke.tsx"],
+  entryPoints: ["test/smoke.tsx", "test/settings.test.tsx", "test/loops-smoke.tsx", "test/live-smoke.tsx", "test/loops-editor-smoke.tsx"],
   bundle: true,
   platform: "node",
   format: "cjs",
@@ -15,3 +15,5 @@ await build({
 execFileSync(process.execPath, [".test-out/smoke.cjs"], { stdio: "inherit" });
 execFileSync(process.execPath, [".test-out/settings.test.cjs"], { stdio: "inherit" });
 execFileSync(process.execPath, [".test-out/loops-smoke.cjs"], { stdio: "inherit" });
+execFileSync(process.execPath, [".test-out/live-smoke.cjs"], { stdio: "inherit" });
+execFileSync(process.execPath, [".test-out/loops-editor-smoke.cjs"], { stdio: "inherit" });

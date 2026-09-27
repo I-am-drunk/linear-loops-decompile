@@ -203,18 +203,30 @@ export async function* parseChatCompletionStream(
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       let nl: number;
+      let terminal = false;
       while ((nl = buffer.indexOf("\n")) !== -1) {
         const line = buffer.slice(0, nl).replace(/\r$/, "");
         buffer = buffer.slice(nl + 1);
         if (!line.startsWith("data:")) continue;
-        for (const ev of eventsFromPayload(line.slice(5).trim())) yield ev;
+        for (const ev of eventsFromPayload(line.slice(5).trim())) {
+          yield ev;
+          // [DONE] (the null-finishReason sentinel) is protocol-terminal:
+          // stop reading right after it. A provider holding the stream open
+          // past [DONE] must never keep the run alive.
+          if (ev.type === "done" && ev.finishReason === null) terminal = true;
+        }
       }
+      if (terminal) break;
     }
     const tail = buffer.trim();
     if (tail.startsWith("data:")) {
       for (const ev of eventsFromPayload(tail.slice(5).trim())) yield ev;
     }
   } finally {
+    // Tear the body down on every exit path — terminal sentinel, error, or
+    // the consumer returning early (cooperative cancel): never leak an open
+    // stream.
+    await reader.cancel().catch(() => {});
     reader.releaseLock();
   }
 }

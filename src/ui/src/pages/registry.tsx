@@ -24,14 +24,21 @@ import {
   demoLinearDisconnected,
   demoSessions,
 } from "../features/settings/fixtures.ts";
-import { LoopsListPage, LoopsStyles, demoLoops } from "../features/loops/index.ts";
+import { LoopsStyles } from "../features/loops/index.ts";
+import { RunsStyles } from "../features/loops/runs/index.ts";
+import {
+  LoopsListContainer,
+  RunsListContainer,
+  RunDetailContainer,
+} from "../live/index.ts";
+import { DemoEditor, demoEditorConfig } from "../features/loops/editor/index.ts";
+import { defaultLoopConfig } from "../../../model/index.ts";
 import { navigate } from "../useHashRoute.ts";
 
 // T-802: settings pages are live. Until R9's connect channel lands, they are
 // wired to fixtures (intents are no-ops) — swap the containers, not the pages.
 const noop = (): void => {};
 const noopId = (_id: string): void => {};
-const noopToggle = (_id: string, _enabled: boolean): void => {};
 const noopInput = (..._args: unknown[]): void => {};
 
 export interface PageDef {
@@ -40,66 +47,59 @@ export interface PageDef {
 }
 
 export const PAGE_REGISTRY: Record<string, PageDef> = {
-  // T-701 live: fixture container until R9's channel lands (container swap,
-  // page untouched). Toggle is server-authoritative — intent is a no-op here,
-  // so rows keep showing fixture state until a real container confirms.
+  // T-701 + T-1104: live over T3 connect when a token is configured, fixtures
+  // otherwise (container decides; page untouched). Toggle server-authoritative.
   "loops": {
     title: "Loops",
     render: () => (
       <>
         <LoopsStyles />
-        <LoopsListPage
-          loops={demoLoops}
-          inferenceConfigured={demoHarnesses.length > 0}
-          onToggle={noopToggle}
-          onOpen={(id) => navigate({ name: "loop-detail", loopId: id })}
-          onNewLoop={() => navigate({ name: "loop-new" })}
-          onOpenInferenceSettings={() => navigate({ name: "settings-inference" })}
-        />
+        <LoopsListContainer />
       </>
     ),
   },
+  // T-803: loop-new is live — the T-702 editor behind its own DemoEditor
+  // fixture container (house pattern: the R9 connect container swaps in
+  // later; the page never changes).
   "loop-new": {
     title: "New loop",
-    render: () => (
-      <PlaceholderPage
-        title="New loop"
-        description="Template library + from-scratch flow."
-        owner="T-702"
-      />
-    ),
+    // key forces a remount on route change: AppShell renders children unkeyed,
+    // and two DemoEditor routes at one position would otherwise share state.
+    render: () => <DemoEditor key="loop-new" initial={defaultLoopConfig()} />,
   },
+  // T-803: loop-detail mounts the same editor on the fixture config;
+  // per-id resolution arrives with the R9 connect container, not here.
   "loop-detail": {
     title: "Loop",
     render: (route) => (
-      <PlaceholderPage
-        title="Loop detail"
-        description="Editor: trigger, schedule, conditions, prompt, trusted sources."
-        owner="T-702"
-        note={route.name === "loop-detail" ? `loopId: ${route.loopId}` : undefined}
+      <DemoEditor
+        key={route.name === "loop-detail" ? `loop-detail:${route.loopId}` : "loop-detail"}
+        initial={demoEditorConfig}
+        publishedVersion={3}
       />
     ),
   },
+  // T-703 + T-1104: runs pages live over the channel (fixture fallback).
   "loop-runs": {
     title: "Runs",
     render: (route) => (
-      <PlaceholderPage
-        title="Runs"
-        description="Run history with status, target, duration, cost."
-        owner="T-703"
-        note={route.name === "loop-runs" ? `loopId: ${route.loopId} ("all" = aggregate view)` : undefined}
-      />
+      <>
+        <RunsStyles />
+        <RunsListContainer loopId={route.name === "loop-runs" ? route.loopId : "all"} />
+      </>
     ),
   },
   "run-detail": {
     title: "Run",
     render: (route) => (
-      <PlaceholderPage
-        title="Run detail"
-        description="Live activity stream: thoughts, actions, responses; steer + cancel."
-        owner="T-703"
-        note={route.name === "run-detail" ? `runId: ${route.runId}` : undefined}
-      />
+      <>
+        <RunsStyles />
+        {route.name === "run-detail" ? (
+          <RunDetailContainer loopId={route.loopId} runId={route.runId} />
+        ) : (
+          <PlaceholderPage title="Run" description="Missing run id." owner="T-703" />
+        )}
+      </>
     ),
   },
   "templates": {
@@ -108,7 +108,7 @@ export const PAGE_REGISTRY: Record<string, PageDef> = {
       <PlaceholderPage
         title="Templates"
         description="Loop template library; using a template prefills a new draft."
-        owner="T-702"
+        owner="T-704"
       />
     ),
   },
