@@ -85,6 +85,23 @@ test("watermark advances to the newest window and never moves backward", () => {
   assert.equal(t.watermark, "2026-09-25T02:00:00.000Z");
 });
 
+test("a stale window entry (older updatedAt) never reverse-diffs nor overwrites the snapshot", () => {
+  const t = new PollTracker();
+  t.observe({ issues: [issue({ title: "v1", updatedAt: "2026-09-25T10:00:00.000Z" })], watermark: "2026-09-25T10:00:00.000Z" });
+  const forward = t.observe({ issues: [issue({ title: "v2", updatedAt: "2026-09-25T11:00:00.000Z" })], watermark: "2026-09-25T11:00:00.000Z" });
+  assert.equal(forward.length, 1); // the v1→v2 title change
+  // A late-arriving stale window still carries the issue at its OLDER state.
+  const stale = t.observe({ issues: [issue({ title: "v1", updatedAt: "2026-09-25T10:00:00.000Z" })], watermark: "2026-09-25T11:30:00.000Z" });
+  assert.deepEqual(stale, [], "stale entries emit nothing — no reverse ghosts");
+  // The snapshot kept the newer state: re-observing v2 is silent, and the
+  // next REAL change diffs forward from v2 — not back from the stale v1.
+  const silent = t.observe({ issues: [issue({ title: "v2", updatedAt: "2026-09-25T11:00:00.000Z" })], watermark: "2026-09-25T12:00:00.000Z" });
+  assert.deepEqual(silent, [], "v2 re-observed: silent");
+  const next = t.observe({ issues: [issue({ title: "v3", updatedAt: "2026-09-25T13:00:00.000Z" })], watermark: "2026-09-25T13:00:00.000Z" });
+  assert.equal(next.length, 1);
+  assert.deepEqual(next[0]!.changedProperties, ["title"], "diff runs forward from the newer snapshot");
+});
+
 test("toJSON/fromJSON round-trip: a restored tracker diffs exactly like the original", () => {
   const t = new PollTracker();
   t.observe({ issues: [issue()], watermark: W0 });
