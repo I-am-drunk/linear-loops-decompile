@@ -6,7 +6,7 @@ Behavioral spec for OUR reimplementation, derived from decompiling Linear 1.32.4
 ## Concepts
 
 - **Loop** — a named automation owned by an org/team/project, with: trigger, conditions,
-  prompt (rich text), schedule (when triggerType=schedule), activities (what it may do),
+  prompt (rich text), schedule (when triggerType=Schedule), activities (what it may do),
   trusted sources, enabled flag, drafts + publish lifecycle, run history.
 - **Loop run** — one execution. Has status, started/ended, target entity (issue/project/
   initiative/document/team/cycle/release), a conversation (turns of activities), stats
@@ -51,7 +51,6 @@ unsupported for commentAdded/updatePosted/customerRequestAdded triggers.
 Triage is a condition/variant (`entityInTriage`), not a triggerType value.
 
 Chat triggers: loop wakes on @mention/message in an enabled channel.
-Triage variant: event `entityInTriage` with triage-state conditions.
 
 ## Condition semantics (observed)
 
@@ -64,7 +63,8 @@ Triage variant: event `entityInTriage` with triage-state conditions.
 ## Loop config fields we persist (superset of Linear's, minus their server bits)
 
 `name, icon, color, description, groupName, owner, team?, project?, prompt (doc),
-triggerType, trigger(event+activationMode), conditions[], schedule?, enabled,
+triggerType (the PascalCase entity | Schedule | Chat), trigger (event),
+activationMode, conditions[], schedule?, enabled,
 applyToSubTeams, activities[] (capabilities), trustedSourceKeys[], codeAccess: none|read|write,
 editAccess, subscribers, stats{…}, lastExecutedAt, version/publishedAt`.
 

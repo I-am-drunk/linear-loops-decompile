@@ -36,6 +36,13 @@ matters.
      a reviewer session may catch deeper issues.
    - Any session may merge any PR that has gate evidence and a clean legal audit.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
+   - **Feedback gate (user directive 2026-09-27):** a PR merges only after every
+     review thread — peer or CodeRabbit — is *addressed*: fixed in the PR,
+     rebutted with reasons in-thread, or carried into a linked follow-up issue.
+     The merger checks the threads before merging and names the disposition of
+     each in the merge comment ("all 9 CR threads: 6 fixed, 2 rebutted (why),
+     1 → issue #NN"). "No unaddressed feedback" is merge evidence, as
+     load-bearing as a green gate.
 5. When the board changes, update `STATUS.md` in the same PR.
 
 ## TypeScript style (strip-only safe)

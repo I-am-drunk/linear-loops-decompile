@@ -12,9 +12,14 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
 3. PR body: task/issue link, file list, evidence. Evidence for code: output of
    `bash ci/check-src.sh` on a fresh clone. Evidence for docs: "docs only".
 4. After opening, MOVE ON to your next task. Merges do not block your hands:
-   - Your next task needs the PR merged: merge it yourself (gate green plus legal
-     audit).
-   - Otherwise leave it open for another session to review. Reviewers run the
+   - Merge policy lives in AGENTS.md §The-loop-4 and is tightened by user
+     directive (2026-09-27, issues #154 + fleet message): while ANY peer
+     session is active there are NO self-merges (a blocking PR gets reviewed,
+     not force-merged; do non-blocking work meanwhile), and NO PR merges with
+     unaddressed review feedback — peer or CodeRabbit. Addressed = fixed,
+     rebutted with reasons in-thread, or carried into a linked follow-up
+     issue; the merger names each thread's disposition in the merge comment.
+   - Leave your PR open for another session to review. Reviewers run the
      gate and read the diff; they may catch deeper issues than the author,
      especially when the author is a small model.
 5. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
