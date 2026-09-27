@@ -1,0 +1,19 @@
+{
+  "name": "@loops/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Loops server skeleton (T-1101): node:http + node:sqlite stores, runtime persistence, composition root.",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test *.test.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
+}
