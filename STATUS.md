@@ -23,6 +23,12 @@ Done 2026-09-27:
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
   (a stale `main` branch produced a false "zero drift" on 2026-09-27 morning).
+- Official-docs CORRECTION: the vendored upstream `docs/*.md` turned out to be
+  one-line redirect stubs — the real API docs live only on `linear.app/developers/*`
+  (26 live pages, curl-fetchable). All of them read + digested into
+  `extracts/linear-official/API-FACTS.md` (exact rate budgets, webhook contract,
+  OAuth 24h-token/refresh regime, filtering/pagination, attachments idempotency);
+  KNOWLEDGE §6 corrected (PAT vs Bearer header shape, real limits).
 - Golden-goose trace (issue #14, PR #141): Q1-Q4 answered in
   `docs/golden-goose-chat-route.md` + KNOWLEDGE.md §8a — send op + input fields,
   streamData subscribe envelope, auth, wire shapes (now MIT-documented), meter

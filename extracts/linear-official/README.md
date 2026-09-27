@@ -19,10 +19,11 @@ commit dated 2026-09-25), retrieved 2026-09-27.
 | `_generated_documents.graphql` | Every operation the official SDK ships (671 ops, 834 KB) | `packages/sdk/src/_generated_documents.graphql` |
 | `LICENSE` | MIT, upstream repo root | `LICENSE` |
 | `UPSTREAM-README.md` | Upstream repo README (SDK + import tool overview) | `README.md` |
-| `docs/` | Upstream `docs/` verbatim: `API.md`, `OAuth2.md`, `Webhooks.md`, `Attachments.md`, webhook settings screenshots, markdown-magic config/transforms | `docs/` |
+| `docs/` | Upstream `docs/` verbatim — **WARNING: the four `.md` files are one-line redirect stubs** ("Visit developers.linear.app"), not documentation. The real API docs live only on `linear.app/developers/*`; the curated fact sheet from those live pages is **`API-FACTS.md`** in this directory | `docs/` |
 | `packages/*/README.md` | Package docs: `sdk` (client usage), `import` (CLI importer), `codegen-doc`, `codegen-sdk`, `codegen-test` | `packages/<pkg>/README.md` |
 | `packages/sdk/CHANGELOG.md` | Full SDK changelog (2.1 MB): release-by-release public-API history — the drift-forensics source ("when did op X appear?") | `packages/sdk/CHANGELOG.md` |
 | `AGENT-API.md` | OUR digest of the official Agent Sessions surface (+ divergences) | curated from the schema + linear.app/developers (links inside) |
+| `API-FACTS.md` | OUR digest of the other 21 live developer-docs pages: exact rate limits, webhook contract, OAuth incl. the 2026 refresh-token regime, filtering, pagination, attachments, customers, manifests, deprecations | curated from linear.app/developers (links inside), 2026-09-27 |
 
 Deliberately NOT vendored (MIT allows it; size says no — fetch on demand):
 `packages/sdk/src/*.ts` (`_generated_sdk.ts` 2.1 MB, `_generated_documents.ts`

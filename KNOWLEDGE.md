@@ -167,8 +167,15 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 ## §6. Linear public API facts (for our dataplane)
 
 - Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
-  keys act as the user. Rate limit ≈ 2,500 req/h/user (batch + budget). Webhooks
-  configurable per workspace for issue/comment/project/etc. changes.
+  keys act as the user. **Header shape differs by credential kind**: PAT =
+  `Authorization: <key>` (no Bearer), OAuth token = `Authorization: Bearer <token>`
+  (official docs). Exact rate budgets (API key 2,500 req/h + 3M complexity points/h
+  per USER shared across keys; OAuth app 5,000 req/h + 2M points/h; 10,000-point
+  single-query cap; leaky bucket; endpoint-specific windows exist):
+  `extracts/linear-official/API-FACTS.md` §2 — never hardcode, read the
+  `X-RateLimit-*` headers. OAuth access tokens expire in 24 h since the 2026-04-01
+  refresh-token migration (API-FACTS §7). Webhooks: full contract (5 s ACK,
+  1min/1h/6h retries, HMAC-SHA256 of raw body, replay guard) in API-FACTS §6.
 - The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /
