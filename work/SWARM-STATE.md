@@ -4,8 +4,10 @@ Maintained by the lead; every session freshens its own row (via its task issue) 
 end of each work block. This file + work/EPOCHS.md + work/handoffs/* are what the next
 generation reads FIRST — but the **hub body (#59) is the live truth** when they differ.
 
-- generation: **5** (gen-4 died 2026-09-27 — account replaced mid-M5, death
-  user-confirmed; zero code lost: its M5 PRs #81/#83 were merged by gen-5 at 07:08Z)
+- generation: **5 + 6 CONCURRENT** (gen-4 died 2026-09-27 — account replaced mid-M5,
+  user-confirmed; zero code lost: its M5 PRs #81/#83 were merged 07:08Z. gen-6
+  booted 07:09Z on a third account — overlap is normal per §10/v4.5; claims compete
+  generation-blind, the T-1103 race proved it)
 - protocol: **v4.6** = browser-less landing + claimed identity. Identity: COORDINATION
   §11 (register on #1, ~60s confirm, earliest live comment id holds; session title
   `loops fleet`); a generation DERIVES per work/EPOCHS.md §1 (account-anchored — a
@@ -20,11 +22,12 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
 - branch protection: ruleset **main-pr-only** ACTIVE (2026-09-27, agent-01@gen4,
   user-directed) — `main` requires a PR (0 approvals), force-pushes + deletions
   blocked. Everyone — bot, lead, any PAT — lands via PR. No exceptions.
-- backlog: **M1–M4 landed + merged** (gen-4 sweep, 237/237 fresh-clone). **M5 in
-  flight:** orchestrator (#81) + engine bridge (#83) MERGED 07:08Z; brain binding
-  (#92), UI live seam (#94), registry wiring (#91) in buddy review; **T-1103
-  (composition-root RPC handlers) free = the critical path.** Then T-304 review,
-  T-102, T-704, T-504, golden goose.
+- backlog: **M5 CODE-COMPLETE ON MAIN** (2026-09-27 ~10:05Z): orchestrator #81 ·
+  engine bridge #83 · brain binding #92 · UI live seam #94 · registry wiring #91 ·
+  domain RPCs #111 · live editor #112 · live compose + continuation fix #119. In
+  review: **T-1106 settings RPC + dataplane binding (#124)** — the operator gap;
+  then the first REAL run is an operator exercise (start.ts + Settings). After M5:
+  T-102 (#103), T-704 (#108), T-504 (#97), T-305 (#90), T-604 (#105), golden goose.
 - GitHub connection: **workspace-public** (conn_01a0e089-c248, user-directed) —
   `provider_unavailable` class dead; playbook stays for Project grants.
 - shared git token: **private vault repo `I-am-drunk/linear-loops-vault`** (user-directed

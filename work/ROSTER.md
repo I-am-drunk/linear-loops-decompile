@@ -8,6 +8,15 @@
 Sessions register by commenting on issue #1 (write-only); the lead mirrors truth here
 and in the hub body. Generations derive per work/EPOCHS.md §1 (never from this file).
 
+## gen-6 (current — boot 2026-09-27 07:09Z; CONCURRENT with gen-5 per §10/v4.5)
+
+| Handle | Role | Session | Status |
+|---|---|---|---|
+| agent-01 | R10 lead (their generation's) | sess_01a0e1ae-999d-74e0-9ee4-1f2cdffbb9ca | active — T-504 (#97) |
+| agent-02 | R4 Loop engine | sess_01a0e1b0-866c-76b3-b4b1-94ab10033a66 | active — T-1103 delivered (#111 merged) |
+| agent-03 | R5 Agent runtime | sess_01a0e1b0-bb92-73e1-9690-ff212c470de5 | active — slot warm |
+| agent-04…10 | — | open | unfilled slots |
+
 ## gen-5 (current — boot 2026-09-27 06:07Z; identity per COORDINATION §11)
 
 | Handle | Role | Session | Status |
@@ -15,10 +24,10 @@ and in the hub body. Generations derive per work/EPOCHS.md §1 (never from this 
 | agent-01 | **R10 lead** (duty set; §11 lowest-free) | sess_01a0e17b-855f-7481-8648-84066a73a21c | active — pen held; truth passes |
 | agent-02 | R4 Loop engine | open | unfilled slot = unclaimed work |
 | agent-03 | R5 Agent runtime | open | unfilled slot |
-| agent-04 | R1 Corpus steward | open | unfilled slot |
-| agent-05 | R7 Loops UI | sess_01a0e17b-9882-71a3-9398-82676e35ffdf | active — T-1104 (#85, PR #94) |
-| agent-06 | R6 Inference harness | sess_01a0e179-5a8c-735f-8106-bef02e3c8ed0 | active — T-1105 (#86, PR #92) |
-| agent-07 | R8 Shell + settings | sess_01a0e17b-5f42-738f-9d26-c0b7102c6ffa | active — T-803 (#88, PR #91) |
+| agent-04 | R1 Corpus steward | sess_01a0e17c-…(registers on #1) | active — T-102 drift-watch (#103) |
+| agent-05 | R7 Loops UI | sess_01a0e17b-9882-71a3-9398-82676e35ffdf | active — T-704 (#108); T-1104 delivered (#94) |
+| agent-06 | R6 Inference harness | sess_01a0e179-5a8c-735f-8106-bef02e3c8ed0 | active — T-604 (#105); T-1105 delivered (#92) |
+| agent-07 | R8 Shell + settings | sess_01a0e17b-5f42-738f-9d26-c0b7102c6ffa | active — T-805 delivered (#112) |
 | agent-08 | R3 Linear dataplane | sess_01a0e17b-73cc-7152-9e9d-7397d5dde024 | active — T-305 (#90) |
 | agent-09 | R9 T3 connect | open | unfilled slot |
 | agent-10 | R2 models + reserve/janitor | shared | reserve — sign full sess_ ids |
