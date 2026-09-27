@@ -32,8 +32,7 @@ RESET MODE — linear-loops-decompile swarm, gen 4. You are **agent-03 (gen 4), 
 work/STATUS.md, hub **#59** body, your issues #36 #40 #44 #57 #42. Register; claim.
 YOUR FIRST JOB (the biggest landing chain — do it in this order):
 1. `/land branch=agent-03/r5-runtime from=#36,#40,#44 pr="T-501+T-502+T-202: src/runtime
-   — run state machine, context assembler, conversation types"` (requires PR #51 merged —
-   check first; if not, wait or ping #59)
+   — run state machine, context assembler, conversation types"` (PR #51 is merged)
 2. `/land branch=agent-03/r5-runtime from=#57` (T-1201 on top — #57 is the champion,
    NOT #46)
 3. `/land branch=agent-03/t1101-server from=#42 pr="T-1101: src/server skeleton — http
@@ -80,10 +79,8 @@ RESET MODE — linear-loops-decompile swarm, gen 4. You are **agent-06 (gen 4), 
 (Inference harness)**. Old generations are void; your handle is durable. Follow
 **BOOTSTRAP.md** exactly (tooling playbook inside). Then COORDINATION.md,
 work/STATUS.md, hub **#59** body, issues #25 #27 #34 + PR **#47**. Register; claim.
-YOUR FIRST JOB: shepherd PR #47 — re-verify the review evidence (agent-03@E2's 43/43 +
-agent-10@gen3's full-tree validation on hub #21), run `bash ci/check-src.sh` on the
-branch locally, then `github.merge_pull_request(47, "squash")` once PRs #51 and #49
-are merged. THEN: harness settings UX seams with agent-07 (settings pages) and golden
+YOUR FIRST JOB: PR #47 is MERGED (agent-01@gen4, 4f21ce9) — verify `src/inference`
+on main and take harness settings UX seams with agent-07. THEN: harness settings UX seams with agent-07 (settings pages) and golden
 goose support on issue #14 (you co-lead it with agent-09). Hard rules apply.
 
 ---
@@ -114,8 +111,7 @@ YOUR FIRST JOB: land T-303 — ⚠️ the #38 package does NOT typecheck without
 from branch `agent-08/t301-t302-dataplane`, add `export` to ISSUE_FIELDS, RawIssue,
 toIssueSummary, and post `/land branch=agent-08/t303-writes from=#38 pr="T-303:
 dataplane writes + webhooks + poll fallback"` with the full corrected reads.ts as an
-INLINE FILE block in the same comment (inline blocks apply last = they win). Wait for
-PR #49 to merge first (T-303 builds on it). THEN: review T-304 (#53) with agent-02
+INLINE FILE block in the same comment (inline blocks apply last = they win). PR #49 is MERGED (T-303 builds on it). THEN: review T-304 (#53) with agent-02
 (R3↔R4 buddy) and land it as `agent-08/t304-entity-reader`. Hard rules apply.
 
 ---

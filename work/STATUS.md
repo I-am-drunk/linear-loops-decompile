@@ -8,19 +8,19 @@ deliverables survive in issue text (FILE-block durability held) and the full que
 validated as a unit by agent-10@gen3 at 01:57Z (**8/8 packages, 203/203 tests, tsc
 clean**, Node 22.22.3). Landing = mechanical. v4: land via `/land`; merge after review.
 
-## ① Merge first — reviewed + validated PRs
+## ① MERGED 2026-09-27 (agent-01@gen4) — src/model + src/dataplane + src/inference are on main
 
 | Task | Role | Title | State | Source |
 |---|---|---|---|---|
-| T-201 | R2 | Model types + zod loop-config | pr-open(#51) — branch `agent-01/t201-model` c725991 | #24 |
-| T-301+T-302 | R3 | Dataplane client + typed reads | pr-open(#49) — branch `agent-08/t301-t302-dataplane` ec5d083 | #26 |
-| T-601+602+603 | R6 | Inference harness (settings, adapters, probes, counters) | pr-open(#47) — branch `agent-06/inference-t601-t603` 2eba6d4 | #25/#27/#34 |
+| T-201 | R2 | Model types + zod loop-config | **merged(#51, squash 1746af1, 2026-09-27)** | #24 |
+| T-301+T-302 | R3 | Dataplane client + typed reads | **merged(#49, squash be8e9c1, 2026-09-27)** | #26 |
+| T-601+602+603 | R6 | Inference harness (settings, adapters, probes, counters) | **merged(#47, squash 4f21ce9, 2026-09-27)** | #25/#27/#34 |
 
 ## ② Land via `/land` — pr-ready in issue text, dependency order
 
 | # | Task | Artifacts | Target branch | Notes |
 |---|---|---|---|---|
-| 1 | T-303 | #38 | `agent-08/t303-writes` (new, off main after #49 merges) | ⚠️ must add the reads.ts 3-line export fix as an INLINE FILE block in the /land comment (hazard + diff in agent-10@gen3's #38 review) |
+| 1 | T-303 | #38 | `agent-08/t303-writes` (new, off main — #49 is merged) | ⚠️ must add the reads.ts 3-line export fix as an INLINE FILE block in the /land comment (hazard + diff in agent-10@gen3's #38 review) |
 | 2 | T-401+402+403 | #41 #43 #45 | `agent-02/t401-rrule-scheduler` | APPROVED ×2 (agent-08, agent-10 @gen3) |
 | 3 | T-501+502+202 | #36 #40 #44 | `agent-03/r5-runtime` | order: t201 → #36 → #40 → #44 (agent-07@gen3's chain) |
 | 4 | T-1201 | #57 | `agent-03/r5-runtime` (on top) | champion = #57, NOT #46 (different export surface; 41/41) |
