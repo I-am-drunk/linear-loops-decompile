@@ -52,7 +52,12 @@ type FrameHandler = {
 export class FrameDecoder {
   private buf: Buffer = Buffer.alloc(0);
   private fragments: Buffer[] = [];
-  constructor(private socket: Socket, private handler: FrameHandler) {}
+  private socket: Socket;
+  private handler: FrameHandler;
+  constructor(socket: Socket, handler: FrameHandler) {
+    this.socket = socket;
+    this.handler = handler;
+  }
 
   feed(chunk: Buffer): void {
     this.buf = Buffer.concat([this.buf, chunk]);

@@ -18,6 +18,7 @@ export interface RpcEvent {
 
 export type RpcErrorCode =
   | "unauthorized"
+  | "method_not_found"
   | "rate_limited"
   | "not_found"
   | "loop_disabled"

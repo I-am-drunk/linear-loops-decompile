@@ -18,9 +18,12 @@ Done 2026-09-27:
   agents via the private vault repo (`corpus/`); regeneration is the ~30-day
   drift check only.
 
+- R3.1 transport slice: `src/connect` (zero-dep RFC 6455 framing + JSON-RPC,
+  in-band auth, events; 3/3 tests, gate green).
+
 Now:
-- R3.1 transport slice (in progress: sess_01a0e2c0-4c63-70a3-a057-cc1ded6f0665):
-  src/connect per PLAN.md. We build in thin vertical slices, one PR each.
+- R3.2 boot slice (unassigned): `src/server` (http + static + environment
+  descriptor + dev token + node:sqlite store + health) per PLAN.md.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 
