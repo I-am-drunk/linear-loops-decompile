@@ -10,22 +10,22 @@
  *   → comment write-back via real dataplane createComment (T-303)
  *   → T-1103 domain RPCs as the UI consumes them (loops.list / runs.list / runs.get+lastSeq)
  *
- * Run from the repo root:  node --experimental-strip-types e2e-m5-fixture.ts
+ * Run from the repo root:  node --experimental-strip-types e2e/m5-fixture.ts
  */
 
 import http from "node:http";
 import assert from "node:assert/strict";
 
-import { createLoopsServer } from "./src/server/index.ts";
-import { createOrchestrator, commentWriteBack } from "./src/server/orchestrator.ts";
-import { RunQueue, MemoryRunQueueStore } from "./src/engine/queue.ts";
-import { ScheduleRegistry, MemoryScheduleStore } from "./src/engine/registry.ts";
-import type { EntityEvent } from "./src/engine/trigger.ts";
-import { LinearClient } from "./src/dataplane/dist/client.js";
-import { createDemoWorkspace } from "./src/dataplane/dist/fixtures.js";
-import { DataplaneEntityReader } from "./src/dataplane/dist/entityReader.js";
-import { createComment } from "./src/dataplane/dist/writes.js";
-import { defaultLoopConfig } from "./src/model/loop-config.ts";
+import { createLoopsServer } from "../src/server/index.ts";
+import { createOrchestrator, commentWriteBack } from "../src/server/orchestrator.ts";
+import { RunQueue, MemoryRunQueueStore } from "../src/engine/queue.ts";
+import { ScheduleRegistry, MemoryScheduleStore } from "../src/engine/registry.ts";
+import type { EntityEvent } from "../src/engine/trigger.ts";
+import { LinearClient } from "../src/dataplane/dist/client.js";
+import { createDemoWorkspace } from "../src/dataplane/dist/fixtures.js";
+import { DataplaneEntityReader } from "../src/dataplane/dist/entityReader.js";
+import { createComment } from "../src/dataplane/dist/writes.js";
+import { defaultLoopConfig } from "../src/model/loop-config.ts";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const report: Record<string, unknown> = { checks: [] };
@@ -235,13 +235,16 @@ check("event run completed", evtRun.status === "complete", { id: evtRun.id, stat
 // 9) Evidence assembly
 // ---------------------------------------------------------------------------
 // Brain requests hit the mock with the loop prompt + entity context.
-const cronMsg = JSON.stringify(seenBodies[0] ?? {});
-const evtMsg = JSON.stringify(seenBodies[1] ?? {});
-check("cron run carried its loop prompt to the brain", cronMsg.includes("standup summary"), { request: 1 });
+// Match by content (never request order) and assert the exact count.
+check("provider received exactly two requests (cron + event)", seenBodies.length === 2, { count: seenBodies.length });
+const bodies = seenBodies.map((b) => JSON.stringify(b));
+const cronMsg = bodies.find((b) => b.includes("standup summary")) ?? "";
+const evtMsg = bodies.find((b) => b.includes("An issue you watch changed state")) ?? "";
+check("cron run carried its loop prompt to the brain", cronMsg !== "", { matched: cronMsg !== "" });
 check(
   "event run carried the REAL entity context (T-304 reader over the dataplane fixture)",
-  evtMsg.includes("An issue you watch changed state") && evtMsg.includes("Set up CI pipeline") && evtMsg.includes("merged the workflow"),
-  { promptFound: evtMsg.includes("An issue you watch changed state"), issueTitle: evtMsg.includes("Set up CI pipeline"), latestComment: evtMsg.includes("merged the workflow") },
+  evtMsg.includes("Set up CI pipeline") && evtMsg.includes("merged the workflow"),
+  { issueTitle: evtMsg.includes("Set up CI pipeline"), latestComment: evtMsg.includes("merged the workflow") },
 );
 check("the adapter sent the seeded API key as Bearer", seenAuth.every((a) => a === "Bearer sk-e2e-secret-key"), seenAuth);
 
