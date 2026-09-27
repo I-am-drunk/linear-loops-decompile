@@ -42,6 +42,8 @@ import { createRunEventPublisher, registerDomainRpcs } from "./rpcs.ts";
 import { createLoopsServer } from "./index.ts";
 import type { LoopsServer, LoopsServerOptions } from "./index.ts";
 import type { Store } from "./store.ts";
+import { createRunSweeper } from "./sweeper.ts";
+import type { RunSweeper } from "./sweeper.ts";
 
 /** The channel's RuntimeCommands over the real Runner (binding doc above). */
 export function runtimeCommandsFor(deps: {
@@ -98,6 +100,10 @@ export interface LiveLoopsServerOptions extends LoopsServerOptions {
   descriptor?: Partial<EnvironmentDescriptor> | undefined;
   /** Loop id minting for loops.upsert creates (tests: deterministic ids). */
   idgen?: (() => string) | undefined;
+  /** M6 sweeper: silence threshold for active runs (default 5 min). */
+  staleAfterMs?: number | undefined;
+  /** M6 sweeper: audit hook per run marked stale. */
+  onStaleMark?: ((runId: string, silentMs: number) => void) | undefined;
 }
 
 export interface LiveLoopsServer extends LoopsServer {
@@ -106,6 +112,8 @@ export interface LiveLoopsServer extends LoopsServer {
   readonly tokens: TokenStore;
   readonly queue: RunQueue;
   readonly registry: ScheduleRegistry;
+  /** M6 run sweeper (T-504's markStale consumer) — drive via sweep(). */
+  readonly sweeper: RunSweeper;
   /** Boot reloadLoops() result (scheduled/event/chat counts). */
   readonly bootLoops: { scheduled: number; event: number; chat: number };
 }
@@ -136,6 +144,12 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     ...(options.authTimeoutMs !== undefined ? { authTimeoutMs: options.authTimeoutMs } : {}),
   });
 
+  const sweeper = createRunSweeper({
+    runner: base.runner,
+    ...(options.staleAfterMs !== undefined ? { staleAfterMs: options.staleAfterMs } : {}),
+    ...(options.onStaleMark !== undefined ? { onMark: options.onStaleMark } : {}),
+  });
+
   const orchestrator = createOrchestrator({
     store: base.store,
     runner: base.runner,
@@ -144,7 +158,7 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     brainFor,
     reader: options.reader,
     writeBack: options.writeBack,
-    publish: createRunEventPublisher(channel),
+    publish: sweeper.trackPublish(createRunEventPublisher(channel)),
   });
 
   registerDomainRpcs(channel, {
@@ -163,6 +177,7 @@ export function createLiveLoopsServer(options: LiveLoopsServerOptions = {}): Liv
     tokens,
     queue,
     registry,
+    sweeper,
     bootLoops,
     close() {
       channel.closeAll();

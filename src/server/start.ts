@@ -5,7 +5,8 @@
  *
  * Env: PORT (default 7373) · LOOPS_DB (default ./loops.db) · TICK_MS
  * (scheduler drive, default 30000; 0 disables — tick/handleEvent stay
- * callable internally).
+ * callable internally) · STALE_AFTER_MS (M6 sweeper: active-run silence
+ * before markStale, default 300000).
  *
  * Boots the live composition root (compose.ts) and mints a full-scope
  * bootstrap session token for the operator. Self-hosted single-user: the
@@ -27,8 +28,15 @@ const ALL_SCOPES: Scope[] = [
 
 const port = Number(process.env["PORT"] ?? 7373);
 const tickMs = Number(process.env["TICK_MS"] ?? 30_000);
+const staleAfterMs = Number(process.env["STALE_AFTER_MS"] ?? 300_000);
 
-const live = createLiveLoopsServer({ dbPath: process.env["LOOPS_DB"] ?? "./loops.db" });
+const live = createLiveLoopsServer({
+  dbPath: process.env["LOOPS_DB"] ?? "./loops.db",
+  staleAfterMs,
+  onStaleMark: (runId, silentMs) => {
+    console.log(`sweeper: run ${runId} marked stale after ${Math.round(silentMs / 1000)}s of silence`);
+  },
+});
 const { token } = live.tokens.mint({ scopes: ALL_SCOPES });
 const bound = await live.listen(port, "127.0.0.1");
 
@@ -42,6 +50,8 @@ if (tickMs > 0) {
     live.orchestrator.tick().catch((error: unknown) => {
       console.error("tick failed:", error instanceof Error ? error.message : error);
     });
+    // M6 sweeper: hung active runs go stale (T-504); revive is the UI's Continue.
+    live.sweeper.sweep();
   }, tickMs);
   timer.unref();
 }
