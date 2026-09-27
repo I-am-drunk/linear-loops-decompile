@@ -53,21 +53,21 @@ for (const retina of [false, true]) {
   const sidebarFixtures = golden(retina ? `golden-sidebar-retina1` : `golden-sidebar-retina0`);
   for (const [fixtureKey, presetKey] of CASES) {
     test(`${presetKey} (retina=${retina}) matches the corpus byte-for-byte, derived themes included`, () => {
-      const want = fixtures[fixtureKey];
+      const want = fixtures[fixtureKey]!;
       const root = makeRoot(retina, presetKey);
       assertShellAndColors(root, want, fixtureKey);
 
       const derived = want.derived as Record<string, Record<string, unknown>>;
-      assertShellAndColors(root.elevatedTheme(), derived.elevated, `${fixtureKey}.elevated`);
-      assertShellAndColors(root.subTheme(), derived.sub, `${fixtureKey}.sub`);
-      assertShellAndColors(root.menuTheme(), derived.menu, `${fixtureKey}.menu`);
-      assertShellAndColors(root.selectedTheme(), derived.selected, `${fixtureKey}.selected`);
-      assertShellAndColors(root.focusTheme(), derived.focus, `${fixtureKey}.focus`);
+      assertShellAndColors(root.elevatedTheme(), derived.elevated!, `${fixtureKey}.elevated`);
+      assertShellAndColors(root.subTheme(), derived.sub!, `${fixtureKey}.sub`);
+      assertShellAndColors(root.menuTheme(), derived.menu!, `${fixtureKey}.menu`);
+      assertShellAndColors(root.selectedTheme(), derived.selected!, `${fixtureKey}.selected`);
+      assertShellAndColors(root.focusTheme(), derived.focus!, `${fixtureKey}.focus`);
       // sidebarTheme mutates the shared subTheme memo in place (real
       // upstream behavior) — its fixture was captured on a FRESH root with
       // no prior subTheme call, so mirror that here.
       const sidebarRoot = makeRoot(retina, presetKey);
-      assertShellAndColors(sidebarRoot.sidebarTheme(), sidebarFixtures[fixtureKey], `${fixtureKey}.sidebar`);
+      assertShellAndColors(sidebarRoot.sidebarTheme(), sidebarFixtures[fixtureKey]!, `${fixtureKey}.sidebar`);
     });
   }
 }
@@ -76,7 +76,7 @@ test(`dynamic functions match the corpus (highlightVariant, textHighlight)`, () 
   const fixtures = golden(`golden-functions-retina0`);
   for (const [fixtureKey, presetKey] of CASES) {
     const root = makeRoot(false, presetKey);
-    const want = fixtures[fixtureKey] as {
+    const want = fixtures[fixtureKey]! as {
       highlightVariant: Record<string, string>;
       textHighlight: Record<string, string>;
     };
@@ -94,7 +94,7 @@ test(`LCH and P3 color formats match the corpus`, () => {
   for (const format of [`LCH`, `P3`] as const) {
     for (const [fixtureKey, presetKey] of CASES) {
       const root = makeRoot(false, presetKey, format);
-      assert.deepEqual(root.color, fixtures[format][fixtureKey], `${format} ${fixtureKey}: color map`);
+      assert.deepEqual(root.color, fixtures[format]![fixtureKey], `${format} ${fixtureKey}: color map`);
     }
   }
 });

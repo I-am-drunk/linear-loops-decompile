@@ -9,7 +9,10 @@
  * underneath, exactly as the corpus computes it).
  */
 
-export type Lch = number[];
+export type Lch = [number, number, number, number?];
+
+/** Internal 3-vector (Lab, XYZ, linear RGB). */
+type Vec3 = [number, number, number];
 
 /** Numeric clamp (corpus export `n`). */
 export function clamp(value: number, min: number, max: number): number {
@@ -19,10 +22,10 @@ export function clamp(value: number, min: number, max: number): number {
 export type ColorFormat = "RGB" | "LCH" | "P3";
 
 export interface AdjustDelta {
-  l?: number;
-  c?: number;
-  h?: number;
-  a?: number;
+  l?: number | undefined;
+  c?: number | undefined;
+  h?: number | undefined;
+  a?: number | undefined;
 }
 
 // D50 white point, exactly as the corpus writes it: [.3457/.3585, 1, .2958/.3585]
@@ -63,25 +66,26 @@ export function fromCss(css: string): Lch {
     const small = HEX_REGEX_SMALL.exec(css);
     if (small) {
       m = small;
-      m[1] += m[1];
-      m[2] += m[2];
-      m[3] += m[3];
+      m[1] += m[1]!;
+      m[2] += m[2]!;
+      m[3] += m[3]!;
     }
   }
   if (m) {
-    const out = rgbToLch([parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)]);
-    if (m[4] && !/ff/i.test(m[4])) out[3] = parseInt(m[4], 16) / 255;
+    const out = rgbToLch([parseInt(m[1]!, 16), parseInt(m[2]!, 16), parseInt(m[3]!, 16)]);
+    const alpha = m[4];
+    if (alpha && !/ff/i.test(alpha)) out[3] = parseInt(alpha, 16) / 255;
     return out;
   }
   const lch = LCH_REGEX.exec(css);
   if (lch) {
-    const out: Lch = [parseFloat(lch[1]), parseFloat(lch[2]), parseFloat(lch[3])];
+    const out: Lch = [parseFloat(lch[1]!), parseFloat(lch[2]!), parseFloat(lch[3]!)];
     if (lch[4] && lch[4] !== `1`) out[3] = parseFloat(lch[4]);
     return out;
   }
   const p3 = P3_REGEX.exec(css);
   if (p3) {
-    const out = p3ToLch([parseFloat(p3[1]), parseFloat(p3[2]), parseFloat(p3[3])]);
+    const out = p3ToLch([parseFloat(p3[1]!), parseFloat(p3[2]!), parseFloat(p3[3]!)]);
     if (p3[4] && p3[4] !== `1`) out[3] = parseFloat(p3[4]);
     return out;
   }
@@ -150,8 +154,8 @@ export function adjustTo(color: Lch, target: AdjustDelta): Lch {
 export function mix(a: Lch, b: Lch, ratio: number): Lch {
   const alphaA = a[3] ?? 1;
   const alphaB = b[3] ?? 1;
-  const [x1, y1, z1] = labToXyz(lchToLab(a));
-  const [x2, y2, z2] = labToXyz(lchToLab(b));
+  const [x1, y1, z1]: Vec3 = labToXyz(lchToLab(a));
+  const [x2, y2, z2]: Vec3 = labToXyz(lchToLab(b));
   const [l, c, h] = labToLch(
     xyzToLab([x1 * (1 - ratio) + ratio * x2, y1 * (1 - ratio) + ratio * y2, z1 * (1 - ratio) + ratio * z2]),
   );
@@ -161,10 +165,10 @@ export function mix(a: Lch, b: Lch, ratio: number): Lch {
 /** #rrggbb(aa) string for an LCH tuple (corpus `lchToRgbString`). */
 export function lchToRgbString(color: Lch): string {
   const hex = lchToRgb(color)
-    .map((v) => v.toString(16).split(`.`)[0])
+    .map((v) => v.toString(16).split(`.`)[0]!)
     .map((v) => (v.length === 1 ? `0` + v : v));
   const alpha =
-    color[3] !== undefined && color[3] !== 1 ? pad2((color[3] * 255).toString(16).split(`.`)[0]) : ``;
+    color[3] !== undefined && color[3] !== 1 ? pad2((color[3] * 255).toString(16).split(`.`)[0]!) : ``;
   return `#${hex[0]}${hex[1]}${hex[2]}${alpha}`;
 }
 
@@ -177,31 +181,31 @@ function lchToP3String(color: Lch): string {
   return `color(display-p3 ${p3[0]} ${p3[1]} ${p3[2]}${color[3] === undefined ? `` : ` / ${color[3].toString(10)}`})`;
 }
 
-function lchToP3(color: Lch): number[] {
+function lchToP3(color: Lch): Vec3 {
   return xyzToLinearP3(d50ToD65(labToXyz(lchToLab(color))))
     .map(gammaEncode)
-    .map((v) => clamp(v, 0, 1));
+    .map((v) => clamp(v, 0, 1)) as Vec3;
 }
 
 /** sRGB [0-255] to LCH (corpus `rgbToLch`). */
-export function rgbToLch(rgb: number[]): Lch {
+export function rgbToLch(rgb: Vec3): Lch {
   return labToLch(xyzToLab(d65ToD50(linearRgbToXyz(srgbLinear(rgb)))));
 }
 
-function p3ToLch(p3: number[]): Lch {
-  return labToLch(xyzToLab(d65ToD50(linearP3ToXyz(srgbLinear(p3.map((v) => v * 255))))));
+function p3ToLch(p3: Vec3): Lch {
+  return labToLch(xyzToLab(d65ToD50(linearP3ToXyz(srgbLinear(p3.map((v) => v * 255) as Vec3)))));
 }
 
 /** LCH to sRGB [0-255] (corpus `lchToRgb`), with the exact-white special case. */
-export function lchToRgb(color: Lch): number[] {
+export function lchToRgb(color: Lch): Vec3 {
   const lab = lchToLab(color);
   if (lab[0] === 100 && lab[1] === 0 && lab[2] === 0) return [255, 255, 255];
   return xyzLinearRgb(d50ToD65(labToXyz(lab)))
     .map((v) => 255 * gammaEncode(v))
-    .map((v) => clamp(v, 0, 255));
+    .map((v) => clamp(v, 0, 255)) as Vec3;
 }
 
-export function multiplyMatrix(m: number[][], v: number[]): number[] {
+export function multiplyMatrix(m: [Vec3, Vec3, Vec3], v: Vec3): Vec3 {
   const [[a, b, c], [d, e, f], [g, h, i]] = m;
   const [x, y, z] = v;
   return [a * x + b * y + c * z, d * x + e * y + f * z, g * x + h * y + i * z];
@@ -213,7 +217,7 @@ function gammaEncode(v: number): number {
   return abs > 0.0031308 ? sign * (1.055 * abs ** (1 / 2.4) - 0.055) : 12.92 * v;
 }
 
-function linearRgbToXyz(rgb: number[]): number[] {
+function linearRgbToXyz(rgb: Vec3): Vec3 {
   return multiplyMatrix(
     [
       [0.41239079926595934, 0.357584339383878, 0.1804807884018343],
@@ -224,7 +228,7 @@ function linearRgbToXyz(rgb: number[]): number[] {
   );
 }
 
-function linearP3ToXyz(p3: number[]): number[] {
+function linearP3ToXyz(p3: Vec3): Vec3 {
   return multiplyMatrix(
     [
       [0.4865709486482162, 0.26566769316909306, 0.1982172852343625],
@@ -235,7 +239,7 @@ function linearP3ToXyz(p3: number[]): number[] {
   );
 }
 
-function xyzLinearRgb(xyz: number[]): number[] {
+function xyzLinearRgb(xyz: Vec3): Vec3 {
   return multiplyMatrix(
     [
       [3.2409699419045226, -1.537383177570094, -0.4986107602930034],
@@ -246,7 +250,7 @@ function xyzLinearRgb(xyz: number[]): number[] {
   );
 }
 
-function xyzToLinearP3(xyz: number[]): number[] {
+function xyzToLinearP3(xyz: Vec3): Vec3 {
   return multiplyMatrix(
     [
       [2.493496911941425, -0.9313836179191239, -0.40271078445071684],
@@ -257,7 +261,7 @@ function xyzToLinearP3(xyz: number[]): number[] {
   );
 }
 
-function d50ToD65(xyz: number[]): number[] {
+function d50ToD65(xyz: Vec3): Vec3 {
   return multiplyMatrix(
     [
       [0.9554734527042182, -0.023098536874261423, 0.0632593086610217],
@@ -268,7 +272,7 @@ function d50ToD65(xyz: number[]): number[] {
   );
 }
 
-function d65ToD50(xyz: number[]): number[] {
+function d65ToD50(xyz: Vec3): Vec3 {
   return multiplyMatrix(
     [
       [1.0479298208405488, 0.022946793341019088, -0.05019222954313557],
@@ -279,33 +283,32 @@ function d65ToD50(xyz: number[]): number[] {
   );
 }
 
-function xyzToLab(xyz: number[]): number[] {
+function xyzToLab(xyz: Vec3): Vec3 {
   const f = xyz
-    .map((v, i) => v / D50[i])
-    .map((v) => (v > 0.008856451679035631 ? Math.cbrt(v) : (903.2962962962963 * v + 16) / 116));
+    .map((v, i) => v / D50[i]!)
+    .map((v) => (v > 0.008856451679035631 ? Math.cbrt(v) : (903.2962962962963 * v + 16) / 116)) as Vec3;
   return [116 * f[1] - 16, 500 * (f[0] - f[1]), 200 * (f[1] - f[2])];
 }
 
-function labToXyz(lab: number[]): number[] {
+function labToXyz(lab: Vec3): Vec3 {
   const kappa = 24389 / 27;
   const epsilon = 216 / 24389;
-  const f: number[] = [];
-  f[1] = (lab[0] + 16) / 116;
-  f[0] = lab[1] / 500 + f[1];
-  f[2] = f[1] - lab[2] / 200;
+  const f1 = (lab[0] + 16) / 116;
+  const f0 = lab[1] / 500 + f1;
+  const f2 = f1 - lab[2] / 200;
   return [
-    f[0] ** 3 > epsilon ? f[0] ** 3 : (116 * f[0] - 16) / kappa,
+    f0 ** 3 > epsilon ? f0 ** 3 : (116 * f0 - 16) / kappa,
     lab[0] > kappa * epsilon ? ((lab[0] + 16) / 116) ** 3 : lab[0] / kappa,
-    f[2] ** 3 > epsilon ? f[2] ** 3 : (116 * f[2] - 16) / kappa,
-  ].map((v, i) => v * D50[i]);
+    f2 ** 3 > epsilon ? f2 ** 3 : (116 * f2 - 16) / kappa,
+  ].map((v, i) => v * D50[i]!) as Vec3;
 }
 
-function labToLch(lab: number[]): Lch {
+function labToLch(lab: Vec3): Lch {
   const h = (Math.atan2(lab[2], lab[1]) * 180) / Math.PI;
   return [lab[0], Math.sqrt(lab[1] ** 2 + lab[2] ** 2), h >= 0 ? h : h + 360, 1];
 }
 
-export function lchToLab(color: Lch): number[] {
+export function lchToLab(color: Lch): Vec3 {
   return [color[0], color[1] * Math.cos((color[2] * Math.PI) / 180), color[1] * Math.sin((color[2] * Math.PI) / 180)];
 }
 
@@ -315,6 +318,6 @@ function srgbLinearOne(v: number): number {
   return abs < 0.04045 ? v / 12.92 : sign * ((abs + 0.055) / 1.055) ** 2.4;
 }
 
-function srgbLinear(rgb: number[]): number[] {
-  return rgb.map((v) => srgbLinearOne(v / 255));
+function srgbLinear(rgb: Vec3): Vec3 {
+  return rgb.map((v) => srgbLinearOne(v / 255)) as Vec3;
 }

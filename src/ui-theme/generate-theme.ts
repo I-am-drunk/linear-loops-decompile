@@ -87,7 +87,7 @@ export interface Theme {
 function mapValues<T, U>(obj: Record<string, T>, fn: (value: T, key: string) => U): Record<string, U> {
   const out: Record<string, U> = {};
   Object.keys(obj).forEach((key) => {
-    out[key] = fn(obj[key], key);
+    out[key] = fn(obj[key]!, key);
   });
   return out;
 }
@@ -227,7 +227,7 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
     const ve = p(o, c ? { l: 9 } : { l: 22, c: 0.5 });
     const ye = p(o, c ? { l: 13, c: 0 } : { l: 29, c: 1.5 });
     const L: Lch = [48, 59.31, 288.43]; // purple
-    const R = e.baseTheme ? fromCss(e.baseTheme.color.focusColor) : e.accent;
+    const R = e.baseTheme ? fromCss(e.baseTheme.color.focusColor ?? ``) : e.accent;
     const be = R[1] > 50 && (c ? R[0] < 90 : R[0] > 30);
     const z = R[1] < 20 ? L[2] : R[2];
     const xe = be ? R : adjustTo(R, c ? { l: 70, c: 90, h: z } : { l: 50, c: 120, h: z });
@@ -366,6 +366,7 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
     };
 
     const J = mapValues(q, (color) => toCss(e.colorFormat, color));
+    const cssOf = (token: string): string => J[token]!;
 
     let elevatedMemo: Theme | undefined;
     let subMemo: Theme | undefined;
@@ -382,16 +383,16 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
     const Z = v(0.1);
     const Q = v(0.125);
     const Re = v(0.3);
-    const ze = (css: string): Lch => (css === J.bgBase ? o : ANY_COLOR_REGEX.test(css) ? fromCss(css) : o);
+    const ze = (css: string): Lch => (css === cssOf(`bgBase`) ? o : ANY_COLOR_REGEX.test(css) ? fromCss(css) : o);
 
     const theme: Theme = {
       hash,
-      shadowColor: J.shadowColor,
+      shadowColor: cssOf(`shadowColor`),
       contrast: e.contrast,
       colorFormat: e.colorFormat,
-      focusShadow: `0 0 0 1px ${J.focusColor}`,
+      focusShadow: `0 0 0 1px ${cssOf(`focusColor`)}`,
       shadowLow: c ? `0px 3px 6px -2px ${Pe}, 0px 1px 1px ${X}` : `0px 0.5px 1px 1px ${Re}`,
-      shadowBorder: `0 0 0 0.5px ` + J.bgBorder,
+      shadowBorder: `0 0 0 0.5px ` + cssOf(`bgBorder`),
       shadowMedium: c
         ? `0 6px 18px ${Pe}, 0 3px 9px ${X}, 0 1px 1px ${X}`
         : `0 3px 8px ${Q}, 0 2px 5px ${Q}, 0 1px 1px ${Q}`,
@@ -402,8 +403,8 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
       inputPadding: `6px 12px`,
       inputPaddingBlock: `6px`,
       inputPaddingInline: `12px`,
-      inputBackground: J.bgBase,
-      inputBorder: `1px solid ${J.bgBorder}`,
+      inputBackground: cssOf(`bgBase`),
+      inputBorder: `1px solid ${cssOf(`bgBorder`)}`,
       inputBorderRadius: `8px`,
       inputFontSize: `0.8125rem`,
       color: J,
@@ -416,7 +417,7 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
       textHighlight(css: string, ratio: number): string {
         return toCss(
           e.colorFormat,
-          mix(ze(this.color.bgBase), c ? adjust(fromCss(css), { l: 7, c: 8 }) : fromCss(css), ratio),
+          mix(ze(this.color.bgBase ?? ``), c ? adjust(fromCss(css), { l: 7, c: 8 }) : fromCss(css), ratio),
         );
       },
       elevatedTheme: () =>
@@ -428,7 +429,7 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
                 elevation: (e.elevation ?? 0) + 1,
                 baseTheme: theme,
                 _themeType: `elevated`,
-                base: f(q.bgBase, { l: c ? -8 : 4.125, c: c && !u ? 0 : 0.5 }),
+                base: f(q.bgBase!, { l: c ? -8 : 4.125, c: c && !u ? 0 : 0.5 }),
               })),
       subTheme: () =>
         (subMemo ||=
@@ -453,13 +454,13 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
           const r = e.sidebarInput
             ? n && e.sidebarInput.base[0] > 97 && e.sidebarInput.base[1] < 8
             : u;
-          sidebarMemo.color.controlTertiaryHover = n ? Fe : t.color.controlSecondary;
-          sidebarMemo.color.controlSecondary = r ? t.color.bgBase : n ? t.color.bgShade : t.color.controlSecondary;
+          sidebarMemo.color.controlTertiaryHover = n ? Fe : t.color.controlSecondary!;
+          sidebarMemo.color.controlSecondary = r ? t.color.bgBase! : n ? t.color.bgShade! : t.color.controlSecondary!;
           sidebarMemo.color.controlSecondaryHover = r
-            ? t.color.bgBaseHover
+            ? t.color.bgBaseHover!
             : n
-              ? t.color.bgShadeHover
-              : t.color.controlSecondaryHover;
+              ? t.color.bgShadeHover!
+              : t.color.controlSecondaryHover!;
         }
         return sidebarMemo;
       },
@@ -472,12 +473,12 @@ export function makeGenerateTheme(retina: boolean): (input: ThemeInput) => Theme
             ...e,
             baseTheme: theme,
             _themeType: `menu`,
-            base: f(q.bgBase, { l: c ? -8 : 8, c: c && !u ? 0 : 0.5 }),
+            base: f(q.bgBase!, { l: c ? -8 : 8, c: c && !u ? 0 : 0.5 }),
           })),
       selectedTheme: () =>
-        (selectedMemo ||= generateTheme({ ...e, base: q.bgSelected, baseTheme: theme, _themeType: `selected` })),
+        (selectedMemo ||= generateTheme({ ...e, base: q.bgSelected!, baseTheme: theme, _themeType: `selected` })),
       focusTheme: () =>
-        (focusMemo ||= generateTheme({ ...e, base: q.bgFocus, baseTheme: theme, _themeType: `focus` })),
+        (focusMemo ||= generateTheme({ ...e, base: q.bgFocus!, baseTheme: theme, _themeType: `focus` })),
       baseTheme: e.baseTheme,
     };
     return theme;
