@@ -31,7 +31,7 @@ fn extract(tmp: &std::path::Path) -> PathBuf {
     );
     let text = String::from_utf8(out.stdout).unwrap();
     assert!(text.contains("extract:"), "unexpected stdout: {}", text);
-    assert!(text.contains("canaries: 4/4 pass"), "canary enforcement ran: {}", text);
+    assert!(text.contains("canaries: 5/5 pass"), "canary enforcement ran: {}", text);
     reference
 }
 
@@ -452,5 +452,90 @@ fn matrix_js_substring_token_is_not_a_surface() {
         "mid-token .js must not become a surface: {}",
         String::from_utf8_lossy(&out.stderr)
     );
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
+fn states_alternates_extracted_and_gated() {
+    // H3 #213 slice 3: `cond ? `A` : `B`` with both arms as copy-grade
+    // template literals is ONE state-gated slot; class-name and
+    // non-literal-arm ternaries are not facts.
+    let tmp = std::env::temp_dir().join(format!("parity-test-states-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    assert!(
+        text.contains("alt:No matching runs|No runs to show"),
+        "states alternate extracted: {}", text
+    );
+    assert!(!text.contains("activeRow"), "class-name ternary leaked into states");
+    assert!(!text.contains("alt:Done"), "non-literal-arm ternary leaked into states");
+
+    // ours missing the alternate: a states violation (reference covers the family)
+    let facts = tmp.join("ui-facts-no-states.json");
+    let clean = std::fs::read_to_string(fixtures().join("ours/ui-facts-clean.json")).unwrap();
+    let without = clean.replace(
+        "\"alt:No matching runs|No runs to show\"",
+        "\"alt:No matching runs|Nothing here\"",
+    );
+    assert_ne!(clean, without, "fixture replace must hit");
+    std::fs::write(&facts, without).unwrap();
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .output()
+        .expect("run parity check");
+    assert_eq!(out.status.code(), Some(1), "diverged states must fail: {}", String::from_utf8_lossy(&out.stdout));
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("states"), "states family named: {}", stdout);
+
+    // a states canary the corpus does not yield fails extract loudly
+    let bad = tmp.join("canaries-bad-states.txt");
+    std::fs::write(&bad, "states:AutomationRunsPage=alt:Ghost|Slot\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref2.json"))
+        .arg("--canaries").arg(&bad)
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "mismatched states canary must fail extract");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("states canary"));
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
+fn compact_ternary_and_malformed_canary_lines() {
+    // CodeRabbit #217: `cond?`A`:`B`` (no whitespace) is the same state fact;
+    // a canary line missing `=` must be a loud config error, never a silent
+    // drop that lets extraction pass without running the intended canary.
+    let tmp = std::env::temp_dir().join(format!("parity-test-states2-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    assert!(
+        text.contains("alt:Archived view|Active view"),
+        "compact ternary extracted: {}", text
+    );
+    // ("Not copy here" IS copy — the guard is that no `alt:` fact was built
+    // from the `??` operator's right-hand side)
+    assert!(!text.contains("alt:Not copy here") && !text.contains("|Not copy here"), "?? arm leaked into states: {}", text);
+
+    let bad = tmp.join("canaries-malformed.txt");
+    std::fs::write(&bad, "states:AutomationRunsPage alt:No matching runs|No runs to show\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref2.json"))
+        .arg("--canaries").arg(&bad)
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "malformed canary line must fail extract");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("malformed line"));
     let _ = std::fs::remove_dir_all(&tmp);
 }

@@ -24,6 +24,8 @@ pub struct ExtractStats {
     pub tokens: usize,
     /// surfaces that carry an order chain
     pub order: usize,
+    /// state-alternate facts across surfaces (H3 #213 slice 3)
+    pub states: usize,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
@@ -127,7 +129,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, canaries: None };
     let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
@@ -152,6 +154,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             let text = fs::read_to_string(entry.path())
                 .map_err(|e| format!("read {}: {}", entry.path().display(), e))?;
             surface.copy.extend(extract_copy(&text));
+            surface.states.extend(extract_state_alternates(&text));
             surface.structure.extend(extract_edges(&text));
             surface.tokens.extend(extract_tokens(&text));
             order_candidates.extend(extract_order(&text));
@@ -177,6 +180,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         stats.edges += surface.structure.len();
         stats.tokens += surface.tokens.len();
         stats.order += usize::from(!surface.order.is_empty());
+        stats.states += surface.states.len();
         facts.surfaces.insert(comp.clone(), surface);
         stats.surfaces += 1;
     }
@@ -221,20 +225,41 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     if let Some(canary_path) = canaries {
         let list_text = fs::read_to_string(canary_path)
             .map_err(|e| format!("read canaries {}: {}", canary_path.display(), e))?;
-        // Three canary kinds: plain lines are COPY canaries; `route:` lines
+        // Four canary kinds: plain lines are COPY canaries; `route:` lines
         // are ROUTE canaries checked against app.routes (#177); `order:` lines
         // (H3 #207) are ORDER canaries — `order:<Surface>=<a> > <b> > …` —
         // checked against the surface's extracted whole-sequence chain, so an
         // order-grammar regression fails as loudly as a copy one.
         let mut order_canaries: Vec<(String, String)> = Vec::new(); // (surface, chain)
+        let mut states_canaries: Vec<(String, String)> = Vec::new(); // (surface, alt fact)
+        // A malformed `order:`/`states:` line (no `=`) silently dropping
+        // would let extraction pass while the intended canary never ran
+        // (CodeRabbit #217): configuration errors are loud.
+        let mut bad_lines: Vec<String> = Vec::new();
         let canary_list: Vec<(bool, String)> = list_text
             .lines()
             .map(str::trim)
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
             .filter_map(|l| {
                 if let Some(o) = l.strip_prefix("order:") {
-                    if let Some((surface, chain)) = o.split_once('=') {
-                        order_canaries.push((surface.trim().to_string(), chain.trim().to_string()));
+                    match o.split_once('=') {
+                        Some((surface, chain)) => {
+                            order_canaries.push((surface.trim().to_string(), chain.trim().to_string()))
+                        }
+                        None => bad_lines.push(l.to_string()),
+                    }
+                    return None;
+                }
+                // `states:<Surface>=alt:<armA>|<armB>` (H3 #213 slice 3):
+                // pins the state-alternate grammar the same way order: pins
+                // the chain grammar — checked against the surface's extracted
+                // states facts, loud on regression or drift.
+                if let Some(st) = l.strip_prefix("states:") {
+                    match st.split_once('=') {
+                        Some((surface, fact)) => {
+                            states_canaries.push((surface.trim().to_string(), fact.trim().to_string()))
+                        }
+                        None => bad_lines.push(l.to_string()),
                     }
                     return None;
                 }
@@ -244,8 +269,28 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                 })
             })
             .collect();
+        if !bad_lines.is_empty() {
+            return Err(format!(
+                "canary config: malformed line(s) (expected `order:<Surface>=<chain>` / `states:<Surface>=<fact>`):\n  {}",
+                bad_lines.join("\n  ")
+            ));
+        }
         let mut order_problems: Vec<String> = Vec::new();
         let mut order_passed = 0;
+        for (surface, fact) in &states_canaries {
+            let hit = facts
+                .surfaces
+                .get(surface)
+                .is_some_and(|s| s.states.iter().any(|f| f == fact));
+            if hit {
+                order_passed += 1;
+            } else {
+                order_problems.push(format!(
+                    "states canary: surface {:?} did not extract {:?} (states-grammar regression or corpus drift)",
+                    surface, fact
+                ));
+            }
+        }
         for (surface, chain) in &order_canaries {
             let extracted = facts
                 .surfaces
@@ -266,7 +311,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                 ));
             }
         }
-        if !canary_list.is_empty() || !order_canaries.is_empty() {
+        if !canary_list.is_empty() || !order_canaries.is_empty() || !states_canaries.is_empty() {
             // one pass over every chunk, all canaries at once
             let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
             // a registration route may live only in analysis/routes.json
@@ -324,7 +369,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             }
             problems.extend(order_problems);
             passed += order_passed;
-            stats.canaries = Some((passed, canary_list.len() + order_canaries.len()));
+            stats.canaries = Some((passed, canary_list.len() + order_canaries.len() + states_canaries.len()));
             if !problems.is_empty() {
                 return Err(format!("canary check failed:\n  {}", problems.join("\n  ")));
             }
@@ -562,6 +607,70 @@ fn extract_copy(text: &str) -> Vec<String> {
         } else {
             i += 1;
         }
+    }
+    out
+}
+
+/// State-conditional copy alternates (H3 #213 slice 3): the compiled chunks
+/// carry state-gated UI text as literal ternaries with BOTH arms as template
+/// strings — `` cond ? `No matching loops` : `No loops yet` ``
+/// (LoopsManagementPage), `` ? `Unavailable` : `Loading…` ``, `` ? `Failed` :
+/// `Completed` `` (AutomationRunsPage). The gating variable is minified away,
+/// so naming the state (empty/loading/…) would be a guess; the PAIR is the
+/// verbatim corpus fact: one slot renders exactly these two alternates. Fact
+/// form: `alt:<armA>|<armB>` (source order kept — the truthy arm first).
+/// Both arms must pass the copy grammar, which drops class-name and
+/// expression ternaries with near-zero noise.
+fn extract_state_alternates(text: &str) -> Vec<String> {
+    let mut out = Vec::new();
+    let bytes = text.as_bytes();
+    let mut search = 0;
+    // scan `?` tokens and allow any JS whitespace (or none) before the first
+    // backtick: `cond?\`A\`:\`B\`` and multiline pretty-printed forms are the
+    // same fact (CodeRabbit #217). `??`/`?.` are skipped.
+    while let Some(rel) = text[search..].find('?') {
+        let q = search + rel;
+        if matches!(bytes.get(q + 1), Some(b'?') | Some(b'.')) || matches!(bytes.get(q.wrapping_sub(1)), Some(b'?')) {
+            search = q + 2;
+            continue;
+        }
+        let mut a_tick = q + 1;
+        while a_tick < bytes.len() && (bytes[a_tick] as char).is_ascii_whitespace() {
+            a_tick += 1;
+        }
+        if a_tick >= bytes.len() || bytes[a_tick] != b'`' {
+            search = q + 1;
+            continue;
+        }
+        let a_start = a_tick + 1;
+        let Some(a_len) = text[a_start..].find('`') else { break };
+        let a_end = a_start + a_len;
+        // between the arms: whitespace, then `:`, then whitespace, then a backtick
+        let mut j = a_end + 1;
+        while j < bytes.len() && (bytes[j] as char).is_ascii_whitespace() {
+            j += 1;
+        }
+        if j >= bytes.len() || bytes[j] != b':' {
+            search = a_end + 1;
+            continue;
+        }
+        j += 1;
+        while j < bytes.len() && (bytes[j] as char).is_ascii_whitespace() {
+            j += 1;
+        }
+        if j >= bytes.len() || bytes[j] != b'`' {
+            search = a_end + 1;
+            continue;
+        }
+        let b_start = j + 1;
+        let Some(b_len) = text[b_start..].find('`') else { break };
+        let b_end = b_start + b_len;
+        let a = &text[a_start..a_end];
+        let b = &text[b_start..b_end];
+        if looks_like_copy(a) && looks_like_copy(b) {
+            out.push(format!("alt:{}|{}", a, b));
+        }
+        search = b_end + 1;
     }
     out
 }

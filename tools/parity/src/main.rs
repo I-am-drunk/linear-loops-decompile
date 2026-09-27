@@ -132,7 +132,7 @@ fn cmd_extract(args: &[String]) -> ExitCode {
     match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref()) {
         Ok(stats) => {
             println!(
-                "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains → {}",
+                "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains · {} state alternates → {}",
                 stats.surfaces,
                 stats.chunks_read,
                 stats.routes,
@@ -140,6 +140,7 @@ fn cmd_extract(args: &[String]) -> ExitCode {
                 stats.edges,
                 stats.tokens,
                 stats.order,
+                stats.states,
                 o.out.display()
             );
             if let Some((passed, total)) = stats.canaries {

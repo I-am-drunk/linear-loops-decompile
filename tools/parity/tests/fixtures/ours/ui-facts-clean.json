@@ -15,10 +15,16 @@
     "AutomationRunsPage": {
       "routes": [],
       "copy": [
+        "Active view",
+        "Archived view",
+        "Done",
         "Duration",
         "Loop runs",
         "Name",
+        "No matching runs",
+        "No runs to show",
         "No runs yet",
+        "Not copy here",
         "Started",
         "Status",
         "Team"
@@ -29,6 +35,10 @@
         "name",
         "started",
         "duration"
+      ],
+      "states": [
+        "alt:Archived view|Active view",
+        "alt:No matching runs|No runs to show"
       ]
     },
     "app.routes": {
