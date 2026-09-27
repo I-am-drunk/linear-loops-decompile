@@ -521,7 +521,9 @@ export class Runner {
               if (state.cancelRequested || state.staleRequested) break; // for-await calls stream.return()
             }
           } catch (err) {
-            state.abort = null;
+            // Only clear the pointer if it is still OURS — a zombie waking
+            // after a revive must never clobber the new exchange's controller.
+            if (state.abort === abort) state.abort = null;
             if (turn.status === "streaming") this.#closeTurn(state, turn, "error");
             if (isDead()) return; // markStale already landed the terminal state
             if (state.cancelRequested) {
@@ -535,7 +537,7 @@ export class Runner {
             }
             return;
           }
-          state.abort = null;
+          if (state.abort === abort) state.abort = null; // identity-guarded (zombie)
           if (turn.status === "streaming") this.#closeTurn(state, turn, "complete");
           if (isDead()) return; // markStale landed mid-stream
           if (state.cancelRequested) {

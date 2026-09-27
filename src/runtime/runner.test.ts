@@ -309,6 +309,44 @@ describe("Runner", () => {
     assert.ok(allParts.includes("recovered"));
   });
 
+  it("a waking zombie never clobbers the revived exchange's AbortController (T-504, CodeRabbit)", async () => {
+    let openZombie!: () => void;
+    const zombieGate = new Promise<void>((r) => { openZombie = r; });
+    const zombie: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        yield { kind: "thought", text: "partial" };
+        await zombieGate;
+        yield { kind: "response", text: "zombie output" };
+      },
+    };
+    let revivedSignal: AbortSignal | undefined;
+    let openRevived!: () => void;
+    const revivedGate = new Promise<void>((r) => { openRevived = r; });
+    const revived: Brain = {
+      async *stream(_input: BrainInput, signal: AbortSignal): AsyncIterable<Part> {
+        revivedSignal = signal;
+        yield { kind: "thought", text: "revived thinking" };
+        await revivedGate;
+        if (signal.aborted) return;
+        yield { kind: "response", text: "should never arrive" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: zombie });
+    await new Promise((r) => setTimeout(r, 0));
+    runner.markStale(run.id);
+    runner.continueRun(run.id, "retry", revived);
+    await new Promise((r) => setTimeout(r, 0)); // the revived exchange is mid-stream
+    openZombie(); // the zombie wakes and exits — its arms must not touch state.abort
+    await new Promise((r) => setTimeout(r, 10));
+    runner.cancel(run.id);
+    assert.equal(revivedSignal?.aborted, true, "the revived brain still receives the stop signal");
+    openRevived();
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "canceled");
+    assert.equal(done.stopSignal?.source, "user");
+  });
+
   it("refuses cancel/markStale on terminal runs, finished runs are never stale (T-504)", async () => {
     const brain = new ScriptBrain([[{ kind: "response", text: "done" }]]);
     const runner = new Runner(deps());
