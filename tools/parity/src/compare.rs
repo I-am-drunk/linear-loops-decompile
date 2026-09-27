@@ -13,10 +13,15 @@ use std::collections::BTreeSet;
 pub struct Deviation {
     pub surface: String,
     pub family: String,
-    /// "missing" (reference has it, we don't) | "extra" (we have it, reference doesn't)
-    /// | "differs" (scalar/sequence mismatch)
+    /// "missing" (reference has it, we don't) | "extra" (we have it, reference
+    /// doesn't, incl. ours-only surfaces as family "surface") | "differs"
+    /// (scalar/sequence mismatch)
     pub kind: &'static str,
+    /// The REFERENCE-side fact (improvements.json matches this — stable
+    /// against our own wording).
     pub fact: String,
+    /// Display text (defaults to `fact`; order/primitive carry the diff here).
+    pub detail: Option<String>,
     /// Some(reason) when a declared improvement covers this deviation.
     pub covered_by: Option<String>,
 }
@@ -26,8 +31,6 @@ pub struct Outcome {
     pub deviations: Vec<Deviation>,
     /// Reference surfaces we have no facts for yet (iterative building).
     pub not_built: Vec<String>,
-    /// Our surfaces absent from the reference (new surfaces of ours).
-    pub untracked: Vec<String>,
     /// surface/family pairs skipped because the reference has no facts there.
     pub uncovered: Vec<String>,
     /// Declared improvements that no longer match any deviation.
@@ -48,10 +51,15 @@ pub fn check(ours: &FactFile, reference: &FactFile, improvements: &[Improvement]
     let mut used: BTreeSet<usize> = BTreeSet::new();
 
     for (name, our_surface) in &ours.surfaces {
-        let Some(ref_surface) = reference.surfaces.get(name) else {
-            out.untracked.push(name.clone());
+        if !reference.surfaces.contains_key(name) {
+            // Ours-only surfaces are deviations: a new surface is an
+            // *addition* and belongs in the declared-improvements channel
+            // (family "surface", fact = the surface name). Silent inventing
+            // is the v0 failure mode this tool exists to kill.
+            push_deviation(&mut out, improvements, &mut used, name, "surface", "extra", name.clone());
             continue;
-        };
+        }
+        let ref_surface = reference.surfaces.get(name).unwrap();
         // set families
         for (family, ref_list) in SET_FAMILIES.iter().zip(ref_surface.set_lists()) {
             if ref_list.is_empty() {
@@ -75,7 +83,13 @@ pub fn check(ours: &FactFile, reference: &FactFile, improvements: &[Improvement]
             let theirs = ref_surface.order.join(" > ");
             let mine = our_surface.order.join(" > ");
             if theirs != mine {
-                push_deviation(&mut out, improvements, &mut used, name, "order", "differs", format!("reference [{}] vs ours [{}]", theirs, mine));
+                // fact = the REFERENCE chain, so improvements.json can declare
+                // the deviation stably; the diagnostic text rides in detail.
+                push_deviation_detailed(
+                    &mut out, improvements, &mut used, name, "order", "differs",
+                    theirs.clone(),
+                    format!("reference [{}] vs ours [{}]", theirs, mine),
+                );
             }
         } else if !our_surface.order.is_empty() {
             out.uncovered.push(format!("{}:order", name));
@@ -84,13 +98,9 @@ pub fn check(ours: &FactFile, reference: &FactFile, improvements: &[Improvement]
         if let Some(theirs) = &ref_surface.primitive {
             let mine = our_surface.primitive.clone().unwrap_or_default();
             if *theirs != mine {
-                push_deviation(
-                    &mut out,
-                    improvements,
-                    &mut used,
-                    name,
-                    "primitive",
-                    "differs",
+                push_deviation_detailed(
+                    &mut out, improvements, &mut used, name, "primitive", "differs",
+                    theirs.clone(),
                     format!("reference '{}' vs ours '{}'", theirs, if mine.is_empty() { "(undeclared)" } else { &mine }),
                 );
             }
@@ -127,6 +137,20 @@ fn push_deviation(
     kind: &'static str,
     fact: String,
 ) {
+    push_deviation_detailed(out, improvements, used, surface, family, kind, fact, String::new());
+}
+
+#[allow(clippy::too_many_arguments)]
+fn push_deviation_detailed(
+    out: &mut Outcome,
+    improvements: &[Improvement],
+    used: &mut BTreeSet<usize>,
+    surface: &str,
+    family: &str,
+    kind: &'static str,
+    fact: String,
+    detail: String,
+) {
     let cov = improvements
         .iter()
         .position(|i| i.surface == surface && i.family == family && i.fact == fact);
@@ -138,6 +162,7 @@ fn push_deviation(
         family: family.to_string(),
         kind,
         fact,
+        detail: if detail.is_empty() { None } else { Some(detail) },
         covered_by: cov.map(|i| improvements[i].reason.clone()),
     });
 }

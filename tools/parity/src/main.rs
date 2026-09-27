@@ -218,10 +218,9 @@ fn cmd_check(args: &[String]) -> ExitCode {
 
     let violations = outcome.violations();
     println!(
-        "check: {} deviation(s) ({} covered by declared improvements) · {} untracked · {} not-built · {} stale improvements",
+        "check: {} deviation(s) ({} covered by declared improvements) · {} not-built · {} stale improvements",
         outcome.deviations.len(),
         outcome.deviations.len() - violations.len(),
-        outcome.untracked.len(),
         outcome.not_built.len(),
         outcome.stale_improvements.len()
     );
@@ -231,7 +230,7 @@ fn cmd_check(args: &[String]) -> ExitCode {
     } else {
         println!("FAIL: {} undeclared deviation(s):", violations.len());
         for d in violations.iter().take(25) {
-            println!("  [{}:{}:{}] {}", d.surface, d.family, d.kind, d.fact);
+            println!("  [{}:{}:{}] {}", d.surface, d.family, d.kind, d.detail.as_deref().unwrap_or(&d.fact));
         }
         if violations.len() > 25 {
             println!("  … and {} more (see report)", violations.len() - 25);

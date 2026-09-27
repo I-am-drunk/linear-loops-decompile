@@ -122,3 +122,33 @@ fn check_fails_on_undeclared_deviation_and_passes_with_improvement() {
     assert!(stdout.contains("theme.tokens"), "synthetic surface omission is a violation: {}", stdout);
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn ours_only_surface_is_a_violation_unless_declared() {
+    let tmp = std::env::temp_dir().join(format!("parity-test-surface-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let facts = fixtures().join("ours/ui-facts-extra-surface.json");
+
+    // undeclared: FAIL (invented-surface hole is closed)
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .output()
+        .expect("run parity check");
+    assert_eq!(out.status.code(), Some(1), "ours-only surface must fail: {}", String::from_utf8_lossy(&out.stdout));
+    assert!(String::from_utf8_lossy(&out.stdout).contains("HarnessSettingsPage"));
+
+    // declared via improvements (family "surface"): PASS
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .arg("--improvements").arg(fixtures().join("improvements-surface.json"))
+        .output()
+        .expect("run parity check");
+    assert_eq!(out.status.code(), Some(0), "declared surface must pass: {}", String::from_utf8_lossy(&out.stdout));
+    let _ = std::fs::remove_dir_all(&tmp);
+}

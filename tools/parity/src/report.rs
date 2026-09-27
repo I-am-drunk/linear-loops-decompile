@@ -16,7 +16,7 @@ pub fn render(out: &Outcome) -> String {
         s.push_str("## Violations (undeclared deviations)\n\n");
         s.push_str("| Surface | Family | Kind | Fact |\n|---|---|---|---|\n");
         for d in &violations {
-            s.push_str(&format!("| {} | {} | {} | {} |\n", d.surface, d.family, d.kind, escape(&d.fact)));
+            s.push_str(&format!("| {} | {} | {} | {} |\n", d.surface, d.family, d.kind, escape(d.detail.as_deref().unwrap_or(&d.fact))));
         }
         s.push_str("\nFix the slice to match the reference, or — only for a deliberate,\nreviewed improvement — declare it in `tools/parity/policy/improvements.json`.\n\n");
     }
@@ -28,7 +28,7 @@ pub fn render(out: &Outcome) -> String {
         for d in covered {
             s.push_str(&format!(
                 "| {} | {} | {} | {} | {} |\n",
-                d.surface, d.family, d.kind, escape(&d.fact),
+                d.surface, d.family, d.kind, escape(d.detail.as_deref().unwrap_or(&d.fact)),
                 escape(d.covered_by.as_deref().unwrap_or(""))
             ));
         }
@@ -43,13 +43,6 @@ pub fn render(out: &Outcome) -> String {
         s.push('\n');
     }
 
-    if !out.untracked.is_empty() {
-        s.push_str("## Untracked surfaces (ours; no reference surface)\n\n");
-        for n in &out.untracked {
-            s.push_str(&format!("- {}\n", n));
-        }
-        s.push('\n');
-    }
     if !out.not_built.is_empty() {
         s.push_str("## Reference surfaces not yet built\n\n");
         for n in &out.not_built {

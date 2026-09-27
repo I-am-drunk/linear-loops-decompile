@@ -53,13 +53,14 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     // `/:orgKey/…` template literals and merge.
     let client_for_routes = corpus.join("pretty/client");
     if let Ok(entries) = fs::read_dir(&client_for_routes) {
-        for entry in entries.flatten() {
-            // routes-from-bodies is best-effort: unreadable entries skip
+        for entry in entries {
+            let entry = entry.map_err(|e| format!("read {}: {}", client_for_routes.display(), e))?;
             let name = entry.file_name().to_string_lossy().to_string();
             if !name.ends_with(".js") {
                 continue;
             }
-            let Ok(text) = fs::read_to_string(entry.path()) else { continue };
+            let text = fs::read_to_string(entry.path())
+                .map_err(|e| format!("read {}: {}", entry.path().display(), e))?;
             for route in extract_route_literals(&text) {
                 if is_loops_route(&route) {
                     app_routes.push(route);

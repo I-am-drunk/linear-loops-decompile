@@ -81,7 +81,11 @@ where we can measure; never false-red, never silent-green.
   Loosening is a PR decision.
 - `tools/parity/policy/improvements.json` — the ONLY sanctioned deviation
   channel: `[{ surface, family, fact, reason, issue }]`. Unlisted deviation =
-  red. Stale entries (reference caught up) self-flag in the report.
+  red — **including ours-only surfaces** (family `"surface"`, fact = the
+  surface name; an invented page is a deviation like any other). `fact` is
+  always the REFERENCE-side value (for `order`: the reference chain), so
+  entries stay stable as our side evolves. Stale entries (reference caught
+  up) self-flag in the report.
 
 ## Commands and layers
 
