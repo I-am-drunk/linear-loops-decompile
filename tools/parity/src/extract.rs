@@ -21,6 +21,8 @@ pub struct ExtractStats {
     pub copy: usize,
     pub edges: usize,
     pub tokens: usize,
+    /// surfaces that carry an order chain
+    pub order: usize,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
@@ -83,10 +85,13 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, canaries: None };
 
     for (comp, exact) in &components {
         let mut surface = Surface::default();
+        // order chains per matched chunk (a surface can match several chunk
+        // builds; the longest chain wins — see below)
+        let mut order_candidates: Vec<Vec<String>> = Vec::new();
         // chunk files for this surface pattern (hashes rotate; match by prefix)
         let mut matched_any = false;
         let entries = match fs::read_dir(&client_dir) {
@@ -106,12 +111,21 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             surface.copy.extend(extract_copy(&text));
             surface.structure.extend(extract_edges(&text));
             surface.tokens.extend(extract_tokens(&text));
+            order_candidates.extend(extract_order(&text));
+        }
+        // A surface may match several chunk builds of the same component
+        // (hash-rotated duplicates); their order chains are the same fact.
+        // Keep the LONGEST chain (a stripped/duplicate build can carry a
+        // truncated copy of the array literal; the fuller one is the fact).
+        if let Some(best) = order_candidates.into_iter().max_by_key(Vec::len) {
+            surface.order = best;
         }
         surface.normalize();
         if matched_any || !surface.is_empty() {
             stats.copy += surface.copy.len();
             stats.edges += surface.structure.len();
             stats.tokens += surface.tokens.len();
+            stats.order += usize::from(!surface.order.is_empty());
             facts.surfaces.insert(comp.clone(), surface);
             stats.surfaces += 1;
         }
@@ -150,19 +164,52 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     if let Some(canary_path) = canaries {
         let list_text = fs::read_to_string(canary_path)
             .map_err(|e| format!("read canaries {}: {}", canary_path.display(), e))?;
-        // Two canary kinds (#177): plain lines are COPY canaries; lines
-        // prefixed `route:` are ROUTE canaries checked against app.routes,
-        // so a route-extraction regression fails as loudly as a copy one.
+        // Three canary kinds: plain lines are COPY canaries; `route:` lines
+        // are ROUTE canaries checked against app.routes (#177); `order:` lines
+        // (H3 #207) are ORDER canaries — `order:<Surface>=<a> > <b> > …` —
+        // checked against the surface's extracted whole-sequence chain, so an
+        // order-grammar regression fails as loudly as a copy one.
+        let mut order_canaries: Vec<(String, String)> = Vec::new(); // (surface, chain)
         let canary_list: Vec<(bool, String)> = list_text
             .lines()
             .map(str::trim)
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
-            .map(|l| match l.strip_prefix("route:") {
-                Some(r) => (true, r.trim().to_string()),
-                None => (false, l.to_string()),
+            .filter_map(|l| {
+                if let Some(o) = l.strip_prefix("order:") {
+                    if let Some((surface, chain)) = o.split_once('=') {
+                        order_canaries.push((surface.trim().to_string(), chain.trim().to_string()));
+                    }
+                    return None;
+                }
+                Some(match l.strip_prefix("route:") {
+                    Some(r) => (true, r.trim().to_string()),
+                    None => (false, l.to_string()),
+                })
             })
             .collect();
-        if !canary_list.is_empty() {
+        let mut order_problems: Vec<String> = Vec::new();
+        let mut order_passed = 0;
+        for (surface, chain) in &order_canaries {
+            let extracted = facts
+                .surfaces
+                .get(surface)
+                .map(|s| s.order.join(" > "))
+                .unwrap_or_default();
+            if extracted == *chain {
+                order_passed += 1;
+            } else if extracted.is_empty() {
+                order_problems.push(format!(
+                    "order canary: surface {:?} extracted NO chain (order-grammar regression or corpus drift); expected [{}]",
+                    surface, chain
+                ));
+            } else {
+                order_problems.push(format!(
+                    "order canary: surface {:?} chain differs — expected [{}], extracted [{}] (grammar regression or corpus drift)",
+                    surface, chain, extracted
+                ));
+            }
+        }
+        if !canary_list.is_empty() || !order_canaries.is_empty() {
             // one pass over every chunk, all canaries at once
             let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
             // a registration route may live only in analysis/routes.json
@@ -218,7 +265,9 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                     passed += 1;
                 }
             }
-            stats.canaries = Some((passed, canary_list.len()));
+            problems.extend(order_problems);
+            passed += order_passed;
+            stats.canaries = Some((passed, canary_list.len() + order_canaries.len()));
             if !problems.is_empty() {
                 return Err(format!("canary check failed:\n  {}", problems.join("\n  ")));
             }
@@ -419,6 +468,86 @@ fn looks_like_copy(s: &str) -> bool {
     }
     let letters = t.chars().filter(|c| c.is_ascii_alphabetic() || c.is_whitespace()).count();
     letters * 3 >= t.len() * 2
+}
+
+/// Ordered-presentation chains from a prettified chunk (family 9, H3 #207).
+/// Order is compiled into the bundle as ARRAY/OBJECT LITERALS whose source
+/// order IS the render order, so the grammars read literal sequences — never
+/// inferred layout. Two corpus-proven forms (Linear 1.32.4):
+///
+/// 1. column declarations: consecutive `orderingKey: `k`` props on list
+///    header cells (AutomationsList: name > trigger > team > owner > runs >
+///    lastExecuted). The key is the stable fact; the display label is already
+///    a copy fact.
+/// 2. filter/section declarations: consecutive `key: `k`,\n name: `Label``
+///    pairs inside one options array (LoopsManagementPage: Enabled > Team >
+///    Owner > Trusted external source). The user-visible `name` is the fact.
+///
+/// A chain needs >= 2 items (one item carries no order). Each grammar yields
+/// at most one chain per chunk; the caller keeps the longest chain per
+/// surface (ramp rule: surfaces without a proven chain stay uncovered).
+fn extract_order(text: &str) -> Vec<Vec<String>> {
+    let mut chains: Vec<Vec<String>> = Vec::new();
+
+    // grammar 1: `orderingKey: `k`` in source order
+    let mut cols: Vec<String> = Vec::new();
+    let mut rest = text;
+    while let Some(idx) = rest.find("orderingKey: `") {
+        // skip identifier-suffixed lookalikes (e.g. activeOrderingKey) by
+        // requiring a non-identifier char before the match
+        let pre_ok = idx == 0
+            || !rest[..idx]
+                .chars()
+                .next_back()
+                .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_');
+        let after = &rest[idx + 14..];
+        let Some(end) = after.find('`') else { break };
+        let key = &after[..end];
+        rest = &after[end + 1..];
+        if pre_ok
+            && !key.is_empty()
+            && key.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+            && !cols.contains(&key.to_string())
+        {
+            cols.push(key.to_string());
+        }
+    }
+    if cols.len() >= 2 {
+        chains.push(cols);
+    }
+
+    // grammar 2: `key: `k`,` immediately followed by `name: `Label`` —
+    // one options-array literal, names in source order
+    let mut names: Vec<String> = Vec::new();
+    let mut rest = text;
+    while let Some(idx) = rest.find("key: `") {
+        let pre_ok = idx == 0
+            || !rest[..idx]
+                .chars()
+                .next_back()
+                .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_');
+        let after = &rest[idx + 6..];
+        let Some(kend) = after.find('`') else { break };
+        let tail = &after[kend + 1..];
+        rest = tail;
+        if !pre_ok {
+            continue;
+        }
+        // the very next property must be `name:` with a backtick literal
+        let Some(t) = tail.strip_prefix(',') else { continue };
+        let t = t.trim_start();
+        let Some(t) = t.strip_prefix("name: `") else { continue };
+        let Some(nend) = t.find('`') else { break };
+        let name = &t[..nend];
+        if !name.is_empty() && !name.contains("${") && !names.contains(&name.to_string()) {
+            names.push(name.to_string());
+        }
+    }
+    if names.len() >= 2 {
+        chains.push(names);
+    }
+
+    chains
 }
 
 /// Component containment edges: `from "./Child.<hash>.js"` inside a chunk is a

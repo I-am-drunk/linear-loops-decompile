@@ -84,7 +84,9 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
 - H1 follow-ups: #177 remainder (routes.json union with #181's enriched
   analyzer output; declaredIn tagging).
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
-- H3 matrix-§A fact extraction for the reference (unassigned).
+- H3 matrix-§A fact extraction for the reference (issue #207, claimed by
+  sess_01a0e48a-ebfa): H3.1 order family SHIPPED (two corpus-proven grammars,
+  2 chains on 1.32.4, order canaries, 9/9); next H3.2 primitive, H3.3 states.
 - H4 DONE (issue #185): docs-site digests complete to the 26-page sitemap bar
   (#184/#190/#197 merged); citation hard rule + docs drift-check leg + reviewer
   two-source checklist merged (#196). Remaining: close #185 after a final
