@@ -3,15 +3,17 @@
 Legend: `free` | `claimed(agent-NN, until <utc>)` | `pr-open(#NN)` | `merged(#PR)` | `done(<date>)`
 Live claims are `[claim]` issues; live mirror: hub #59 body. Rules: COORDINATION.md (PROTOCOL v4).
 
-**GEN-5 STATE 2026-09-27 ~10:15Z (agent-01@gen5, R10):** M1–M4 landed (gen-4 sweep),
-and **M5 IS CODE-COMPLETE ON MAIN**: orchestrator (#81) · engine bridge (#83) · brain
-binding (#92) · UI live seam (#94) · registry wiring (#91) · T-1103 domain RPCs (#111,
-agent-02@gen6) · live editor (#112) · live compose + continuation fix (#119). In
-review: **T-1106 settings RPC + dataplane binding (#124)** — the operator gap. Then
-the first REAL run is an operator exercise: `npx tsc -p src/dataplane/tsconfig.build.json`
+**GEN-5 STATE 2026-09-27 ~10:30Z (agent-01@gen5, R10):** M1–M4 landed (gen-4 sweep),
+and **M5 IS CODE-COMPLETE ON MAIN** (gate 356/356): orchestrator (#81) · engine
+bridge (#83) · brain binding (#92) · UI live seam (#94) · registry wiring (#91) ·
+T-1103 domain RPCs (#111, agent-02@gen6) · live editor (#112) · live compose +
+continuation fix (#119) · T-604 agent-session presenter (#109) · poll-diff rescue
+(#115) · T-605 webhooks (#118) · e2e fixture harness (#120). In review: **T-1106
+settings RPC + dataplane binding (#124)** — the operator gap. Then the first REAL
+run is an operator exercise: `npx tsc -p src/dataplane/tsconfig.build.json`
 + `node --experimental-strip-types src/server/start.ts` → Settings → connect Linear +
 harness → watch a cron loop run. Remaining after M5: T-102 (#103), T-704 (#108),
-T-504 (#97 gen-6), T-305 (#90), T-604 (#105), the golden goose (#14). Landing
+T-504 (#97 gen-6), T-305 (#90), the golden goose (#14). Landing
 mechanics: vault-token branch → PR (main is PR-only); /land is billing-blocked
 (ticket #4797514). Fresh-clone `bash ci/check-src.sh` is the evidence gate.
 
@@ -42,6 +44,10 @@ mechanics: vault-token branch → PR (main is PR-only); /land is billing-blocked
 | T-1103 | composition-root domain RPCs (loops.*, runs.list/get) + lastSeq + runs.created | #111 | #96 (agent-02@gen6) |
 | T-805 | live editor container (loop-new/loop-detail over the T-1104 seam) | #112 | #110 (agent-07@gen5) |
 | T-1103+ | live compose + continuation fix + e2e acceptance + operator entry | #119 | agent-01@gen5 (duplicate-#113 salvage) |
+| T-604 | Linear agent-session presenter (run events → native Linear session; golden-goose track B) | #109 | #105 (agent-06@gen5) |
+| — | M5 poll-diff follow-up: stale per-issue snapshots never reverse-diff | #115 | rescue of #107 (agent-06@gen5) |
+| T-605 | AgentSessionEvent inbound webhooks (Linear's chat drives our runs) | #118 | #116 (agent-06@gen5) |
+| — | M5 end-to-end fixture validation harness | #120 | agent-01@gen6 |
 
 ## In flight / free
 
@@ -51,7 +57,7 @@ mechanics: vault-token branch → PR (main is PR-only); /land is billing-blocked
 | T-305 | R3 | `src/dataplane/agent-sessions.ts` — the 9 official agent ops (extracts/linear-official/) | claimed(agent-08@gen5, #90) — golden-goose substrate | #14 |
 | T-102 | R1 | Official-extracts drift-watch (+ pipeline README notes) | claimed(agent-04@gen5, #103) | #35 |
 | T-704 | R7 | Template library + New-loop flow | claimed(agent-05@gen5, #108) | #21 |
-| T-604 | R6 | Linear agent-session presenter (golden-goose track B) | claimed(agent-06@gen5, #105) | #14 |
+
 | T-504 | R5 | Runtime `stale` state + cancel→stop-signal mapping | claimed(agent-01@gen6, #97) | extracts/linear-official/ |
 | T-101 | R1 | Runbook end-to-end verify | done(gen-1, report #30) | #30 |
 | — | R6+R9 lead | Golden goose: Linear Agent Sessions API as brain — fully documented in-repo (extracts/linear-official/); proof task = live agentSessionCreateOnIssue probe on the user's workspace | research → ready to probe (needs the user's Linear OAuth app) | #14 |
