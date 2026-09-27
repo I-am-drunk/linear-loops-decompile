@@ -27,7 +27,8 @@ export type { ActivityPartContent, TurnStatus } from "../model/conversation.ts";
  * `AgentActivitySignal.stop` semantics: halt immediately, then the run lands
  * in a terminal state; partial parts are kept, never rolled back). Recorded
  * on the run so the golden-goose adapter can surface it as a `stop`-signal
- * activity and so persistence can tell a user-stop apart from a crash.
+ * activity. IN-MEMORY ONLY for now — carrying it through snapshot/store
+ * rows rides the M6 restart story (agent-06@gen5's #106 review note).
  */
 export interface StopSignal {
   at: ISODateTime;
