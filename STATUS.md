@@ -23,6 +23,12 @@ Done 2026-09-27:
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
   (a stale `main` branch produced a false "zero drift" on 2026-09-27 morning).
+- Official-docs leg made real (issue #183): upstream `docs/*.md` turned out to be
+  one-line redirect stubs (~519 bytes), so `extracts/linear-official/DEV-DOCS.md`
+  now digests the developers.linear.app core dataplane pages (auth, rate limiting
+  incl. the HTTP-400/RATELIMITED shape, pagination, filtering, webhooks, OAuth2,
+  attachments, file upload) with retrieval dates + a coverage table. Found via the
+  same audit: #155's rate-limit model contradicts the official page (review posted).
 - Golden-goose trace (issue #14, PR #141): Q1-Q4 answered in
   `docs/golden-goose-chat-route.md` + KNOWLEDGE.md §8a — send op + input fields,
   streamData subscribe envelope, auth, wire shapes (now MIT-documented), meter

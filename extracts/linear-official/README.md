@@ -19,10 +19,11 @@ commit dated 2026-09-25), retrieved 2026-09-27.
 | `_generated_documents.graphql` | Every operation the official SDK ships (671 ops, 834 KB) | `packages/sdk/src/_generated_documents.graphql` |
 | `LICENSE` | MIT, upstream repo root | `LICENSE` |
 | `UPSTREAM-README.md` | Upstream repo README (SDK + import tool overview) | `README.md` |
-| `docs/` | Upstream `docs/` verbatim: `API.md`, `OAuth2.md`, `Webhooks.md`, `Attachments.md`, webhook settings screenshots, markdown-magic config/transforms | `docs/` |
+| `docs/` | Upstream `docs/` verbatim — **warning: the four `.md` files are one-line redirect stubs** ("Visit developers.linear.app…", ~519 bytes total; Linear moved doc content to the website). Kept for provenance only. The real official-docs leg is `DEV-DOCS.md`. | `docs/` |
 | `packages/*/README.md` | Package docs: `sdk` (client usage), `import` (CLI importer), `codegen-doc`, `codegen-sdk`, `codegen-test` | `packages/<pkg>/README.md` |
 | `packages/sdk/CHANGELOG.md` | Full SDK changelog (2.1 MB): release-by-release public-API history — the drift-forensics source ("when did op X appear?") | `packages/sdk/CHANGELOG.md` |
 | `AGENT-API.md` | OUR digest of the official Agent Sessions surface (+ divergences) | curated from the schema + linear.app/developers (links inside) |
+| `DEV-DOCS.md` | OUR facts digest of the developers.linear.app core dataplane pages (endpoint/auth, rate limiting incl. the 400/RATELIMITED shape, pagination, filtering, webhooks, OAuth2, attachments, file upload) + a coverage table of undigested pages | curated from linear.app/developers (per-section links + retrieval dates inside; issue #183) |
 
 Deliberately NOT vendored (MIT allows it; size says no — fetch on demand):
 `packages/sdk/src/*.ts` (`_generated_sdk.ts` 2.1 MB, `_generated_documents.ts`
@@ -46,6 +47,8 @@ curl -fO $B/packages/sdk/src/_generated_documents.graphql
 ```
 
 Diff, log deltas in `KNOWLEDGE.md` §drift, flag affected SPECS on issue #2.
+Same cadence for `DEV-DOCS.md`: re-fetch each digested developers.linear.app page,
+diff the facts, bump the retrieval dates.
 The SDK cuts releases roughly weekly (@linear/sdk on npm).
 
 ## The two-source cross-check rule (BINDING)
