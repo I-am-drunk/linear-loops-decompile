@@ -34,6 +34,17 @@ constantly, so compare the counts against the baseline below, note material delt
 in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
 current.
 
+The drift check has a SECOND leg (issue #185): the official docs move under us
+too (the 2026-04-01 refresh-token migration and the 2026-09-25 agent-skill ops
+both shipped as doc changes). In the same pass:
+
+1. Re-fetch every page listed in `extracts/linear-official/docs-site/README.md`
+   (plain `curl` works — the pages are server-rendered).
+2. Diff the FACTS against the corresponding `docs-site/<page>.md` digest —
+   quotas, header names, status codes, retry ladders, token lifetimes.
+3. Update the digests and bump their `Fetched` dates even when nothing changed.
+4. Log material deltas in `KNOWLEDGE.md` (same rule as corpus drift).
+
 ## Running the pipeline (the 30-day job)
 
 ```bash

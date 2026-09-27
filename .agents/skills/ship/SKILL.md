@@ -28,9 +28,16 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
    the MCP lists oldest-first).
    Unaddressed feedback: do not merge — fix forward (a PR onto the author's
    branch is welcome) or leave your own review.
-6. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
+6. Reviewer evidence checklist (issue #185 §4, binding): a claim about Linear
+   behavior verified against only ONE evidence leg when both cover it is a
+   review finding. Corpus = what the client does; official docs
+   (`extracts/linear-official/docs-site/`) = what the public API guarantees.
+   Check citations exist and point at citable sources — the upstream
+   `extracts/linear-official/docs/*.md` stubs are never citable (AGENTS.md
+   hard rule).
+7. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
    everyone (ruleset `main-pr-only`): no direct pushes, no force pushes.
-7. Update `STATUS.md` in the same PR whenever the board changes.
+8. Update `STATUS.md` in the same PR whenever the board changes.
 
 Legal audit before every merge: no Linear proprietary material anywhere in the
 diff. The repo is public; this line is absolute.
