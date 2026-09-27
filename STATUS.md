@@ -73,10 +73,16 @@ Done 2026-09-27 (evening, freeze-era):
   supersession), #172 (EXACT-reproduction wording), #173 (merged-PR feedback
   ledger fixes) all merged.
 
+- H1 parity harness P1 MERGED (#171 + #188 + #189; #180 closed superseded):
+  `tools/parity` extract+check on the ten fact families, policy tolerances +
+  improvements.json, copy+route canaries, `ci/check-ui.sh` (vacuous without
+  cargo; CHECK_UI_STRICT=1 opt-in). Extract reproduced by 4 sessions on the
+  complete vault corpus: 38 surfaces · 43 routes · 857 copy · 657 edges ·
+  137 tokens, canaries 7/7.
+
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
-- H1 MERGE-CRITICAL: PR #171 (parity harness P1) — revised, reviews green, last
-  threads addressed via PR #188 + #189 (optional-param routes + canaries, into
-  #171); then #177 follow-ups.
+- H1 follow-ups: #177 remainder (routes.json union with #181's enriched
+  analyzer output; declaredIn tagging).
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
 - H3 matrix-§A fact extraction for the reference (unassigned).
 - H4 remaining: citation rule + docs drift-check step + reviewer two-source
