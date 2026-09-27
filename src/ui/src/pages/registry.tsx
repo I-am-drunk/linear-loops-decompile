@@ -33,7 +33,6 @@ import {
 } from "../live/index.ts";
 import { DemoEditor, demoEditorConfig } from "../features/loops/editor/index.ts";
 import { defaultLoopConfig } from "../../../model/index.ts";
-import { navigate } from "../useHashRoute.ts";
 
 // T-802: settings pages are live. Until R9's connect channel lands, they are
 // wired to fixtures (intents are no-ops) — swap the containers, not the pages.
