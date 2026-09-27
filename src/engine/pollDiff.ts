@@ -200,10 +200,13 @@ export function diffIssueSnapshots(
       continue;
     }
 
-    // Identical updatedAt = the exact same state re-observed (a replayed or
-    // overlapping poll window): nothing new, no event — replays are silent
-    // even before the run queue's idempotency key gets a say.
-    if (issue.updatedAt === before.updatedAt) continue;
+    // updatedAt <= before = already-observed state. Identical means the
+    // exact same state re-observed (a replayed or overlapping poll window);
+    // OLDER means a stale reply — diffing it would emit reverse "changed
+    // back" events with fresh ids (loops firing on ghosts), and folding it
+    // would overwrite the newer snapshot (the next poll re-fires the
+    // forward change). Stale entries are silent, same as replays.
+    if (issue.updatedAt <= before.updatedAt) continue;
 
     const changed = WATCHED_FIELDS.filter(
       (f) => watchedValue(before, f) !== watchedValue(issue, f),
@@ -330,7 +333,13 @@ export class PollTracker {
           prevWatermark: this.watermarkValue ?? undefined,
         })
       : [];
-    for (const issue of window.issues) this.snapshot.set(issue.id, issue);
+    for (const issue of window.issues) {
+      // Never fold stale state over a newer observation (see the diff guard).
+      const current = this.snapshot.get(issue.id);
+      if (current === undefined || issue.updatedAt > current.updatedAt) {
+        this.snapshot.set(issue.id, issue);
+      }
+    }
     if (this.watermarkValue === null || window.watermark > this.watermarkValue) {
       this.watermarkValue = window.watermark;
     }
