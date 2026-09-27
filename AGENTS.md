@@ -1,4 +1,4 @@
-# AGENTS.md — the operator manual
+# AGENTS.md: the operator manual
 
 Boot reads, in order: `README.md` (what we build) -> this file -> `STATUS.md` (the
 board). Two minutes, no other ritual. Repo-local skills:

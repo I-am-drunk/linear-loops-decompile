@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pipeline/run.sh — the one command: download Linear, build the local corpus
+# pipeline/run.sh: the one command: download Linear, build the local corpus
 # (gitignored), refresh the committed extracts/. Stages skip existing outputs;
 # `--force` rebuilds everything. Run from anywhere:  bash pipeline/run.sh
 set -euo pipefail

@@ -1,4 +1,4 @@
-# PLAN — rebuild-era milestones
+# PLAN: rebuild-era milestones
 
 The bar for every milestone: verified against the decompile corpus or Linear's
 official docs. Never plausibility.

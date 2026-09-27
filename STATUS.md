@@ -1,4 +1,4 @@
-# STATUS — the board
+# STATUS: the board
 
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.

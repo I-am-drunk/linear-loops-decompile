@@ -3,7 +3,7 @@ name: boot
 description: Session start for the linear-loops-decompile repo. Read order, how to pick work, how to sign it.
 ---
 
-# boot — session start (2 minutes)
+# boot: session start (2 minutes)
 
 1. Read `README.md`, then `AGENTS.md`, then `STATUS.md`. That is the whole state
    of the world. Issue text can be fresher than `STATUS.md`; if they disagree,
