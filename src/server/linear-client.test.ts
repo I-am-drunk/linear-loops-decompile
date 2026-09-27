@@ -128,6 +128,32 @@ test("http 429 honors Retry-After (seconds) and marks the window exhausted", asy
   assert.equal(client.budget().requestsRemaining, 0);
 });
 
+test("429 with only Retry-After backfills the reset so the gate actually closes", async () => {
+  // Without budget headers, zeroing requestsRemaining alone leaves
+  // requestsReset unset and the gate (remaining===0 AND reset>now) open.
+  // markExhausted must backfill the reset from Retry-After (CodeRabbit #155).
+  let calls = 0;
+  let now = 1_000_000;
+  const fakeFetch = (async () => {
+    calls += 1;
+    return new Response("Too Many Requests", { status: 429, headers: { "retry-after": "30" } });
+  }) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch, now: () => now });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => e.kind === "rate_limited");
+  assert.equal(calls, 1);
+  // The next call must be refused by the gate — no network fire.
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    assert.ok(e.retryAfterMs !== undefined && e.retryAfterMs > 0 && e.retryAfterMs <= 30_000);
+    return true;
+  });
+  assert.equal(calls, 1);
+  // After the window passes, the gate reopens.
+  now += 31_000;
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => e.kind === "rate_limited");
+  assert.equal(calls, 2);
+});
+
 test("429 keeps a still-positive global budget the headers report", async () => {
   // Endpoint/complexity-only 429: headers still show global requests left —
   // the global budget must survive (CodeRabbit #155).

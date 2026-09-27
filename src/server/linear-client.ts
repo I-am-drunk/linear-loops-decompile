@@ -167,10 +167,20 @@ export class LinearClient {
    * request window — never overwrite a still-positive budget the headers
    * just reported (CodeRabbit #155).
    */
-  private markExhausted(): void {
+  private markExhausted(retryAfterMs?: number): void {
     const b = this.lastBudget;
-    if (b.requestsRemaining === 0 || b.complexityRemaining === 0 || b.endpointRequestsRemaining === 0) return;
+    // Endpoint/complexity exhaustion: the headers already tell the gate the
+    // truth; do not touch the request window.
+    if (b.complexityRemaining === 0 || b.endpointRequestsRemaining === 0) return;
     b.requestsRemaining = 0;
+    // The gate only fires on remaining===0 AND reset>now. A limit response
+    // without informative budget headers (429 + Retry-After only) would zero
+    // remaining but leave reset unset — an open gate. Backfill the reset from
+    // Retry-After when the headers gave none (CodeRabbit #155, final thread).
+    const now = this.opts.now();
+    if ((b.requestsReset === undefined || b.requestsReset <= now) && retryAfterMs !== undefined) {
+      b.requestsReset = now + retryAfterMs;
+    }
   }
 
   /** Refuse to fire into a window Linear has already told us is exhausted. */
@@ -242,7 +252,7 @@ export class LinearClient {
         // We earned a 429 despite the gate: zero the window the headers show
         // exhausted (endpoint/complexity 429s must not nuke a healthy global
         // budget — only the ambiguous case falls back to the request window).
-        this.markExhausted();
+        this.markExhausted(retryAfterMs);
         throw new LinearClientError("rate_limited", "http 429: Linear rate limit", {
           status: 429,
           retryAfterMs,
