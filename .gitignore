@@ -6,3 +6,6 @@ package-lock.json
 
 # ui smoke-bundle output (test/run-smoke.mjs)
 .test-out/
+
+# Decompile corpus (Linear proprietary material lives ONLY here, never in git)
+pipeline/corpus/
