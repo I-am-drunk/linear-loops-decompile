@@ -28,3 +28,5 @@ const filters = [{
 const emptyState = hasFilters ? `No matching runs` : `No runs to show`;
 const cls = isActive ? `activeRow` : `row`;
 const expr = ok ? `Done` : fallbackFn();
+const compact = tight?`Archived view`:`Active view`;
+const optional = maybe?.thing ?? `Not copy here`;

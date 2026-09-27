@@ -506,3 +506,36 @@ fn states_alternates_extracted_and_gated() {
     assert!(String::from_utf8_lossy(&out.stderr).contains("states canary"));
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn compact_ternary_and_malformed_canary_lines() {
+    // CodeRabbit #217: `cond?`A`:`B`` (no whitespace) is the same state fact;
+    // a canary line missing `=` must be a loud config error, never a silent
+    // drop that lets extraction pass without running the intended canary.
+    let tmp = std::env::temp_dir().join(format!("parity-test-states2-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    assert!(
+        text.contains("alt:Archived view|Active view"),
+        "compact ternary extracted: {}", text
+    );
+    // ("Not copy here" IS copy — the guard is that no `alt:` fact was built
+    // from the `??` operator's right-hand side)
+    assert!(!text.contains("alt:Not copy here") && !text.contains("|Not copy here"), "?? arm leaked into states: {}", text);
+
+    let bad = tmp.join("canaries-malformed.txt");
+    std::fs::write(&bad, "states:AutomationRunsPage alt:No matching runs|No runs to show\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref2.json"))
+        .arg("--canaries").arg(&bad)
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "malformed canary line must fail extract");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("malformed line"));
+    let _ = std::fs::remove_dir_all(&tmp);
+}

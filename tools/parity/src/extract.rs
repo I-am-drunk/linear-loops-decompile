@@ -232,14 +232,21 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         // order-grammar regression fails as loudly as a copy one.
         let mut order_canaries: Vec<(String, String)> = Vec::new(); // (surface, chain)
         let mut states_canaries: Vec<(String, String)> = Vec::new(); // (surface, alt fact)
+        // A malformed `order:`/`states:` line (no `=`) silently dropping
+        // would let extraction pass while the intended canary never ran
+        // (CodeRabbit #217): configuration errors are loud.
+        let mut bad_lines: Vec<String> = Vec::new();
         let canary_list: Vec<(bool, String)> = list_text
             .lines()
             .map(str::trim)
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
             .filter_map(|l| {
                 if let Some(o) = l.strip_prefix("order:") {
-                    if let Some((surface, chain)) = o.split_once('=') {
-                        order_canaries.push((surface.trim().to_string(), chain.trim().to_string()));
+                    match o.split_once('=') {
+                        Some((surface, chain)) => {
+                            order_canaries.push((surface.trim().to_string(), chain.trim().to_string()))
+                        }
+                        None => bad_lines.push(l.to_string()),
                     }
                     return None;
                 }
@@ -248,8 +255,11 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                 // the chain grammar — checked against the surface's extracted
                 // states facts, loud on regression or drift.
                 if let Some(st) = l.strip_prefix("states:") {
-                    if let Some((surface, fact)) = st.split_once('=') {
-                        states_canaries.push((surface.trim().to_string(), fact.trim().to_string()));
+                    match st.split_once('=') {
+                        Some((surface, fact)) => {
+                            states_canaries.push((surface.trim().to_string(), fact.trim().to_string()))
+                        }
+                        None => bad_lines.push(l.to_string()),
                     }
                     return None;
                 }
@@ -259,6 +269,12 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                 })
             })
             .collect();
+        if !bad_lines.is_empty() {
+            return Err(format!(
+                "canary config: malformed line(s) (expected `order:<Surface>=<chain>` / `states:<Surface>=<fact>`):\n  {}",
+                bad_lines.join("\n  ")
+            ));
+        }
         let mut order_problems: Vec<String> = Vec::new();
         let mut order_passed = 0;
         for (surface, fact) in &states_canaries {
@@ -609,8 +625,24 @@ fn extract_state_alternates(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let bytes = text.as_bytes();
     let mut search = 0;
-    while let Some(rel) = text[search..].find("? `") {
-        let a_start = search + rel + 3;
+    // scan `?` tokens and allow any JS whitespace (or none) before the first
+    // backtick: `cond?\`A\`:\`B\`` and multiline pretty-printed forms are the
+    // same fact (CodeRabbit #217). `??`/`?.` are skipped.
+    while let Some(rel) = text[search..].find('?') {
+        let q = search + rel;
+        if matches!(bytes.get(q + 1), Some(b'?') | Some(b'.')) || matches!(bytes.get(q.wrapping_sub(1)), Some(b'?')) {
+            search = q + 2;
+            continue;
+        }
+        let mut a_tick = q + 1;
+        while a_tick < bytes.len() && (bytes[a_tick] as char).is_ascii_whitespace() {
+            a_tick += 1;
+        }
+        if a_tick >= bytes.len() || bytes[a_tick] != b'`' {
+            search = q + 1;
+            continue;
+        }
+        let a_start = a_tick + 1;
         let Some(a_len) = text[a_start..].find('`') else { break };
         let a_end = a_start + a_len;
         // between the arms: whitespace, then `:`, then whitespace, then a backtick
