@@ -35,14 +35,23 @@
  * failure); `complete` needs nothing — the response activities already
  * carry it. Session state itself auto-derives from activities (digest).
  *
- * Durability / idempotency (the append-only audit log is the record, M5
- * convention): the created session id and every emitted activity id are
- * audited (`linear.session` / `linear.activity`). Re-presenting a run —
- * after a server restart, or a double-attach — consults the audit first
- * and never double-creates: Linear-side, the session + activities appear
- * exactly once. Writer failures never touch the run: they land in the
- * audit (ok:false) and the watch continues; session creation is retried
- * on the next event.
+ * Durability / idempotency / ordering (the append-only audit log is the
+ * record, M5 convention): the created session id and every delivered
+ * activity are audited (`linear.session` / `linear.activity`). Every event
+ * funnels into one serialized canonical-order sync (scan the turns, emit
+ * what the audit lacks), so Linear sees activities in run order ALWAYS —
+ * including recovery from a mid-run Linear outage, where emit-what-arrives
+ * would append recovered parts after later ones. Deterministic client
+ * activity ids (below) make every re-emit idempotent on Linear's side, and
+ * re-presenting a run after a restart consults the audit first: the
+ * session + activities appear exactly once. Writer failures never touch
+ * the run.
+ *
+ * Attachment lifecycle: the watch lives until a FINAL terminal status
+ * (error/canceled). It deliberately survives `complete` (continuation can
+ * revive the run — complete → active via continueRun) and `stale` (the
+ * T-504 revive edge), or a revived run's later activities would never
+ * reach Linear.
  *
  * Non-goals (documented, later slices): inbound AgentSessionEvent webhooks
  * (`created`/`prompted` → run start) need the server's webhook route + the
@@ -55,7 +64,7 @@
 import { createHash } from "node:crypto";
 
 import type { Runner } from "../runtime/runner.ts";
-import type { EntityId, Part, RunEvent, RunStatus } from "../runtime/types.ts";
+import type { EntityId, Part, RunEvent } from "../runtime/types.ts";
 import type { Store } from "./store.ts";
 
 // ---------------------------------------------------------------------------
@@ -105,7 +114,6 @@ export interface LinearPresenterOptions {
 
 const AUDIT_SESSION = "linear.session";
 const AUDIT_ACTIVITY = "linear.activity";
-const TERMINAL: ReadonlySet<RunStatus> = new Set(["complete", "error", "canceled"]);
 
 // ---------------------------------------------------------------------------
 // Part mapping (exported for tests)
@@ -151,14 +159,10 @@ export function partToActivity(part: Part): MappedActivity | null {
 }
 
 // ---------------------------------------------------------------------------
-// The presenter
+// Audit rails
 // ---------------------------------------------------------------------------
 
-interface SessionRecord {
-  sessionId: string;
-}
-
-function readSessionRecord(store: Store, runId: EntityId): SessionRecord | null {
+function readSessionRecord(store: Store, runId: EntityId): { sessionId: string } | null {
   for (const row of store.listAudit({ runId })) {
     if (row["kind"] !== AUDIT_SESSION) continue;
     const detail = typeof row["detail_json"] === "string" ? JSON.parse(row["detail_json"]) : null;
@@ -169,14 +173,14 @@ function readSessionRecord(store: Store, runId: EntityId): SessionRecord | null 
   return null;
 }
 
-/** Part keys already emitted (audit-first replay dedupe). */
-function readEmittedParts(store: Store, runId: EntityId): Map<string, string> {
-  const out = new Map<string, string>();
+/** Part keys already delivered (audit-first replay dedupe; ok:true only). */
+function readEmittedParts(store: Store, runId: EntityId): Set<string> {
+  const out = new Set<string>();
   for (const row of store.listAudit({ runId })) {
     if (row["kind"] !== AUDIT_ACTIVITY) continue;
     const detail = typeof row["detail_json"] === "string" ? JSON.parse(row["detail_json"]) : null;
     if (detail !== null && detail.ok === true && typeof detail.partKey === "string") {
-      out.set(detail.partKey, typeof detail.activityId === "string" ? detail.activityId : "");
+      out.add(detail.partKey);
     }
   }
   return out;
@@ -197,25 +201,78 @@ export function partActivityId(runId: EntityId, partKey: string): string {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 }
 
+// ---------------------------------------------------------------------------
+// The presenter
+// ---------------------------------------------------------------------------
+
 /**
  * Present one run as a Linear agent session. Attaches like persistRun
  * (events replay from seq 0, so late attachment loses nothing — the audit
- * dedupe keeps replays idempotent). No-op when the run has no issue target:
- * sessions attach to issues in v1. Returns the unsubscribe function.
+ * dedupe keeps replays idempotent). No-op when the run is unknown or has no
+ * issue target: sessions attach to issues in v1. Returns the unsubscribe
+ * function.
  */
 export function presentRun(
   runner: Runner,
   runId: EntityId,
   options: LinearPresenterOptions,
 ): () => void {
-  const run = runner.getRun(runId);
-  if (run === undefined) return () => {};
+  let run;
+  try {
+    run = runner.getRun(runId);
+  } catch {
+    return () => {}; // unknown run id — presenting nothing is the honest noop
+  }
   const target = run.target;
   if (target === undefined || target.entity !== "issue") return () => {};
   const { writer, store } = options;
 
   // Session memo: created lazily on first use, retried after a failure.
   let sessionPromise: Promise<string | null> | null = null;
+  // Per-run serialized chain (the ordering rail). Every event funnels into
+  // the same canonical-order sync: scan the turns, emit what the audit has
+  // not recorded as delivered. Linear therefore sees activities in run
+  // order ALWAYS — including recovery from a mid-run Linear outage, where a
+  // naive emit-what-arrives would append recovered parts after later ones.
+  let chain: Promise<void> = Promise.resolve();
+
+  const emitOne = async (
+    sessionId: string,
+    partKey: string,
+    mapped: MappedActivity,
+  ): Promise<void> => {
+    if (readEmittedParts(store, runId).has(partKey)) return;
+    const activityId = partActivityId(runId, partKey);
+    try {
+      await writer.createActivity({
+        agentSessionId: sessionId,
+        content: mapped.content,
+        id: activityId,
+        ...(mapped.signal !== undefined ? { signal: mapped.signal } : {}),
+        ...(mapped.signalMetadata !== undefined ? { signalMetadata: mapped.signalMetadata } : {}),
+      });
+      store.appendAudit(AUDIT_ACTIVITY, {
+        loopId: run.loopId,
+        runId,
+        detail: { ok: true, partKey, activityId },
+      });
+    } catch (error) {
+      // Failed writes audit ok:false — readEmittedParts only counts ok:true,
+      // so the next sync re-emits while this attachment lives (a later
+      // presentRun recovers the rest). The deterministic activity id makes
+      // every re-emit idempotent on Linear's side.
+      store.appendAudit(AUDIT_ACTIVITY, {
+        loopId: run.loopId,
+        runId,
+        detail: {
+          ok: false,
+          partKey,
+          error: error instanceof Error ? error.message : String(error),
+        },
+      });
+    }
+  };
+
   const ensureSession = (): Promise<string | null> => {
     if (sessionPromise !== null) return sessionPromise;
     const existing = readSessionRecord(store, runId);
@@ -246,68 +303,50 @@ export function presentRun(
     return sessionPromise;
   };
 
-  const emit = (partKey: string, mapped: MappedActivity): void => {
-    const already = readEmittedParts(store, runId);
-    if (already.has(partKey)) return;
-    void ensureSession().then((sessionId) => {
-      if (sessionId === null) return;
-      const activityId = partActivityId(runId, partKey);
-      return writer
-        .createActivity({
-          agentSessionId: sessionId,
-          content: mapped.content,
-          id: activityId,
-          ...(mapped.signal !== undefined ? { signal: mapped.signal } : {}),
-          ...(mapped.signalMetadata !== undefined ? { signalMetadata: mapped.signalMetadata } : {}),
-        })
-        .then(() => {
-          store.appendAudit(AUDIT_ACTIVITY, {
-            loopId: run.loopId,
-            runId,
-            detail: { ok: true, partKey, activityId },
-          });
-        })
-        .catch((error: unknown) => {
-          store.appendAudit(AUDIT_ACTIVITY, {
-            loopId: run.loopId,
-            runId,
-            detail: {
-              ok: false,
-              partKey,
-              error: error instanceof Error ? error.message : String(error),
-            },
-          });
-        });
-    });
+  /** The canonical-order sync: emit every turn part the audit lacks, then
+   *  (optionally) one non-part key (terminal markers). */
+  const syncNow = async (extra?: { partKey: string; mapped: MappedActivity }): Promise<void> => {
+    const sessionId = await ensureSession();
+    if (sessionId === null) return; // audited; the next event retries
+    for (const turn of runner.getTurns(runId)) {
+      for (const [index, part] of turn.parts.entries()) {
+        const mapped = partToActivity(part);
+        if (mapped === null) continue;
+        await emitOne(sessionId, `${turn.id}:${index}`, mapped);
+      }
+    }
+    if (extra !== undefined) await emitOne(sessionId, extra.partKey, extra.mapped);
+  };
+
+  const sync = (extra?: { partKey: string; mapped: MappedActivity }): void => {
+    chain = chain.then(() => syncNow(extra)).catch(() => {});
   };
 
   const off = runner.subscribe(runId, (event: RunEvent) => {
     if (event.type === "partAppended") {
-      // The appended part is the turn's last; the turn:index key is stable
-      // across replays (events re-emit in order), which is what makes the
-      // audit dedupe exact.
-      const turns = runner.getTurns(runId);
-      const turn = turns.find((t) => t.id === event.turnId);
-      const index = turn === undefined ? -1 : turn.parts.length - 1;
-      if (index < 0) return;
-      const mapped = partToActivity(event.part);
-      if (mapped === null) return;
-      emit(`${event.turnId}:${index}`, mapped);
+      sync();
       return;
     }
-    if (event.type === "runStatus" && TERMINAL.has(event.status)) {
+    if (event.type === "runStatus") {
       if (event.status === "error") {
-        emit("run:error", {
-          content: { type: "error", body: event.run.error ?? "run failed" },
+        sync({
+          partKey: "run:error",
+          mapped: { content: { type: "error", body: event.run.error ?? "run failed" } },
         });
+        void chain.finally(() => off()); // final — detach after the tail lands
       } else if (event.status === "canceled") {
-        emit("run:canceled", {
-          content: { type: "thought", body: "Run canceled by user." },
+        sync({
+          partKey: "run:canceled",
+          mapped: { content: { type: "thought", body: "Run canceled by user." } },
         });
+        void chain.finally(() => off()); // final — detach after the tail lands
+      } else if (event.status === "complete") {
+        // NOT final: continuation may revive this run (complete → active)
+        // and its later activities must still reach Linear. Keep watching;
+        // sweep anything a struggling write left behind.
+        sync();
       }
-      // Let the terminal activity settle, then detach: subscribe replay would
-      // otherwise re-emit nothing (audit dedupe) but the listener is dead weight.
-      queueMicrotask(() => off());
+      // `stale` (T-504) is likewise non-final (revive edge): keep watching.
     }
   });
   return off;

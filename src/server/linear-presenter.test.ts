@@ -202,7 +202,7 @@ test("re-presenting a run never double-creates (replay idempotency)", async () =
   }
 });
 
-test("a failing writer lands in the audit and the session create retries", async () => {
+test("a failing writer lands in the audit, the session retries, and recovery stays IN ORDER", async () => {
   const { db, store, runner, writer } = setup();
   try {
     writer.failSessions = 1; // first create 503s; the retry on the next event succeeds
@@ -224,6 +224,105 @@ test("a failing writer lands in the audit and the session create retries", async
     assert.equal(sessionAudit.filter((d) => d["ok"] === false).length, 1);
     assert.equal(sessionAudit.filter((d) => d["ok"] === true).length, 1);
     assert.equal(writer.sessions.length, 1); // retried once
+
+    // The part that arrived during the outage is recovered, in canonical
+    // order — never appended after the later one.
+    assert.deepEqual(
+      writer.activities.map((a) => a.content.type),
+      ["thought", "response"],
+    );
+  } finally {
+    db.close();
+  }
+});
+
+test("writes are serialized: a slow first activity is never overtaken", async () => {
+  const { db, store, runner, writer } = setup();
+  try {
+    // Hold every createActivity behind a manual gate.
+    const gates: Array<() => void> = [];
+    const gated = writer.createActivity.bind(writer);
+    writer.createActivity = (input: ActivityCall): Promise<{ id: string }> =>
+      new Promise((resolve) => {
+        gates.push(() => resolve(gated(input)));
+      });
+
+    const parts: Part[] = [
+      { kind: "thought", text: "one" },
+      { kind: "response", text: "two" },
+    ];
+    const run = runner.start({
+      loopId: "loop-1",
+      message: "hi",
+      brain: new ScriptBrain([parts]),
+      target: { entity: "issue", id: "LIN-4" },
+    });
+    presentRun(runner, run.id, { writer, store, runViewUrl: URL_OF });
+    await runner.whenIdle(run.id);
+    await settle();
+
+    // The chain holds: exactly one write is in flight (the first) — the
+    // second createActivity has NOT even been called.
+    assert.equal(gates.length, 1);
+    assert.equal(writer.activities.length, 0);
+    gates[0]!();
+    await settle();
+    // Releasing the first lets the second proceed — and not before.
+    assert.equal(writer.activities.length, 1);
+    assert.equal(gates.length, 2);
+    gates[1]!();
+    await settle();
+    assert.deepEqual(
+      writer.activities.map((a) => a.content.type),
+      ["thought", "response"],
+    );
+    assert.equal(gates.length, 2); // no write happened out from under us
+  } finally {
+    db.close();
+  }
+});
+
+test("presentRun on an unknown run is a noop, never a throw", () => {
+  const { db, store, runner, writer } = setup();
+  try {
+    const off = presentRun(runner, "no-such-run", { writer, store, runViewUrl: URL_OF });
+    assert.equal(typeof off, "function");
+    off();
+    assert.equal(writer.sessions.length, 0);
+  } finally {
+    db.close();
+  }
+});
+
+test("continuation after complete still presents (the watch survives complete)", async () => {
+  const { db, store, runner, writer } = setup();
+  try {
+    const run = runner.start({
+      loopId: "loop-1",
+      message: "first question",
+      brain: new ScriptBrain([[{ kind: "response", text: "first answer" }]]),
+      target: { entity: "issue", id: "LIN-5" },
+    });
+    presentRun(runner, run.id, { writer, store, runViewUrl: URL_OF });
+    const first = await runner.whenIdle(run.id);
+    assert.equal(first.status, "complete");
+    await settle();
+    assert.deepEqual(
+      writer.activities.map((a) => a.content.type),
+      ["response"],
+    );
+
+    // The user follows up: complete → active, the exchange continues.
+    runner.continueRun(run.id, "follow-up", new ScriptBrain([[{ kind: "response", text: "second answer" }]]));
+    const second = await runner.whenIdle(run.id);
+    assert.equal(second.status, "complete");
+    await settle();
+
+    assert.deepEqual(
+      writer.activities.map((a) => a.content.type),
+      ["response", "response"],
+    );
+    assert.equal(writer.sessions.length, 1); // one session across the continuation
   } finally {
     db.close();
   }
