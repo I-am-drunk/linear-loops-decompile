@@ -48,14 +48,30 @@ parity check   [--facts src/ui/ui-facts.json] [--ref .parity/reference.json]
 canary missing from the corpus is a drift alarm; present-but-not-extracted is
 a grammar regression. Both fail loudly.
 
+`extract` also refuses a bad corpus (#205, both are loud exit-2 failures,
+no reference written):
+- **corpus integrity** — every chunk `analysis/chunks.json` names must exist
+  in `pretty/client/`; a shortfall means a partial/stale copy (the vault fast
+  path must be a FULL `git clone` — #187).
+- **unmatched matrix surface** — a matrix component matching zero chunks means
+  a partial corpus or a stale matrix row; the reference never silently omits
+  a surface.
+
 Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
 
 Fact families: routes, copy, structure, tokens, bindings, icons, behavior,
 states (set-compared) + order (whole-sequence) + primitive (exact scalar).
 A family compares only where the reference has facts for it (ramp rule).
+`order` extraction (H3 #207): `` orderingKey: `k` `` chains (column order) and
+`` key:/name: `` options-array chains (filter/section order); longest chain per
+surface; pinned by `order:<Surface>=<a> > <b> > …` canary lines.
 Synthetic app-level surfaces: `app.routes` (route table — chunk-body scan,
 because the analysis index is a floor) and `theme.tokens` (token namespace;
 VALUES come from the theme-generator golden-vectors slice, #162).
+The reference also carries `routeMeta` (issue #208): per route, `declaredIn`
+(declaring chunk basenames) + `role` (`registration` = in the `Root.*` route
+table; `matcher` = a match() call site; `both`). Informational — `check`
+compares route paths only, and `ui-facts.json` never declares it.
 
 No cargo on a fresh sandbox? `curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal`
 (+ `apt-get install -y gcc` for the linker). The gate skips with a pointer

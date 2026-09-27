@@ -16,7 +16,8 @@
       "routes": [
         "/:orgKey/loop/:loopId",
         "/:orgKey/loop/:loopId/runs",
-        "/:orgKey/loops/:viewType?"
+        "/:orgKey/loops/:viewType?",
+        "/:orgKey/loops/new"
       ],
       "copy": [],
       "structure": [],

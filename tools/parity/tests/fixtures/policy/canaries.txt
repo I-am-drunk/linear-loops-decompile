@@ -2,3 +2,4 @@
 Create a new loop
 route:/:orgKey/loops/:viewType?
 route:/:orgKey/loop/:loopId/runs
+order:AutomationRunsPage=name > started > duration

@@ -10,7 +10,8 @@
 //! - `pretty/client/<Component>.<HASH>.js` — per-surface copy strings,
 //!   component import edges, and theme-token usage.
 
-use crate::model::{FactFile, Surface};
+use crate::model::{FactFile, RouteMeta, Surface};
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
@@ -21,12 +22,22 @@ pub struct ExtractStats {
     pub copy: usize,
     pub edges: usize,
     pub tokens: usize,
+    /// surfaces that carry an order chain
+    pub order: usize,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
 
 pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) -> Result<ExtractStats, String> {
     let mut facts = FactFile::default();
+
+    // --- corpus integrity: the chunk inventory must be complete -------------
+    // A stale or partial corpus copy produced a silent false-green reference
+    // once already (#162 INFRA ALERT: 1,043/1,550 chunks, 21 matrix surfaces
+    // missing, no warning; #205). analysis/chunks.json is the inventory the
+    // pipeline wrote for this corpus; every chunk it names must be present in
+    // pretty/client before an extract can be trusted.
+    check_corpus_integrity(corpus)?;
 
     // --- routes: the app's Loops/agent route table is ONE fact surface ------
     // (routes.json's `file` is the chunk where the route literal appears —
@@ -39,13 +50,30 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let routes_arr = routes_json
         .as_arr()
         .ok_or_else(|| format!("{}: expected a JSON array", routes_path.display()))?;
-    let mut app_routes: Vec<String> = Vec::new();
+    // Per-route provenance (issue #208): declaredIn = every chunk basename
+    // (or routes.json `file`) carrying the literal; role = where it sits.
+    // The `Root.*` chunk is the app's route table (registration); any other
+    // declaring chunk is a matcher call site ("this URL gates what this
+    // surface renders" — the /:orgKey/loops/new dialog-route nuance, #177).
+    let mut declared_in: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    let mut registered: BTreeSet<String> = BTreeSet::new();
+    let mut matched: BTreeSet<String> = BTreeSet::new();
     for item in routes_arr {
         let Some(path) = item.get("path").and_then(|v| v.as_str()) else {
             continue;
         };
         if path.starts_with('/') && is_loops_route(path) {
-            app_routes.push(path.to_string());
+            let entry = declared_in.entry(path.to_string()).or_default();
+            // the index's `file` names the chunk the literal appears in;
+            // the role follows from WHICH chunk that is, same as scan hits.
+            if let Some(file) = item.get("file").and_then(|v| v.as_str()) {
+                entry.insert(file.to_string());
+                if is_route_table_chunk(file) {
+                    registered.insert(path.to_string());
+                } else {
+                    matched.insert(path.to_string());
+                }
+            }
         }
     }
     // routes.json is a floor, not a ceiling (the analyzer misses route
@@ -61,16 +89,32 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             }
             let text = fs::read_to_string(entry.path())
                 .map_err(|e| format!("read {}: {}", entry.path().display(), e))?;
+            let is_table = is_route_table_chunk(&name);
             for route in extract_route_literals(&text) {
                 if is_loops_route(&route) {
-                    app_routes.push(route);
+                    declared_in.entry(route.clone()).or_default().insert(name.clone());
+                    if is_table {
+                        registered.insert(route);
+                    } else {
+                        matched.insert(route);
+                    }
                 }
             }
         }
     }
-    app_routes.sort();
-    app_routes.dedup();
+    let app_routes: Vec<String> = declared_in.keys().cloned().collect();
     if !app_routes.is_empty() {
+        for (route, chunks) in &declared_in {
+            let role = match (registered.contains(route), matched.contains(route)) {
+                (true, true) => "both",
+                (true, false) => "registration",
+                _ => "matcher",
+            };
+            facts.route_meta.insert(
+                route.clone(),
+                RouteMeta { declared_in: chunks.iter().cloned().collect(), role: role.to_string() },
+            );
+        }
         facts.surfaces.insert(
             "app.routes".to_string(),
             Surface { routes: app_routes.clone(), ..Default::default() },
@@ -83,10 +127,14 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, canaries: None };
+    let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
         let mut surface = Surface::default();
+        // order chains per matched chunk (a surface can match several chunk
+        // builds; the longest chain wins — see below)
+        let mut order_candidates: Vec<Vec<String>> = Vec::new();
         // chunk files for this surface pattern (hashes rotate; match by prefix)
         let mut matched_any = false;
         let entries = match fs::read_dir(&client_dir) {
@@ -106,15 +154,38 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             surface.copy.extend(extract_copy(&text));
             surface.structure.extend(extract_edges(&text));
             surface.tokens.extend(extract_tokens(&text));
+            order_candidates.extend(extract_order(&text));
+        }
+        // A surface may match several chunk builds of the same component
+        // (hash-rotated duplicates); their order chains are the same fact.
+        // Keep the LONGEST chain (a stripped/duplicate build can carry a
+        // truncated copy of the array literal; the fuller one is the fact).
+        if let Some(best) = order_candidates.into_iter().max_by_key(Vec::len) {
+            surface.order = best;
         }
         surface.normalize();
-        if matched_any || !surface.is_empty() {
-            stats.copy += surface.copy.len();
-            stats.edges += surface.structure.len();
-            stats.tokens += surface.tokens.len();
-            facts.surfaces.insert(comp.clone(), surface);
-            stats.surfaces += 1;
+        if !matched_any {
+            // A matrix surface with zero matching chunks is the other silent
+            // false-green path (#205): the reference simply omits it and every
+            // check against it passes vacuously. Loud failure: either the
+            // corpus copy is partial (re-clone the vault) or the matrix names
+            // a component the corpus no longer ships (fix the matrix row).
+            unmatched.push(comp.clone());
+            continue;
         }
+        stats.copy += surface.copy.len();
+        stats.edges += surface.structure.len();
+        stats.tokens += surface.tokens.len();
+        stats.order += usize::from(!surface.order.is_empty());
+        facts.surfaces.insert(comp.clone(), surface);
+        stats.surfaces += 1;
+    }
+    if !unmatched.is_empty() {
+        return Err(format!(
+            "matrix surfaces with zero matching chunks in {} (partial corpus? re-clone the vault — #187; or a stale matrix row):\n  {}",
+            client_dir.display(),
+            unmatched.join("\n  ")
+        ));
     }
 
     // --- theme: the semantic token namespace is one synthetic surface -------
@@ -150,19 +221,52 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     if let Some(canary_path) = canaries {
         let list_text = fs::read_to_string(canary_path)
             .map_err(|e| format!("read canaries {}: {}", canary_path.display(), e))?;
-        // Two canary kinds (#177): plain lines are COPY canaries; lines
-        // prefixed `route:` are ROUTE canaries checked against app.routes,
-        // so a route-extraction regression fails as loudly as a copy one.
+        // Three canary kinds: plain lines are COPY canaries; `route:` lines
+        // are ROUTE canaries checked against app.routes (#177); `order:` lines
+        // (H3 #207) are ORDER canaries — `order:<Surface>=<a> > <b> > …` —
+        // checked against the surface's extracted whole-sequence chain, so an
+        // order-grammar regression fails as loudly as a copy one.
+        let mut order_canaries: Vec<(String, String)> = Vec::new(); // (surface, chain)
         let canary_list: Vec<(bool, String)> = list_text
             .lines()
             .map(str::trim)
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
-            .map(|l| match l.strip_prefix("route:") {
-                Some(r) => (true, r.trim().to_string()),
-                None => (false, l.to_string()),
+            .filter_map(|l| {
+                if let Some(o) = l.strip_prefix("order:") {
+                    if let Some((surface, chain)) = o.split_once('=') {
+                        order_canaries.push((surface.trim().to_string(), chain.trim().to_string()));
+                    }
+                    return None;
+                }
+                Some(match l.strip_prefix("route:") {
+                    Some(r) => (true, r.trim().to_string()),
+                    None => (false, l.to_string()),
+                })
             })
             .collect();
-        if !canary_list.is_empty() {
+        let mut order_problems: Vec<String> = Vec::new();
+        let mut order_passed = 0;
+        for (surface, chain) in &order_canaries {
+            let extracted = facts
+                .surfaces
+                .get(surface)
+                .map(|s| s.order.join(" > "))
+                .unwrap_or_default();
+            if extracted == *chain {
+                order_passed += 1;
+            } else if extracted.is_empty() {
+                order_problems.push(format!(
+                    "order canary: surface {:?} extracted NO chain (order-grammar regression or corpus drift); expected [{}]",
+                    surface, chain
+                ));
+            } else {
+                order_problems.push(format!(
+                    "order canary: surface {:?} chain differs — expected [{}], extracted [{}] (grammar regression or corpus drift)",
+                    surface, chain, extracted
+                ));
+            }
+        }
+        if !canary_list.is_empty() || !order_canaries.is_empty() {
             // one pass over every chunk, all canaries at once
             let mut in_corpus: Vec<bool> = vec![false; canary_list.len()];
             // a registration route may live only in analysis/routes.json
@@ -218,7 +322,9 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
                     passed += 1;
                 }
             }
-            stats.canaries = Some((passed, canary_list.len()));
+            problems.extend(order_problems);
+            passed += order_passed;
+            stats.canaries = Some((passed, canary_list.len() + order_canaries.len()));
             if !problems.is_empty() {
                 return Err(format!("canary check failed:\n  {}", problems.join("\n  ")));
             }
@@ -230,6 +336,68 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     fs::write(out, crate::json::to_string(&crate::model::to_value(&facts)))
         .map_err(|e| format!("write {}: {}", out.display(), e))?;
     Ok(stats)
+}
+
+/// The app-shell route-table chunk: `Root.<hash>.js` holds the client's route
+/// REGISTRATIONS (verified on 1.32.4: `Root.DfW4FHnP.js` declares 39 of the
+/// 43 Loops/agent routes). Every other declaring chunk is a matcher call site.
+fn is_route_table_chunk(filename: &str) -> bool {
+    chunk_matches(filename, "Root", true)
+}
+
+/// Corpus integrity: every chunk named by `analysis/chunks.json` (the
+/// inventory the pipeline wrote for THIS corpus) must exist in
+/// `pretty/client/`. A shortfall means a partial or stale corpus copy — the
+/// exact condition that produced a silent false-green reference on
+/// 2026-09-27 (#162 INFRA ALERT, #205). The fix is a full re-clone of the
+/// vault (#187), never trusting a sparse/API-based fetch.
+/// A missing chunks.json is tolerated (fixture mini-corpora don't carry one);
+/// a present-but-unreadable one is an error.
+fn check_corpus_integrity(corpus: &Path) -> Result<(), String> {
+    let inventory_path = corpus.join("analysis/chunks.json");
+    if !inventory_path.exists() {
+        return Ok(());
+    }
+    let text = fs::read_to_string(&inventory_path)
+        .map_err(|e| format!("read {}: {}", inventory_path.display(), e))?;
+    let json = crate::json::parse(&text)?;
+    let arr = json
+        .as_arr()
+        .ok_or_else(|| format!("{}: expected a JSON array", inventory_path.display()))?;
+    let client_dir = corpus.join("pretty/client");
+    let mut missing: Vec<String> = Vec::new();
+    let mut total = 0usize;
+    for item in arr {
+        // The pipeline writes a string `file` for every chunk record: a
+        // malformed entry is a broken inventory, not a skippable row — if the
+        // matrix does not name the affected chunk, skipping would let
+        // extraction write an incomplete reference (CodeRabbit #210).
+        let Some(file) = item.get("file").and_then(|v| v.as_str()) else {
+            return Err(format!(
+                "{}: malformed inventory entry (missing string `file`): {}",
+                inventory_path.display(),
+                crate::json::to_string(item).trim_end()
+            ));
+        };
+        total += 1;
+        if !client_dir.join(file).is_file() {
+            missing.push(file.to_string());
+        }
+    }
+    if !missing.is_empty() {
+        let shown: Vec<&str> = missing.iter().take(10).map(String::as_str).collect();
+        let more = if missing.len() > 10 { format!("\n  … and {} more", missing.len() - 10) } else { String::new() };
+        return Err(format!(
+            "corpus integrity: {}/{} chunks from {} are missing in {} — partial or stale corpus copy; the vault fast path must be a FULL git clone (#187):\n  {}{}",
+            missing.len(),
+            total,
+            inventory_path.display(),
+            client_dir.display(),
+            shown.join("\n  "),
+            more
+        ));
+    }
+    Ok(())
 }
 
 /// Absolute routes that belong to the Loops/agent surfaces.
@@ -260,7 +428,7 @@ fn chunk_matches(filename: &str, prefix: &str, exact: bool) -> bool {
 /// Surface patterns from the feature matrix. Two kinds:
 /// - exact component: `Name.HASH.js` or `Name.{H1,H2}.js` → matches chunks
 ///   named "<Name>.<anything>.js" (hashes rotate between corpus versions).
-/// - family prefix: any other Capitalized backticked token containing ".js",
+/// - family prefix: any other Capitalized backticked token ending in ".js",
 ///   "*" or "{" (e.g. `WorkspaceAgent(s)SettingsPage.*`, `AgentPanel*`) →
 ///   leading alphanumeric run, matched as a raw prefix.
 /// Returns (prefix, exact) pairs, sorted and deduped.
@@ -276,24 +444,30 @@ fn matrix_components(matrix: &str) -> Vec<(String, bool)> {
         if !first.is_ascii_uppercase() {
             continue;
         }
-        // exact: strip ".js", optional ".{…}" brace hash-list, then "Name.hash"
+        // exact: only ".js"-suffixed tokens are chunk names (without this,
+        // `KNOWLEDGE.md` parsed as surface "KNOWLEDGE" with hash "md" — a
+        // phantom surface, #205). Strip ".js", optional ".{…}" brace
+        // hash-list, then "Name.hash".
+        let is_chunk_name = tok.ends_with(".js");
         let mut core = tok.strip_suffix(".js").unwrap_or(tok);
         let mut exact = false;
-        if let Some(brace_at) = core.find(".{") {
-            if core.ends_with('}') {
-                core = &core[..brace_at];
-                exact = true;
-            }
-        }
-        if !exact {
-            if let Some((name, hash)) = core.rsplit_once('.') {
-                if !hash.is_empty()
-                    && hash.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
-                    && !name.contains('.')
-                    && name.chars().all(|c| c.is_ascii_alphanumeric())
-                {
-                    core = name;
+        if is_chunk_name {
+            if let Some(brace_at) = core.find(".{") {
+                if core.ends_with('}') {
+                    core = &core[..brace_at];
                     exact = true;
+                }
+            }
+            if !exact {
+                if let Some((name, hash)) = core.rsplit_once('.') {
+                    if !hash.is_empty()
+                        && hash.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+                        && !name.contains('.')
+                        && name.chars().all(|c| c.is_ascii_alphanumeric())
+                    {
+                        core = name;
+                        exact = true;
+                    }
                 }
             }
         }
@@ -304,8 +478,14 @@ fn matrix_components(matrix: &str) -> Vec<(String, bool)> {
             }
             continue;
         }
-        // family prefix
-        if tok.contains(".js") || tok.contains('*') || tok.contains('{') || tok.contains('(') {
+        // family prefix. `(` is NOT a trigger: parenthesized backticked
+        // tokens in the matrix are GraphQL op shorthand
+        // (`AutomationTrustedSources(WithUsage)`), not chunk patterns — they
+        // parsed into phantom surfaces that match zero chunks (#205).
+        // `.js` must be a SUFFIX to trigger (a `Component.js.md` token in an
+        // alternate --matrix would otherwise create a phantom surface —
+        // CodeRabbit #210); `*` and `{` stay as the family/brace triggers.
+        if tok.ends_with(".js") || tok.contains('*') || tok.contains('{') {
             let prefix: String = tok.chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
             if !prefix.is_empty() && !out.iter().any(|(p, _)| p == &prefix) {
                 out.push((prefix, false));
@@ -419,6 +599,86 @@ fn looks_like_copy(s: &str) -> bool {
     }
     let letters = t.chars().filter(|c| c.is_ascii_alphabetic() || c.is_whitespace()).count();
     letters * 3 >= t.len() * 2
+}
+
+/// Ordered-presentation chains from a prettified chunk (family 9, H3 #207).
+/// Order is compiled into the bundle as ARRAY/OBJECT LITERALS whose source
+/// order IS the render order, so the grammars read literal sequences — never
+/// inferred layout. Two corpus-proven forms (Linear 1.32.4):
+///
+/// 1. column declarations: consecutive `orderingKey: `k`` props on list
+///    header cells (AutomationsList: name > trigger > team > owner > runs >
+///    lastExecuted). The key is the stable fact; the display label is already
+///    a copy fact.
+/// 2. filter/section declarations: consecutive `key: `k`,\n name: `Label``
+///    pairs inside one options array (LoopsManagementPage: Enabled > Team >
+///    Owner > Trusted external source). The user-visible `name` is the fact.
+///
+/// A chain needs >= 2 items (one item carries no order). Each grammar yields
+/// at most one chain per chunk; the caller keeps the longest chain per
+/// surface (ramp rule: surfaces without a proven chain stay uncovered).
+fn extract_order(text: &str) -> Vec<Vec<String>> {
+    let mut chains: Vec<Vec<String>> = Vec::new();
+
+    // grammar 1: `orderingKey: `k`` in source order
+    let mut cols: Vec<String> = Vec::new();
+    let mut rest = text;
+    while let Some(idx) = rest.find("orderingKey: `") {
+        // skip identifier-suffixed lookalikes (e.g. activeOrderingKey) by
+        // requiring a non-identifier char before the match
+        let pre_ok = idx == 0
+            || !rest[..idx]
+                .chars()
+                .next_back()
+                .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_');
+        let after = &rest[idx + 14..];
+        let Some(end) = after.find('`') else { break };
+        let key = &after[..end];
+        rest = &after[end + 1..];
+        if pre_ok
+            && !key.is_empty()
+            && key.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+            && !cols.contains(&key.to_string())
+        {
+            cols.push(key.to_string());
+        }
+    }
+    if cols.len() >= 2 {
+        chains.push(cols);
+    }
+
+    // grammar 2: `key: `k`,` immediately followed by `name: `Label`` —
+    // one options-array literal, names in source order
+    let mut names: Vec<String> = Vec::new();
+    let mut rest = text;
+    while let Some(idx) = rest.find("key: `") {
+        let pre_ok = idx == 0
+            || !rest[..idx]
+                .chars()
+                .next_back()
+                .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_');
+        let after = &rest[idx + 6..];
+        let Some(kend) = after.find('`') else { break };
+        let tail = &after[kend + 1..];
+        rest = tail;
+        if !pre_ok {
+            continue;
+        }
+        // the very next property must be `name:` with a backtick literal
+        let Some(t) = tail.strip_prefix(',') else { continue };
+        let t = t.trim_start();
+        let Some(t) = t.strip_prefix("name: `") else { continue };
+        let Some(nend) = t.find('`') else { break };
+        let name = &t[..nend];
+        if !name.is_empty() && !name.contains("${") && !names.contains(&name.to_string()) {
+            names.push(name.to_string());
+        }
+    }
+    if names.len() >= 2 {
+        chains.push(names);
+    }
+
+    chains
 }
 
 /// Component containment edges: `from "./Child.<hash>.js"` inside a chunk is a
