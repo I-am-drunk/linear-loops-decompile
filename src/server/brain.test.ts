@@ -186,7 +186,7 @@ test("undecryptable key → error part naming the harness", async () => {
   }
 });
 
-test("a harness update invalidates the cached adapter", async () => {
+test("a harness update takes effect on the next run", async () => {
   const db = openDatabase(":memory:");
   try {
     const { harnessStore } = createInferenceStores(db, ":memory:");

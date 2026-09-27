@@ -107,16 +107,16 @@ export interface BrainBindingOptions {
 }
 
 /**
- * Build the orchestrator's `brainFor(loop)`. Adapters are cached per
- * harness revision (keyed on id + updatedAt): adapters carry no per-run
- * state, and a settings update — key rotation, model change — invalidates
- * the cache entry automatically.
+ * Build the orchestrator's `brainFor(loop)`. The adapter is built fresh on
+ * every call: construction is trivial (an object plus a header closure),
+ * and resolving per call means a settings update — key rotation, model
+ * change — takes effect on the very next run with no cache-invalidation
+ * edge cases (an updatedAt-stamped cache can serve a stale adapter when two
+ * updates land inside one millisecond — CodeRabbit on #92).
  */
 export function createBrainFor(
   options: BrainBindingOptions,
 ): (loop: WorkflowDefinition) => Brain {
-  const adapters = new Map<string, { stamp: string; adapter: ChatAdapter }>();
-
   const wrap = (adapter: ChatAdapter): Brain =>
     new HarnessBrain(adapter, {
       onUsage: (runId, delta) => options.runner.recordUsage(runId, delta),
@@ -130,21 +130,18 @@ export function createBrainFor(
         "No inference harness is configured — add one under Settings → Inference to run loops.",
       );
     }
-    const cached = adapters.get(harness.id);
-    if (cached !== undefined && cached.stamp === harness.updatedAt) {
-      return wrap(cached.adapter);
-    }
-    let adapter: ChatAdapter;
     try {
       // resolveForAdapter is the ONLY code path that may decrypt a key
       // (secrets.ts house rule); the plaintext goes straight into the
       // adapter and is never stored or logged here.
       const { settings, apiKey } = options.harnessStore.resolveForAdapter(harness.id);
-      adapter = createChatAdapter({
-        settings,
-        apiKey,
-        ...(options.fetchFn !== undefined ? { fetchFn: options.fetchFn } : {}),
-      });
+      return wrap(
+        createChatAdapter({
+          settings,
+          apiKey,
+          ...(options.fetchFn !== undefined ? { fetchFn: options.fetchFn } : {}),
+        }),
+      );
     } catch (error) {
       return new ConfigErrorBrain(
         `Harness "${harness.name}" cannot be used: ${
@@ -152,7 +149,5 @@ export function createBrainFor(
         }`,
       );
     }
-    adapters.set(harness.id, { stamp: harness.updatedAt, adapter });
-    return wrap(adapter);
   };
 }
