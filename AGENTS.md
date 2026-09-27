@@ -68,9 +68,12 @@ big, it is two slices. The sequence lives in `PLAN.md`.
   no DMG/asar contents, no decompiled or prettified Linear code. The corpus lives
   only in `pipeline/corpus/` (gitignored). Commit only original code and extracted
   facts (op names, shapes, behavior notes).
-- Credentials live only in the private vault repo `I-am-drunk/linear-loops-vault`
-  (`GIT-TOKEN.md`). Never in this repo, issues, PRs, chat, or cloud files. Read it
-  with `github.get_content`, use it through a git credential helper, never print it.
+- The shared git token lives in the private vault repo `I-am-drunk/linear-loops-vault`
+  (`GIT-TOKEN.md`); read it with `github.get_content` and use it freely. This GitHub
+  account exists for agents (owner directive 2026-09-27) — handling the token in
+  chat or command output is fine. Just never COMMIT it to this public repo:
+  GitHub secret scanning auto-revokes an exposed classic PAT, which breaks every
+  session's push access.
 - The acceptance bar is the corpus plus `docs/feature-matrix.md`, and the bar is
   EXACT: the same Linear Loops UI and behavior, not a plausible version of it. If
   a behavior cannot be verified against the corpus or Linear's docs, mark it
