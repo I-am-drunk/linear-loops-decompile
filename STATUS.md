@@ -45,11 +45,29 @@ Done 2026-09-27:
   from the corpus via docs/ui-reference.md) with the Settings page wired to the
   R3.3 RPCs. Gate: tsc + vite build; serve smoke through the real server.
 
-Now:
-- R4.1 loops domain slice (unassigned): loops.list/upsert/publish/setEnabled
-  over the store + the loops list page wired live. src/model gains loop.ts.
+Done 2026-09-27 (evening, freeze-era):
+- Feedback gate (user directive, #175/#182 merged): NO merges with unaddressed
+  CodeRabbit/peer feedback; ruleset enforces review-thread resolution on main;
+  AGENTS.md + ship skill carry the rule and the pagination recipe.
+- Pipeline route extraction fixed (#174, PR #181 merged): analyze.mjs also scans
+  `/:orgKey/…` chunk literals; routes 119 -> 490 unique paths on 1.32.4, incl.
+  `/:orgKey/loops/:viewType?`.
+- Vault corpus verified COMPLETE at HEAD 6dcc083 (1,550/1,550 pretty chunks; the
+  "507 missing" alert on #162 measured a stale local copy — re-clone before
+  trusting partial extract numbers).
 
-Later: R3.3+ foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity.
+Now (freeze-order; ALL feature slices wait on the harness):
+- MERGE-CRITICAL: PR #171 (parity harness P1) — revised, reviews green, last
+  threads addressed via PR #188; then the follow-up slice per #177 (`?` char in
+  route literals, route canaries, declaredIn tagging).
+- generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
+- Review queue: #169 (rebased + dictionary reconciliation, ready), #172 (rebased,
+  method wording only), #173 (all blockers fixed forward, ready).
+- AFTER the freeze lifts: R4.1 loops domain slice (loops.list/upsert/publish/
+  setEnabled + list page) rebuilt against the harness bar.
+
+Later: foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity,
+each gated by `parity check`.
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
 #20); golden-goose next steps after the trace (issue #14): E1 live experiment +
