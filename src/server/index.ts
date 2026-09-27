@@ -26,10 +26,25 @@ import type { HttpOptions } from "./http.ts";
 import { Store } from "./store.ts";
 import { restoreRuns } from "./persistence.ts";
 import { createBrainFor, createInferenceStores } from "./brain.ts";
+import { registerDomainRpcs } from "./rpcs.ts";
+import type { DomainChannel, OrchestratorReload } from "./rpcs.ts";
+
+export { registerDomainRpcs, createRunEventPublisher, toWireLoop } from "./rpcs.ts";
+export type { DomainChannel, DomainRpcDeps, OrchestratorReload, RunEventChannel, WireLoop } from "./rpcs.ts";
 
 export interface LoopsServerOptions extends HttpOptions {
   /** SQLite file path, or ":memory:" (tests). Defaults to ./loops.db. */
   dbPath?: string;
+  /**
+   * T-1103: the T3 connect channel (structural — the real ChannelServer
+   * satisfies this). When present, the loops + runs domain RPCs register
+   * on it at construction, before any socket attaches.
+   */
+  channel?: DomainChannel | undefined;
+  /** M5 orchestrator — the loop write RPCs hook its reloadLoops(). */
+  orchestrator?: OrchestratorReload | undefined;
+  /** Loop id minting for loops.upsert creates (tests: deterministic ids). */
+  idgen?: (() => string) | undefined;
 }
 
 export interface LoopsServer {
@@ -59,6 +74,15 @@ export function createLoopsServer(options: LoopsServerOptions = {}): LoopsServer
   const server = createHttpServer(options);
   const { harnessStore } = createInferenceStores(db, dbPath);
   const brainFor = createBrainFor({ harnessStore, runner });
+
+  if (options.channel !== undefined) {
+    registerDomainRpcs(options.channel, {
+      store,
+      runner,
+      ...(options.orchestrator !== undefined ? { orchestrator: options.orchestrator } : {}),
+      ...(options.idgen !== undefined ? { idgen: options.idgen } : {}),
+    });
+  }
 
   return {
     server,
