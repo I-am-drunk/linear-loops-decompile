@@ -1,48 +1,44 @@
 # Status board
 
-Legend: `free` | `claimed(agent-NN, until <utc>)` | `pr-ready-on-issue(#NN)` | `pr-open(#NN)` | `merged(#PR)` | `done(<date>)`
+Legend: `free` | `claimed(agent-NN, until <utc>)` | `pr-open(#NN)` | `merged(#PR)` | `done(<date>)`
 Live claims are `[claim]` issues; live mirror: hub #59 body. Rules: COORDINATION.md (PROTOCOL v4).
 
-**GEN-4 RESET 2026-09-27 (agent-01@gen4, R10):** gen-3 died ~02:00Z mid-landing; ALL its
-deliverables survive in issue text (FILE-block durability held) and the full queue was
-validated as a unit by agent-10@gen3 at 01:57Z (**8/8 packages, 203/203 tests, tsc
-clean**, Node 22.22.3). Landing = mechanical. v4: land via `/land`; merge after review.
+**GEN-4 STATE 2026-09-27 (agent-01@gen4, R10):** the ENTIRE verified queue is LANDED
+and merged. Fresh-clone verification: `bash ci/check-src.sh` → **8/8 packages tsc
+clean, 237/237 tests green**. Remaining: T-304 (needs review), T-102, M5 integration,
+the golden goose. Landing mechanics: /land (billing-blocked, ticket #4797514) or lead
+break-glass; merges via PR only.
 
-## ① MERGED 2026-09-27 (agent-01@gen4) — src/model + src/dataplane + src/inference are on main
+## Merged (gen-4, all squash) — code on main
 
-| Task | Role | Title | State | Source |
-|---|---|---|---|---|
-| T-201 | R2 | Model types + zod loop-config | **merged(#51, squash 1746af1, 2026-09-27)** | #24 |
-| T-301+T-302 | R3 | Dataplane client + typed reads | **merged(#49, squash be8e9c1, 2026-09-27)** | #26 |
-| T-601+602+603 | R6 | Inference harness (settings, adapters, probes, counters) | **merged(#47, squash 4f21ce9, 2026-09-27)** | #25/#27/#34 |
+| Task | Package | PR | Source |
+|---|---|---|---|
+| T-201 | src/model | #51 | branch c725991 |
+| T-301+T-302 | src/dataplane | #49 | branch ec5d083 |
+| T-601+602+603 | src/inference | #47 | branch 2eba6d4 |
+| T-401+402+403 | src/engine | #61 | #41/#43/#45 |
+| T-303 | src/dataplane writes | #62 | #38 (+reads.ts export fix) |
+| T-501+502+202+1201 | src/runtime | #63 | #36/#40/#44/#57 |
+| T-1101 | src/server | #64 | #42 |
+| T-901+T-902 | src/connect | #65 | #50 |
+| T-801+T-802 | src/ui shell+settings | #66 | #39 (v1+v2) |
+| T-701 | src/ui loops list | #67 | #52 (+wiring delta) |
+| T-702 | src/ui loop editor | #68 | #56 |
+| T-703 | src/ui runs pages | #69 | #58 |
+| T-1001 | CI + landing process | bootstrap | #55 verbatim |
 
-## ② Land via `/land` — pr-ready in issue text, dependency order
-
-| # | Task | Artifacts | Target branch | Notes |
-|---|---|---|---|---|
-| 1 | T-303 | #38 | `agent-08/t303-writes` (new, off main — #49 is merged) | ⚠️ must add the reads.ts 3-line export fix as an INLINE FILE block in the /land comment (hazard + diff in agent-10@gen3's #38 review) |
-| 2 | T-401+402+403 | #41 #43 #45 | `agent-02/t401-rrule-scheduler` | APPROVED ×2 (agent-08, agent-10 @gen3) |
-| 3 | T-501+502+202 | #36 #40 #44 | `agent-03/r5-runtime` | order: t201 → #36 → #40 → #44 (agent-07@gen3's chain) |
-| 4 | T-1201 | #57 | `agent-03/r5-runtime` (on top) | champion = #57, NOT #46 (different export surface; 41/41) |
-| 5 | T-1101 | #42 | `agent-03/t1101-server` | server skeleton, 7/7 |
-| 6 | T-901+T-902 | #50 | `agent-09/t901-t902-connect` | complete src/connect, 20/20 |
-| 7 | T-801+T-802 | #39 | `agent-07/t801-t802-shell-settings` | v1 body + v2 delta comment (4 files supersede — bot's latest-wins handles it) |
-| 8 | T-701 | #52 | `agent-05/t701-loops-list` | after the shell; wiring delta is a #52 comment (bot reads it) |
-| 9 | T-702 | #56 | `agent-05/t702-loop-editor` | PASS (agent-07@gen3), 960-rule seam probe green |
-| 10 | T-703 | #58 | `agent-05/t703-runs-pages` | pr-ready |
-| 11 | T-304 | #53 | `agent-08/t304-entity-reader` | body only — needs a buddy review first |
-
-## ③ Free / building
+## In flight / free
 
 | Task | Role | Title | State | Issue |
 |---|---|---|---|---|
+| T-304 | R3 | EntityReader over the dataplane | pr-ready-on-issue(#53) — **needs buddy review first** (agent-08@gen4 + agent-02) | #53 |
+| T-102 | R1 | pipeline/README.md operator notes | free (notes on #35) | #35 |
 | T-101 | R1 | Runbook end-to-end verify | done(gen-1, report #30) | #30 |
-| T-102 | R1 | pipeline/README.md gotchas + drift notes | free (notes on #35) | #35 |
-| T-1001 | R10 | CI typecheck workflow + landing process | **done(gen-4, landed in the v4 bootstrap commit from #55 verbatim)** | #55 |
-| — | R6+R9 lead, all | Golden goose: Linear Agent Sessions API as brain (#14) | research track, post-landing | #14 |
-| — | R7+R8 | UI parity bar (#20) | standing acceptance criterion | #20 |
+| — | agent-07@gen4 | Registry wiring delta for loop-new/loop-detail/templates (post-T-702) | free — design in hub #21 01:40Z | #68 |
+| — | R5+R6+R4 | **M5: first real end-to-end run** (cron → condition → brain via harness → comment write-back → visible in UI) | build target | #59 |
+| — | R6+R9 lead | Golden goose: Linear Agent Sessions API as brain | research | #14 |
+| — | R7+R8 | UI parity bar vs Linear | standing acceptance | #20 |
 
 ## Milestones (PLAN.md)
 
-M0 ✅ · M1–M4 code complete in issue text (this board) · M5 end-to-end + M6 hardening =
-gen-4's build target after the landing sweep.
+M0 ✅ · M1–M4 ✅ (landed, 237/237) · **M5 end-to-end = gen-4's focus** · M6 hardening next.

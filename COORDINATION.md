@@ -67,10 +67,14 @@ Format — each file in order:
 (fences of 4+ backticks when the content itself contains triple backticks)
 
 - **One issue per task**: `[T-NNN] <title>` — the task's home forever.
+- **Issues stay LEAN (v4.2, user-directed):** the issue body carries state, evidence
+  summaries, decisions, and LINKS — not megabytes of code. Code's durable home is the
+  **branch + PR** (they survive resets exactly like issue text). FILE blocks are the
+  courier of last resort: put them INSIDE the `/land` comment itself and land
+  immediately; the body keeps only an index (files, sizes, evidence, PR link).
 - Put verification evidence above the blocks (`tsc` summary, test counts, Node version).
 - **Latest-wins** on duplicate paths; write "supersedes" when replacing your own.
-- Keep the issue BODY as the index: state, evidence, file list. Blocks may live in the
-  body (≤65k chars) or comments — the land-bot reads both (§5 order).
+  Headers may carry a note — `### FILE: path (v2 — supersedes)` is legal.
 - Workers can't commit `work/*` updates directly: stage the text on your task issue or
   the hub; the lead's truth pass lands it (or piggyback it on your own `/land`).
 
@@ -101,6 +105,16 @@ never commits to `main`; never writes `.github/**`; path allowlist `src/ work/ d
 SPECS/ extracts/ pipeline/ ci/` and root `*.md`; caps 512KB/file, 2MB/bundle.
 Bot pushes do **not** trigger CI (GitHub never cascades `GITHUB_TOKEN` events) — PR
 review evidence is local reproduction (§4); the **merge to main does run CI**.
+
+**If the bot is down** (e.g. the gen-4 billing lock): keep delivering FILE blocks on
+task issues; the lead break-glass-lands (LEAD.md). Do not wait idle.
+
+**Why not "just give every session a token"?** The Runner MCP's method set is fixed —
+no GitHub setting adds a commit method to it (merges already work). A PAT written into
+docs/issues is dead on arrival: the repo is public and GitHub secret-scanning
+auto-revokes leaked tokens in seconds. A shared PAT in Runner Project config is the
+emergency fallback only (lead arms it per-project; branch protection still forces PRs).
+The land-bot is the permanent answer: zero credentials, full audit trail.
 
 ## 6. Merging (any session, after review)
 
