@@ -84,7 +84,13 @@ async function main(): Promise<number> {
     return 0;
   }
   // Locate the divergence: output vs provenance-only (corpus refresh drift).
-  const wantParsed = JSON.parse(want) as { output?: unknown };
+  let wantParsed: { output?: unknown };
+  try {
+    wantParsed = JSON.parse(want) as { output?: unknown };
+  } catch {
+    console.error(`verify: MISMATCH — committed golden at ${expectedPath} is not valid JSON; a corrupt golden is a red, review it.`);
+    return 1;
+  }
   const outputMatches = stringify(result.output) === `${JSON.stringify(wantParsed.output, null, 2)}\n`;
   if (outputMatches) {
     console.error(`verify: OUTPUT matches but provenance differs (corpus refresh or stub change) — re-record deliberately, in a reviewed PR.`);

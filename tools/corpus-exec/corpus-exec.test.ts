@@ -9,11 +9,12 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { expectedBytes, loadCase, runCase, type CaseFile } from "./run.ts";
 import { buildSandbox, closureSize } from "./sandbox.ts";
 import { serialize, stringify } from "./serialize.ts";
 
-const here = new URL(`.`, import.meta.url).pathname;
+const here = fileURLToPath(new URL(`.`, import.meta.url));
 const fixtureCorpus = join(here, `fixtures`, `corpus`);
 const fixtureChunks = join(fixtureCorpus, `pretty`, `client`);
 const noLog = (): void => undefined;
@@ -33,6 +34,18 @@ test(`closure walk finds transitive imports and substitutes stubs`, () => {
   assert.deepEqual(stubbed.stubbed, [`provider.DDDD.js`]);
   // the stub is not hashed (it is declared in the case file, not the corpus)
   assert.equal(stubbed.hashes[`provider.DDDD.js`], undefined);
+});
+
+test(`side-effect imports join the closure (import "./x" without from)`, async () => {
+  const closure = buildSandbox(fixtureChunks, `effects.EEEE.js`, {});
+  assert.deepEqual(closure.chunks, [`config.BBBB.js`, `effects.EEEE.js`, `sideeffect.FFFF.js`]);
+  const c: CaseFile = {
+    unit: `fixture/effects`,
+    chunk: `effects.EEEE.js`,
+    invoke: { export: `n`, exportMeaning: `get (effects.EEEE.js: export { get as n })`, args: [1] },
+  };
+  const result = await runCase(fixtureCorpus, c, noLog);
+  assert.equal(result.output, 103); // 100 (side-effect global) + 2 (config k) + 1
 });
 
 test(`a missing chunk fails loudly, naming it`, () => {

@@ -6,7 +6,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
@@ -98,6 +98,14 @@ function makeDispatcher(contextValue: unknown): Record<string, unknown> {
 export async function runCase(corpusDir: string, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
   const chunksDir = join(corpusDir, `pretty`, `client`);
   const closure: Closure = buildSandbox(chunksDir, c.chunk, c.stubs ?? {});
+  try {
+    return await runInSandbox(corpusDir, closure, c, log);
+  } finally {
+    rmSync(closure.dir, { recursive: true, force: true });
+  }
+}
+
+async function runInSandbox(corpusDir: string, closure: Closure, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
   log(`sandbox: ${closure.chunks.length} chunks (${closure.stubbed.length} stubbed) at ${closure.dir}`);
   for (const name of closure.chunks) {
     log(`  ${closure.stubbed.includes(name) ? `[stub] ` : ``}${name}`);

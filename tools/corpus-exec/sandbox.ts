@@ -28,7 +28,8 @@ export type Closure = {
   dir: string;
 };
 
-const IMPORT_RE = /from\s*"\.\/([^"]+)"/g;
+// `from "./x"` (static), `import "./x"` (side-effect), `import("./x")` (dynamic).
+const IMPORT_RE = /(?:from\s*|import\s*\(?\s*)"\.\/([^"]+)"/g;
 
 function importsOf(text: string): string[] {
   const out: string[] = [];
