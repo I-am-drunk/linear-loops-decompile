@@ -14,6 +14,20 @@ cp -r /tmp/linear-loops-vault/corpus pipeline/corpus
 unset GIT_TOKEN
 ```
 
+**Use a full `git clone` (as above) and nothing else.** API-based fetch paths
+truncate silently: the GitHub contents API caps a directory listing at 1,000
+entries, and `corpus/pretty/client/` holds ~1,550 files — a sparse or per-file
+fetch yields a partial corpus with no error, and a partial corpus produces a
+silently wrong parity reference (the 2026-09-27 "vault is incomplete" alarm on
+issue #162 was exactly this: a 1,043-file fetch of a complete 1,550-file vault).
+
+**Then verify the copy before trusting anything built on it:**
+
+```bash
+python3 -c "import json; print(len(json.load(open('pipeline/corpus/analysis/chunks.json'))))"
+find pipeline/corpus/pretty/client -name '*.js' | wc -l   # must be EQUAL
+```
+
 Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
 constantly, so compare the counts against the baseline below, note material deltas
 in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
