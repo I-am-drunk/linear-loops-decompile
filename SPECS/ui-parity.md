@@ -125,6 +125,13 @@ where we can measure; never false-red, never silent-green.
   corpus, no `src/ui` → extract (canaries enforced), vacuous check ·
   `src/ui` without `ui-facts.json` → **FAIL** (declared facts are part of the
   slice) · facts present → full check.
+- Corpus guards in `extract` (#205; both loud exit-2 failures, no reference
+  written): **integrity** — every chunk `analysis/chunks.json` names must be
+  present in `pretty/client/` (a shortfall = partial/stale copy; full
+  `git clone` of the vault, #187); **unmatched surface** — a matrix component
+  matching zero chunks fails by name (never a silently omitted surface). The
+  #162 INFRA ALERT (1,043/1,550 stale copy → silent partial reference) is the
+  incident both guards close.
 
 ## Repo fit and the legal line
 

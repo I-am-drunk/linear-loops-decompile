@@ -81,16 +81,19 @@ Done 2026-09-27 (evening, freeze-era):
   137 tokens, canaries 7/7.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
-- H1 follow-ups: #177 remainder (routes.json union with #181's enriched
-  analyzer output; declaredIn tagging).
+- H1 hardening (#205): `parity extract` corpus-integrity guard (chunks.json
+  inventory vs pretty/client on disk) + unmatched-matrix-surface guard, both
+  loud failures — closes the #162 INFRA-ALERT fix-2 / #171 R1 ask (the
+  silent-partial-reference blind spot). Matrix-parser phantom surfaces
+  (`KNOWLEDGE.md`, parenthesized op shorthand) fixed alongside.
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
 - H3 matrix-§A fact extraction for the reference (issue #207, claimed by
   sess_01a0e48a-ebfa): H3.1 order family SHIPPED (two corpus-proven grammars,
   2 chains on 1.32.4, order canaries, 9/9); next H3.2 primitive, H3.3 states.
-- H4 DONE (issue #185): docs-site digests complete to the 26-page sitemap bar
+- H4 DONE, #185 CLOSED: docs-site digests complete to the 26-page sitemap bar
   (#184/#190/#197 merged); citation hard rule + docs drift-check leg + reviewer
-  two-source checklist merged (#196). Remaining: close #185 after a final
-  checklist pass.
+  two-source checklist merged (#196); §3 remainder (agent-signals +
+  best-practices prose into AGENT-API.md) merged (#201).
 - R5.1 dataplane PR #155: needs the 400/RATELIMITED redesign per the docs leg
   (review posted on the PR).
 
