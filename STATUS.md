@@ -85,7 +85,13 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   #171/#189/#181). declaredIn route tagging LANDED (#208
   closed; #211 merged — 43 routeMeta entries, roles verified); extract
   integrity guards LANDED (#205 closed; #210+#214 merged).
-- H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
+- H2 generateTheme exact reimplementation (#168): `src/ui-theme/` —
+  generateTheme + LCh/APCA color math + the object-hash input hash, verified
+  byte-for-byte against golden vectors executed FROM the corpus generator
+  (4 parametrizations × both retina branches × 116 tokens + 18 shell values +
+  derived elevated/sub/menu/selected/focus/sidebar themes + dynamic functions
+  + LCH/P3 formats; 13/13 tests). Remaining for the harness: feed the golden
+  values into the parity theme-values family (#162 ramp).
 - H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
   as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
   grammars, 2 chains on 1.32.4, order canaries, 9/9); next: primitive
