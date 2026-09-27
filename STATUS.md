@@ -83,7 +83,13 @@ Done 2026-09-27 (evening, freeze-era):
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
 - H1 follow-ups: #177 remainder (routes.json union with #181's enriched
   analyzer output; declaredIn tagging).
-- H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
+- H2 generateTheme exact reimplementation (#168): `src/ui-theme/` —
+  generateTheme + LCh/APCA color math + the object-hash input hash, verified
+  byte-for-byte against golden vectors executed FROM the corpus generator
+  (4 parametrizations × both retina branches × 116 tokens + 18 shell values +
+  derived elevated/sub/menu/selected/focus/sidebar themes + dynamic functions
+  + LCH/P3 formats; 13/13 tests). Remaining for the harness: feed the golden
+  values into the parity theme-values family (#162 ramp).
 - H3 matrix-§A fact extraction for the reference (unassigned).
 - H4 DONE (issue #185): docs-site digests complete to the 26-page sitemap bar
   (#184/#190/#197 merged); citation hard rule + docs drift-check leg + reviewer
