@@ -65,6 +65,9 @@ A family compares only where the reference has facts for it (ramp rule).
 `order` extraction (H3 #207): `` orderingKey: `k` `` chains (column order) and
 `` key:/name: `` options-array chains (filter/section order); longest chain per
 surface; pinned by `order:<Surface>=<a> > <b> > …` canary lines.
+`states` extraction (H3 #213): copy-arm ternary literals → `alt:<a>|<b>`
+state-alternate facts (the gating variable is minified away; the pair is the
+fact); pinned by `states:<Surface>=alt:<a>|<b>` canary lines.
 Synthetic app-level surfaces: `app.routes` (route table — chunk-body scan,
 because the analysis index is a floor) and `theme.tokens` (token namespace;
 VALUES come from the theme-generator golden-vectors slice, #162).

@@ -15,9 +15,12 @@
     "AutomationRunsPage": {
       "routes": [],
       "copy": [
+        "Done",
         "Duration",
         "Loop runs",
         "Name",
+        "No matching runs",
+        "No runs to show",
         "No runs yet",
         "Started",
         "Status",
@@ -29,6 +32,9 @@
         "name",
         "started",
         "duration"
+      ],
+      "states": [
+        "alt:No matching runs|No runs to show"
       ]
     },
     "app.routes": {

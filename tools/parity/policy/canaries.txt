@@ -16,3 +16,8 @@ route:/:orgKey/automation/:automationId/run/:runId
 # mismatch = order-grammar regression or corpus drift; both fail red.
 order:AutomationsList=name > trigger > team > owner > runs > lastExecuted
 order:LoopsManagementPage=Enabled > Team > Owner > Trusted external source
+
+# States canaries (H3 #213 slice 3): one alternate pair per grammar form —
+# the empty-state pair proves the ternary-alternate grammar per extraction.
+states:LoopsManagementPage=alt:No matching loops|No loops yet
+states:AutomationRunsPage=alt:Failed|Completed

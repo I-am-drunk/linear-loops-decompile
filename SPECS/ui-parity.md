@@ -56,6 +56,13 @@ Per UI surface. Set families (compared as sets; missing/extra are deviations):
 6. **icons** — icon-set membership per slot (same ramp).
 7. **behavior** — "event → effect" facts (click X navigates Y) (same ramp).
 8. **states** — state-conditional visibility facts (empty/loading/disabled).
+   Extraction (H3 #213 slice 3): the compiled chunks carry state-gated copy
+   as literal ternaries with both arms as template strings
+   (`` cond ? `No matching loops` : `No loops yet` ``). The minifier erases
+   the gating variable's name, so the fact is the PAIR, never a guessed
+   state name: `alt:<truthy arm>|<falsy arm>`, both arms passing the copy
+   grammar (which drops class-name/expression ternaries). `states:` canary
+   lines (`states:<Surface>=alt:<a>|<b>`) pin the grammar per extraction.
 
 Plus two non-set facts:
 

@@ -25,3 +25,6 @@ const filters = [{
   name: `Team`,
   values: []
 }];
+const emptyState = hasFilters ? `No matching runs` : `No runs to show`;
+const cls = isActive ? `activeRow` : `row`;
+const expr = ok ? `Done` : fallbackFn();
