@@ -16,16 +16,22 @@ Behavioral spec for OUR reimplementation, derived from decompiling Linear 1.32.4
 
 ## Trigger model (faithful)
 
+CORRECTED 2026-09-27 (audit, docs/audit-2026-09-27.md — the old "event"
+triggerType was wrong). Corpus enum (`fD` in `Issue.DRYymPCa.js`, switched on in
+`AutomationHelper.B0HEcOoo.js`): triggerType IS the entity, PascalCase strings:
+
 ```
-triggerType: "schedule" | "chat" | "event"
-schedule:    { rrule-ish; default exists (defaultAutomationSchedule) }   # when schedule
-event:       entity (issue|project|initiative|document|comment|team|cycle|release|…)
-activationMode (for event): "collectionChanged" | "watchedPropertyChanged"
+triggerType: "Issue" | "Project" | "Document" | "Initiative" | "Team"
+           | "Release" | "Cycle" | "Schedule" | "Chat"
+schedule:    { rrule-ish; default exists (defaultAutomationSchedule) }   # when Schedule
+activationMode (entity triggers): "collectionChanged" | "watchedPropertyChanged"
 conditions:  [ { watchedProperties: [...],
                  collectionChange: { property, operation },
                  commentMatch: <string/regex>,
                  filters… } ]
 ```
+
+Triage is a condition/variant (`entityInTriage`), not a triggerType value.
 
 Chat triggers: loop wakes on @mention/message in an enabled channel.
 Triage variant: event `entityInTriage` with triage-state conditions.

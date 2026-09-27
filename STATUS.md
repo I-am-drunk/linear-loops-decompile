@@ -3,7 +3,10 @@
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: R3 (skeleton).**
+**Phase: R3 (skeleton). FREEZE (2026-09-27, user directive issue #157): no new
+UI/server feature code until the audit (docs/audit-2026-09-27.md) is digested
+and the CLI parity harness is planned. Safe work: audits, corpus extraction,
+docs corrections, the generateTheme reimplementation, harness planning.**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
