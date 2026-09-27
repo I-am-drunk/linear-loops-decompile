@@ -232,33 +232,35 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         // order-grammar regression fails as loudly as a copy one.
         let mut order_canaries: Vec<(String, String)> = Vec::new(); // (surface, chain)
         let mut states_canaries: Vec<(String, String)> = Vec::new(); // (surface, alt fact)
-        let canary_list: Vec<(bool, String)> = list_text
-            .lines()
-            .map(str::trim)
-            .filter(|l| !l.is_empty() && !l.starts_with('#'))
-            .filter_map(|l| {
-                if let Some(o) = l.strip_prefix("order:") {
-                    if let Some((surface, chain)) = o.split_once('=') {
-                        order_canaries.push((surface.trim().to_string(), chain.trim().to_string()));
-                    }
-                    return None;
-                }
-                // `states:<Surface>=alt:<armA>|<armB>` (H3 #213 slice 3):
-                // pins the state-alternate grammar the same way order: pins
-                // the chain grammar — checked against the surface's extracted
-                // states facts, loud on regression or drift.
-                if let Some(st) = l.strip_prefix("states:") {
-                    if let Some((surface, fact)) = st.split_once('=') {
-                        states_canaries.push((surface.trim().to_string(), fact.trim().to_string()));
-                    }
-                    return None;
-                }
-                Some(match l.strip_prefix("route:") {
-                    Some(r) => (true, r.trim().to_string()),
-                    None => (false, l.to_string()),
-                })
-            })
-            .collect();
+        let mut canary_list: Vec<(bool, String)> = Vec::new();
+        for l in list_text.lines().map(str::trim).filter(|l| !l.is_empty() && !l.starts_with('#')) {
+            if let Some(o) = l.strip_prefix("order:") {
+                // A malformed structured canary line is a broken config, not a
+                // skippable row — silently dropping it would let extraction
+                // pass without ever checking the intended fact (CodeRabbit
+                // #217; same doctrine as the malformed-inventory guard #210).
+                let Some((surface, chain)) = o.split_once('=') else {
+                    return Err(format!("canaries: malformed order canary (expected order:<Surface>=<a> > <b> > …): {:?}", l));
+                };
+                order_canaries.push((surface.trim().to_string(), chain.trim().to_string()));
+                continue;
+            }
+            // `states:<Surface>=alt:<armA>|<armB>` (H3 #213 slice 3):
+            // pins the state-alternate grammar the same way order: pins
+            // the chain grammar — checked against the surface's extracted
+            // states facts, loud on regression or drift.
+            if let Some(st) = l.strip_prefix("states:") {
+                let Some((surface, fact)) = st.split_once('=') else {
+                    return Err(format!("canaries: malformed states canary (expected states:<Surface>=alt:<a>|<b>): {:?}", l));
+                };
+                states_canaries.push((surface.trim().to_string(), fact.trim().to_string()));
+                continue;
+            }
+            canary_list.push(match l.strip_prefix("route:") {
+                Some(r) => (true, r.trim().to_string()),
+                None => (false, l.to_string()),
+            });
+        }
         let mut order_problems: Vec<String> = Vec::new();
         let mut order_passed = 0;
         for (surface, fact) in &states_canaries {
@@ -609,8 +611,27 @@ fn extract_state_alternates(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let bytes = text.as_bytes();
     let mut search = 0;
-    while let Some(rel) = text[search..].find("? `") {
-        let a_start = search + rel + 3;
+    while let Some(rel) = text[search..].find('?') {
+        let q = search + rel;
+        // exclude optional chaining (?.), nullish coalescing (??), and a `?`
+        // that is part of ?? read from the left
+        if bytes.get(q + 1) == Some(&b'.') || bytes.get(q + 1) == Some(&b'?') || (q > 0 && bytes[q - 1] == b'?') {
+            search = q + 1;
+            continue;
+        }
+        // whitespace (incl. none, incl. newlines — prettified output wraps)
+        // then the truthy arm's opening backtick (CodeRabbit #217: `? \``
+        // literal-substring matching skipped compact `cond?\`` and wrapped
+        // forms)
+        let mut a_open = q + 1;
+        while a_open < bytes.len() && (bytes[a_open] as char).is_ascii_whitespace() {
+            a_open += 1;
+        }
+        if a_open >= bytes.len() || bytes[a_open] != b'`' {
+            search = q + 1;
+            continue;
+        }
+        let a_start = a_open + 1;
         let Some(a_len) = text[a_start..].find('`') else { break };
         let a_end = a_start + a_len;
         // between the arms: whitespace, then `:`, then whitespace, then a backtick

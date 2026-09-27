@@ -471,6 +471,16 @@ fn states_alternates_extracted_and_gated() {
     );
     assert!(!text.contains("activeRow"), "class-name ternary leaked into states");
     assert!(!text.contains("alt:Done"), "non-literal-arm ternary leaked into states");
+    // CodeRabbit #217: compact (no space after ?) and line-wrapped ternaries
+    // are valid copy-arm forms and must extract
+    assert!(
+        text.contains("alt:Loading run…|Run idle"),
+        "compact ternary extracted: {}", text
+    );
+    assert!(
+        text.contains("alt:Stale results|Fresh results"),
+        "line-wrapped ternary extracted: {}", text
+    );
 
     // ours missing the alternate: a states violation (reference covers the family)
     let facts = tmp.join("ui-facts-no-states.json");
@@ -504,5 +514,35 @@ fn states_alternates_extracted_and_gated() {
         .expect("run parity extract");
     assert!(!out.status.success(), "mismatched states canary must fail extract");
     assert!(String::from_utf8_lossy(&out.stderr).contains("states canary"));
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+
+#[test]
+fn malformed_structured_canary_lines_fail_extract() {
+    // CodeRabbit #217: a states:/order: line without `=` is a broken config
+    // and must hard-fail, never silently drop (the intended fact would go
+    // unchecked while extraction reports a pass).
+    let tmp = std::env::temp_dir().join(format!("parity-test-badcanary-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    for (line, kind) in [
+        ("states:AutomationRunsPage alt:No matching runs|No runs to show", "states"),
+        ("order:AutomationRunsPage name > started > duration", "order"),
+    ] {
+        let bad = tmp.join(format!("canaries-{}.txt", kind));
+        std::fs::write(&bad, line).unwrap();
+        let out = bin()
+            .arg("extract")
+            .arg("--corpus").arg(fixtures().join("corpus"))
+            .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+            .arg("--out").arg(tmp.join("ref.json"))
+            .arg("--canaries").arg(&bad)
+            .output()
+            .expect("run parity extract");
+        assert!(!out.status.success(), "malformed {} canary must fail extract", kind);
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(stderr.contains("malformed"), "loud malformed-canary failure ({}): {}", kind, stderr);
+    }
     let _ = std::fs::remove_dir_all(&tmp);
 }

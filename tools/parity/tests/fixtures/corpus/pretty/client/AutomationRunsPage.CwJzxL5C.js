@@ -28,3 +28,6 @@ const filters = [{
 const emptyState = hasFilters ? `No matching runs` : `No runs to show`;
 const cls = isActive ? `activeRow` : `row`;
 const expr = ok ? `Done` : fallbackFn();
+const compact = busy?`Loading run…`:`Run idle`;
+const wrapped = stale ?
+  `Stale results` : `Fresh results`;

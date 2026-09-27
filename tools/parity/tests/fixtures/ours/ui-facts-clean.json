@@ -17,11 +17,15 @@
       "copy": [
         "Done",
         "Duration",
+        "Fresh results",
+        "Loading run…",
         "Loop runs",
         "Name",
         "No matching runs",
         "No runs to show",
         "No runs yet",
+        "Run idle",
+        "Stale results",
         "Started",
         "Status",
         "Team"
@@ -34,7 +38,9 @@
         "duration"
       ],
       "states": [
-        "alt:No matching runs|No runs to show"
+        "alt:No matching runs|No runs to show",
+        "alt:Loading run…|Run idle",
+        "alt:Stale results|Fresh results"
       ]
     },
     "app.routes": {
