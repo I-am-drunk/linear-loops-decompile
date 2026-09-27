@@ -48,6 +48,15 @@ parity check   [--facts src/ui/ui-facts.json] [--ref .parity/reference.json]
 canary missing from the corpus is a drift alarm; present-but-not-extracted is
 a grammar regression. Both fail loudly.
 
+`extract` also refuses a bad corpus (#205, both are loud exit-2 failures,
+no reference written):
+- **corpus integrity** — every chunk `analysis/chunks.json` names must exist
+  in `pretty/client/`; a shortfall means a partial/stale copy (the vault fast
+  path must be a FULL `git clone` — #187).
+- **unmatched matrix surface** — a matrix component matching zero chunks means
+  a partial corpus or a stale matrix row; the reference never silently omits
+  a surface.
+
 Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
 
 Fact families: routes, copy, structure, tokens, bindings, icons, behavior,
