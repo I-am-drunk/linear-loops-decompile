@@ -37,6 +37,11 @@ early, ship to the issue.
 4. Done. No other instructions are ever needed. If a fleet asks for more, the docs are
    wrong — that is a bug; the lead (rank 0) fixes them.
 
+**Boot early, not at the flatline.** The new account's fleet may boot WHILE the old
+one still runs — overlap is fully supported (COORDINATION.md §10): both claim at
+once, the old generation's leases stand until it dies, and its tombstone is written
+by the living side. Booting early costs nothing and buys zero-downtime handover.
+
 Everything GitHub-side survives a Runner account death BY CONSTRUCTION: the repo,
 issues, PRs, branches, the private vault, the shared git token (a GitHub PAT — not
 tied to Runner), and the land-bot workflow. What dies is only Runner-side: sessions,

@@ -153,8 +153,34 @@ procedure (vault rotation, `.github/**`, settings — the only browser jobs).
 - **Credentials never** in repo/issues/chat/cloud/transcripts. v4 sessions need none (§1).
 - One live claim; heartbeat or it expires. Small frequent updates beat big silent pushes.
 
-## 10. Generations
+## 10. Generations — serial AND concurrent (v4.3)
 
 Sessions die; handles (`agent-NN`) and issue text survive. Registry: `work/EPOCHS.md`.
-Protocol: `RESET.md`. The user's launch prompt assigns your handle + role — **no rank
-computation, no self-selection** (gen-2 and gen-3 both lost hours to handle collisions).
+A **generation = one Runner-account lifespan of the fleet.** Generations may
+**OVERLAP**: when the user starts a new account before the old one's credits die, both
+fleets run and claim at once. That is normal, and five rules cover it:
+
+1. **Identity is `agent-NN@genN`.** During overlap every registration, claim, review,
+   and hub line carries the generation. New branches are named
+   `gen<N>/agent-NN/tNNN-slug` (unprefixed branches from earlier generations stay).
+2. **Claims are generation-blind.** A claim is live iff its lease is unexpired with a
+   fresh heartbeat — no matter which generation holds it. Earliest claim wins a free
+   task (§2). Dead account ⇒ heartbeats stop ⇒ leases void on expiry; once the user
+   confirms the death, the lead voids that generation's claims on the hub immediately
+   rather than waiting for expiry.
+3. **The pen.** The hub body and `work/*` files have ONE writer: the lead of the
+   OLDEST LIVING generation. It passes to the next generation's rank-0 at the
+   tombstone. Registrations (comments on #1 + the hub) are append-only — any
+   generation, any time.
+4. **Tombstone.** When a generation's account is confirmed dead, any living lead
+   appends its EPOCHS row + hub line and voids its claims. The living generations
+   continue — zero downtime, no special reset prompt (FLEET-PROMPT covers both cases:
+   full-fleet boot and joining a running generation via its backstop).
+5. **One live hub.** Overlapping generations share the current hub issue. A new hub
+   opens only when the pen-holder judges the current one unwieldy (~150+ comments).
+
+**When to boot the next fleet: whenever** — as soon as credits look thin, or earlier.
+There is no wrong time; the rules absorb the overlap. Boot text:
+`work/FLEET-PROMPT.md` (generation-agnostic). Handle/role assignment: self-derived
+(FLEET-PROMPT STEP 0) — **no rank math by hand, no user-side assignment** (gen-2/3
+lost hours to collisions).

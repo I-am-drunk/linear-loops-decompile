@@ -2,7 +2,9 @@
 
 An epoch/generation = one Runner-account lifespan of the swarm. Handles agent-01…10 are
 stable role slots; session ids are per-generation and tombstoned at reset.
-Cross-generation references: `agent-NN@gen<n>`.
+Cross-generation references: `agent-NN@gen<n>`. Generations may OVERLAP (v4.3,
+COORDINATION.md §10): a new account's fleet booting before the old one dies is
+normal — concurrent rows below note their overlap window.
 
 ## gen-4 — 2026-09-27, current
 
