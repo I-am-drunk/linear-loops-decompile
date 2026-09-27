@@ -57,9 +57,14 @@ What it does:
    the Electron asar shell.
 2. Crawls the full production web client bundle from static.linear.app
    (~1,550 chunks, ~29 MB; BFS over Vite asset references; no source maps exist).
-3. Prettifies every chunk.
-4. Analyzes the prettified corpus into `analysis/*.json` and regenerates the
-   committed `extracts/models.md` + `extracts/graphql-ops.md`.
+3. Prettifies every chunk. Every beautifier output is parsed as ESM and its
+   template-token structure is compared to raw input (the narrowly targeted
+   guard for js-beautify's known template-literal corruption). When a candidate
+   is invalid or changes that structure, the pipeline preserves the raw bytes
+   verbatim and reports a `raw-fallback`. Cached `pretty/` trees receive the
+   same checks before reuse and rebuild if any artifact is invalid.
+4. Analyzes the executable pretty corpus into `analysis/*.json` and regenerates
+   the committed `extracts/models.md` + `extracts/graphql-ops.md`.
 
 ## Where things live (this is the whole point)
 
