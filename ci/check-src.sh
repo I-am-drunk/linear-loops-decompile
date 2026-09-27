@@ -22,6 +22,21 @@ set -euo pipefail
 TSC_VERSION="5.9"
 TYPES_NODE_VERSION="22"
 
+# --- dependency pre-pass -----------------------------------------------------
+# Cross-package type imports (e.g. engine → ../model/loop-config.ts → zod)
+# resolve node_modules from the IMPORTED package's tree, never the importer's
+# — so every package's deps must exist before ANY package compiles. The
+# check loop installs per-package in glob order (engine before model), which
+# dies on a pristine clone (found by agent-02@gen4, issue #2). Install all
+# package deps up front; the loop below then no-ops on install.
+for tsconfig in src/*/tsconfig.json; do
+  [ -e "$tsconfig" ] || continue
+  pkg=$(dirname "$tsconfig")
+  [ -f "$pkg/package.json" ] || continue
+  echo "=== $pkg (install) ==="
+  (cd "$pkg" && npm install --no-audit --no-fund)
+done
+
 has_jq_expr() { # has_jq_expr <dir> <node-eval-expr-over-p>
   (cd "$1" && node -e "const p=require('./package.json');process.exit(($2)?0:1)")
 }
