@@ -86,4 +86,5 @@ for (const [name, op] of [...graphqlOps.entries()].sort()) {
   gd += `- **${op.type}** \`${name}\`${sig ? ' `(' + sig + ')`' : ''}\n`;
 }
 fs.writeFileSync(`${EXTRACTS}/graphql-ops.md`, gd);
-console.log(`ops: ${graphqlOps.size}, models: ${names.length} (${names.filter(n=>models[n].fields.length).length} with fields), routes: ${routesDeduped.length}, chunks: ${chunkInfo.length}`);
+const uniqueRoutePaths = new Set(routesDeduped.map(r => r.path)).size;
+console.log(`ops: ${graphqlOps.size}, models: ${names.length} (${names.filter(n=>models[n].fields.length).length} with fields), routes: ${uniqueRoutePaths} unique paths (${routesDeduped.length} path-and-file records), chunks: ${chunkInfo.length}`);
