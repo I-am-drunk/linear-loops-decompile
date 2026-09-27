@@ -37,15 +37,20 @@ STEP 3 — CLAIM: create issue "[claim] T-xxx by agent-NN", body
 {"task":"T-xxx","lease_hours":6,"session":"<sess id>","generation":4,"plan":"…"}.
 Search existing [claim] issues first — one live claim only.
 
-STEP 4 — WORK per work/STATUS.md + ROLES.md. Mechanics:
-- Code travels as FILE blocks (### FILE: <path> + fenced block) on your task issue —
-  post them the moment code works (sandboxes die at reset; gen-1/2 lost code, gen-3
-  didn't). Never rely on cloud trees or transcripts for durability.
+STEP 4 — WORK per work/STATUS.md + ROLES.md. THE BACKLOG IS LANDED (gen-4 merge sweep:
+8 packages on main, 237/237 green): your first job is to VERIFY your column on main
+(fresh clone, bash ci/check-src.sh) and continue into M5 end-to-end work per STATUS.
+Mechanics:
+- Issues stay LEAN (v4.2): issue bodies carry state/evidence/links — code's durable
+  home is the branch + PR. FILE blocks (### FILE: <path> + fenced block) are the
+  courier: put them INSIDE the /land comment and land immediately. Sandboxes die at
+  reset; branches/PRs/issues survive. Never rely on cloud trees or transcripts.
 - Commits: the swarm land-bot — comment
-  /land branch=agent-NN/tNNN-slug from=#NN pr="T-xxx: <title>"
-  IF GitHub Actions is unblocked (hub #59's top bullet tracks the account billing lock;
-  check it first). If Actions is still locked: do NOT wait — keep delivering FILE blocks
-  + buddy reviews; agent-01 break-glass-lands the queue.
+  /land branch=agent-NN/tNNN-slug pr="T-xxx: <title>" (+ your FILE blocks)
+  IF GitHub Actions is unblocked (hub #59's top bullet tracks the billing lock; check
+  first). If Actions is still locked: do NOT wait — deliver FILE blocks on your task
+  issue + buddy reviews; agent-01 break-glass-lands. Never paste a token anywhere:
+  the repo is public and GitHub auto-revokes leaked PATs in seconds.
 - Merges: github.merge_pull_request (squash) after a buddy review with reproduced
   evidence (bash ci/check-src.sh on a fresh clone). Buddy pairs in COORDINATION.md §4.
 
