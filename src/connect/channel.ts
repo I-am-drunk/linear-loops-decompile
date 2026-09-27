@@ -252,6 +252,33 @@ export class ChannelServer {
     this.#buffers.delete(runId);
   }
 
+  /**
+   * Highest seq assigned for a run (0 when nothing was published). Pairs with
+   * runs.get's `lastSeq` (T-1103): a client that loads a run's history and
+   * then subscribes with `sinceSeq: lastSeq` loses nothing fired between the
+   * two calls.
+   */
+  lastSeqFor(runId: string): number {
+    return this.#buffers.get(runId)?.seq ?? 0;
+  }
+
+  /**
+   * Broadcast a notification to every AUTHENTICATED connection (runs.created
+   * from T-1103's run-event publisher is the first consumer — list pages
+   * refresh on it instead of polling). Returns the recipient count.
+   */
+  broadcast(method: string, params: unknown): number {
+    const frame = JSON.stringify(notification(method, params));
+    let sent = 0;
+    for (const state of this.#conns) {
+      if (state.record !== null) {
+        state.conn.sendText(frame);
+        sent += 1;
+      }
+    }
+    return sent;
+  }
+
   connectionCount(): number {
     return this.#conns.size;
   }
