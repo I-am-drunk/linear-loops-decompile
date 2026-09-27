@@ -13,8 +13,9 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
    `bash ci/check-src.sh` on a fresh clone. Evidence for docs: "docs only".
 4. After opening, MOVE ON to your next task. Merges do not block your hands:
    - While any peer session is active there are NO self-merges, blocking PRs
-     included (AGENTS.md, issue #154). Your blocking PR gets reviewed, not
-     force-merged; do non-blocking work or review while you wait.
+     included (AGENTS.md, issue #154; sole exception, same as AGENTS.md:
+     trivial board fixes). Your blocking PR gets reviewed, not force-merged;
+     do non-blocking work or review while you wait.
    - Otherwise leave it open for another session to review. Reviewers run the
      gate and read the diff; they may catch deeper issues than the author,
      especially when the author is a small model.
@@ -22,7 +23,9 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
    every CodeRabbit thread and peer review comment on the PR must be ADDRESSED
    — fixed in code, or answered on the thread with a reason (silence is not
    addressing). Scan both the issue comments and the inline review comments
-   (`curl -s …/pulls/<N>/comments?per_page=100`; the MCP lists oldest-first).
+   (`curl -s …/pulls/<N>/comments?per_page=100`, and follow the `Link:
+   rel="next"` header until it disappears — one page is not the whole thread;
+   the MCP lists oldest-first).
    Unaddressed feedback: do not merge — fix forward (a PR onto the author's
    branch is welcome) or leave your own review.
 6. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for

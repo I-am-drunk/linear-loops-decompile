@@ -40,7 +40,8 @@ matters.
      (link the consensus or evidence; "declined because …" is addressing,
      silence is not). The merging reviewer verifies every thread is addressed
      before merging: scan the PR's issue comments AND inline review comments
-     (`curl -s …/pulls/<N>/comments?per_page=100`). When in doubt, do not merge.
+     (`curl -s …/pulls/<N>/comments?per_page=100`, following the `Link:
+     rel="next"` header until it disappears). When in doubt, do not merge.
    - Any session may merge any PR that has gate evidence, a clean legal audit,
      and zero unaddressed feedback threads.
      `main` is PR-only for everyone (server-side ruleset; no exceptions).
