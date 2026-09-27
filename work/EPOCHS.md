@@ -16,15 +16,33 @@ confirm-and-yield; registrations from other accounts never affect slots.
 
 | handle | session (full id) | role | status |
 |---|---|---|---|
-| agent-01 | (open — lowest-free; first new claim takes it + R10 duties) | R10 lead | open |
+| agent-01 | sess_01a0e17b-855f-7481-8648-84066a73a21c | R10 lead | holds (07:07:17Z; yielded agent-05 per §11 — 9882's claim was earlier — and took lowest-free) |
 | agent-02…04 | (open — unfilled slots = unclaimed work, not an error) | R4 · R5 · R1 | open |
 | agent-05 | sess_01a0e17b-9882-71a3-9398-82676e35ffdf | R7 | holds (registration 06:16:22Z, earliest) |
 | agent-06 | sess_01a0e179-5a8c-735f-8106-bef02e3c8ed0 | R6 | holds (06:18:18Z) |
 | agent-07 | sess_01a0e17b-5f42-738f-9d26-c0b7102c6ffa | R8 | holds (06:25:51Z) |
 | agent-08 | sess_01a0e17b-73cc-7152-9e9d-7397d5dde024 | R3 | holds (06:37:25Z; user-directed v4.4/v4.5 docs) |
-| agent-09 | (open — recommended next slot for sess_01a0e17b-855f after its agent-05 yield) | R9 | open |
+| agent-09 | (open) | R9 | open |
 | agent-10 | (reserve, shared) | R2/reserve | — |
 
+First-hour notes: the boot collided twice on retired rank math (duplicate agent-05,
+06:16–06:26Z — resolved per §11: 9882 holds; duplicate T-1104 claim #87 + PR #95
+released/closed, port list to #94) and the 06:07Z title-pool fragment ("gen4 swarm"
+vs the durable "loops fleet") slowed confirmations. Lead succession: agent-01@gen5
+took the pen 07:1xZ (hub #59 body rewrite, claim sweep #74/#75, this truth pass).
+
+
+## gen-4 — 2026-09-27, DEAD (account replaced mid-M5; death user-confirmed 06:4xZ)
+
+**Tombstone (written by agent-01@gen5, the living side):** all gen-4 session ids
+(sess_01a0e088 / sess_01a0e141 / sess_01a0e142 / sess_01a0e08c + the 05:06Z boot)
+VOID. Live claims #74 (M5 engine slice) + #75 (T-1102) void per §10.2 — closed by
+the gen-5 claim sweep. **Nothing lost:** the entire M1–M4 backlog landed in the
+#47–#73 sweep (237/237 fresh-clone), and gen-4's two M5 PRs were merged by gen-5
+with reproduced-evidence reviews: **#81 (T-1102 run orchestrator) + #83 (engine
+poll-diff bridge), 2026-09-27 07:08Z.** Its protocol legacy is permanent: v4
+(browser-less swarm), v4.2 lean issues, the vault-token commit path, the land-bot,
+the main-pr-only ruleset, the linear-official two-source cross-check.
 
 Boot: user designated agent-01@gen4 as Integrator and ordered the docs fix +
 browser-less landing BEFORE spawning the other sessions. Protocol v4: the land-bot

@@ -3,20 +3,27 @@
 Sessions register by commenting on issue #1 (write-only); the lead mirrors truth here
 and in the hub body. Generations: work/EPOCHS.md — this file shows the CURRENT one.
 
-## gen-4 (current — boot 2026-09-27)
+## gen-5 (current — boot 2026-09-27 06:07Z; identity per COORDINATION §11)
 
 | Handle | Role | Session | Status |
 |---|---|---|---|
-| agent-01 | **R10 lead** (user-designated) | sess_01a0e088-c660-759e-a222-9dcebd33236f | active — v4 architecture landed; holding lead duties |
-| agent-02 | R4 Loop engine | launch pending | first job: land engine (#41/#43/#45) |
-| agent-03 | R5 Agent runtime | launch pending | first job: land runtime chain (#36/#40/#44/#57) + server (#42) |
-| agent-04 | R1 Corpus steward | launch pending | first job: T-102 pipeline README (#35) |
-| agent-05 | R7 Loops UI | launch pending | first job: land UI pages (#52/#56/#58) after the shell |
-| agent-06 | R6 Inference harness | launch pending | first job: verify + merge PR #47, harness UX |
-| agent-07 | R8 Shell + settings | launch pending | first job: land shell (#39 v1+v2) |
-| agent-08 | R3 Linear dataplane | launch pending | first job: land T-303 (#38 + reads.ts fix), T-304 (#53) |
-| agent-09 | R9 T3 connect | launch pending | first job: land connect (#50) |
-| agent-10 | R2 models + reserve/janitor | launch pending | first job: T-201/#51 shepherding, review sweep |
+| agent-01 | **R10 lead** (duty set; §11 lowest-free) | sess_01a0e17b-855f-7481-8648-84066a73a21c | active — pen held; truth passes |
+| agent-02 | R4 Loop engine | open | unfilled slot = unclaimed work |
+| agent-03 | R5 Agent runtime | open | unfilled slot |
+| agent-04 | R1 Corpus steward | open | unfilled slot |
+| agent-05 | R7 Loops UI | sess_01a0e17b-9882-71a3-9398-82676e35ffdf | active — T-1104 (#85, PR #94) |
+| agent-06 | R6 Inference harness | sess_01a0e179-5a8c-735f-8106-bef02e3c8ed0 | active — T-1105 (#86, PR #92) |
+| agent-07 | R8 Shell + settings | sess_01a0e17b-5f42-738f-9d26-c0b7102c6ffa | active — T-803 (#88, PR #91) |
+| agent-08 | R3 Linear dataplane | sess_01a0e17b-73cc-7152-9e9d-7397d5dde024 | active — T-305 (#90) |
+| agent-09 | R9 T3 connect | open | unfilled slot |
+| agent-10 | R2 models + reserve/janitor | shared | reserve — sign full sess_ ids |
+
+## gen-4 — DEAD 2026-09-27 (account replaced mid-M5; death user-confirmed; all ids void)
+
+01=R10(designated, sess_01a0e088) · 02=R4 (e141) · 03=R5 (e142) · 04=R1 (e08c, backstop) · 05…10 launch-pending.
+Landed: v4/v4.2/v4.3 architecture, vault + land-bot + ruleset, linear-official extracts,
+M1–M4 sweep (PRs #47–#73, 237/237), M5 PRs #81+#83 (merged by gen-5, 07:08Z).
+Claims #74/#75 void per §10.2 (closed by the gen-5 sweep). Never trust a gen-4 session id.
 
 ## gen-3 — DEAD 2026-09-27 ~02:00 UTC (account credits; all ids void)
 
