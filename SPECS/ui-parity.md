@@ -30,7 +30,15 @@ Per UI surface. Set families (compared as sets; missing/extra are deviations):
 1. **routes** — the Loops/agent route table (synthetic surface `app.routes`).
    Extraction reads `analysis/routes.json` AND scans chunk bodies for
    `` `/:orgKey/…` `` literals — the index is a floor, not a ceiling (#157
-   meta finding).
+   meta finding). The reference additionally carries per-route provenance
+   (`routeMeta`, issue #208): `declaredIn` (the chunk basenames holding the
+   literal) and a derived `role` — `registration` (the literal sits in the
+   `Root.*` route-table chunk: the app shell must route this URL), `matcher`
+   (a `match(route, pathname)` call site: this URL gates what a surface
+   renders — e.g. `/:orgKey/agent/:agentId`), or `both` (e.g.
+   `/:orgKey/loops/new`, a registered route that renders a DIALOG). Compare
+   is unchanged (paths as a set); role is informational until the primitive
+   family (H3, #207) consumes it. `ui-facts.json` never declares routeMeta.
 2. **copy** — user-visible strings, exact-compared (zero tolerance; copy is
    the cheapest sameness). Extraction grammar: all three string-literal forms
    (compiled JSX carries copy as `children:` props, backtick literals, and
@@ -53,6 +61,15 @@ Plus two non-set facts:
 
 9. **order** — ordered presentation (sidebar items, column order), compared
    as ONE whole-sequence fact ("a > b > c"); containment alone misses order.
+   Extraction (H3 #207): order is compiled into the bundle as array/object
+   literals whose source order IS the render order, so the grammars read
+   literal sequences, never inferred layout. Two corpus-proven grammars:
+   consecutive `` orderingKey: `k` `` header-cell props (list column order,
+   e.g. `AutomationsList`) and consecutive `` key:/name: `` pairs in one
+   options-array literal (filter/section order, e.g. `LoopsManagementPage`).
+   ≥2 items make a chain; per surface the longest chain wins; surfaces
+   without a proven chain stay uncovered (ramp rule). `order:` canaries
+   (`order:<Surface>=<a> > <b> > …`) pin the extracted chains per extraction.
 10. **primitive** — the surface's interaction primitive (dialog | page |
     popover | drawer | …), exact-compared: a route can be exact while the
     primitive is wrong.
@@ -116,6 +133,13 @@ where we can measure; never false-red, never silent-green.
   corpus, no `src/ui` → extract (canaries enforced), vacuous check ·
   `src/ui` without `ui-facts.json` → **FAIL** (declared facts are part of the
   slice) · facts present → full check.
+- Corpus guards in `extract` (#205; both loud exit-2 failures, no reference
+  written): **integrity** — every chunk `analysis/chunks.json` names must be
+  present in `pretty/client/` (a shortfall = partial/stale copy; full
+  `git clone` of the vault, #187); **unmatched surface** — a matrix component
+  matching zero chunks fails by name (never a silently omitted surface). The
+  #162 INFRA ALERT (1,043/1,550 stale copy → silent partial reference) is the
+  incident both guards close.
 
 ## Repo fit and the legal line
 

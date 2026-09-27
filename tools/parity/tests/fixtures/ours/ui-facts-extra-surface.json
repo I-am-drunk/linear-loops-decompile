@@ -15,17 +15,28 @@
     "AutomationRunsPage": {
       "routes": [],
       "copy": [
+        "Duration",
         "Loop runs",
-        "No runs yet"
+        "Name",
+        "No runs yet",
+        "Started",
+        "Status",
+        "Team"
       ],
       "structure": [],
-      "tokens": []
+      "tokens": [],
+      "order": [
+        "name",
+        "started",
+        "duration"
+      ]
     },
     "app.routes": {
       "routes": [
         "/:orgKey/loop/:loopId",
         "/:orgKey/loop/:loopId/runs",
-        "/:orgKey/loops/:viewType?"
+        "/:orgKey/loops/:viewType?",
+        "/:orgKey/loops/new"
       ],
       "copy": [],
       "structure": [],

@@ -11,3 +11,8 @@ Notes saved by Linear Agent from previous runs
 # param, one route-table registration. Route-extraction regression fails red.
 route:/:orgKey/loops/:viewType?
 route:/:orgKey/automation/:automationId/run/:runId
+
+# Order canaries (H3 #207): whole-sequence facts that MUST extract. A chain
+# mismatch = order-grammar regression or corpus drift; both fail red.
+order:AutomationsList=name > trigger > team > owner > runs > lastExecuted
+order:LoopsManagementPage=Enabled > Team > Owner > Trusted external source

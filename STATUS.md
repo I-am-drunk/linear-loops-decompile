@@ -81,8 +81,10 @@ Done 2026-09-27 (evening, freeze-era):
   137 tokens, canaries 7/7.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
-- H1 follow-ups: #177 remainder (routes.json union with #181's enriched
-  analyzer output; declaredIn tagging).
+- H1 follow-ups: #177 closed (routes.json union + `?` params landed via
+  #171/#189/#181). declaredIn route tagging LANDED (#208
+  closed; #211 merged — 43 routeMeta entries, roles verified); extract
+  integrity guards LANDED (#205 closed; #210+#214 merged).
 - H2 generateTheme exact reimplementation (#168): `src/ui-theme/` —
   generateTheme + LCh/APCA color math + the object-hash input hash, verified
   byte-for-byte against golden vectors executed FROM the corpus generator
@@ -90,13 +92,17 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   derived elevated/sub/menu/selected/focus/sidebar themes + dynamic functions
   + LCH/P3 formats; 13/13 tests). Remaining for the harness: feed the golden
   values into the parity theme-values family (#162 ramp).
-- H3 matrix-§A fact extraction for the reference (unassigned).
-- H4 DONE (issue #185): docs-site digests complete to the 26-page sitemap bar
-  (#184/#190/#197 merged); citation hard rule + docs drift-check leg + reviewer
-  two-source checklist merged (#196). Remaining: close #185 after a final
-  checklist pass.
-- R5.1 dataplane PR #155: needs the 400/RATELIMITED redesign per the docs leg
-  (review posted on the PR).
+- H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
+  as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
+  grammars, 2 chains on 1.32.4, order canaries, 9/9); next: primitive
+  (claimed on #213), states, behavior.
+- H4 DONE (issue #185, closed): docs-site digests complete to the 26-page
+  sitemap bar (#184/#190/#197 merged); citation hard rule + docs drift-check
+  leg + reviewer two-source checklist merged (#196); agent-signals +
+  best-practices prose digests merged (#201).
+- R5.1 dataplane PR #155: the blocking 400/RATELIMITED finding and the
+  markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
+  merged into it; server 26/26). Stays open per the #157 freeze.
 
 Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
 trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by

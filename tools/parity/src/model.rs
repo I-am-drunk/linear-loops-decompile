@@ -50,9 +50,29 @@ pub struct Surface {
     pub primitive: Option<String>,
 }
 
+/// Where a route literal was found, and what that means (issue #208).
+/// Informational in the reference: `check` compares route PATHS only; role
+/// distinguishes "the app shell must route this URL" (registration — the
+/// literal is in the `Root.*` route-table chunk) from "this URL gates what a
+/// surface renders" (matcher — a `match(route, pathname)` call site). The
+/// primitive family (H3, #207) consumes this; compare is unchanged.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct RouteMeta {
+    /// Chunk basenames declaring the literal (scan hits, merged with
+    /// `analysis/routes.json` `file` entries — the index names the chunk the
+    /// literal appears in, NOT the route table, so it feeds declaredIn, never
+    /// the role).
+    pub declared_in: Vec<String>,
+    /// "registration" (Root only) | "matcher" (never in Root) | "both".
+    pub role: String,
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct FactFile {
     pub surfaces: BTreeMap<String, Surface>,
+    /// Per-route provenance, keyed by route path (reference-side only; a
+    /// slice's ui-facts.json never needs it).
+    pub route_meta: BTreeMap<String, RouteMeta>,
 }
 
 impl Surface {
@@ -66,9 +86,6 @@ impl Surface {
             list.dedup();
         }
         self.order.dedup();
-    }
-    pub fn is_empty(&self) -> bool {
-        self.set_lists().iter().all(|l| l.is_empty()) && self.order.is_empty() && self.primitive.is_none()
     }
     pub fn set_lists(&self) -> [&Vec<String>; 8] {
         [
@@ -123,10 +140,26 @@ pub fn to_value(f: &FactFile) -> Value {
         }
         surfaces.push((name.clone(), Value::Obj(pairs.into_iter().map(|(k, v)| (k.to_string(), v)).collect())));
     }
-    Value::Obj(vec![
+    let mut top = vec![
         ("version".to_string(), Value::Num(FACT_VERSION as f64)),
         ("surfaces".to_string(), Value::Obj(surfaces)),
-    ])
+    ];
+    // routeMeta is additive + informational (issue #208): compare never reads
+    // it, so fact files without it (every ui-facts.json) stay valid.
+    if !f.route_meta.is_empty() {
+        let mut metas = Vec::new();
+        for (path, m) in &f.route_meta {
+            metas.push((
+                path.clone(),
+                Value::Obj(vec![
+                    ("declaredIn".to_string(), json::str_arr(&m.declared_in)),
+                    ("role".to_string(), Value::Str(m.role.clone())),
+                ]),
+            ));
+        }
+        top.push(("routeMeta".to_string(), Value::Obj(metas)));
+    }
+    Value::Obj(top)
 }
 
 pub fn from_value(v: &Value) -> Result<FactFile, String> {
@@ -171,6 +204,32 @@ pub fn from_value(v: &Value) -> Result<FactFile, String> {
         }
         s.normalize();
         f.surfaces.insert(name.clone(), s);
+    }
+    if let Some(meta_v) = v.get("routeMeta") {
+        let metas = match meta_v {
+            Value::Obj(p) => p,
+            _ => return Err("fact file: \"routeMeta\" must be an object".to_string()),
+        };
+        for (path, mv) in metas {
+            let mut m = RouteMeta::default();
+            if let Some(arr) = mv.get("declaredIn").and_then(Value::as_arr) {
+                for item in arr {
+                    match item.as_str() {
+                        Some(x) => m.declared_in.push(x.to_string()),
+                        None => return Err(format!("routeMeta '{}': declaredIn must be strings", path)),
+                    }
+                }
+            }
+            m.role = mv
+                .get("role")
+                .and_then(Value::as_str)
+                .ok_or_else(|| format!("routeMeta '{}': missing string field 'role'", path))?
+                .to_string();
+            if !matches!(m.role.as_str(), "registration" | "matcher" | "both") {
+                return Err(format!("routeMeta '{}': role must be registration|matcher|both, got {:?}", path, m.role));
+            }
+            f.route_meta.insert(path.clone(), m);
+        }
     }
     Ok(f)
 }
