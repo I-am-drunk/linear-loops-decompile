@@ -13,6 +13,28 @@ contract, loop lifecycle semantics — name a different computed bar per row
 (the goose trace `docs/golden-goose-chat-route.md`, runtime fixtures). Every
 matrix row should eventually name its bar; parity covers the renderable ones.
 
+## Two tiers (user directive 2026-09-27, issue #220) — READ FIRST
+
+This spec now describes TWO layers with different authority:
+
+- **Tier 1 — the acceptance bar: hand-verified golden tests.** A clean-code
+  module is proven exact by executing the CORPUS code itself (vault-side, per
+  the #215 generateTheme pattern) on author-chosen inputs, committing the
+  computed outputs as golden manifests, and byte-diffing our module's output
+  against them in `parity check`. Every golden case is picked and verified BY
+  HAND against the corpus file it came from. This is what "exact" means.
+- **Tier 2 — drift canaries: the extract→compare families below.** The
+  grammar-extracted reference (routes/copy/structure/tokens/order/states/
+  primitive) is lossy and grammar-inferred: it catches regressions and corpus
+  drift cheaply, but it can NOT prove sameness — a surface can pass every
+  family and still not be the same UI. It is recon for authoring goldens and
+  the ~30-day drift alarm, never the acceptance bar.
+
+A UI slice is done when its modules carry Tier-1 goldens (green) AND Tier 2
+reports no undeclared drift. Tier 2 alone advances no matrix row. The
+golden-tier mechanics live in "The golden tier" section at the end; the
+extraction families below are retained as specified, at canary authority.
+
 ## The one command (the most important thing, made perfect)
 
 ```bash
@@ -23,7 +45,7 @@ Exit 0 = the slice matches the reference within declared tolerances and
 declared improvements. Exit 1 = violations, with a Markdown report
 (`parity-report.md`) that pastes straight into the PR as evidence.
 
-## Fact model (what "the same" means, computed)
+## Fact model (Tier 2 — drift canaries; see "Two tiers")
 
 Per UI surface. Set families (compared as sets; missing/extra are deviations):
 
@@ -157,11 +179,48 @@ where we can measure; never false-red, never silent-green.
   vault-side. Screenshots/captures: local only, never committed (issue #20).
 - Matrix rows gain parity evidence by report paste; no auto-editing (YAGNI).
 
+## The golden tier (Tier 1 — the acceptance bar; issue #220)
+
+The unit of parity is the corpus chunk/function a clean `src/` module
+reimplements — not a fact family.
+
+1. **Golden manifests** — `src/<module>/golden/<case>.json`: author-chosen
+   inputs + expected outputs COMPUTED by executing the corpus code vault-side.
+   Committed goldens are values (facts), never Linear code; the legal line is
+   the same one #215's theme vectors already passed review under. Each case
+   names its corpus source (chunk + what was executed) and is verified by its
+   author against that file before commit — no auto-generated bar, ever.
+2. **`tools/corpus-exec`** (G1) — a vault-side Node runner that loads a
+   prettified chunk with a module map + stub registry, calls named exports on
+   the case inputs, and records outputs. It generalizes what H2 did ad hoc,
+   so authoring a golden is cheap. It lives in the public repo; it only runs
+   where the corpus is (never committed output beyond the value manifests).
+3. **`parity check` golden leg** (G2) — for every `src/` module with a
+   manifest, run OUR module on the manifest inputs and byte-diff outputs.
+   Mismatch = red. A `src/` module with no manifest = a loud "uncovered"
+   ledger line, never silence.
+4. **Coverage ledger** (G2) — per matrix-§A surface, every corpus chunk it
+   names is classified: `golden` (reimplemented + manifest) / `stubbed`
+   (deliberate, with reason + issue) / `GAP`. Printed in every check report:
+   the unextracted 90% of a chunk's behavior stays visible instead of
+   silently out of scope.
+5. **Rendered components** — same recipe one level up: render the corpus
+   component vault-side (React ships in the bundle), snapshot DOM/props;
+   render ours; diff. This supersedes the old P2 "scan/render" plan as the
+   path to "same UI" for JSX. First citizen: G4 (AutomationsList or
+   LoopsManagementPage).
+
+Slices: G0 spec (this section) · G1 corpus-exec · G2 manifest format + check
+leg + ledger · G3 generateTheme retrofit (its goldens exist; subsumes #218's
+wiring) · G4 first rendered-component golden. Claims on #220.
+
 ## Failure modes it must kill (the why, from the v0 incident)
 
 - "Looks Linear-ish" invented UI → copy/structure/token/primitive gates.
 - Silent divergence across slices → every UI PR carries the report.
 - Improvements smuggled as parity → unlisted deviation = red.
 - Extraction regressions masquerading as parity → canaries fail the extract.
+- Grammar-lossy false confidence → Tier 2 is never the bar; acceptance is
+  golden execution of the corpus code (issue #220).
 - Reference rot → deterministic extract per corpus; 30-day drift check
   regenerates; stale improvements self-flag.
