@@ -15,15 +15,19 @@ Done 2026-09-27:
   `boot`, `ship`, `github`.
 - R1 pipeline: `bash pipeline/run.sh` runs end to end (Linear v1.32.4: 1,550
   chunks, 258 GraphQL ops, 87 models, zero drift vs baseline). Corpus ships to
-  agents via the private vault repo (`corpus/`); regeneration is the ~30-day
   drift check only.
+- R2 feature matrix: `docs/feature-matrix.md` enumerates every Loops feature with
+  corpus evidence; KNOWLEDGE.md gained §8 (chat substrate: loop chat IS normal
+  chat; zero GraphQL subscriptions, streaming rides the sync queue).
 
 - R3.1 transport slice: `src/connect` (zero-dep RFC 6455 framing + JSON-RPC,
   in-band auth, events; 3/3 tests, gate green).
+- R3.2 boot slice: `src/server` (http + static + descriptor + persisted session
+  token + node:sqlite store + append-only audit; 4/4 tests + real boot smoke).
 
 Now:
-- R3.2 boot slice (unassigned): `src/server` (http + static + environment
-  descriptor + dev token + node:sqlite store + health) per PLAN.md.
+- R3.3 settings vertical (unassigned): settings.* RPCs + dataplane.probe +
+  the Settings page in src/ui. First real user path; write-only secrets.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 
