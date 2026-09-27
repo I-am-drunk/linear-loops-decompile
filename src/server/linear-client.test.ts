@@ -68,7 +68,27 @@ test("graphql errors with null data throw a typed graphql error", async () => {
   });
 });
 
-test("RATELIMITED extension maps to rate_limited with retry hint from the reset header", async () => {
+test("HTTP 400 + RATELIMITED (the documented shape) maps to rate_limited with retry hint", async () => {
+  // Official docs: "response http status code will be 400, but you can catch
+  // these by inspecting the errors in the response body containing the
+  // RATELIMITED error code" (docs-site/rate-limiting.md).
+  let now = 3_000_000;
+  const fakeFetch = (async () =>
+    jsonResponse(
+      { errors: [{ message: "Rate limit exceeded", extensions: { code: "RATELIMITED" } }] },
+      { status: 400, headers: { ...HEADERS, "x-ratelimit-requests-remaining": "0", "x-ratelimit-requests-reset": "3600000" } },
+    )) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch, now: () => now });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    assert.equal(e.status, 400);
+    assert.equal(e.retryAfterMs, 600_000);
+    return true;
+  });
+  assert.equal(client.budget().requestsRemaining, 0);
+});
+
+test("RATELIMITED on a 200 body (defensive) still maps to rate_limited", async () => {
   let now = 3_000_000;
   const fakeFetch = (async () =>
     jsonResponse(
@@ -79,6 +99,17 @@ test("RATELIMITED extension maps to rate_limited with retry hint from the reset 
   await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
     assert.equal(e.kind, "rate_limited");
     assert.equal(e.retryAfterMs, 600_000);
+    return true;
+  });
+});
+
+test("a plain 400 without RATELIMITED stays a generic http error", async () => {
+  const fakeFetch = (async () =>
+    jsonResponse({ errors: [{ message: "Argument Validation Error" }] }, { status: 400 })) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "http");
+    assert.equal(e.status, 400);
     return true;
   });
 });

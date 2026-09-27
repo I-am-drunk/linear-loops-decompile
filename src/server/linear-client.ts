@@ -12,8 +12,12 @@
  *   are the source of truth, so this client never hardcodes a budget.
  * - Some endpoints have lower per-endpoint limits, signalled with
  *   X-RateLimit-Endpoint-Requests-* + X-RateLimit-Endpoint-Name.
- * - Exhaustion surfaces two ways: HTTP 429 (Retry-After, seconds) or a 200
- *   with errors[].extensions.code === "RATELIMITED".
+ * - Exhaustion: the DOCUMENTED shape is HTTP 400 with
+ *   errors[].extensions.code === "RATELIMITED" in the body (the official
+ *   rate-limiting page, "Handling rate limit errors" — see
+ *   extracts/linear-official/docs-site/rate-limiting.md). Defensively we also
+ *   map HTTP 429 (Retry-After, seconds) and a RATELIMITED code on any other
+ *   status, 200 included.
  *
  * Policy: gate before firing (when a window is known-exhausted, refuse with
  * retryAfterMs instead of earning a 429), cap concurrency with a FIFO queue,
@@ -245,29 +249,38 @@ export class LinearClient {
           rateLimit: this.budget(),
         });
       }
-      if (!res.ok) {
-        throw new LinearClientError("http", `http ${res.status}`, { status: res.status, rateLimit: this.budget() });
-      }
-
-      let body: GraphqlBody<T>;
+      // Parse the body BEFORE the generic !res.ok throw: the DOCUMENTED
+      // rate-limit exhaustion shape is HTTP 400 with errors[].extensions.code
+      // === "RATELIMITED" (docs-site/rate-limiting.md, "Handling rate limit
+      // errors"). A generic http throw on 400 would misclassify it, skip
+      // markExhausted(), and leave the gate open (#155 blocking review).
+      let body: GraphqlBody<T> | undefined;
       try {
         body = (await res.json()) as GraphqlBody<T>;
       } catch {
-        throw new LinearClientError("http", "invalid JSON from Linear", { status: res.status, rateLimit: this.budget() });
+        body = undefined;
       }
 
-      // RATELIMITED is checked BEFORE partial data is accepted: a 200 can
-      // carry both, and treating a limited call as success would let
-      // settings.setLinear store a token mid-limit (CodeRabbit #155).
-      const errors = body.errors ?? [];
+      // RATELIMITED is checked on ANY status — 400 is documented, 200 with
+      // partial data is defended against (treating a limited call as success
+      // would let settings.setLinear store a token mid-limit — CodeRabbit
+      // #155), anything else is belt-and-braces.
+      const errors = body?.errors ?? [];
       if (errors.some((e) => e.extensions?.code === "RATELIMITED")) {
         this.markExhausted();
         const reset = this.lastBudget.requestsReset;
         const now = this.opts.now();
         throw new LinearClientError("rate_limited", "Linear: RATELIMITED", {
+          status: res.ok ? undefined : res.status,
           retryAfterMs: reset !== undefined && reset > now ? reset - now : undefined,
           rateLimit: this.budget(),
         });
+      }
+      if (!res.ok) {
+        throw new LinearClientError("http", `http ${res.status}`, { status: res.status, rateLimit: this.budget() });
+      }
+      if (body === undefined) {
+        throw new LinearClientError("http", "invalid JSON from Linear", { status: res.status, rateLimit: this.budget() });
       }
       if (body.data === undefined || body.data === null) {
         const message = errors.map((e) => e.message ?? "?").join("; ") || "GraphQL error (no message)";

@@ -149,10 +149,15 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   MILLISECONDS. Budgets: API key 2,500 req/h + 3,000,000 complexity pts/h, per USER
   (all keys share); single-query complexity cap 10,000 pts (always rejected above).
   Some endpoints carry lower per-endpoint limits signalled via
-  `X-RateLimit-Endpoint-Requests-*` + `X-RateLimit-Endpoint-Name`. Exhaustion surfaces
-  as HTTP 429 (`Retry-After`, seconds) or as a 200 with
-  `errors[].extensions.code === "RATELIMITED"`. The docs' numbers have drifted across
-  third-party write-ups — treat the response headers as the only source of truth.
+  `X-RateLimit-Endpoint-Requests-*` + `X-RateLimit-Endpoint-Name`. Exhaustion: the
+  DOCUMENTED shape is HTTP **400** with `errors[].extensions.code ===
+  "RATELIMITED"` in the body (official rate-limiting page, "Handling rate
+  limit errors"); 429/`Retry-After` and 200-with-RATELIMITED are handled
+  defensively but are not the documented contract. The docs' numbers have
+  drifted across third-party write-ups — treat the response headers as the
+  only source of truth. (NOTE: this branch predates the #184 §6 rewrite on
+  main; resolve any conflict in favor of main's sourced version, which states
+  the same 400 fact.)
 - The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /
