@@ -52,7 +52,6 @@ unsupported for commentAdded/updatePosted/customerRequestAdded triggers.
 Triage is a condition/variant (`entityInTriage`), not a triggerType value.
 
 Chat triggers: loop wakes on @mention/message in an enabled channel.
-Triage variant: event `entityInTriage` with triage-state conditions.
 
 ## Condition semantics (observed)
 
