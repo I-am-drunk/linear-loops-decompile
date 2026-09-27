@@ -39,6 +39,8 @@ export function lastRunLabel(
       return `Failed ${ago}`;
     case "canceled":
       return `Canceled ${ago}`;
+    case "stale":
+      return `Unresponsive ${ago}`;
     case "active":
       return "Running…";
     case "awaitingInput":

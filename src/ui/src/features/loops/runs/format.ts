@@ -44,6 +44,8 @@ export function statusLabel(status: string): string {
       return "Failed";
     case "canceled":
       return "Canceled";
+    case "stale":
+      return "Unresponsive";
     default:
       return status;
   }

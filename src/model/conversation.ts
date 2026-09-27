@@ -100,7 +100,14 @@ export interface AiConversationTurn {
   endedAt?: ISODateTime | undefined;
 }
 
-/** AgentSession statuses (SPECS/agent.md §5; canceled arrives externally). */
+/**
+ * AgentSession statuses (SPECS/agent.md §5; canceled arrives externally).
+ * `stale` added in T-504 for official parity: the official
+ * `AgentSessionStatus` enum is { active, awaitingInput, complete, error,
+ * pending, stale } (extracts/linear-official/AGENT-API.md), so every official
+ * status is representable here; our extras (`waiting`, `canceled`) fold down
+ * on export via src/runtime/agent-session-status.ts.
+ */
 export const AGENT_SESSION_STATUSES = [
   "pending",
   "active",
@@ -109,6 +116,7 @@ export const AGENT_SESSION_STATUSES = [
   "complete",
   "waiting",
   "canceled",
+  "stale",
 ] as const;
 export type AgentSessionStatus = (typeof AGENT_SESSION_STATUSES)[number];
 

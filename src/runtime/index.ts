@@ -47,6 +47,9 @@ export type { RunSnapshot } from "./snapshot.ts";
 
 export { runToConversation, turnsToConversationTurns, turnToConversationTurn } from "./conversation-map.ts";
 
+export { OFFICIAL_AGENT_SESSION_STATUSES, toOfficialAgentSessionStatus } from "./agent-session-status.ts";
+export type { OfficialAgentSessionStatus } from "./agent-session-status.ts";
+
 export { TURN_STATUSES } from "./types.ts";
 export type {
   Part,
@@ -56,6 +59,7 @@ export type {
   RunEventType,
   RunTarget,
   RunUsage,
+  StopSignal,
   Turn,
   TurnStatus,
 } from "./types.ts";

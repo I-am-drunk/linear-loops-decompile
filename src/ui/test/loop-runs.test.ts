@@ -38,7 +38,7 @@ test("live + cancelable statuses", () => {
     assert.ok(isLiveStatus(s));
     assert.ok(isCancelable(s));
   }
-  for (const s of ["complete", "error", "canceled"] as const) {
+  for (const s of ["complete", "error", "canceled", "stale"] as const) {
     assert.ok(!isLiveStatus(s));
     assert.ok(!isCancelable(s));
   }
@@ -50,11 +50,12 @@ test("filterRuns: newest first; active = live statuses; failed = error only", ()
     mk("live", "active", "2026-09-27T00:00:00Z"),
     mk("mid", "error", "2026-09-26T00:00:00Z"),
     mk("canceled", "canceled", "2026-09-26T12:00:00Z"),
+    mk("stale", "stale", "2026-09-26T18:00:00Z"),
     mk("queued", "waiting", "2026-09-27T01:00:00Z"),
   ];
-  assert.deepEqual(filterRuns(runs, "all").map((r) => r.id), ["queued", "live", "canceled", "mid", "old"]);
+  assert.deepEqual(filterRuns(runs, "all").map((r) => r.id), ["queued", "live", "stale", "canceled", "mid", "old"]);
   assert.deepEqual(filterRuns(runs, "active").map((r) => r.id), ["queued", "live"]);
-  assert.deepEqual(filterRuns(runs, "failed").map((r) => r.id), ["mid"]); // canceled is NOT failed
+  assert.deepEqual(filterRuns(runs, "failed").map((r) => r.id), ["mid"]); // canceled/stale are NOT failed
 });
 
 test("follow-up box copy states", () => {
@@ -65,4 +66,5 @@ test("follow-up box copy states", () => {
   assert.equal(followUpCopy("complete").button, "Continue");
   assert.equal(followUpCopy("error").button, "Continue");
   assert.equal(followUpCopy("canceled").button, "Continue");
+  assert.equal(followUpCopy("stale").button, "Continue");
 });

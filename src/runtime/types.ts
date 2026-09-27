@@ -22,6 +22,20 @@ export type { EntityId, ISODateTime } from "../model/loop.ts";
 export { TURN_STATUSES } from "../model/conversation.ts";
 export type { ActivityPartContent, TurnStatus } from "../model/conversation.ts";
 
+/**
+ * A halt signal issued on a run (T-504 — the official
+ * `AgentActivitySignal.stop` semantics: halt immediately, then the run lands
+ * in a terminal state; partial parts are kept, never rolled back). Recorded
+ * on the run so the golden-goose adapter can surface it as a `stop`-signal
+ * activity. IN-MEMORY ONLY for now — carrying it through snapshot/store
+ * rows rides the M6 restart story (agent-06@gen5's #106 review note).
+ */
+export interface StopSignal {
+  at: ISODateTime;
+  /** `user` = the person asked to halt (cancel); `system` = the sweeper/server. */
+  source: "user" | "system";
+}
+
 /** Omit that distributes over a union (plain Omit collapses to common keys). */
 export type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
 
@@ -83,10 +97,12 @@ export interface Turn {
  *
  * Lifecycle (run-machine.ts owns the transitions):
  *
- *   pending → waiting → active ⇄ awaitingInput → complete | error | canceled
+ *   pending → waiting → active ⇄ awaitingInput → complete | error | canceled | stale
  *
  * `complete` is continuable: a user follow-up re-activates the same run with
- * its full turn history (SPECS/agent.md §continuation).
+ * its full turn history (SPECS/agent.md §continuation). `stale` (T-504) is
+ * the unresponsive terminal: a sweeper marks a run whose runner went silent,
+ * and `stale → active` revives it if the runner reappears.
  */
 export interface Run {
   id: EntityId;
@@ -103,6 +119,8 @@ export interface Run {
   usage: RunUsage;
   /** Failure detail when status is `error`. */
   error?: string | undefined;
+  /** Set when a stop signal drove this run to its terminal state (T-504). */
+  stopSignal?: StopSignal | undefined;
   /** The elicitation the run is parked on (only in `awaitingInput`). */
   pendingElicitation?: PendingElicitation | undefined;
   /** Link to the persisted conversation record (server-side, T-202). */

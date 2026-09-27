@@ -4,7 +4,7 @@
  *
  * Behavior (SPECS/agent.md §runtime-contract):
  *
- *   pending → waiting → active ⇄ awaitingInput → complete | error | canceled
+ *   pending → waiting → active ⇄ awaitingInput → complete | error | canceled | stale
  *
  * Rules worth naming:
  * - `waiting` is the run queue's hold state (per-loop concurrency/budgets,
@@ -15,7 +15,12 @@
  * - `complete → active` is the continuation edge: a user follow-up on a
  *   finished run re-activates it with its full history.
  * - `canceled` and `error` are terminal. Cancel is cooperative — the brain's
- *   stream is aborted and partial turns are kept, not rolled back.
+ *   stream is aborted and partial turns are kept, not rolled back (T-504:
+ *   the cancel path records the user's `stop` signal on the run).
+ * - `stale` (T-504) is the unresponsive terminal: any live or queued state
+ *   can be marked stale by a sweeper when the runner stops reporting.
+ *   `stale → active` is the revive edge — Linear derives a stale session
+ *   back to active on fresh activity; ours resumes explicitly.
  *
  * Timestamp invariants (checked by assertRunInvariants):
  * - `startedAt` is set exactly when a run first becomes `active`.
@@ -29,17 +34,18 @@ import type { RunStatus } from "../model/enums.ts";
 import type { ISODateTime } from "../model/loop.ts";
 import type { Run } from "./types.ts";
 
-const TERMINAL: ReadonlySet<RunStatus> = new Set(["complete", "error", "canceled"]);
+const TERMINAL: ReadonlySet<RunStatus> = new Set(["complete", "error", "canceled", "stale"]);
 
 /** The whole legal-transition table. Read: row → set of legal next states. */
 const TRANSITIONS: Readonly<Record<RunStatus, ReadonlySet<RunStatus>>> = {
-  pending: new Set(["waiting", "active", "canceled"]),
-  waiting: new Set(["active", "canceled"]),
-  active: new Set(["active", "awaitingInput", "complete", "error", "canceled"]),
-  awaitingInput: new Set(["active", "canceled"]),
+  pending: new Set(["waiting", "active", "canceled", "stale"]),
+  waiting: new Set(["active", "canceled", "stale"]),
+  active: new Set(["active", "awaitingInput", "complete", "error", "canceled", "stale"]),
+  awaitingInput: new Set(["active", "canceled", "stale"]),
   complete: new Set(["active"]), // continuation
   error: new Set(),
   canceled: new Set(),
+  stale: new Set(["active"]), // revive (T-504): the runner reappeared
 };
 
 export function isTerminalStatus(status: RunStatus): boolean {
@@ -76,7 +82,7 @@ export function transitionRun(
   run: Run,
   to: RunStatus,
   at: ISODateTime,
-  patch?: Partial<Pick<Run, "error" | "summary" | "pendingElicitation">>,
+  patch?: Partial<Pick<Run, "error" | "summary" | "pendingElicitation" | "stopSignal">>,
 ): Run {
   if (!canTransitionRunStatus(run.status, to)) {
     throw new IllegalRunTransitionError(run.status, to);

@@ -19,6 +19,7 @@ export function statusTone(status: RunStatus): StatusTone {
     case "waiting":
       return "accent";
     case "canceled":
+    case "stale":
       return "muted";
   }
 }

@@ -195,7 +195,7 @@ export interface Orchestrator {
   flush(): Promise<void>;
 }
 
-const TERMINAL: ReadonlySet<RunStatus> = new Set(["complete", "error", "canceled"]);
+const TERMINAL: ReadonlySet<RunStatus> = new Set(["complete", "error", "canceled", "stale"]);
 
 export function createOrchestrator(deps: OrchestratorDeps): Orchestrator {
   const { store, runner, queue, registry, brainFor } = deps;

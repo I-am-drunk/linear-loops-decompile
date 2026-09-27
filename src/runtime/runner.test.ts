@@ -131,6 +131,241 @@ describe("Runner", () => {
     assert.equal(runner.getRun(run.id).status, "canceled");
   });
 
+  it("records the user's stop signal on the canceled run (T-504)", async () => {
+    const brain = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await runner.whenIdle(run.id);
+    runner.cancel(run.id);
+    const done = runner.getRun(run.id);
+    assert.equal(done.status, "canceled");
+    assert.equal(done.stopSignal?.source, "user");
+    assert.equal(typeof done.stopSignal?.at, "string");
+  });
+
+  it("records the stop signal on a mid-stream cancel too (T-504)", async () => {
+    let openGate!: () => void;
+    const gate = new Promise<void>((r) => { openGate = r; });
+    const brain: Brain = {
+      async *stream(_input: BrainInput, signal: AbortSignal) {
+        yield { kind: "thought", text: "partial reasoning" };
+        await gate;
+        if (signal.aborted) return;
+        yield { kind: "response", text: "should never arrive" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    runner.cancel(run.id);
+    openGate();
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "canceled");
+    assert.equal(done.stopSignal?.source, "user");
+  });
+
+  it("marks a parked run stale immediately (T-504)", async () => {
+    const brain = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await runner.whenIdle(run.id);
+    runner.markStale(run.id);
+    const stale = runner.getRun(run.id);
+    assert.equal(stale.status, "stale");
+    assert.ok(stale.endedAt !== undefined, "stale is terminal: endedAt set");
+    assert.equal(stale.pendingElicitation, undefined, "parked elicitation cleared");
+    assert.equal(stale.stopSignal, undefined, "a sweeper halt is not a user stop");
+  });
+
+  it("markStale settles a HUNG brain immediately and fences late output (T-504)", async () => {
+    let openGate!: () => void;
+    const gate = new Promise<void>((r) => { openGate = r; });
+    const brain: Brain = {
+      async *stream(_input: BrainInput, _signal: AbortSignal) {
+        yield { kind: "thought", text: "partial reasoning" };
+        await gate; // the hung provider: wakes long after abort, ignoring it
+        yield { kind: "response", text: "late output" }; // fenced on arrival
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await new Promise((r) => setTimeout(r, 0)); // the first part lands on the run
+    runner.markStale(run.id);
+    // Settles NOW — never waiting on the brain that went silent.
+    const stale = await runner.whenIdle(run.id);
+    assert.equal(stale.status, "stale");
+    assert.ok(stale.endedAt !== undefined);
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns[0]!.status, "error", "dangling turn closed (interrupted rule)");
+    assert.deepEqual(turns[0]!.parts, [{ kind: "thought", text: "partial reasoning" }], "partial kept");
+    // The dead stream wakes later: fenced — nothing changes.
+    openGate();
+    await new Promise((r) => setTimeout(r, 10));
+    const after = runner.getRun(run.id);
+    assert.equal(after.status, "stale");
+    assert.equal(runner.getTurns(run.id)[0]!.parts.length, 1, "late output never appended");
+  });
+
+  it("markStale inside a runStatus callback stops the drive before the brain starts (T-504)", async () => {
+    let streamStarted = false;
+    const parked = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: parked });
+    await runner.whenIdle(run.id);
+    const turnCount = runner.getTurns(run.id).length;
+    let skippedReplay = false;
+    runner.subscribe(run.id, (e) => {
+      if (e.type === "runStatus" && e.status === "active") {
+        // The subscription replays the first exchange's buffered active
+        // event — only the LIVE one (from respond's drive) is the test target.
+        if (!skippedReplay) { skippedReplay = true; return; }
+        runner.markStale(run.id);
+      }
+    });
+    const brain2: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        streamStarted = true;
+        yield { kind: "response", text: "should never stream" };
+      },
+    };
+    runner.respond(run.id, "connected", brain2);
+    await runner.whenIdle(run.id);
+    assert.equal(runner.getRun(run.id).status, "stale");
+    assert.equal(streamStarted, false, "no exchange starts for a dead run");
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns.length, turnCount + 1, "only the user's answer turn is appended");
+    assert.equal(turns[turns.length - 1]!.role, "user");
+  });
+
+  it("revives a stale run via continueRun with its full history (T-504)", async () => {
+    const parked = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: parked });
+    await runner.whenIdle(run.id);
+    const startedAt = runner.getRun(run.id).startedAt;
+    runner.markStale(run.id);
+    const events = recorder(runner, run.id);
+    runner.continueRun(run.id, "retry the exchange", new ScriptBrain([[{ kind: "response", text: "recovered" }]]));
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "complete");
+    assert.equal(done.startedAt, startedAt, "the original start survives the revive");
+    assert.ok(done.endedAt !== undefined, "re-terminated cleanly");
+    assert.deepEqual(statuses(events).slice(-3), ["stale", "active", "complete"], "stale → active → complete");
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns[turns.length - 1]!.parts[0]!.kind, "response");
+  });
+
+  it("revives after a TRULY WEDGED brain — no RunBusyError (T-504, agent-03@gen6 finding)", async () => {
+    const wedged: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        yield { kind: "thought", text: "partial reasoning" };
+        await new Promise<void>(() => {}); // never resolves, ignores abort
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: wedged });
+    await new Promise((r) => setTimeout(r, 0)); // the part lands
+    runner.markStale(run.id);
+    assert.equal(runner.getRun(run.id).status, "stale");
+    // The wedged loop never releases its lock the normal way — the epoch
+    // bump is what frees the run. This call threw RunBusyError pre-fix.
+    runner.continueRun(run.id, "retry", new ScriptBrain([[{ kind: "response", text: "recovered" }]]));
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "complete");
+    const turns = runner.getTurns(run.id);
+    assert.equal(turns[turns.length - 1]!.parts[0]!.kind, "response");
+  });
+
+  it("a zombie loop stays fenced ACROSS a revive (T-504)", async () => {
+    let openGate!: () => void;
+    const gate = new Promise<void>((r) => { openGate = r; });
+    const zombie: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        yield { kind: "thought", text: "partial reasoning" };
+        await gate; // wakes only after the revive completes
+        yield { kind: "response", text: "zombie output" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: zombie });
+    await new Promise((r) => setTimeout(r, 0));
+    runner.markStale(run.id);
+    runner.continueRun(run.id, "retry", new ScriptBrain([[{ kind: "response", text: "recovered" }]]));
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "complete");
+    openGate(); // the zombie wakes into the new epoch
+    await new Promise((r) => setTimeout(r, 10));
+    const after = runner.getRun(run.id);
+    assert.equal(after.status, "complete", "the revived run is never clobbered");
+    const allParts = runner.getTurns(run.id).flatMap((t) => t.parts.map((p) => (p.kind === "response" ? p.text : p.kind)));
+    assert.ok(!allParts.includes("zombie output"), "zombie output never appended");
+    assert.ok(allParts.includes("recovered"));
+  });
+
+  it("a waking zombie never clobbers the revived exchange's AbortController (T-504, CodeRabbit)", async () => {
+    let openZombie!: () => void;
+    const zombieGate = new Promise<void>((r) => { openZombie = r; });
+    const zombie: Brain = {
+      async *stream(): AsyncIterable<Part> {
+        yield { kind: "thought", text: "partial" };
+        await zombieGate;
+        yield { kind: "response", text: "zombie output" };
+      },
+    };
+    let revivedSignal: AbortSignal | undefined;
+    let openRevived!: () => void;
+    const revivedGate = new Promise<void>((r) => { openRevived = r; });
+    const revived: Brain = {
+      async *stream(_input: BrainInput, signal: AbortSignal): AsyncIterable<Part> {
+        revivedSignal = signal;
+        yield { kind: "thought", text: "revived thinking" };
+        await revivedGate;
+        if (signal.aborted) return;
+        yield { kind: "response", text: "should never arrive" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain: zombie });
+    await new Promise((r) => setTimeout(r, 0));
+    runner.markStale(run.id);
+    runner.continueRun(run.id, "retry", revived);
+    await new Promise((r) => setTimeout(r, 0)); // the revived exchange is mid-stream
+    openZombie(); // the zombie wakes and exits — its arms must not touch state.abort
+    await new Promise((r) => setTimeout(r, 10));
+    runner.cancel(run.id);
+    assert.equal(revivedSignal?.aborted, true, "the revived brain still receives the stop signal");
+    openRevived();
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "canceled");
+    assert.equal(done.stopSignal?.source, "user");
+  });
+
+  it("refuses cancel/markStale on terminal runs, finished runs are never stale (T-504)", async () => {
+    const brain = new ScriptBrain([[{ kind: "response", text: "done" }]]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await runner.whenIdle(run.id);
+    assert.equal(runner.getRun(run.id).status, "complete");
+    assert.throws(() => runner.markStale(run.id), IllegalRunTransitionError);
+
+    const brain2 = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const run2 = runner.start({ loopId: "loop-1", message: "go", brain: brain2 });
+    await runner.whenIdle(run2.id);
+    runner.markStale(run2.id);
+    assert.equal(runner.getRun(run2.id).status, "stale");
+    assert.throws(() => runner.cancel(run2.id), IllegalRunTransitionError, "a stale run cannot be canceled");
+    assert.throws(() => runner.markStale(run2.id), IllegalRunTransitionError, "stale is idempotent-terminal");
+  });
+
   it("surfaces a brain throw as run error with the message", async () => {
     const brain: Brain = {
       async *stream(): AsyncIterable<Part> {
