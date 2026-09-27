@@ -52,6 +52,18 @@ force-push + deletion blocked). No path bypasses review.
 - Merge: squash via `github.merge_pull_request` AFTER one buddy review with reproduced
   evidence. Buddies: R2↔R5, R3↔R4, R6↔R9, R7↔R8, R1↔R10.
 
+## External review agents (bots)
+
+**CodeRabbit** (`coderabbitai` GitHub App, account-wide, free on this public repo)
+reviews every PR; its policy is `.coderabbit.yaml` (version-controlled, tuned to OUR
+conventions — never another project's). Its `CodeRabbit` check is a required merge
+gate; buddy reviews stay required too (judgment ≠ mechanics). Adding another bot:
+a one-line entry here first (name, gate, config path); if it can't stay in scope,
+it's trimmed or uninstalled (lead's call).
+
+Repo-local skills live at `.agents/skills/*/SKILL.md` (cross-tool Agent Skills
+standard; `.claude/skills` symlinks to it). Runner Workflow Library skills mirror them.
+
 ## Hard rules (absolute)
 
 - **Never commit Linear-proprietary material** (bundle/DMG/asar/prettified output).

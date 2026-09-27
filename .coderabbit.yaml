@@ -1,0 +1,61 @@
+# .coderabbit.yaml — CodeRabbit policy for linear-loops-decompile (public repo → free OSS tier).
+# Version-controlled; the config on the BRANCH under review is used for that review.
+# Reference: https://docs.coderabbit.ai/reference/configuration
+language: "en-US"
+early_access: true        # newest review features
+free_tier: true
+
+reviews:
+  profile: "assertive"          # thorough — this codebase is agent-written and earns the scrutiny
+  request_changes_workflow: false  # findings come as comments; merge gating = required check + buddy review (no bot-driven stalls)
+  high_level_summary: true
+  poem: false
+  review_status: true           # status comment + the `CodeRabbit` check run on every PR
+  collapse_walkthrough: true
+  sequence_diagrams: false
+  auto_review:
+    enabled: true
+    drafts: false               # incremental re-review of every push = the multiple passes (default-on)
+
+  path_filters:                 # not ours to review
+    - "!**/node_modules/**"
+    - "!**/dist/**"
+    - "!extracts/linear-official/**"   # vendored MIT Linear SDK schema + generated ops
+
+  # Practical, per-surface guidance (this project's own conventions — AGENTS.md is the source).
+  path_instructions:
+    - path: "src/**/*.ts"
+      instructions: |
+        TypeScript strict under the package's OWN tsconfig (exactOptionalPropertyTypes,
+        noUncheckedIndexedAccess); there is no root tsconfig — the package is truth.
+        Zero heavy runtime deps: flag any new dependency (zod is the pre-approved exception).
+        New packages: .ts-extension imports + Node type stripping (Node >= 22.18).
+        Writes to external APIs must be idempotent. Secrets are write-only:
+        never returned in responses, logs, errors, or fixtures.
+    - path: "src/ui/**/*.tsx"
+      instructions: |
+        Feature pages are props-driven with fixtures (no direct data fetching in pages);
+        behavior parity with Linear Loops UX is the bar (issue #20).
+    - path: ".github/**"
+      instructions: |
+        Automation with write scopes (the land-bot commits for the swarm). Scrutinize:
+        token permissions, script injection from issue/PR text, path traversal in
+        file-writing code, and any route for a comment to write main or .github/.
+    - path: "extracts/**"
+      instructions: |
+        Reference material (interface facts: names, endpoints, counts). Check formatting
+        and internal consistency only. extracts/linear-official/ is filtered out entirely.
+    - path: "work/**"
+      instructions: |
+        Coordination state. Check internal consistency (task ids, PR numbers, dates,
+        claim JSON shape). Prose quality is non-blocking.
+
+  instructions: |
+    Review the diff in this PR against the repo's own conventions (AGENTS.md).
+    Do not request unrelated refactors or re-litigate documented architectural decisions;
+    prefix non-blocking suggestions with "Nit:". This project reimplements another
+    product's behavior as original code — if a fragment looks copied from a proprietary
+    source rather than written fresh, flag it once, plainly, with the reason.
+
+chat:
+  auto_reply: true
