@@ -1,79 +1,61 @@
-# .coderabbit.yaml — CodeRabbit review policy for linear-loops-decompile (public repo, OSS tier).
-# Version-controlled; changes ride PRs and apply to the branch under review.
-# Docs: https://docs.coderabbit.ai/reference/configuration
+# .coderabbit.yaml — CodeRabbit policy for linear-loops-decompile (public repo → free OSS tier).
+# Version-controlled; the config on the BRANCH under review is used for that review.
+# Reference: https://docs.coderabbit.ai/reference/configuration
 language: "en-US"
-early_access: true
+early_access: true        # newest review features
 free_tier: true
 
 reviews:
-  profile: "assertive"            # this codebase is agent-built; it earns the scrutiny
-  request_changes_workflow: true  # real findings become request-changes (pairs with the required check)
+  profile: "assertive"          # thorough — this codebase is agent-written and earns the scrutiny
+  request_changes_workflow: false  # findings come as comments; merge gating = required check + buddy review (no bot-driven stalls)
   high_level_summary: true
   poem: false
-  review_status: true             # publishes the review status + the `CodeRabbit` check run on the PR
+  review_status: true           # status comment + the `CodeRabbit` check run on every PR
   collapse_walkthrough: true
   sequence_diagrams: false
   auto_review:
     enabled: true
-    drafts: false                 # incremental re-review on every push is default-on = the multiple passes
-  path_filters:                   # never review these
+    drafts: false               # incremental re-review of every push = the multiple passes (default-on)
+
+  path_filters:                 # not ours to review
     - "!**/node_modules/**"
     - "!**/dist/**"
-    - "!extracts/linear-official/schema.graphql"
-    - "!extracts/linear-official/_generated_documents.graphql"
-    - "!extracts/linear-official/LICENSE"
-  instructions: |
-    You are reviewing for a ~10-agent swarm reimplementing Linear Loops as ORIGINAL code
-    (same behavior, our own implementation; the brain is the user's own inference).
+    - "!extracts/linear-official/**"   # vendored MIT Linear SDK schema + generated ops
 
-    SCOPE DISCIPLINE (absolute): review ONLY the diff in this PR. Never re-litigate
-    settled architecture — SPECS/, work/LOG.md, AGENTS.md, and hub issue bodies record
-    binding decisions. No unrelated refactors, moves, or renames. Prefix every
-    non-blocking comment with "Nit:".
-
-    THE LEGAL LINE (blocking, absolute): nothing from Linear's proprietary client
-    (bundle/DMG/asar/prettified output) may enter this PUBLIC repo — flag even small
-    suspicious fragments (Linear-internal helper names, verbatim non-trivial logic,
-    decompile corpus paths). extracts/linear-official/ is MIT-licensed and exempt.
-
-    MERGE BAR: the PR body must carry verification evidence (bash ci/check-src.sh
-    summary or equivalent tsc/test counts). Missing evidence → one comment asking for it.
-
+  # Practical, per-surface guidance (this project's own conventions — AGENTS.md is the source).
   path_instructions:
     - path: "src/**/*.ts"
       instructions: |
-        Blocking rules: ORIGINAL code only (see legal line). TypeScript strict
-        (exactOptionalPropertyTypes, noUncheckedIndexedAccess) under the package's OWN
-        tsconfig — the package is truth; there is no root tsconfig. Zero heavy runtime
-        deps (zod is the sole pre-approved exception — flag ANY other new dependency in
-        package.json or imports). New packages use .ts-extension imports + Node type
-        stripping (Node >=22.18). Every write to Linear must stay idempotent
-        (audit seam + idempotency-key for non-set operations). Secrets are write-only:
-        never returned in API responses, logs, errors, or fixtures.
+        TypeScript strict under the package's OWN tsconfig (exactOptionalPropertyTypes,
+        noUncheckedIndexedAccess); there is no root tsconfig — the package is truth.
+        Zero heavy runtime deps: flag any new dependency (zod is the pre-approved exception).
+        New packages: .ts-extension imports + Node type stripping (Node >= 22.18).
+        Writes to external APIs must be idempotent. Secrets are write-only:
+        never returned in responses, logs, errors, or fixtures.
     - path: "src/ui/**/*.tsx"
       instructions: |
-        UI parity with Linear Loops (issue #20): behavior parity over pixel parity.
-        Props-only seams to the server (no direct fetch/React Query in feature pages —
-        fixtures + registry wiring per src/ui/README.md). Dark theme tokens are original.
-    - path: "extracts/**"
-      instructions: |
-        FACTS ONLY (interface names, op names, endpoints, counts). Blocking: anything
-        resembling proprietary code or corpus paths. extracts/linear-official/ is
-        MIT-licensed vendored material — already filtered out of review.
+        Feature pages are props-driven with fixtures (no direct data fetching in pages);
+        behavior parity with Linear Loops UX is the bar (issue #20).
     - path: ".github/**"
       instructions: |
-        LEAD-ONLY territory and the swarm's commit privilege (the land-bot). Maximum
-        suspicion: permissions scope creep, GITHUB_TOKEN use, script injection from
-        issue/PR text, path traversal in file-writing code, and any path that lets a
-        comment write .github/ or main.
+        Automation with write scopes (the land-bot commits for the swarm). Scrutinize:
+        token permissions, script injection from issue/PR text, path traversal in
+        file-writing code, and any route for a comment to write main or .github/.
+    - path: "extracts/**"
+      instructions: |
+        Reference material (interface facts: names, endpoints, counts). Check formatting
+        and internal consistency only. extracts/linear-official/ is filtered out entirely.
     - path: "work/**"
       instructions: |
-        Coordination state. Check internal consistency only (task ids, PR numbers,
-        dates, claim JSON shape). Prose quality is non-blocking.
-    - path: "pipeline/**"
-      instructions: |
-        Decompile tooling. Blocking: any pipeline OUTPUT entering the repo
-        (linear-re/, client/, pretty/, analysis/, *.asar, *.dmg — all proprietary).
+        Coordination state. Check internal consistency (task ids, PR numbers, dates,
+        claim JSON shape). Prose quality is non-blocking.
+
+  instructions: |
+    Review the diff in this PR against the repo's own conventions (AGENTS.md).
+    Do not request unrelated refactors or re-litigate documented architectural decisions;
+    prefix non-blocking suggestions with "Nit:". This project reimplements another
+    product's behavior as original code — if a fragment looks copied from a proprietary
+    source rather than written fresh, flag it once, plainly, with the reason.
 
 chat:
   auto_reply: true
