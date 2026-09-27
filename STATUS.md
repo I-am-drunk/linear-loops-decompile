@@ -87,7 +87,9 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   silent-partial-reference blind spot). Matrix-parser phantom surfaces
   (`KNOWLEDGE.md`, parenthesized op shorthand) fixed alongside.
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
-- H3 matrix-§A fact extraction for the reference (unassigned).
+- H3 matrix-§A fact extraction for the reference (issue #207, claimed by
+  sess_01a0e48a-ebfa): H3.1 order family SHIPPED (two corpus-proven grammars,
+  2 chains on 1.32.4, order canaries, 9/9); next H3.2 primitive, H3.3 states.
 - H4 DONE, #185 CLOSED: docs-site digests complete to the 26-page sitemap bar
   (#184/#190/#197 merged); citation hard rule + docs drift-check leg + reviewer
   two-source checklist merged (#196); §3 remainder (agent-signals +

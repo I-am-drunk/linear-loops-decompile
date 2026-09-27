@@ -53,6 +53,15 @@ Plus two non-set facts:
 
 9. **order** — ordered presentation (sidebar items, column order), compared
    as ONE whole-sequence fact ("a > b > c"); containment alone misses order.
+   Extraction (H3 #207): order is compiled into the bundle as array/object
+   literals whose source order IS the render order, so the grammars read
+   literal sequences, never inferred layout. Two corpus-proven grammars:
+   consecutive `` orderingKey: `k` `` header-cell props (list column order,
+   e.g. `AutomationsList`) and consecutive `` key:/name: `` pairs in one
+   options-array literal (filter/section order, e.g. `LoopsManagementPage`).
+   ≥2 items make a chain; per surface the longest chain wins; surfaces
+   without a proven chain stay uncovered (ramp rule). `order:` canaries
+   (`order:<Surface>=<a> > <b> > …`) pin the extracted chains per extraction.
 10. **primitive** — the surface's interaction primitive (dialog | page |
     popover | drawer | …), exact-compared: a route can be exact while the
     primitive is wrong.

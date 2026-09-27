@@ -62,6 +62,9 @@ Exit codes: 0 pass · 1 parity violations · 2 usage/tooling error.
 Fact families: routes, copy, structure, tokens, bindings, icons, behavior,
 states (set-compared) + order (whole-sequence) + primitive (exact scalar).
 A family compares only where the reference has facts for it (ramp rule).
+`order` extraction (H3 #207): `` orderingKey: `k` `` chains (column order) and
+`` key:/name: `` options-array chains (filter/section order); longest chain per
+surface; pinned by `order:<Surface>=<a> > <b> > …` canary lines.
 Synthetic app-level surfaces: `app.routes` (route table — chunk-body scan,
 because the analysis index is a floor) and `theme.tokens` (token namespace;
 VALUES come from the theme-generator golden-vectors slice, #162).

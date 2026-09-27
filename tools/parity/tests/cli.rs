@@ -31,7 +31,7 @@ fn extract(tmp: &std::path::Path) -> PathBuf {
     );
     let text = String::from_utf8(out.stdout).unwrap();
     assert!(text.contains("extract:"), "unexpected stdout: {}", text);
-    assert!(text.contains("canaries: 3/3 pass"), "canary enforcement ran: {}", text);
+    assert!(text.contains("canaries: 4/4 pass"), "canary enforcement ran: {}", text);
     reference
 }
 
@@ -66,6 +66,78 @@ fn extract_produces_expected_reference_facts() {
     // structure: component import edge kept, lowercase util import dropped
     assert!(text.contains("LoopTemplateLibrary"));
     assert!(!text.contains("util-helpers"), "non-component import leaked");
+
+    // order (H3 #207): orderingKey chain extracted in source order; the
+    // identifier-suffixed decoy (activeOrderingKey) and the shorter key/name
+    // chain do not displace it (longest chain wins)
+    assert!(
+        text.contains(r#""name",
+        "started",
+        "duration"
+      ]"#),
+        "order chain extracted: {}",
+        text
+    );
+    assert!(!text.contains("decoy"), "activeOrderingKey decoy leaked into order");
+
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
+fn order_mismatch_is_a_violation_and_order_canary_fails_loudly() {
+    let tmp = std::env::temp_dir().join(format!("parity-test-order-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+
+    // ours declares the same items in the WRONG order: containment would
+    // pass, the order family must fail (the family's reason to exist)
+    let facts = tmp.join("ui-facts-wrong-order.json");
+    let clean = std::fs::read_to_string(fixtures().join("ours/ui-facts-clean.json")).unwrap();
+    let wrong = clean.replace(
+        "\"name\",\n        \"started\",",
+        "\"started\",\n        \"name\",",
+    );
+    assert_ne!(clean, wrong, "fixture replace must hit");
+    std::fs::write(&facts, wrong).unwrap();
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .output()
+        .expect("run parity check");
+    assert_eq!(out.status.code(), Some(1), "wrong order must fail: {}", String::from_utf8_lossy(&out.stdout));
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("name > started > duration"), "reference chain named: {}", stdout);
+
+    // an order canary that does not match the extracted chain fails extract
+    let bad_canaries = tmp.join("canaries-bad-order.txt");
+    std::fs::write(&bad_canaries, "order:AutomationRunsPage=name > duration > started\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref2.json"))
+        .arg("--canaries").arg(&bad_canaries)
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "mismatched order canary must fail extract");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("order canary"), "loud order-canary failure: {}", stderr);
+
+    // a canary for a surface with NO extracted chain also fails
+    let none_canaries = tmp.join("canaries-no-chain.txt");
+    std::fs::write(&none_canaries, "order:AutomationNewDialog=a > b\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref3.json"))
+        .arg("--canaries").arg(&none_canaries)
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "no-chain order canary must fail extract");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("extracted NO chain"));
 
     let _ = std::fs::remove_dir_all(&tmp);
 }
