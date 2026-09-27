@@ -15,9 +15,10 @@ Done 2026-09-27:
   `boot`, `ship`, `github`.
 
 Now:
-- R1 pipeline harness (unassigned; take it per AGENTS.md): one command that
-  downloads the latest Linear release, decompiles into `pipeline/corpus/`
-  (gitignored), and refreshes `extracts/`.
+- R1 pipeline harness (in progress: sess_01a0e2c0-4c63-70a3-a057-cc1ded6f0665):
+  one command that downloads the latest Linear release, decompiles into
+  `pipeline/corpus/` (gitignored), and refreshes `extracts/`. The scripts existed
+  but were never run; this lands the layout fix plus the first real run.
 
 Later: R2 feature matrix -> R3 skeleton -> R4 matrix rows.
 

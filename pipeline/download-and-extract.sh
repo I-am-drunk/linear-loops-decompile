@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
-# Linear desktop download + DMG/asar extraction (Linux). Tested 2026-09-26, v1.32.4.
+# Download the Linear desktop app and extract the Electron asar shell.
+# ALL output lands in pipeline/corpus/app/ (gitignored: Linear proprietary
+# material never enters the repo). Tested 2026-09-26, Linear v1.32.4.
 set -euo pipefail
-mkdir -p linear-re && cd linear-re
+cd "$(dirname "$0")"
+mkdir -p corpus/app && cd corpus/app
 
 echo "== 1. Download Linear macOS DMG (universal) =="
 curl -sL -o Linear-universal.dmg "https://releases.linear.app/mac"
 ls -la Linear-universal.dmg
 
 echo "== 2. Extract DMG (HFS+) =="
-command -v 7z >/dev/null || sudo apt-get install -y p7zip-full
+if ! command -v 7z >/dev/null; then
+  if command -v sudo >/dev/null; then sudo apt-get install -y p7zip-full; else apt-get install -y p7zip-full; fi
+fi
 7z x -oextracted Linear-universal.dmg || true   # 7z reports a header error on HFS; extraction still succeeds
 APP="extracted/Linear/Linear.app/Contents"
 
