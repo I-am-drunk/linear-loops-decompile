@@ -252,6 +252,36 @@ export class ChannelServer {
     this.#buffers.delete(runId);
   }
 
+  /**
+   * The per-run seq the next publishRunEvent will increment — i.e. the seq
+   * of the most recent event the channel stamped for this run THIS boot
+   * (0 when the buffer holds none). `runs.get` returns it so a client can
+   * pass `sinceSeq` to runs.subscribe and close the load→subscribe race:
+   * events between the get and the subscribe replay from the ring buffer.
+   */
+  lastSeqFor(runId: string): number {
+    return this.#buffers.get(runId)?.seq ?? 0;
+  }
+
+  /**
+   * Send a notification to every authenticated connection whose token holds
+   * `scope` (default "runs:read") — list-level signals like `runs.created`
+   * that are not per-run-subscription fan-out. Returns the recipient count.
+   * Unknown methods are ignored by JSON-RPC clients, so older UIs tolerate
+   * new broadcasts.
+   */
+  broadcast(method: string, params: unknown, scope: Scope = "runs:read"): number {
+    const frame = JSON.stringify(notification(method, params));
+    let sent = 0;
+    for (const state of this.#conns) {
+      if (state.record !== null && state.record.scopes.includes(scope)) {
+        state.conn.sendText(frame);
+        sent += 1;
+      }
+    }
+    return sent;
+  }
+
   connectionCount(): number {
     return this.#conns.size;
   }

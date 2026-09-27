@@ -98,6 +98,9 @@ interface RunState {
 
 const DEFAULT_EVENT_BUFFER = 500;
 
+/** States a run never leaves without a continue (which only complete allows). */
+const TERMINAL_STATUSES: ReadonlySet<Run["status"]> = new Set(["complete", "error", "canceled"]);
+
 export class Runner {
   readonly #deps: Required<Omit<RunnerDeps, "eventBufferSize">> & { eventBufferSize: number };
   readonly #runs = new Map<EntityId, RunState>();
@@ -118,6 +121,28 @@ export class Runner {
   /** All turns of a run, in order. Throws RunNotFoundError. */
   getTurns(runId: EntityId): readonly Turn[] {
     return this.#state(runId).turns;
+  }
+
+  /**
+   * True when the runner holds this run (started or restored this boot).
+   * The connect channel's RunRegistry seam reads this — it must never throw.
+   */
+  has(runId: EntityId): boolean {
+    return this.#runs.has(runId);
+  }
+
+  /**
+   * Ids of runs in a non-terminal state (pending/waiting/active/
+   * awaitingInput) — the presence-lite list the channel puts in every
+   * subscribe result. Terminal runs (complete/error/canceled) stay
+   * addressable via getRun/subscribe; they just aren't "live".
+   */
+  activeRunIds(): EntityId[] {
+    const ids: EntityId[] = [];
+    for (const [id, state] of this.#runs) {
+      if (!TERMINAL_STATUSES.has(state.run.status)) ids.push(id);
+    }
+    return ids;
   }
 
   /**
