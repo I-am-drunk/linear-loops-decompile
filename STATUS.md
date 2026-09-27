@@ -48,9 +48,10 @@ Done 2026-09-27:
   secrets, credential-header refusal, duplicate-name rejection; 8/8 server
   tests with an injected fake fetch.
 
-- R3.4 UI shell: `src/ui` (Vite + React 19, hand-rolled router, theme tokens
-  from the corpus via docs/ui-reference.md) with the Settings page wired to the
-  R3.3 RPCs. Gate: tsc + vite build; serve smoke through the real server.
+- R3.4 UI shell: BUILT then FAILED the exactness audit (docs/audit-2026-09-27.md
+  F1/F2: invented tokens + invented IA) — not done; disposition per PLAN.md H
+  track: brought to parity-green or archived like v0. The server halves
+  (R3.1-R3.3) stand.
 
 Done 2026-09-27 (evening, freeze-era):
 - Feedback gate (user directive, #175/#182 merged): NO merges with unaddressed
@@ -61,20 +62,34 @@ Done 2026-09-27 (evening, freeze-era):
   `/:orgKey/loops/:viewType?`.
 - Vault corpus verified COMPLETE at HEAD 6dcc083 (1,550/1,550 pretty chunks; the
   "507 missing" alert on #162 measured a stale local copy — re-clone before
-  trusting partial extract numbers).
+  trusting partial extract numbers; vault fetch = full git clone + count check,
+  #187 merged).
+- H4 official-docs leg LANDED: per-page live-site digests in
+  `extracts/linear-official/docs-site/` (#184, #190 merged; #197 folds in
+  #191's remaining pages + the sitemap completeness bar; #186/#191 close with
+  credit per the #183 dedupe). KNOWLEDGE §6 now officially sourced (incl.
+  HTTP-400 + RATELIMITED exhaustion — constrains PR #155).
+- Review-queue burn-down: #169 (KNOWLEDGE §4/§5/§6 corrections + sync-protocol
+  supersession), #172 (EXACT-reproduction wording), #173 (merged-PR feedback
+  ledger fixes) all merged.
 
-Now (freeze-order; ALL feature slices wait on the harness):
-- MERGE-CRITICAL: PR #171 (parity harness P1) — revised, reviews green, last
-  threads addressed via PR #188; then the follow-up slice per #177 (`?` char in
-  route literals, route canaries, declaredIn tagging).
-- generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
-- Review queue: #169 (rebased + dictionary reconciliation, ready), #172 (rebased,
-  method wording only), #173 (all blockers fixed forward, ready).
-- AFTER the freeze lifts: R4.1 loops domain slice (loops.list/upsert/publish/
-  setEnabled + list page) rebuilt against the harness bar.
+Now (the H track — PLAN.md "harness era", the freeze's exit path):
+- H1 MERGE-CRITICAL: PR #171 (parity harness P1) — revised, reviews green, last
+  threads addressed via PR #188 + #189 (optional-param routes + canaries, into
+  #171); then #177 follow-ups.
+- H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
+- H3 matrix-§A fact extraction for the reference (unassigned).
+- H4 remaining: citation rule + docs drift-check step (#185, unassigned);
+  PR #197 (docs-site fold-in) in review.
+- R5.1 dataplane PR #155: needs the 400/RATELIMITED redesign per the docs leg
+  (review posted on the PR).
 
-Later: foundation/domain slices per PLAN.md -> R4 matrix rows to exact parity,
-each gated by `parity check`.
+Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
+trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by
+`parity check`.
+
+(Contradiction fixed 2026-09-27: this section previously offered R4.1 as
+unassigned work while the freeze banner above forbade feature code.)
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
 #20); golden-goose next steps after the trace (issue #14): E1 live experiment +
