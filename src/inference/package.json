@@ -1,0 +1,24 @@
+{
+  "name": "@linear-loops/inference",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Inference harness settings + provider adapters for the self-hosted Linear Loops reimplementation (role R6).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test 'test/*.test.ts'"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
