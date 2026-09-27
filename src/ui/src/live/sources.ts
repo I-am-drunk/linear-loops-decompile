@@ -14,6 +14,7 @@ import type { ChannelClient } from "../../../connect/client.ts";
 import type { LoopSummary } from "../features/loops/types.ts";
 import type { RunDetail, RunSummary } from "../features/loops/runs/types.ts";
 import { demoLoops } from "../features/loops/fixtures.ts";
+import { demoEditorConfig } from "../features/loops/editor/fixtures.ts";
 import {
   demoRunDetail,
   demoRunDetailDone,
@@ -23,6 +24,7 @@ import {
 import type { RunEvent } from "../../../runtime/types.ts";
 import {
   RPC,
+  type LoopsGetResult,
   type LoopsListResult,
   type LoopsUpsertResult,
   type RunsGetResult,
@@ -70,6 +72,16 @@ export interface LoopsSource {
   /** Draft save + publish; returns the loop id (create when id is null). The
    *  editor container (R8's wiring delta) calls this. */
   saveLoop(id: string | null, config: LoopConfig): Promise<string>;
+  /** T-805: one loop's editable record — the editor container's draft source. */
+  getLoop(id: string): Promise<EditorLoopRecord>;
+}
+
+/** The editor's draft source: config + the published version it bases on. */
+export interface EditorLoopRecord {
+  readonly id: string;
+  readonly name: string;
+  readonly version: number;
+  readonly config: LoopConfig;
 }
 
 export interface RunsSource {
@@ -121,6 +133,12 @@ export class LiveLoopsSource implements LoopsSource {
       id: upserted.loop.id,
     })) as LoopsUpsertResult;
     return published.loop.id;
+  }
+
+  async getLoop(id: string): Promise<EditorLoopRecord> {
+    const result = (await this.#rpc.request(RPC.loopsGet, { id })) as LoopsGetResult;
+    const loop = result.loop;
+    return { id: loop.id, name: loop.name || loop.config.name, version: loop.version, config: loop.config };
   }
 }
 
@@ -244,6 +262,10 @@ export class FixtureLoopsSource implements LoopsSource {
 
   saveLoop(_id: string | null, _config: LoopConfig): Promise<string> {
     return Promise.reject(new Error("loop writes need a connected server"));
+  }
+
+  getLoop(_id: string): Promise<EditorLoopRecord> {
+    return Promise.resolve({ id: _id, name: demoEditorConfig.name, version: 3, config: demoEditorConfig });
   }
 }
 

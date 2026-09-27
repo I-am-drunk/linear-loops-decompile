@@ -60,6 +60,8 @@ async function dataplaneDeps(): Promise<Partial<SettingsBindingDeps>> {
 const live = createLiveLoopsServer({
   dbPath: process.env["LOOPS_DB"] ?? "./loops.db",
   settingsDeps: await dataplaneDeps(),
+  // The web UI, built once with `npm --prefix src/ui run build`.
+  staticDir: process.env["LOOPS_STATIC"] ?? new URL("../ui/dist", import.meta.url).pathname,
 });
 const { token } = live.tokens.mint({ scopes: ALL_SCOPES });
 const bound = await live.listen(port, "127.0.0.1");
@@ -67,7 +69,10 @@ const bound = await live.listen(port, "127.0.0.1");
 console.log(`loops-server listening on http://127.0.0.1:${bound}`);
 console.log(`boot loops: ${live.bootLoops.scheduled} scheduled · ${live.bootLoops.event} event · ${live.bootLoops.chat} chat`);
 console.log(`connect token (operator bootstrap): ${token}`);
-console.log(`UI deep link: ?t3url=ws://127.0.0.1:${bound}/connect&t3token=${token}`);
+// The merged UI resolves same-origin: token via ?connectToken= (persisted,
+// stripped from the address bar), channel at ws(s)://<ui-host>/connect.
+console.log(`UI: http://127.0.0.1:${bound}/?connectToken=${token}`);
+console.log(`(UI needs its build: npm --prefix src/ui run build — the server runs API-only without it)`);
 
 if (tickMs > 0) {
   const timer = setInterval(() => {
