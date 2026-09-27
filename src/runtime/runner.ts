@@ -12,8 +12,12 @@
  * - `steer` on an active run QUEUES the user message; the queue drains
  *   between exchanges as a new user turn — the run never flickers through
  *   `complete` while a steer is pending (active→active self-transition).
- * - `cancel` is cooperative: the brain's AbortSignal fires, parts already
- *   streamed are kept, the run lands in `canceled`.
+ * - `cancel` is the user's `stop` signal (T-504): cooperative — the brain's
+ *   AbortSignal fires, parts already streamed are kept, the signal is
+ *   recorded on the run, and the run lands in `canceled`.
+ * - `markStale` is the sweeper's halt (T-504): a run whose runner stopped
+ *   reporting lands in `stale` (same cooperative abort; an explicit user
+ *   stop wins if both land mid-exchange). `stale → active` revives.
  * - `continueRun` re-activates a `complete` run with its full history
  *   (continuation — the same context plus the new message).
  *
@@ -28,7 +32,7 @@
  * Original code.
  */
 
-import { transitionRun, assertRunInvariants, IllegalRunTransitionError } from "./run-machine.ts";
+import { transitionRun, assertRunInvariants, IllegalRunTransitionError, isTerminalStatus } from "./run-machine.ts";
 import type { Brain } from "./brain.ts";
 import { fromSnapshot } from "./snapshot.ts";
 import type { RunSnapshot } from "./snapshot.ts";
@@ -40,6 +44,7 @@ import type {
   Run,
   RunEvent,
   RunTarget,
+  StopSignal,
   Turn,
   TurnStatus,
 } from "./types.ts";
@@ -91,6 +96,9 @@ interface RunState {
   steerQueue: string[];
   abort: AbortController | null;
   cancelRequested: boolean;
+  staleRequested: boolean;
+  /** The user's stop signal, captured when cancel lands (T-504). */
+  stopSignal: StopSignal | null;
   driving: boolean;
   idle: Promise<Run> | null;
   idleResolve: ((run: Run) => void) | null;
@@ -147,6 +155,8 @@ export class Runner {
       steerQueue: [],
       abort: null,
       cancelRequested: false,
+      staleRequested: false,
+      stopSignal: null,
       driving: false,
       idle: null,
       idleResolve: null,
@@ -197,23 +207,50 @@ export class Runner {
   }
 
   /**
-   * Cooperative cancel. Active run: the brain's signal fires and the
-   * exchange unwinds into `canceled` with partial parts kept. Parked or
-   * queued runs transition immediately.
+   * Cooperative cancel — the user's `stop` signal (T-504, official
+   * AgentActivitySignal.stop semantics: halt immediately; partial parts are
+   * kept, never rolled back). Active run: the brain's signal fires and the
+   * exchange unwinds into `canceled`. Parked or queued runs transition
+   * immediately. The signal is recorded on the run (`stopSignal`) so
+   * persistence and the golden-goose adapter can surface it.
    */
   cancel(runId: EntityId): void {
     const state = this.#state(runId);
     const status = state.run.status;
-    if (status === "complete" || status === "error" || status === "canceled") {
+    if (isTerminalStatus(status)) {
       throw new IllegalRunTransitionError(status, "canceled");
     }
     state.cancelRequested = true;
+    state.stopSignal = { at: this.#iso(), source: "user" };
     if (status === "active" && state.abort !== null) {
       state.brain?.cancel?.(runId);
       state.abort.abort();
       return; // the drive loop lands the transition
     }
-    this.#transition(state, "canceled");
+    this.#transition(state, "canceled", { stopSignal: state.stopSignal });
+    this.#settleIdle(state);
+  }
+
+  /**
+   * Mark a run `stale` — the sweeper's halt (T-504): the run was live or
+   * queued but its runner/brain stopped reporting without reaching a
+   * terminal signal (process death without a snapshot, a hung provider).
+   * Active runs are aborted cooperatively (same mechanism as cancel; a
+   * user stop wins if both land mid-exchange). Terminal runs throw — a
+   * finished run is never stale. `stale → active` revives (run-machine).
+   */
+  markStale(runId: EntityId): void {
+    const state = this.#state(runId);
+    const status = state.run.status;
+    if (isTerminalStatus(status)) {
+      throw new IllegalRunTransitionError(status, "stale");
+    }
+    state.staleRequested = true;
+    if (status === "active" && state.abort !== null) {
+      state.abort.abort();
+      return; // the drive loop lands the transition
+    }
+    this.#transition(state, "stale");
     this.#settleIdle(state);
   }
 
@@ -242,6 +279,8 @@ export class Runner {
       steerQueue: [],
       abort: null,
       cancelRequested: false,
+      staleRequested: false,
+      stopSignal: null,
       driving: false,
       idle: null,
       idleResolve: null,
@@ -409,13 +448,15 @@ export class Runner {
                 elicited = true;
                 break; // elicitation ends the exchange; stop consuming
               }
-              if (state.cancelRequested) break; // for-await calls stream.return()
+              if (state.cancelRequested || state.staleRequested) break; // for-await calls stream.return()
             }
           } catch (err) {
             state.abort = null;
             this.#closeTurn(state, turn, "error");
             if (state.cancelRequested) {
-              this.#transition(state, "canceled");
+              this.#transition(state, "canceled", { stopSignal: state.stopSignal ?? undefined });
+            } else if (state.staleRequested) {
+              this.#transition(state, "stale");
             } else {
               this.#transition(state, "error", {
                 error: err instanceof Error ? err.message : String(err),
@@ -426,7 +467,11 @@ export class Runner {
           state.abort = null;
           this.#closeTurn(state, turn, "complete");
           if (state.cancelRequested) {
-            this.#transition(state, "canceled");
+            this.#transition(state, "canceled", { stopSignal: state.stopSignal ?? undefined });
+            return;
+          }
+          if (state.staleRequested) {
+            this.#transition(state, "stale");
             return;
           }
           if (elicited) {

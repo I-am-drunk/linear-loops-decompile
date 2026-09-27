@@ -89,8 +89,14 @@ export type ConversationSource = (typeof CONVERSATION_SOURCES)[number];
  * `waiting`  = held by the run queue (per-loop concurrency or budget, R4).
  * `active`   = brain is streaming.
  * `awaitingInput` = parked on an elicitation until the user answers.
- * Terminal: `complete`, `error`, `canceled`. Cancel is cooperative: the brain
- * stream is aborted and partial turns are kept.
+ * Terminal: `complete`, `error`, `canceled`, `stale`. Cancel is cooperative:
+ * the brain stream is aborted and partial turns are kept (the user's `stop`
+ * signal — T-504). `stale` (T-504) = unresponsive: the run was live but its
+ * runner/brain stopped reporting without reaching a terminal signal; a
+ * sweeper marks it, and it can revive (`stale → active`) when the runner
+ * reappears — mirroring Linear, where fresh activity on a stale session
+ * derives it back to active (official AgentSessionStatus parity,
+ * extracts/linear-official/AGENT-API.md).
  */
 export const RUN_STATUSES = [
   "pending",
@@ -100,6 +106,7 @@ export const RUN_STATUSES = [
   "complete",
   "error",
   "canceled",
+  "stale",
 ] as const;
 export type RunStatus = (typeof RUN_STATUSES)[number];
 

@@ -96,5 +96,6 @@ test("trigger labels: schedule FREQ shapes, chat, event kinds", () => {
   assert.equal(statusTone("pending"), "accent");
   assert.equal(statusTone("waiting"), "accent");
   assert.equal(statusTone("canceled"), "muted");
+  assert.equal(statusTone("stale"), "muted");
   assert.equal(NEVER_RUN_TONE, "muted");
 });

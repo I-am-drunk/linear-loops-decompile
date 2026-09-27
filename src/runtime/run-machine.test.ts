@@ -69,6 +69,34 @@ describe("transition table", () => {
     }
   });
 
+  it("allows stale from every non-terminal state (T-504)", () => {
+    for (const from of ["pending", "waiting", "active", "awaitingInput"] as const) {
+      assert.equal(canTransitionRunStatus(from, "stale"), true, `${from} → stale`);
+    }
+  });
+
+  it("stale is terminal: sets endedAt and clears a parked elicitation", () => {
+    let run = makeRun("active");
+    run = transitionRun(run, "awaitingInput", T1, {
+      pendingElicitation: { kind: "elicitation", elicitationKind: "freeText", prompt: "?" },
+    });
+    run = transitionRun(run, "stale", T2);
+    assert.equal(run.endedAt, T2, "endedAt set on the unresponsive terminal");
+    assert.equal(run.pendingElicitation, undefined, "a parked elicitation cannot outlive its run");
+    assert.equal(isTerminalStatus("stale"), true);
+    assertRunInvariants(run);
+  });
+
+  it("revives stale → active: endedAt cleared, startedAt kept (T-504)", () => {
+    let run = makeRun();
+    run = transitionRun(run, "active", T1);
+    run = transitionRun(run, "stale", T2);
+    run = transitionRun(run, "active", T3);
+    assert.equal(run.endedAt, undefined);
+    assert.equal(run.startedAt, T1, "the original start survives the revive");
+    assertRunInvariants(run);
+  });
+
   it("rejects illegal edges", () => {
     const illegal: [Run["status"], Run["status"]][] = [
       ["pending", "complete"],
@@ -79,6 +107,12 @@ describe("transition table", () => {
       ["error", "active"],
       ["canceled", "active"],
       ["canceled", "pending"],
+      ["stale", "complete"],
+      ["stale", "canceled"],
+      ["stale", "waiting"],
+      ["complete", "stale"],
+      ["error", "stale"],
+      ["canceled", "stale"],
     ];
     for (const [from, to] of illegal) {
       assert.equal(canTransitionRunStatus(from, to), false, `${from} → ${to}`);

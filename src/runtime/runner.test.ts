@@ -131,6 +131,95 @@ describe("Runner", () => {
     assert.equal(runner.getRun(run.id).status, "canceled");
   });
 
+  it("records the user's stop signal on the canceled run (T-504)", async () => {
+    const brain = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await runner.whenIdle(run.id);
+    runner.cancel(run.id);
+    const done = runner.getRun(run.id);
+    assert.equal(done.status, "canceled");
+    assert.equal(done.stopSignal?.source, "user");
+    assert.equal(typeof done.stopSignal?.at, "string");
+  });
+
+  it("records the stop signal on a mid-stream cancel too (T-504)", async () => {
+    let openGate!: () => void;
+    const gate = new Promise<void>((r) => { openGate = r; });
+    const brain: Brain = {
+      async *stream(_input: BrainInput, signal: AbortSignal) {
+        yield { kind: "thought", text: "partial reasoning" };
+        await gate;
+        if (signal.aborted) return;
+        yield { kind: "response", text: "should never arrive" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    runner.cancel(run.id);
+    openGate();
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "canceled");
+    assert.equal(done.stopSignal?.source, "user");
+  });
+
+  it("marks a parked run stale immediately (T-504)", async () => {
+    const brain = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await runner.whenIdle(run.id);
+    runner.markStale(run.id);
+    const stale = runner.getRun(run.id);
+    assert.equal(stale.status, "stale");
+    assert.ok(stale.endedAt !== undefined, "stale is terminal: endedAt set");
+    assert.equal(stale.pendingElicitation, undefined, "parked elicitation cleared");
+    assert.equal(stale.stopSignal, undefined, "a sweeper halt is not a user stop");
+  });
+
+  it("marks a mid-stream run stale cooperatively, keeping partial parts (T-504)", async () => {
+    let openGate!: () => void;
+    const gate = new Promise<void>((r) => { openGate = r; });
+    const brain: Brain = {
+      async *stream(_input: BrainInput, signal: AbortSignal) {
+        yield { kind: "thought", text: "partial reasoning" };
+        await gate;
+        if (signal.aborted) return;
+        yield { kind: "response", text: "should never arrive" };
+      },
+    };
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    runner.markStale(run.id);
+    openGate();
+    const done = await runner.whenIdle(run.id);
+    assert.equal(done.status, "stale");
+    const turns = runner.getTurns(run.id);
+    assert.deepEqual(turns[0]!.parts, [{ kind: "thought", text: "partial reasoning" }], "partial kept");
+  });
+
+  it("refuses cancel/markStale on terminal runs, finished runs are never stale (T-504)", async () => {
+    const brain = new ScriptBrain([[{ kind: "response", text: "done" }]]);
+    const runner = new Runner(deps());
+    const run = runner.start({ loopId: "loop-1", message: "go", brain });
+    await runner.whenIdle(run.id);
+    assert.equal(runner.getRun(run.id).status, "complete");
+    assert.throws(() => runner.markStale(run.id), IllegalRunTransitionError);
+
+    const brain2 = new ScriptBrain([
+      [{ kind: "elicitation", elicitationKind: "auth", prompt: "connect X" }],
+    ]);
+    const run2 = runner.start({ loopId: "loop-1", message: "go", brain: brain2 });
+    await runner.whenIdle(run2.id);
+    runner.markStale(run2.id);
+    assert.equal(runner.getRun(run2.id).status, "stale");
+    assert.throws(() => runner.cancel(run2.id), IllegalRunTransitionError, "a stale run cannot be canceled");
+    assert.throws(() => runner.markStale(run2.id), IllegalRunTransitionError, "stale is idempotent-terminal");
+  });
+
   it("surfaces a brain throw as run error with the message", async () => {
     const brain: Brain = {
       async *stream(): AsyncIterable<Part> {
