@@ -137,6 +137,9 @@ pub fn from_value(v: &Value) -> Result<FactFile, String> {
         _ => return Err("fact file: \"surfaces\" must be an object".to_string()),
     };
     for (name, sv) in pairs {
+        if !matches!(sv, Value::Obj(_)) {
+            return Err(format!("surface '{}': must be an object", name));
+        }
         let mut s = Surface::default();
         for family in SET_FAMILIES {
             if let Some(v) = sv.get(family) {

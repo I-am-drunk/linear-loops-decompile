@@ -152,3 +152,25 @@ fn ours_only_surface_is_a_violation_unless_declared() {
     assert_eq!(out.status.code(), Some(0), "declared surface must pass: {}", String::from_utf8_lossy(&out.stdout));
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn check_rejects_non_object_surface_value() {
+    // A malformed fact file (`"app.routes": null`) must be a parse error,
+    // never an empty Surface that slides through as uncovered (CR #171).
+    let tmp = std::env::temp_dir().join(format!("parity-test-nonobj-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let facts = tmp.join("ui-facts-nonobj.json");
+    std::fs::write(&facts, r#"{ "surfaces": { "app.routes": null } }"#).unwrap();
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(&facts)
+        .arg("--ref").arg(&reference)
+        .output()
+        .expect("run parity check");
+    assert_ne!(out.status.code(), Some(0), "malformed facts must not pass");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("must be an object"), "expected parse error, got: {}", stderr);
+    let _ = std::fs::remove_dir_all(&tmp);
+}
