@@ -140,6 +140,20 @@ export class Runner {
     return this.#state(runId).turns;
   }
 
+  /** Existence check — the T3 channel's RunRegistry gate (T-1103). */
+  has(runId: EntityId): boolean {
+    return this.#runs.has(runId);
+  }
+
+  /** Ids of runs in non-terminal states — presence-lite for the channel (T-1103). */
+  activeRunIds(): EntityId[] {
+    const ids: EntityId[] = [];
+    for (const [id, state] of this.#runs) {
+      if (!isTerminalStatus(state.run.status)) ids.push(id);
+    }
+    return ids;
+  }
+
   /**
    * Create and start a run. Returns the run snapshot immediately (status
    * will already be `active` unless the brain parked it synchronously);
