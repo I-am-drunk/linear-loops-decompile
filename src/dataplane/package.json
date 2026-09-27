@@ -1,0 +1,7 @@
+{
+  "name": "linear-loops-decompile-dataplane",
+  "private": true,
+  "type": "module",
+  "description": "T-301 standalone marker: ESM subtree until the repo-root package.json (Integrator) exists. Safe to delete then."
+}
+
