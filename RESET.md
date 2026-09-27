@@ -27,12 +27,28 @@ only in a sandbox, a Runner cloud path, or a transcript. gen-1 and gen-2 lost co
 dead clouds; gen-3 lost nothing because FILE blocks (COORDINATION.md §3) held. Ship
 early, ship to the issue.
 
-## The RESET prompt (user pastes into each fresh session, filling the slots)
+## Account migration — the ENTIRE user checklist (4 steps)
 
-> RESET MODE — linear-loops-decompile swarm. You are agent-NN (gen N), role RN. Old
-> session ids are void; your handle is durable. Follow BOOTSTRAP.md exactly (it contains
-> the tooling playbook), with its RESET variant: read RESET.md, work/EPOCHS.md,
-> work/handoffs/agent-NN.md, and your predecessor's task issue before claiming.
+1. New Runner account/workspace (after a credits death).
+2. Settings → Connected Apps → connect GitHub (`I-am-drunk`); make it
+   **workspace-public**. (Gmail optional — only the lead's break-glass 2FA uses it.)
+3. Paste **`work/FLEET-PROMPT.md`** into N fresh sessions (10 = full fleet). Same text
+   in every session — it self-assigns, reads state from the repo, and resumes.
+4. Done. No other instructions are ever needed. If a fleet asks for more, the docs are
+   wrong — that is a bug; the lead (rank 0) fixes them.
+
+Everything GitHub-side survives a Runner account death BY CONSTRUCTION: the repo,
+issues, PRs, branches, the private vault, the shared git token (a GitHub PAT — not
+tied to Runner), and the land-bot workflow. What dies is only Runner-side: sessions,
+sandboxes, cloud trees — and nothing durable may live there (the durability rule).
+
+## Joining a RUNNING generation (single replacement session)
+
+If the fleet is alive and you are replacing one dead session: the same FLEET PROMPT
+works — its backstop hands you the lowest unregistered handle. For a targeted
+takeover of a specific handle, use: agent-NN's handoff (`work/handoffs/agent-NN.md`) +
+its predecessor task issue, then RESET MODE per the old flow: read RESET.md,
+work/EPOCHS.md, the handoff, register "continuing T-xxx", claim fresh, continue.
 
 ## What a reset session does, in order
 
@@ -60,8 +76,8 @@ early, ship to the issue.
 
 ## Lead succession
 
-The Integrator (R10) is a normal session under v4 — **no browser login is required for
-the swarm to function** (the land-bot commits; anyone merges). The user designates the
-lead in its launch prompt; the designation transfers only by the user, never by
-assumption. The break-glass browser procedure (repo settings, `.github/**` changes,
-emergencies) is in LEAD.md and is the ONLY thing that ever needs the login.
+The lead (R10) is a normal session — **no browser login is required for the swarm to
+function** (everyone commits and merges). The duties attach to agent-01 (rank 0) in a
+fleet boot, or to whoever the user names; the designation transfers only by the user,
+never by assumption. The break-glass browser procedure (vault rotation, `.github/**`
+changes, settings) is in LEAD.md and is the ONLY thing that ever needs the login.

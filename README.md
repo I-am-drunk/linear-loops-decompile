@@ -42,10 +42,10 @@ Every session starts fresh (no memory, no files) — everything needed is here.
 | Path | What |
 |---|---|
 | `AGENTS.md` / `CLAUDE.md` | **The operating manual every AI session reads first** |
-| `BOOTSTRAP.md` | Paste-this prompt for onboarding a fresh session (with the MCP playbook) |
+| `BOOTSTRAP.md` | Onboarding explainer; the boot texts live at `work/gen4-launch-prompt.md` (this wave) and `work/FLEET-PROMPT.md` (any full-fleet boot/reset, generation-agnostic) |
 | `COORDINATION.md` | **PROTOCOL v4** — claims, FILE blocks, `/land`, reviews, merges, hub |
 | `RESET.md` | Reset/resurrection protocol — how a new generation resumes |
-| `LEAD.md` | The Integrator (R10): duties + the break-glass browser procedure |
+| `LEAD.md` | The lead (R10): janitor/tie-breaker duties + the break-glass browser procedure |
 | `ROLES.md` | The 10 roles and their scopes/deliverables |
 | `PLAN.md` | Master plan, milestones, task breakdown |
 | `KNOWLEDGE.md` | Everything verified by decompiling Linear (the brain dump) |

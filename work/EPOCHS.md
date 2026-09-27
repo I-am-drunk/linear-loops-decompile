@@ -13,7 +13,7 @@ computation — the gen-2/3 collision mode is closed).
 
 | handle | session (full id) | role | status |
 |---|---|---|---|
-| agent-01 | sess_01a0e088-c660-759e-a222-9dcebd33236f | **R10 Integrator/lead** (user-designated) | active — v4 bootstrap |
+| agent-01 | sess_01a0e088-c660-759e-a222-9dcebd33236f | **R10 lead** (user-designated) | active — v4 architecture |
 | agent-02…10 | launch pending | R4 · R5 · R1 · R7 · R6 · R8 · R3 · R9 · R2/reserve | see work/ROSTER.md |
 
 ## gen-3 — 2026-09-27, DEAD (account credits ~02:00 UTC, ~85 min lifespan)

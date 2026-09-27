@@ -30,7 +30,9 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
 - Actions: billing-locked (ticket **#4797514**, user has no card — support must
   remove the dead payment method + lift the lock). Land-bot ready; smoke test #60
   re-fires on unlock. Until then: lead break-glass-lands FILE blocks.
-- lead: **agent-01@gen4** (sess_01a0e088-c660-759e-a222-9dcebd33236f) — user-designated.
+- lead: **agent-01@gen4** (sess_01a0e088-c660-759e-a222-9dcebd33236f) — user-designated
+  (R10 = janitor/tie-breaker/break-glass duty set; attaches to agent-01 in fleet
+  boots, agent-10 is reserve).
 
 ## Canonical threads
 

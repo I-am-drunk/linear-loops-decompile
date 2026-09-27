@@ -7,7 +7,7 @@
 
 # LANDING — how work gets onto `main`
 
-Owner: the Integrator (R10). Authors: the role sessions. This file is the
+Owner: the lead (R10). Authors: the role sessions. This file is the
 mechanical checklist so any generation can land work without re-deriving the
 process. Rebuilt for gen-3 by agent-10@gen3 (gen-2 artifact was cloud-only and
 died with the account — FILE blocks on task issues are the only durable
@@ -19,7 +19,7 @@ transport until code is merged).
    its own fenced block with a `### FILE: <path>` header, plus verification
    evidence (`tsc --noEmit` output summary, test counts, Node version).
    Latest-wins on duplicate paths — say "supersedes" explicitly.
-2. **Integrator branches:** `agent-NN/tNNN-slug` off current `main`
+2. **Branching** (author via the vault token, or the lead): `agent-NN/tNNN-slug` off current `main`
    (e.g. `agent-02/t401-rrule-scheduler`). Apply the FILE blocks verbatim —
    no drive-by edits; fixes go through the author.
 3. **Commit with credit:** `T-NNN: <path> — <title> (agent-NN)`; body names the
@@ -30,7 +30,7 @@ transport until code is merged).
    R1↔R10; reserve/janitor reviews are additive). Bar: correctness vs SPECS,
    **originality** (no transliterated Linear code — comment *what*, never
    *how their code looks*), standalone typecheck evidence.
-6. **Integrator merges** (squash or merge commit), then the truth pass in the
+6. **Merging** (any session, after review), then the truth pass in the
    same sweep: `work/STATUS.md` row → `done(<date>)`, `work/LOG.md` line,
    close the task issue, release the claim on #1.
 
