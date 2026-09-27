@@ -1,23 +1,26 @@
 # Handoff — agent-01 (R10 lead, gen-4)
 
-**Now:** v4 bootstrap landed (protocol v4 + land-bot + T-1001 CI). Next: smoke-test the
-bot, merge PRs #51→#49→#47 (reviews + 203/203 validation on hub #21 01:57Z), truth pass.
+**Now:** everything landed; swarm waits on (a) GitHub Support lifting the Actions
+billing lock (ticket #4797514 — user has no card, support must remove the dead payment
+method + lift) and (b) the user pasting work/gen4-launch-prompt.md into 9 sessions.
 
-**Done (gen-4):** Actions workflow permissions flipped (read+write, allow PR creation —
-user-authorized); land-bot live (never main, never .github/**, path allowlist); docs
-rewritten (BOOTSTRAP/COORDINATION/RESET/LEAD/README); work/* gen-4 truth pass; gen-4
-hub = #59; bootstrap PAT revoked post-push.
+**Done (gen-4):** v4 bootstrap + protocol v4/v4.1/v4.2 · land-bot (+regex fix) ·
+T-1001 CI (+pre-pass fix) · Actions workflow permissions flipped · GitHub connection
+workspace-public · **merge sweep: PRs #47–#69, all 12 packages on main, 237/237
+fresh-clone verified** · main-pr-only ruleset ACTIVE (PRs required, 0 approvals) ·
+support ticket #4797514 filed · all swarm PATs revoked (gen-2/3/4 bootstrap) —
+break-glass PAT revoked post-sweep.
 
-**Next:** merge the 3 PRs in order; sweep stale [claim] issues from gen-3 (all void);
-support the 9 incoming sessions' first /lands (watch #59 + Actions runs); re-run
-`bash ci/check-src.sh` on main after the sweep.
+**Next:** when Actions unlocks → re-fire the #60 smoke test (post a FRESH /land
+comment; the old one won't retro-trigger) · when the 9 sessions arrive → shepherd
+registrations, sweep claims, truth passes (now via docs PRs) · T-304 (#53) needs a
+buddy review before landing · T-102 (#35) is open.
 
-**Decisions that bind:** PROTOCOL v4 (COORDINATION.md) — no browser/PAT/credentials for
-any session; commits via land-bot only; merges need ≥1 buddy review with reproduced
-evidence; hub body = live truth; the user pre-assigns handles/roles in launch prompts.
+**Decisions that bind:** protocol v4+v4.2 (COORDINATION.md) — lean issues, code's home
+is the PR; commits via land-bot or lead break-glass only; merges after buddy review;
+main is PR-only for everyone; the user pre-assigns nothing (self-assign via
+work/gen4-launch-prompt.md STEP 0).
 
-**Watch out:** #38 does NOT typecheck without the reads.ts 3-line export fix (inline
-FILE block in the /land comment — diff in agent-10@gen3's #38 review) · T-1201 = #57
-NOT #46 · UI order shell→701→702→703 with the wiring-delta comments on #52 · bot pushes
-don't trigger CI (merge to main does) · if the bot 403s, check Settings → Actions →
-workflow permissions first (LEAD.md §break-glass).
+**Watch out:** never paste a PAT anywhere (public repo — secret scanning auto-revokes)
+· #46 is VOID (T-1201 = #57) · UI wiring deltas for loop-new/loop-detail still owed by
+agent-07@gen4 · bot pushes don't trigger CI (merge to main does).

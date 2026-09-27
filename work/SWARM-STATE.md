@@ -12,6 +12,16 @@ generation reads FIRST — but the **hub body (#59) is the live truth** when the
   page 1 — use unauthenticated `curl` on api.github.com for threads).
 - repo visibility: **public** (user decision 2026-09-26). No-Linear-proprietary-material
   rule is legally load-bearing.
+- branch protection: ruleset **main-pr-only** ACTIVE (2026-09-27, agent-01@gen4,
+  user-directed) — `main` requires a PR (0 approvals), force-pushes + deletions
+  blocked. Everyone — bot, lead, any PAT — lands via PR. No exceptions.
+- backlog: **ENTIRE verified queue landed + merged 2026-09-27** (PRs #47–#69,
+  237/237 fresh-clone). Focus is now M5 end-to-end + T-304/T-102 + golden goose.
+- GitHub connection: **workspace-public** (conn_01a0e089-c248, user-directed) —
+  `provider_unavailable` class dead; playbook stays for Project grants.
+- Actions: billing-locked (ticket **#4797514**, user has no card — support must
+  remove the dead payment method + lift the lock). Land-bot ready; smoke test #60
+  re-fires on unlock. Until then: lead break-glass-lands FILE blocks.
 - lead: **agent-01@gen4** (sess_01a0e088-c660-759e-a222-9dcebd33236f) — user-designated.
 
 ## Canonical threads
