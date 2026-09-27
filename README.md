@@ -29,7 +29,10 @@ output writes back to Linear through its API.
 
 ## Method (why this rebuild is different)
 
-Everything is verified against the real thing:
+Our method is exact reproduction, not clean-room approximation: we decompile the
+real app, read it directly, and reproduce its behavior, structure, and values
+exactly, writing our own original code. Every claim is verified against the
+decompile:
 
 1. `pipeline/` downloads each Linear release and decompiles it locally into
    `pipeline/corpus/` (gitignored, never committed: legal line). The pipeline is a

@@ -75,6 +75,10 @@ big, it is two slices. The sequence lives in `PLAN.md`.
   EXACT: the same Linear Loops UI and behavior, not a plausible version of it. If
   a behavior cannot be verified against the corpus or Linear's docs, mark it
   unverified. Do not guess.
+- Our method is EXACT REPRODUCTION, not clean-room: we read the decompiled app
+  directly and reproduce its behavior, structure, and values precisely, writing
+  our own original code. (The legal line is about Linear's code, never about its
+  behavior: behavior, values, and algorithms are reproduced exactly.)
 
 ## GitHub tooling
 

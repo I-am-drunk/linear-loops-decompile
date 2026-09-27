@@ -15,7 +15,9 @@ building breadth before depth, so:
   cheap.
 - A slice is done when: the gate passes on a fresh clone, the diff is audited
   against the legal lines, a sibling session has reviewed it when one is around
-  (self-merge only when blocking and no reviewer exists), and STATUS.md plus
+  (self-merge only when you are verifiably the only session running; while any peer
+  session is active there are no self-merges, blocking PRs included — AGENTS.md,
+  user directive #154), and STATUS.md plus
   docs/feature-matrix.md are updated in the same PR.
 - Code stays small: zero runtime deps, strict TS, boring patterns. If a slice
   feels big, it is two slices.
@@ -45,7 +47,9 @@ shell failed the exactness bar and nothing could PROVE a slice exact. The H
 track builds that proof, then restarts the R sequence behind it. Work items:
 
 - H1 parity harness P1 (issue #162, PR #171): `tools/parity` extract+check on
-  routes/copy/structure/tokens, wired into `ci/check-ui.sh`. Follow-ups: route
+  routes/copy/structure/tokens, wired into `ci/check-ui.sh` (a NEW gate that
+  lands with #171 — `ci/check-src.sh` stays untouched; the two red
+  independently). Follow-ups: route
   extraction from chunk literals (#174/#177 — PR #181 supplies the enriched
   routes.json) and the reference manifest.
 - H2 generateTheme exact reimplementation (issue #168): reproduces Linear's

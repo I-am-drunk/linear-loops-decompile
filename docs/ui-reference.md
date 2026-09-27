@@ -19,13 +19,13 @@ theme-token family of the parity harness (issue #162).
   |---|---|---|---|---|
   | `r` | **default dark** | `[5.52, 0.4, 272]` | `[47.9175…, 59.3027…, 288.4214…]` | 27 |
   | `t` | **default light** | `[97.94, 0.5, 282]` | `[53, 52.26, 286.91]` | 30 |
-  | `i` | dark, high contrast | `[8, 0.75, 272]` | (dark accent) | 90 |
-  | `n` | light, high contrast | `[98.7, 0.5, 282.8634…]` | (light accent) | 90 |
+  | `i` | dark, high contrast | `[8, 0.75, 272]` | `[47.917542332560124, 59.30267706856808, 288.42138382943733]` | 90 |
+  | `n` | light, high contrast | `[98.7, 0.5, 282.8634…]` | `[53, 52.26, 286.91]` | 90 |
 
 - The tables below were produced by EXECUTING the corpus generator with those
   parameters (`node` on the two chunks, sandbox only) and recording the output
   values. Values are facts; generator code stays in the vault, never committed.
-  The clean-room reimplementation of `generateTheme` (audit Finding 1
+  The exact reimplementation of `generateTheme` (audit Finding 1
   recommendation) can be verified token-for-token against these tables.
 - `pipeline/corpus/style/style-YZZHHG9P.css` (vault): the compiled app
   stylesheet (~565 KB lightningcss output) for font stacks and global rules;

@@ -6,7 +6,7 @@ Behavioral spec for OUR reimplementation, derived from decompiling Linear 1.32.4
 ## Concepts
 
 - **Loop** — a named automation owned by an org/team/project, with: trigger, conditions,
-  prompt (rich text), schedule (when triggerType=schedule), activities (what it may do),
+  prompt (rich text), schedule (when triggerType=Schedule), activities (what it may do),
   trusted sources, enabled flag, drafts + publish lifecycle, run history.
 - **Loop run** — one execution. Has status, started/ended, target entity (issue/project/
   initiative/document/team/cycle/release), a conversation (turns of activities), stats
@@ -35,7 +35,8 @@ conditions:  [ { watchedProperties: [...],
                  commentMatch: <string>,
                  filters… } ]
              # coherence (corpus): collectionChanged => exactly one condition
-             # with collectionChange and none with watchedProperties
+             # with collectionChange and none with watchedProperties;
+             # watchedPropertyChanged => a non-empty watchedProperties set
 schedule:    { startAt: TimelessDate, type: hours|days|weeks|months|years,
                interval: positive int, hour?: 0-23, minute?: 0-59,
                timezone?: IANA, daysOfWeek?: 1..7 unique (weeks only),
@@ -51,7 +52,6 @@ unsupported for commentAdded/updatePosted/customerRequestAdded triggers.
 Triage is a condition/variant (`entityInTriage`), not a triggerType value.
 
 Chat triggers: loop wakes on @mention/message in an enabled channel.
-Triage variant: event `entityInTriage` with triage-state conditions.
 
 ## Condition semantics (observed)
 
@@ -64,7 +64,13 @@ Triage variant: event `entityInTriage` with triage-state conditions.
 ## Loop config fields we persist (superset of Linear's, minus their server bits)
 
 `name, icon, color, description, groupName, owner, team?, project?, prompt (doc),
-triggerType, trigger(event+activationMode), conditions[], schedule?, enabled,
+triggerType (entity), trigger (event key; support table above — Schedule and
+Chat triggers carry NO event: the runtime trigger for Schedule is
+`{id, type: schedule, schedule}` with the event key absent, and Chat is
+`{id, type: chat, platform, integrationId, channels}` — corpus
+`Issue.DRYymPCa.js` `toTrigger`, which throws when a Schedule definition lacks
+its `schedule`), activationMode?,
+conditions[], schedule? (Schedule triggers), enabled,
 applyToSubTeams, activities[] (capabilities), trustedSourceKeys[], codeAccess: none|read|write,
 editAccess, subscribers, stats{…}, lastExecutedAt, version/publishedAt`.
 

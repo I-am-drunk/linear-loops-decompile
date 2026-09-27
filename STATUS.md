@@ -23,6 +23,13 @@ Done 2026-09-27:
   changelog, and a schema refresh vendored in `extracts/linear-official/`
   (PR #138) — incl. the correction that upstream's DEFAULT branch is `master`
   (a stale `main` branch produced a false "zero drift" on 2026-09-27 morning).
+- Official-docs gap closed (2026-09-27): the vendored upstream `docs/*.md` turned
+  out to be one-line stubs — the real docs moved to linear.app/developers. Fact
+  digests of the live pages (rate limiting incl. RATELIMITED-on-400 + all budget
+  headers, GraphQL auth-header shapes, pagination/filtering, webhooks contract +
+  HMAC verification, OAuth token lifecycle) now live in
+  `extracts/linear-official/docs-site/`; KNOWLEDGE §6 rewritten from them; the
+  audit's UNVERIFIED flag on `src/server/linear.ts` rate headers resolved.
 - Golden-goose trace (issue #14, PR #141): Q1-Q4 answered in
   `docs/golden-goose-chat-route.md` + KNOWLEDGE.md §8a — send op + input fields,
   streamData subscribe envelope, auth, wire shapes (now MIT-documented), meter
@@ -41,21 +48,45 @@ Done 2026-09-27:
   secrets, credential-header refusal, duplicate-name rejection; 8/8 server
   tests with an injected fake fetch.
 
-- R3.4 UI shell: `src/ui` (Vite + React 19, hand-rolled router, theme tokens
-  from the corpus via docs/ui-reference.md) with the Settings page wired to the
-  R3.3 RPCs. Gate: tsc + vite build; serve smoke through the real server.
+- R3.4 UI shell: BUILT then FAILED the exactness audit (docs/audit-2026-09-27.md
+  F1/F2: invented tokens + invented IA) — not done; disposition per PLAN.md H
+  track: brought to parity-green or archived like v0. The server halves
+  (R3.1-R3.3) stand.
+
+Done 2026-09-27 (evening, freeze-era):
+- Feedback gate (user directive, #175/#182 merged): NO merges with unaddressed
+  CodeRabbit/peer feedback; ruleset enforces review-thread resolution on main;
+  AGENTS.md + ship skill carry the rule and the pagination recipe.
+- Pipeline route extraction fixed (#174, PR #181 merged): analyze.mjs also scans
+  `/:orgKey/…` chunk literals; routes 119 -> 490 unique paths on 1.32.4, incl.
+  `/:orgKey/loops/:viewType?`.
+- Vault corpus verified COMPLETE at HEAD 6dcc083 (1,550/1,550 pretty chunks; the
+  "507 missing" alert on #162 measured a stale local copy — re-clone before
+  trusting partial extract numbers; vault fetch = full git clone + count check,
+  #187 merged).
+- H4 official-docs leg LANDED: per-page live-site digests in
+  `extracts/linear-official/docs-site/` (#184, #190 merged; #197 folds in
+  #191's remaining pages + the sitemap completeness bar; #186/#191 close with
+  credit per the #183 dedupe). KNOWLEDGE §6 now officially sourced (incl.
+  HTTP-400 + RATELIMITED exhaustion — constrains PR #155).
+- Review-queue burn-down: #169 (KNOWLEDGE §4/§5/§6 corrections + sync-protocol
+  supersession), #172 (EXACT-reproduction wording), #173 (merged-PR feedback
+  ledger fixes) all merged.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
-- H1 parity harness P1: PR #171 (review-complete, reproduced on the full
-  corpus; blocked only on thread resolution) + #180 (stale, needs
-  rebase-or-close) + #177/#181 route completeness.
-- H2 generateTheme exact reimplementation: issue #168 (claimed).
+- H1 MERGE-CRITICAL: PR #171 (parity harness P1) — revised, reviews green, last
+  threads addressed via PR #188 + #189 (optional-param routes + canaries, into
+  #171); then #177 follow-ups.
+- H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
 - H3 matrix-§A fact extraction for the reference (unassigned).
-- H4 official-docs leg: issue #185 / PRs #184+#190 (digests up; citation rule +
-  drift-check step unassigned).
+- H4 remaining: citation rule + docs drift-check step (#185, unassigned);
+  PR #197 (docs-site fold-in) in review.
+- R5.1 dataplane PR #155: needs the 400/RATELIMITED redesign per the docs leg
+  (review posted on the PR).
 
 Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
-trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity.
+trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by
+`parity check`.
 
 (Contradiction fixed 2026-09-27: this section previously offered R4.1 as
 unassigned work while the freeze banner above forbade feature code.)
