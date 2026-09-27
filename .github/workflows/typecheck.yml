@@ -1,0 +1,40 @@
+# CI: typecheck + unit tests for every package under src/.
+#
+# Package-driven: each src/<pkg>/ with a tsconfig.json is checked against its
+# OWN tsconfig and runs its OWN test script (see ci/check-src.sh for the exact
+# loop, and work/LANDING.md §Conventions for the two legal import styles).
+# The same script runs locally before opening a PR:
+#
+#     bash ci/check-src.sh
+#
+# Landing process: work/LANDING.md. House style: Node 22, zero heavy deps.
+
+name: typecheck
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: typecheck-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  src:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Node >= 22.18 strips types by default; check-src.sh also passes
+          # --experimental-strip-types explicitly so older 22.x still works.
+          node-version: "22"
+
+      - name: Typecheck + test every src/* package
+        run: bash ci/check-src.sh

@@ -1,43 +1,139 @@
-# Coordination protocol
+# Coordination protocol — PROTOCOL v4
 
-~10 sessions, no shared memory, no subagents. The repo is the only shared state.
-Everything here is designed around what each session can actually do:
+> v4 (2026-09-27, agent-01@gen4): browser-less swarm. Consolidates v2/v3, the gen-3 MCP
+> playbook, and work/LANDING.md's process. Where this conflicts with ANY older text
+> (including old hub bodies), this file wins. Repair history: the v3 file shipped
+> truncated mid-§3 (gen-2) and lived only in hub comments (gen-3) — that class of
+> failure is why v4 lands as one complete, committed document.
 
-| Capability | Workers (roles 1–9) | Integrator (role 10) |
+~10 sessions, ONE shared GitHub account (`I-am-drunk`), no shared memory. The repo +
+issue text is the only shared brain. Everything here matches what sessions can
+actually do — no session ever needs a browser, a password, or a PAT:
+
+| Capability | How | Who |
 |---|---|---|
-| Read repo (github.get_content) | ✅ | ✅ |
-| Create issues + comments | ✅ | ✅ |
-| Create PRs (existing branches) | ✅ | ✅ |
-| Commit files / merge PRs (browser GitHub, user is logged in) | ❌ | ✅ |
+| Read repo | `github.get_content`; bulk: `git clone --depth 1` or unauthenticated `curl` (public repo) | all |
+| Issues, comments, body edits | `github.create_issue` / `create_issue_comment` / `update_issue` | all |
+| Branches + commits | **the land-bot (§5)** — post `/land` + FILE blocks; a GitHub Action commits | all |
+| Open PRs | the bot opens it for you (`pr="…"`); or `github.create_pull_request` on an existing branch | all |
+| Merge PRs | `github.merge_pull_request` — after review evidence (§4, §6) | all |
+| Commit `.github/**`, settings, break-glass fixes | lead only, via browser+PAT (LEAD.md) | R10 |
 
-Because only the Integrator can commit, **work products travel as labeled code blocks in
-issue comments**, and the Integrator lands them. (If a worker's MCP can also create
-branches+commits, it may open real PRs instead — same review flow.)
+**If you think you need a browser or a credential: stop — you are doing it wrong. Ask on issue #2.**
 
-## 1. Session start checklist
+## 1. Session start checklist (≈10 min, zero discovery)
 
-1. Read `README.md`, this file, `work/STATUS.md`, `ROLES.md`.
-2. Comment on issue #1 (Roster): handle `agent-NN`, role #, one-line plan.
-3. Claim a task (§2) before doing any work.
-4. Re-read `work/STATUS.md` + `work/LOG.md` at the start of every work block. Files win
-   over your memory — you have none tomorrow.
+1. Read `README.md` → this file → `work/STATUS.md` → the **current hub issue body**
+   (gen-4: **#59**; the live number is pinned in `work/SWARM-STATE.md`) → your task issue.
+2. **MCP playbook** (this cost prior generations hours — learn it once):
+   - `github.*` calls failing `provider_unavailable` → pass `connectionId` explicitly on
+     EVERY call; discover it via `connections.list()`.
+   - `list_issue_comments` returns only the **oldest page** reliably — never page it.
+     Canonical state lives in **issue BODIES**; full threads via
+     `curl "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/<n>/comments?per_page=100&page=N"` (no auth).
+   - `get_content` text caps at 50k chars → bulk-read via `git clone --depth 1` or
+     `curl https://raw.githubusercontent.com/I-am-drunk/linear-loops-decompile/main/<path>`.
+3. Register: comment on **issue #1**:
+   `handle: agent-NN (gen 4) | session: <full sess_ id> | role RN | continuing T-xxx`
+   — and the same line on the hub. #1 is write-only (you cannot read it back — paging);
+   the lead mirrors live state into the hub body.
+4. Claim ONE task (§2) before doing any work.
 
 ## 2. Claims (leases)
 
-- Tasks live in `work/STATUS.md` with IDs like `T-203`.
-- To claim: **create issue titled `[claim] T-203 by agent-NN`** with body
-  `{"task":"T-203","lease_hours":6,"plan":"…"}` — OR, if you can commit, create
-  `work/claims/T-203.md` with the same JSON. Issues are the fallback claim channel;
-  the Integrator mirrors them into `work/claims/`.
-- A claim is **live** until its lease expires (`claimed_at + lease_hours`, UTC, from the
-  issue's timestamp). Heartbeat = comment on your claim issue (or edit the claim file).
-  Expired claims are free for anyone, including re-claim by the same agent.
-- **One live claim per session.** Finish or release before claiming again.
-- To release: comment `[release] T-203` on your claim issue and note it in `work/LOG.md`.
+- Task board: `work/STATUS.md`; live mirror: the hub body (hub wins if they disagree).
+- To claim: create issue **`[claim] T-NNN by agent-NN`** with JSON body
+  `{"task":"T-NNN","lease_hours":6,"session":"sess_…","generation":4,"plan":"…"}`.
+- Before claiming, `github.search_issues` for open `[claim]` issues on that task —
+  a live lease wins. Lease expires at `claimed_at + lease_hours` (UTC, issue timestamp).
+- Heartbeat: comment on your claim issue. Expired claims are free for anyone.
+- **One live claim per session.** Release: comment `[release] T-NNN` on the claim issue.
+- On reset: all leases die with their sessions. **Delivered work is never re-claimed** —
+  the new generation continues it (RESET.md §5).
 
-## 3. Publishing work (workers)
+## 3. Publishing work — FILE blocks (durability rule, ABSOLUTE)
 
-1. Open (or reuse) **one issue per task**: `[T-203] <title>`. This is the task's home.
-2. Post deliverables as comments, each file in its own fenced block with a path header:
+Code lives as FILE blocks on its task issue **the moment it works** — never only in a
+sandbox, a cloud tree, or a transcript. gen-1 and gen-2 lost whole columns to dead
+accounts; issue text survived three generations.
 
-   
+Format — each file in order:
+
+    ### FILE: <repo-relative path>
+    ```<lang>
+    <content>
+    ```
+
+(fences of 4+ backticks when the content itself contains triple backticks)
+
+- **One issue per task**: `[T-NNN] <title>` — the task's home forever.
+- Put verification evidence above the blocks (`tsc` summary, test counts, Node version).
+- **Latest-wins** on duplicate paths; write "supersedes" when replacing your own.
+- Keep the issue BODY as the index: state, evidence, file list. Blocks may live in the
+  body (≤65k chars) or comments — the land-bot reads both (§5 order).
+- Workers can't commit `work/*` updates directly: stage the text on your task issue or
+  the hub; the lead's truth pass lands it (or piggyback it on your own `/land`).
+
+## 4. Review (buddy pairs)
+
+No merge without **one review comment naming reproduced evidence** (fresh sandbox,
+`bash ci/check-src.sh` output, test counts). Buddies: R2↔R5, R3↔R4, R6↔R9, R7↔R8,
+R1↔R10; reserve/janitor reviews are additive. Bar: correctness vs SPECS, **originality**
+(no transliterated Linear code — comment *what*, never *how their code looks*),
+standalone typecheck.
+
+## 5. Landing — `/land` (self-service, replaces the gen-1→3 integrator bottleneck)
+
+Post on the task issue:
+
+    /land branch=agent-NN/tNNN-slug from=#41,#43 pr="T-NNN: <title>"
+
+- `branch` (required): `agent-NN/tNNN-slug`. Exists → files apply on top (multi-part
+  packages: several `/land`s, same branch). Missing → created from `base=` (default main).
+- `from=#N[,#M…]` (optional): land every FILE block from those issues — each issue's
+  body first, then its comments oldest→newest, in the order given.
+- Your `/land` comment's own FILE blocks apply **last** (inline corrections always win —
+  e.g. the reads.ts export fix on #38).
+- `pr="…"` (optional): open (or reuse) a PR to `base`.
+
+The bot comments back the commit + PR link, or the exact rejection reason. Bot policy:
+never commits to `main`; never writes `.github/**`; path allowlist `src/ work/ docs/
+SPECS/ extracts/ pipeline/ ci/` and root `*.md`; caps 512KB/file, 2MB/bundle.
+Bot pushes do **not** trigger CI (GitHub never cascades `GITHUB_TOKEN` events) — PR
+review evidence is local reproduction (§4); the **merge to main does run CI**.
+
+## 6. Merging (any session, after review)
+
+`github.merge_pull_request(number, method:"squash")` once §4 is satisfied and
+`github.get_pull_request` shows `mergeable`. Then note it on the hub; the lead's truth
+pass updates `work/STATUS.md` + `work/LOG.md` + closes the task issue. Merge blocked or
+conflicting → post on #2; never force anything.
+
+## 7. Canonical state & the hub
+
+- **Live truth: the current hub issue's BODY** (gen-4: #59), maintained by the lead.
+- `work/*.md` = the lead's checkpoint, refreshed at merge sweeps. Hub body wins
+  disagreements; issue text wins over memory; you have no memory tomorrow.
+- Threads: roster #1 (write-only) · help #2 · golden goose #14 · UI bar #20.
+- Runner-side `sessions.send_message` = pager for interrupts only; mirror decisions here.
+
+## 8. Roles & duties
+
+Per `ROLES.md`. **R10 (Integrator)** is no longer special: duties = hub body, truth
+passes, claim sweeps, PR audit (the legal line, §9), `.github/**` changes, tie-breaks.
+Everything else, every session can do. LEAD.md holds the break-glass browser procedure.
+
+## 9. Hard rules (absolute)
+
+- **Never commit Linear-proprietary material** (bundle/DMG/asar/prettified chunks). The
+  repo is **PUBLIC** (user decision 2026-09-26) — every commit and comment is forever.
+  `extracts/` = facts only.
+- All reimplementation code is **original**.
+- **Credentials never** in repo/issues/chat/cloud/transcripts. v4 sessions need none (§1).
+- One live claim; heartbeat or it expires. Small frequent updates beat big silent pushes.
+
+## 10. Generations
+
+Sessions die; handles (`agent-NN`) and issue text survive. Registry: `work/EPOCHS.md`.
+Protocol: `RESET.md`. The user's launch prompt assigns your handle + role — **no rank
+computation, no self-selection** (gen-2 and gen-3 both lost hours to handle collisions).

@@ -1,49 +1,54 @@
 # EPOCHS — generation registry
 
 An epoch/generation = one Runner-account lifespan of the swarm. Handles agent-01…10 are
-stable role slots; session ids are per-generation and tombstoned at reset. Cross-generation
-references: `agent-NN@gen<n>`.
+stable role slots; session ids are per-generation and tombstoned at reset.
+Cross-generation references: `agent-NN@gen<n>`.
 
-## gen-2 — 2026-09-26, current
+## gen-4 — 2026-09-27, current
 
-Spawned 23:07–23:08 UTC. Deterministic handles (spawn-order rank, proposed by
-agent-07@gen2, ratified by the lead): rank = agent number. Role map resumes gen-1's
-(01→R2, 02→R4, 03→R5, 04→R1, 05→R7, 06→R6, 07→R8, 08→R3, 09→R9, 10→reserve/R10), EXCEPT:
-the user designated the browser/Integrator session; after a brief double
-  designation (rank-1 ⇄ rank-7) the user ruled finally: **agent-01@gen2 holds R10**.
-  PROTOCOL v3 §8.5 makes the next designation change orderly.
+Boot: user designated agent-01@gen4 as Integrator and ordered the docs fix +
+browser-less landing BEFORE spawning the other 9 sessions. Protocol v4: the land-bot
+commits for everyone; handles/roles are pre-assigned in each launch prompt (no rank
+computation — the gen-2/3 collision mode is closed).
 
 | handle | session (full id) | role | status |
 |---|---|---|---|
-| agent-01 | sess_01a0dff7-e039-7187-b222-b07fdee12282 | **R10 Integrator** (user-designated, final ruling) | active — landed reset docs + recovery package |
-| agent-02 | sess_01a0dff8-ebf5-7110-85ed-486caf629366 | R4 | spawned |
-| agent-03 | sess_01a0dff9-3ceb-7539-a3f8-e916967afd6a | R5 | spawned |
-| agent-04 | sess_01a0dff9-4d4d-7379-be12-12e93e7e09d0 | R1 | spawned |
-| agent-05 | sess_01a0dff9-970f-767f-b779-559704830a25 | R7 | spawned |
-| agent-06 | sess_01a0dff9-a492-73ca-a8bc-a9a8ed4a8b11 | R6 | spawned |
-| agent-07 | sess_01a0dff9-bd76-7753-a2bf-8da5d4a1d367 | R8 | registered on #1 (23:19Z); T-801 delivered |
-| agent-08 | sess_01a0dff9-d36c-7150-acd9-8f8478ac0a1c | R3 | spawned |
-| agent-09 | sess_01a0dff9-dfe0-77f8-8ee9-c0712f04e9ef | R9 | spawned |
-| agent-10 | sess_01a0dffa-008f-748c-8d6e-0520cec94557 | reserve | spawned |
+| agent-01 | sess_01a0e088-c660-759e-a222-9dcebd33236f | **R10 Integrator/lead** (user-designated) | active — v4 bootstrap |
+| agent-02…10 | launch pending | R4 · R5 · R1 · R7 · R6 · R8 · R3 · R9 · R2/reserve | see work/ROSTER.md |
 
-Replacement policy: a slot silent >2h after spawn is presumed dead-on-arrival; the lead
-notes it here and the user spawns a replacement (or the lead reassigns the slot's task).
+## gen-3 — 2026-09-27, DEAD (account credits ~02:00 UTC, ~85 min lifespan)
 
-## gen-1 — 2026-09-26, DEAD (account credits exhausted ~23:0x UTC)
+All gen-3 session ids (sess_01a0e04a…sess_01a0e04f range) are VOID. Spawned
+00:37:08–00:40:06Z. Rank-table identity (rank = agent number) produced one collision
+(sess …bb14 registered agent-09 at rank 4; rank-9 sess …ed0b was rerouted to agent-04)
+and one mid-flight re-designation (user moved R10 from agent-01@gen3 to agent-02@gen3
+at 01:37Z). **Died mid-landing: nothing merged; nothing lost** — every deliverable was
+FILE-blocked on task issues, and agent-10@gen3 validated the full queue as a unit at
+01:57Z (8/8 packages tsc clean, 203/203 tests).
 
-All gen-1 session ids (sess_01a0dfb8-*, sess_01a0dfb9-*, sess_01a0dfbb-*) are VOID —
-never reference them as live. Historical roster (final state at death):
-
-| handle | role | final state (2026-09-26 ~23:20 UTC) |
+| handle | role | final state at death |
 |---|---|---|
-| agent-01@gen1 | R2 (later +R7) | T-201 [ready] on #24 · T-701 [ready] (cloud artifact lost) |
-| agent-02@gen1 | R4 | T-401 [ready] (cloud artifact lost) · EPOCHS + LEAD docs staged |
-| agent-03@gen1 | R5 | T-501, T-502, T-202 all [ready] (cloud artifacts lost) · proposed T-1101 |
-| agent-04@gen1 | R1 | T-101 report on #30 · extracts + reset docs (cloud lost) |
-| agent-05@gen1 | R4→R7→R2 | RESET/LEAD/SWARM-STATE drafts · T-202 claimed |
-| agent-06@gen1 | R6 | T-601 [ready] on #25 · T-601+T-602 bundle on #27 |
-| agent-07@gen1 | R8 | T-801 page-map in flight · docs-reset-v2.1 (cloud lost) |
-| agent-08@gen1 | R3 | T-301 v2 + T-302 done, staged on #26 comments · RESET.md draft |
-| agent-09@gen1 | R9 | T-901 + T-902 [ready] (cloud artifact lost; reviews on hub) |
-| agent-10@gen1 | reserve | (the …6255f6 session; never re-confirmed) |
+| agent-01@gen3 | R10 (designated; never logged in) | hub body maintained; designation moved |
+| agent-02@gen3 | R4 + R10 (browser, user-designated 01:37Z) | R4 column verified carried (54/54); T-303 buddy review; PAT minted, died unused |
+| agent-03@gen3 | R5 | gen-3 docs package staged on hub; T-1201 rewrite on #57 |
+| agent-04@gen3 | R1 | slot open at death |
+| agent-05@gen3 | R7 | T-701 #52 · T-702 #56 · T-703 #58 (the R7 column rebuilt durably) |
+| agent-06@gen3 | R6 | PR #47 shepherd |
+| agent-07@gen3 | R8 | T-802 v2 delta; landing-queue corrections 01:40Z (load-bearing) |
+| agent-08@gen3 | R3 | T-303 re-verified on #38; T-304 on #53 |
+| agent-09@gen3 | R9 | T-901+T-902 complete src/connect on #50 (20/20) |
+| agent-10@gen3 | reserve/janitor | T-1001 rebuilt on #55; review sweep #1 + full-tree CI validation (01:57Z) |
 
+## gen-2 — 2026-09-26, DEAD (account credits ~00:37 UTC)
+
+All gen-2 session ids (sess_01a0dff7…sess_01a0dffa) VOID. Landed: reset/continuity docs
+(0ab2353), code branches `agent-01/t201-model` c725991, `agent-08/t301-t302-dataplane`
+ec5d083, `agent-06/inference-t601-t603` 2eba6d4. PROTOCOL v3 (Runner pager +
+designation stability §8.5) — superseded by v4. Roster/history: pre-v4 editions of this
+file (git history); tombstone trimmed 2026-09-27.
+
+## gen-1 — 2026-09-26, DEAD (account credits ~23:0x UTC)
+
+All gen-1 session ids (sess_01a0dfb8/9/bb ranges) VOID. Delivered: T-101 report (#30),
+T-201 (#24), T-301 v2 + T-302 (#26), T-601/602 (#25/#27); cloud-staged artifacts lost —
+the event that created the FILE-block durability rule. Full per-slot table: git history.

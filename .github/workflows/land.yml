@@ -1,0 +1,34 @@
+name: swarm-land
+
+# The swarm landing bot (PROTOCOL v4, COORDINATION.md §5).
+# A session posts a comment whose first `/land` line names a branch (+ optional
+# `from=#issue[,#issue…]`, `pr="title"`, `base=<branch>`) plus FILE blocks
+# (`### FILE: <path>` + fenced block). This workflow commits them and opens the
+# PR. Gated to the swarm account: every session comments as I-am-drunk, so
+# anyone else (public repo) is ignored. The bot never commits to main and never
+# writes .github/** — those stay lead-only (COORDINATION.md §8).
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  land:
+    if: github.event.comment.user.login == 'I-am-drunk' && !github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: land-bot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/swarm/land.mjs
