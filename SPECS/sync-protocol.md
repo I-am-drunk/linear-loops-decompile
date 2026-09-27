@@ -1,7 +1,9 @@
 > **SUPERSEDED 2026-09-27 (audit issue #157).** This pre-corpus summary has factual
-> errors: the zstd dictionary is client-embedded (not server-sent/SHA256-pinned) and
-> the "custom packer" is stock msgpackr. Authoritative protocol facts: KNOWLEDGE.md
-> §4; the goose stream path: docs/golden-goose-chat-route.md. Kept for history.
+> errors: the "custom packer" is stock msgpackr, and the zstd dictionary story has
+> two layers this file conflated (content = static client-embedded versioned blob;
+> delivery = server-sent, SHA-256-pinned). Authoritative protocol facts:
+> KNOWLEDGE.md §4; the goose stream path: docs/golden-goose-chat-route.md.
+> Kept for history.
 
 # SPEC — Linear's LSE sync protocol (reference only — we do NOT build this)
 
