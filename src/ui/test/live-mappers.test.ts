@@ -7,6 +7,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createRunDetailReducer,
+  isWireRunEvent,
   turnsToActivities,
   wireLoopToSummary,
   wireRunToDetail,
@@ -169,4 +170,21 @@ test("reducer: turnStarted with inline parts renders them once; later parts inde
   const d = reducer.apply({ seq: 3, runId: "run-1", at, type: "partAppended", turnId: "t9", part: { kind: "error", message: "boom" } });
   assert.deepEqual(d.activities.map((i) => i.id), ["t9#0", "t9#1"]);
   assert.equal(d.activities[1]!.position, 3 * 1000 + 1);
+});
+
+test("isWireRunEvent: per-type required fields; malformed and unknown kinds rejected", () => {
+  const run = mkRun({});
+  assert.equal(isWireRunEvent({ type: "runStatus", run }), true);
+  assert.equal(isWireRunEvent({ type: "runStatus", run: { status: "complete" } }), false); // no usage
+  assert.equal(
+    isWireRunEvent({ type: "turnStarted", turn: { id: "t", position: 0, parts: [] } }),
+    true,
+  );
+  assert.equal(isWireRunEvent({ type: "turnStarted", turn: { id: "t" } }), false);
+  assert.equal(isWireRunEvent({ type: "partAppended", turnId: "t", part: { kind: "thought", text: "x" } }), true);
+  assert.equal(isWireRunEvent({ type: "partAppended", turnId: "t" }), false);
+  assert.equal(isWireRunEvent({ type: "turnCompleted", turnId: "t", status: "complete" }), true);
+  assert.equal(isWireRunEvent({ type: "usage", usage: { inputTokens: 1, outputTokens: 1, costUsd: 0.1 } }), true);
+  assert.equal(isWireRunEvent({ type: "usage", usage: {} }), false);
+  assert.equal(isWireRunEvent({ type: "somethingElse" }), false);
 });

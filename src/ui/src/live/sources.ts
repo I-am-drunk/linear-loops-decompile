@@ -33,22 +33,26 @@ import {
 import type { LoopConfig } from "../../../model/index.ts";
 import {
   createRunDetailReducer,
+  isWireRunEvent,
   wireLoopToSummary,
   wireRunToDetail,
   wireRunToSummary,
 } from "./mappers.ts";
 
 /** Run events cross the channel opaque (channel.ts's own payload type); the
- *  source casts at this one boundary — the server publishes runtime RunEvents. */
+ *  source validates + casts at this one boundary — the server publishes
+ *  runtime RunEvents. */
 export type WireEventPayload = Record<string, unknown> & { type: string };
 
-/** The slice of ChannelClient the sources use (structural — tests fake it). */
+/**
+ * The slice of ChannelClient the sources use (structural — tests fake it).
+ * `onEvent` is the client's global `runs.event` sink: it fires for every
+ * notification, subscribed or not, so ONE live watch owns it at a time (the
+ * run-detail route — multiplexing is M6 if a second view ever needs it).
+ */
 export interface ChannelRpc {
   request(method: string, params?: unknown): Promise<unknown>;
-  subscribeRuns(
-    runId: string,
-    onEvent?: (event: WireEventPayload, seq: number) => void,
-  ): Promise<unknown>;
+  onEvent: ((runId: string, seq: number, event: WireEventPayload) => void) | undefined;
   unsubscribe(runId: string): void;
 }
 
@@ -149,14 +153,45 @@ export class LiveRunsSource implements RunsSource {
     return wireRunToDetail(result.run, result.turns, names.get(result.run.loopId) ?? result.run.loopId);
   }
 
+  /**
+   * Snapshot + incremental tail. `runs.get` carries the history AND the
+   * log's `lastSeq`; the subscribe resumes from exactly there, so an event
+   * emitted between the two RPCs arrives in the replay — never missed,
+   * never doubled (replay and live events are both seq-filtered at maxSeq).
+   */
   async watchRun(runId: string, onUpdate: (detail: RunDetail) => void): Promise<() => void> {
-    const initial = await this.getRun(runId);
-    const reducer = createRunDetailReducer(initial);
+    const [names, result] = await Promise.all([
+      this.#loopNames(),
+      this.#rpc.request(RPC.runsGet, { id: runId }) as Promise<RunsGetResult>,
+    ]);
+    if (typeof result.lastSeq !== "number") {
+      throw new Error("runs.get: missing lastSeq — the T-1103 server handlers must send it (contract.ts)");
+    }
+    const reducer = createRunDetailReducer(
+      wireRunToDetail(result.run, result.turns, names.get(result.run.loopId) ?? result.run.loopId),
+    );
     onUpdate(reducer.detail);
-    await this.#rpc.subscribeRuns(runId, (raw: WireEventPayload) => {
+
+    let maxSeq = result.lastSeq;
+    const handler = (eventRunId: string, seq: number, raw: WireEventPayload): void => {
+      if (eventRunId !== runId || seq <= maxSeq) return;
+      maxSeq = seq;
+      if (!isWireRunEvent(raw)) return; // malformed: skip, keep watching
       onUpdate(reducer.apply(raw as RunEvent));
-    });
-    return () => this.#rpc.unsubscribe(runId);
+    };
+    this.#rpc.onEvent = handler;
+    try {
+      await this.#rpc.request(RPC.runsSubscribe, { id: runId, sinceSeq: result.lastSeq });
+    } catch (error) {
+      if (this.#rpc.onEvent === handler) this.#rpc.onEvent = undefined;
+      throw error;
+    }
+    return () => {
+      if (this.#rpc.onEvent === handler) this.#rpc.onEvent = undefined;
+      // Client-local unsubscribe (no server-side unsub RPC exists); the
+      // server-side fan-out ends with the connection.
+      this.#rpc.unsubscribe(runId);
+    };
   }
 
   async steer(runId: string, text: string): Promise<void> {

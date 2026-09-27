@@ -111,10 +111,17 @@ export interface RunsGetParams {
   readonly id: string;
 }
 
-/** Run + full turn history; the live tail arrives via runs.subscribe. */
+/**
+ * Run + full turn history; the live tail arrives via runs.subscribe.
+ * `lastSeq` is the run's event-log tip at snapshot time — the UI subscribes
+ * with `sinceSeq: lastSeq`, so replay is incremental and history never
+ * double-renders. Required: a server that omits it breaks the watch's
+ * dedupe (the UI rejects the response loudly rather than render twice).
+ */
 export interface RunsGetResult {
   readonly run: WireRun;
   readonly turns: readonly WireTurn[];
+  readonly lastSeq: number;
 }
 
 export interface RunsTextParams {

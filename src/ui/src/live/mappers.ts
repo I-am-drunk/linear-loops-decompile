@@ -143,6 +143,47 @@ export function wireRunToDetail(
 }
 
 /**
+ * Runtime guard for wire events. The channel carries payloads opaquely
+ * (channel.ts), so a malformed event must never reach the reducer — a
+ * `runStatus` without `run.usage` would throw mid-callback and drop the
+ * whole update. Checked per type against the fields the reducer reads.
+ */
+export function isWireRunEvent(raw: Record<string, unknown> & { type: string }): boolean {
+  switch (raw["type"]) {
+    case "runStatus": {
+      const run = raw["run"] as Record<string, unknown> | undefined;
+      const usage = run?.["usage"] as Record<string, unknown> | undefined;
+      return (
+        typeof run?.["status"] === "string" &&
+        typeof usage?.["costUsd"] === "number" &&
+        typeof usage?.["inputTokens"] === "number" &&
+        typeof usage?.["outputTokens"] === "number"
+      );
+    }
+    case "turnStarted": {
+      const turn = raw["turn"] as Record<string, unknown> | undefined;
+      return (
+        typeof turn?.["id"] === "string" &&
+        typeof turn?.["position"] === "number" &&
+        Array.isArray(turn?.["parts"])
+      );
+    }
+    case "partAppended": {
+      const part = raw["part"] as Record<string, unknown> | undefined;
+      return typeof raw["turnId"] === "string" && typeof part?.["kind"] === "string";
+    }
+    case "turnCompleted":
+      return typeof raw["turnId"] === "string";
+    case "usage": {
+      const usage = raw["usage"] as Record<string, unknown> | undefined;
+      return typeof usage?.["costUsd"] === "number";
+    }
+    default:
+      return false; // unknown event kinds are not ours to render
+  }
+}
+
+/**
  * Fold a live event stream into a RunDetail. The channel replays from
  * `sinceSeq` after a reconnect and dedupes by seq (src/connect/client.ts), so
  * the reducer stays seq-agnostic; turn/part bookkeeping lives here so live

@@ -84,27 +84,35 @@ export function LoopsListContainer(props: LoopsListContainerProps): JSX.Element 
   }, [source, reloadKey]);
 
   const onToggle = (id: string, enabled: boolean): void => {
-    // Server-authoritative: the row flips only when the reload confirms.
-    void source.setEnabled(id, enabled).then(() => setReloadKey((k) => k + 1));
+    // Server-authoritative: the row flips only when the reload confirms. A
+    // failed toggle surfaces inline — the switch never lies silently.
+    void source
+      .setEnabled(id, enabled)
+      .then(() => setReloadKey((k) => k + 1))
+      .catch((err: unknown) => setError(err instanceof Error ? err.message : String(err)));
   };
 
-  if (error !== null) {
-    return <p role="alert">Couldn't load loops: {error}</p>;
-  }
   if (loops === null) {
-    return <p role="status">Loading loops…</p>;
+    return error !== null ? (
+      <p role="alert">{`Couldn't load loops: ${error}`}</p>
+    ) : (
+      <p role="status">Loading loops…</p>
+    );
   }
   return (
-    <LoopsListPage
-      loops={loops}
-      // The inference empty state is settings-driven; a connected server
-      // implies a configured brain until settings.get lands (T-1103+).
-      inferenceConfigured={source.kind === "live" ? true : demoHarnesses.length > 0}
-      onToggle={onToggle}
-      onOpen={(id) => navigate({ name: "loop-detail", loopId: id })}
-      onNewLoop={() => navigate({ name: "loop-new" })}
-      onOpenInferenceSettings={() => navigate({ name: "settings-inference" })}
-    />
+    <>
+      {error !== null && <p role="alert">{`Couldn't update the loop: ${error}`}</p>}
+      <LoopsListPage
+        loops={loops}
+        // The inference empty state is settings-driven; a connected server
+        // implies a configured brain until settings.get lands (T-1103+).
+        inferenceConfigured={source.kind === "live" ? true : demoHarnesses.length > 0}
+        onToggle={onToggle}
+        onOpen={(id) => navigate({ name: "loop-detail", loopId: id })}
+        onNewLoop={() => navigate({ name: "loop-new" })}
+        onOpenInferenceSettings={() => navigate({ name: "settings-inference" })}
+      />
+    </>
   );
 }
 
@@ -177,7 +185,10 @@ export function RunDetailContainer(props: RunDetailContainerProps): JSX.Element 
         }
       })
       .then((unsub) => {
-        unsubscribe = unsub;
+        // Unmounted before the watch resolved: release immediately — storing
+        // it for a cleanup that already ran would leak the subscription.
+        if (cancelled) unsub();
+        else unsubscribe = unsub;
       })
       .catch((err: unknown) => {
         if (!cancelled) setError(err instanceof Error ? err.message : String(err));

@@ -51,18 +51,29 @@ let sharedConnecting: Promise<ChannelClient> | null = null;
 
 /**
  * The process-wide client, connected lazily. Returns null when the app is
- * unconfigured (fixture mode) or not in a browser. Rejects only on a config
- * error — the client itself retries the socket forever (client.ts).
+ * unconfigured (fixture mode) or not in a browser.
+ *
+ * Lifecycle: one client per page lifetime. A socket drop AFTER a successful
+ * open is the client's own business — it retries forever (client.ts) — so
+ * the same promise stays valid and callers never swap clients mid-flight.
+ * Only an INITIAL connect failure (bad token, unreachable server) clears
+ * the singleton, so the next caller retries with a fresh client.
  */
 export function getSharedClient(): Promise<ChannelClient> | null {
   const config = resolveConnectConfig();
   if (config === null) return null;
-  if (shared !== null && shared.isOpen) return Promise.resolve(shared);
-  if (sharedConnecting !== null) return sharedConnecting;
+  if (shared !== null && sharedConnecting !== null) return sharedConnecting;
   const client = new ChannelClient({ url: config.url, token: config.token });
+  const pending = client.connect().then(() => client);
   shared = client;
-  sharedConnecting = client.connect().then(() => client);
-  return sharedConnecting;
+  sharedConnecting = pending;
+  pending.catch(() => {
+    if (sharedConnecting === pending) {
+      shared = null;
+      sharedConnecting = null;
+    }
+  });
+  return pending;
 }
 
 /** Test hook: drop the singleton so each test resolves a fresh client. */

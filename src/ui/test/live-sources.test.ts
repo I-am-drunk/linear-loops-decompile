@@ -26,27 +26,25 @@ interface Call {
 class FakeRpc implements ChannelRpc {
   readonly calls: Call[] = [];
   readonly responses = new Map<string, unknown>();
-  #runHandler: ((event: Record<string, unknown> & { type: string }, seq: number) => void) | undefined;
+  onEvent: ((runId: string, seq: number, event: Record<string, unknown> & { type: string }) => void) | undefined;
   unsubscribed: string[] = [];
 
   request(method: string, params?: unknown): Promise<unknown> {
     this.calls.push({ method, params });
+    if (method === "runs.subscribe" && !this.responses.has(method)) {
+      return Promise.resolve({ ok: true, runId: "", active: [], replayed: 0, truncated: false });
+    }
     const response = this.responses.get(method);
     if (response === undefined) return Promise.reject(new Error(`no fake response for ${method}`));
     return Promise.resolve(response);
-  }
-
-  subscribeRuns(_runId: string, onEvent?: (event: Record<string, unknown> & { type: string }, seq: number) => void): Promise<unknown> {
-    this.#runHandler = onEvent;
-    return Promise.resolve({ ok: true, replayed: 0, truncated: false, active: [] });
   }
 
   unsubscribe(runId: string): void {
     this.unsubscribed.push(runId);
   }
 
-  emit(event: RunEvent): void {
-    this.#runHandler?.(event, event.seq);
+  emit(runId: string, event: RunEvent): void {
+    this.onEvent?.(runId, event.seq, event);
   }
 }
 
@@ -130,7 +128,7 @@ test("LiveRunsSource.listRuns: pre-joins loop names; passes loopId through", asy
   assert.deepEqual(listCall.params, { loopId: "loop-1", limit: 200 });
 });
 
-test("LiveRunsSource.watchRun: initial detail, live tail, unsubscribe", async () => {
+test("LiveRunsSource.watchRun: snapshot + incremental tail, dedupe, guard, unsubscribe", async () => {
   const rpc = new FakeRpc();
   const turns: WireTurn[] = [
     {
@@ -140,7 +138,7 @@ test("LiveRunsSource.watchRun: initial detail, live tail, unsubscribe", async ()
     },
   ];
   rpc.responses.set("loops.list", { loops: [mkLoop({ id: "loop-1" })] });
-  rpc.responses.set("runs.get", { run: mkRun({ id: "r1", status: "active" }), turns });
+  rpc.responses.set("runs.get", { run: mkRun({ id: "r1", status: "active" }), turns, lastSeq: 4 });
 
   const updates: string[] = [];
   const source = new LiveRunsSource(rpc);
@@ -149,12 +147,38 @@ test("LiveRunsSource.watchRun: initial detail, live tail, unsubscribe", async ()
   });
   assert.deepEqual(updates, ["active:1"]);
 
-  rpc.emit({ seq: 5, runId: "r1", at: "2026-09-27T10:00:09.000Z", type: "partAppended", turnId: "t1", part: { kind: "response", text: "Done" } });
-  rpc.emit({ seq: 6, runId: "r1", at: "2026-09-27T10:00:10.000Z", type: "runStatus", status: "complete", run: mkRun({ id: "r1", status: "complete", summary: "Wrapped." }) });
+  // The subscribe resumes from the snapshot tip — an event between the two
+  // RPCs (seq 3) arrives in the replay and is deduped by seq, never doubled.
+  const sub = rpc.calls.find((c) => c.method === "runs.subscribe")!;
+  assert.deepEqual(sub.params, { id: "r1", sinceSeq: 4 });
+
+  rpc.emit("r1", { seq: 3, runId: "r1", at: "2026-09-27T10:00:08.000Z", type: "partAppended", turnId: "t1", part: { kind: "response", text: "stale" } });
+  assert.deepEqual(updates, ["active:1"], "seq <= lastSeq is ignored");
+
+  rpc.emit("r1", { seq: 5, runId: "r1", at: "2026-09-27T10:00:09.000Z", type: "partAppended", turnId: "t1", part: { kind: "response", text: "Done" } });
+  assert.deepEqual(updates, ["active:1", "active:2"]);
+
+  // Malformed event (runStatus without usage): skipped, watch survives.
+  rpc.emit("r1", { seq: 6, runId: "r1", at: "x", type: "runStatus" } as unknown as RunEvent);
+  assert.deepEqual(updates, ["active:1", "active:2"]);
+
+  rpc.emit("r1", { seq: 7, runId: "r1", at: "2026-09-27T10:00:10.000Z", type: "runStatus", status: "complete", run: mkRun({ id: "r1", status: "complete", summary: "Wrapped." }) });
+  assert.deepEqual(updates, ["active:1", "active:2", "complete:2"]);
+
+  // Another run's events never touch this watch.
+  rpc.emit("r2", { seq: 8, runId: "r2", at: "2026-09-27T10:00:11.000Z", type: "partAppended", turnId: "t1", part: { kind: "response", text: "other" } });
   assert.deepEqual(updates, ["active:1", "active:2", "complete:2"]);
 
   unsub();
   assert.deepEqual(rpc.unsubscribed, ["r1"]);
+  assert.equal(rpc.onEvent, undefined, "unwatch releases the global handler");
+});
+
+test("LiveRunsSource.watchRun: a runs.get without lastSeq rejects loudly (contract)", async () => {
+  const rpc = new FakeRpc();
+  rpc.responses.set("loops.list", { loops: [mkLoop({ id: "loop-1" })] });
+  rpc.responses.set("runs.get", { run: mkRun({ id: "r1" }), turns: [] });
+  await assert.rejects(() => new LiveRunsSource(rpc).watchRun("r1", () => {}), /lastSeq/);
 });
 
 test("fixture sources: offline behavior preserved (demo data, no-op intents, unknown run rejects)", async () => {
