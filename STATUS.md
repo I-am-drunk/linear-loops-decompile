@@ -79,8 +79,9 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   #171); then #177 follow-ups.
 - H2 generateTheme exact reimplementation (#168, claimed by sess_01a0e2c0).
 - H3 matrix-§A fact extraction for the reference (unassigned).
-- H4 remaining: citation rule + docs drift-check step (#185, unassigned);
-  PR #197 (docs-site fold-in) in review.
+- H4 remaining: citation rule + docs drift-check step + reviewer two-source
+  checklist land in THIS PR (#196, issue #185 §1/§2/§4); PR #197 (docs-site
+  fold-in, §3) in review.
 - R5.1 dataplane PR #155: needs the 400/RATELIMITED redesign per the docs leg
   (review posted on the PR).
 
