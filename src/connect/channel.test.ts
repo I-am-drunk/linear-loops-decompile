@@ -348,3 +348,37 @@ test("channel: broadcast reaches authenticated connections only", async () => {
   anon.close();
   await rig.close();
 });
+
+test("channel: broadcast with requiredScope skips connections whose token lacks it", async () => {
+  const rig = await makeRig();
+  const { token: runsToken } = rig.tokens.mint({ scopes: ["runs:read"] });
+  const { token: loopsOnly } = rig.tokens.mint({ scopes: ["loops:read"] });
+  const withRuns = new WebSocket(rig.url, [`t3.${runsToken}`]);
+  const runsFrames: Record<string, unknown>[] = [];
+  withRuns.addEventListener("message", (ev) => runsFrames.push(JSON.parse(ev.data as string)));
+  await new Promise<void>((r) => withRuns.addEventListener("open", () => r(), { once: true }));
+  const noRuns = new WebSocket(rig.url, [`t3.${loopsOnly}`]);
+  const loopsFrames: Record<string, unknown>[] = [];
+  noRuns.addEventListener("message", (ev) => loopsFrames.push(JSON.parse(ev.data as string)));
+  await new Promise<void>((r) => noRuns.addEventListener("open", () => r(), { once: true }));
+  await wait(50);
+
+  const sent = rig.channel.broadcast("runs.created", { run: { id: "run-1" } }, "runs:read");
+  assert.equal(sent, 1, "only the runs:read connection counts");
+  await wait(50);
+  assert.ok(runsFrames.some((f) => f["method"] === "runs.created"), "runs:read token receives");
+  assert.equal(
+    loopsFrames.find((f) => f["method"] === "runs.created"),
+    undefined,
+    "a loops:read-only token must not receive run data",
+  );
+  // Ungated broadcast still reaches every authenticated connection.
+  const all = rig.channel.broadcast("loops.changed", { id: "loop-1" });
+  assert.equal(all, 2);
+  await wait(50);
+  assert.ok(runsFrames.some((f) => f["method"] === "loops.changed"));
+  assert.ok(loopsFrames.some((f) => f["method"] === "loops.changed"));
+  withRuns.close();
+  noRuns.close();
+  await rig.close();
+});

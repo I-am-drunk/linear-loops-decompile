@@ -153,6 +153,23 @@ describe("loops.* RPCs", () => {
     });
   });
 
+  it("loop writes fail unavailable (never fake success) without an orchestrator", () => {
+    const { call, store } = makeRig({ withOrchestrator: false });
+    store.saveLoop("loop-x", defaultLoopConfig());
+    assert.throws(() => call("loops.publish", { id: "loop-x" }), (err: unknown) => {
+      assert.equal((err as { code: string }).code, "unavailable");
+      return true;
+    });
+    assert.throws(() => call("loops.setEnabled", { id: "loop-x", enabled: true }), (err: unknown) => {
+      assert.equal((err as { code: string }).code, "unavailable");
+      return true;
+    });
+    assert.equal(store.getLoop("loop-x")!.enabled, true, "no write happened behind the failure");
+    // Reads still work without one.
+    const list = call("loops.list") as { loops: unknown[] };
+    assert.equal(list.loops.length, 1);
+  });
+
   it("setEnabled flips the row and reloads; unknown loop is not_found", () => {
     const { call, store, reloads } = makeRig();
     call("loops.upsert", { config: defaultLoopConfig() });
@@ -277,10 +294,10 @@ describe("createRunEventPublisher", () => {
 
   it("publishes every event; broadcasts runs.created once, on the pending status", () => {
     const published: { runId: string; event: RunEvent }[] = [];
-    const broadcasts: { method: string; params: unknown }[] = [];
+    const broadcasts: { method: string; params: unknown; scope?: string }[] = [];
     const publish = createRunEventPublisher({
       publishRunEvent: (runId, event) => (published.push({ runId, event }), published.length),
-      broadcast: (method, params) => (broadcasts.push({ method, params }), 1),
+      broadcast: (method, params, scope) => (broadcasts.push({ method, params, ...(scope !== undefined ? { scope } : {}) }), 1),
     });
     publish("run-1", statusEvent("pending", 1));
     publish("run-1", statusEvent("active", 2));
@@ -289,6 +306,7 @@ describe("createRunEventPublisher", () => {
     assert.equal(broadcasts.length, 1, "exactly one runs.created");
     assert.equal(broadcasts[0]!.method, "runs.created");
     assert.equal(((broadcasts[0]!.params as { run: Run }).run).id, "run-1");
+    assert.equal(broadcasts[0]!.scope, "runs:read", "scope-gated like the runs.* reads");
   });
 
   it("a channel without broadcast still publishes (structural optional)", () => {

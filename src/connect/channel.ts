@@ -265,16 +265,19 @@ export class ChannelServer {
   /**
    * Broadcast a notification to every AUTHENTICATED connection (runs.created
    * from T-1103's run-event publisher is the first consumer — list pages
-   * refresh on it instead of polling). Returns the recipient count.
+   * refresh on it instead of polling). `requiredScope` gates the fan-out the
+   * way METHOD_SCOPES gates requests: a connection whose token lacks it is
+   * skipped (a settings-only token must not receive run data). Returns the
+   * recipient count.
    */
-  broadcast(method: string, params: unknown): number {
+  broadcast(method: string, params: unknown, requiredScope?: Scope): number {
     const frame = JSON.stringify(notification(method, params));
     let sent = 0;
     for (const state of this.#conns) {
-      if (state.record !== null) {
-        state.conn.sendText(frame);
-        sent += 1;
-      }
+      if (state.record === null) continue;
+      if (requiredScope !== undefined && !state.record.scopes.includes(requiredScope)) continue;
+      state.conn.sendText(frame);
+      sent += 1;
     }
     return sent;
   }

@@ -162,8 +162,13 @@ export function registerDomainRpcs(channel: DomainChannel, deps: DomainRpcDeps):
     const row = store.getLoop(id);
     if (row === null) throw new RpcError(RPC_ERRORS.NOT_FOUND, `unknown loop: ${id}`);
     // The re-phasing action: the row's updatedAt anchor (bumped by the last
-    // upsert) becomes the live schedule's anchor here.
-    deps.orchestrator?.reloadLoops();
+    // upsert) becomes the live schedule's anchor here. Never fake success
+    // without it — a publish that doesn't reach the registry is a silent
+    // schedule divergence (the channel's own "runtime not wired" pattern).
+    if (deps.orchestrator === undefined) {
+      throw new RpcError(RPC_ERRORS.UNAVAILABLE, "orchestrator not wired");
+    }
+    deps.orchestrator.reloadLoops();
     return { loop: toWireLoop(row) };
   });
 
@@ -175,8 +180,11 @@ export function registerDomainRpcs(channel: DomainChannel, deps: DomainRpcDeps):
       throw new RpcError(RPC_ERRORS.INVALID_PARAMS, "loops.setEnabled needs { enabled: boolean }");
     }
     if (store.getLoop(id) === null) throw new RpcError(RPC_ERRORS.NOT_FOUND, `unknown loop: ${id}`);
+    if (deps.orchestrator === undefined) {
+      throw new RpcError(RPC_ERRORS.UNAVAILABLE, "orchestrator not wired");
+    }
     store.setLoopEnabled(id, enabled);
-    deps.orchestrator?.reloadLoops();
+    deps.orchestrator.reloadLoops();
     return { loop: toWireLoop(store.getLoop(id)!) };
   });
 
@@ -224,7 +232,8 @@ export function registerDomainRpcs(channel: DomainChannel, deps: DomainRpcDeps):
 /** The broadcast-capable channel slice the run-event publisher needs. */
 export interface RunEventChannel {
   publishRunEvent(runId: string, event: RunEvent): number;
-  broadcast?(method: string, params: unknown): number;
+  /** `requiredScope` gates recipients the way METHOD_SCOPES gates requests. */
+  broadcast?(method: string, params: unknown, requiredScope?: string): number;
 }
 
 /**
@@ -239,7 +248,10 @@ export function createRunEventPublisher(
   return (runId, event) => {
     channel.publishRunEvent(runId, event);
     if (event.type === "runStatus" && event.status === "pending") {
-      channel.broadcast?.("runs.created", { run: event.run });
+      // Scope-gated like the runs.* reads: a token without runs:read must not
+      // receive run records it could not fetch (broadcast parity with
+      // METHOD_SCOPES).
+      channel.broadcast?.("runs.created", { run: event.run }, "runs:read");
     }
   };
 }
