@@ -1,0 +1,15 @@
+{
+  "unit": "ui-agent-empty-state/LinearAgentEmptyStateHero",
+  "chunk": "LinearAgentEmptyStateHero",
+  "stubs": {
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "source": "export const uB = `stub:ContextualMenuActions.uB(AgentIcon)`;",
+      "why": "uB resolves to the chunk-local `function Jw(e)` (raw offset ~376648): the shared agent icon \u2014 `{gradient:t=!1,...n}`, gradient ? gje(gradient svg, useId) : I-wrapped svg path \u2014 i.e. exactly the two call shapes this entry uses. (Note: the same chunk also exports an unrelated local `Wvt` under the EXPORT NAME `Jw`; the seam here is the local FUNCTION Jw exported as uB.) A 4.7 MB chunk whose closure pulls the app core (the G16 icon-seam precedent); the icon's own render (incl. its useId/gradient internals) is a separate ledger surface. This golden observes WHAT THE ENTRY PASSES IT ({size:14, color:'labelFaint'} on each of the 253 grid cells; {size:14, gradient:true} on the center), which the string-typed marker keeps in the output bytes. Full chunk name pinned."
+    }
+  },
+  "drive": {
+    "file": "empty-state-hero-driver.mjs",
+    "exportMeaning": "export{r as t} \u2014 r({shouldAnimate}) is the Linear Agent empty-state hero (matrix \u00a7E Session UI row, `LinearAgentEmptyState*` (+Hero)): outer div(5-class) > [grid div(11-class, aria-hidden) > 253 cells from the module-eval table `p` (23 cols x 11 rows, key `${row}-${col}`, the row-10/col-11 cell isHidden, per-cell CSS vars --peak/--peak2/--trough from the sin-hash m(t)/m(t+71)/m(t+37), --tx/--ty the normalized center-push vector, animationDelay 0.4+dist/360), center div(aria-hidden) > icon(size:14, gradient:true)]. Cell and center class sets are computed-member tables keyed by !!shouldAnimate<<1|!!isHidden<<0 and !!shouldAnimate<<0 \u2014 both parametrizations pin all six class strings. The chunk's only export."
+  },
+  "notes": "G36: first golden on the \u00a7E Session UI row. Two parametrizations (shouldAnimate false/true) pin both branches of both computed-member class tables plus the full 253-cell grid table bytes. The grid math is pure (Math.sin/sqrt/floor + toFixed \u2014 no Date, no locale, no TZ), so the golden is ambient-invariant; verified under TZ=Asia/Tokyo + tr_TR.UTF-8 in the PR evidence block. The icon seam is a G16-pattern string marker pinning the props the entry passes at both call sites."
+}

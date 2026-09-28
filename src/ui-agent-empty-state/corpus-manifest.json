@@ -1,0 +1,21 @@
+{
+  "source": "G36 (#225 claim, this slice): src/ui-agent-empty-state reimplements the Linear Agent empty-state hero chunk. Evidence: LinearAgentEmptyStateHero.Cu9P_j7X.js (matrix \u00a7E 'Session UI' row, the `LinearAgentEmptyState*` (+Hero) evidence), executed from the RAW tree in drive mode \u2014 the entry is hook-free and its closure is only the corpus jsx-runtime (executes REAL) plus the agent-icon seam (ContextualMenuActions `uB` = the chunk-local `function Jw(e)`, the shared agent icon with the gradient branch; hand-located in the raw chunk), held as a declared string marker per the G16 boundary (closure 4 chunks, 1 stub). The module-eval grid table executes REAL and lands in the golden bytes in full: 253 cells (23 cols x 11 rows), `${row}-${col}` keys, the single hidden cell at row 10 / col 11, per-cell --peak/--peak2/--trough sin-hash channel offsets (frac(sin(i*12.9898)*43758.5453) at offsets i / i+71 / i+37), the normalized --tx/--ty center-push vector (incl. the JS (-0).toFixed(2)==='0.00' fact on the dx=0 column), and animationDelay 0.4+dist/360 at toFixed(3). Two parametrizations (shouldAnimate false/true) pin all four entries of the cell class table (!!shouldAnimate<<1|!!isHidden<<0) and both entries of the center table (!!shouldAnimate<<0), plus both icon call shapes ({size:14, color:'labelFaint'} per cell; {size:14, gradient:true} center). Pure Math + toFixed \u2014 no Date, locale, or TZ input; ambient-invariant. The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "LinearAgentEmptyStateHero",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{r as t} \u2014 r({shouldAnimate}) is the Linear Agent empty-state hero: outer div(5-class) > [grid div(11-class, aria-hidden) > 253 icon cells with per-cell ripple CSS vars, center div(aria-hidden) > gradient icon]; reimplemented as LinearAgentEmptyStateHero({shouldAnimate, icon}) with the icon seam as an explicit argument (the ContextualMenuActions icon is its own ledger surface)",
+          "evidenceLine": "src/ui-agent-empty-state/empty-state-hero.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "empty-state-hero"
+      ]
+    }
+  ],
+  "goldens": [
+    "empty-state-hero"
+  ]
+}
