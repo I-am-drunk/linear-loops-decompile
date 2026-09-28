@@ -94,25 +94,27 @@ export function loadCase(path: string): CaseFile {
 
 /**
  * The corpus provenance head (issue #250). Resolution ladder:
- *   1. `<corpusDir>/HEAD` stamp file (one hex line, written by the
+ *   1. `<corpusDir>/.corpus-head` stamp file (one hex line, written by the
  *      pipeline/README.md fetch recipe) — the vault commit the bytes came from.
- *   2. `git rev-parse HEAD` ONLY when the corpus dir is itself a git toplevel
- *      (e.g. a vault clone). A copied tree without `.git` must never resolve
- *      the CONTAINING repo's HEAD: that recorded the decompile repo's commit
- *      and made `verify` fail on byte-perfect goldens for every reviewer on a
- *      different repo commit.
+ *   2. `git rev-parse HEAD` ONLY when the corpus dir is a real corpus
+ *      checkout: its own git toplevel, or `<toplevel>/corpus` (the vault
+ *      layout, PR #251's rung). A copied tree without `.git` must never
+ *      resolve the CONTAINING repo's HEAD: that recorded the decompile repo's
+ *      commit and made `verify` fail on byte-perfect goldens for every
+ *      reviewer on a different repo commit.
  *   3. null — honest "unknown"; verify treats it as informational.
  */
 export function corpusHead(dir: string): string | null {
-  const stamp = join(dir, `HEAD`);
+  const stamp = join(dir, `.corpus-head`);
   if (existsSync(stamp)) {
     const line = readFileSync(stamp, `utf8`).trim();
     if (/^[0-9a-f]{7,64}$/i.test(line)) return line;
-    throw new Error(`corpus HEAD stamp is not a commit hash: ${stamp} (got ${JSON.stringify(line.slice(0, 40))})`);
+    throw new Error(`corpus .corpus-head stamp is not a commit hash: ${stamp} (got ${JSON.stringify(line.slice(0, 40))})`);
   }
   try {
-    const toplevel = execFileSync(`git`, [`-C`, dir, `rev-parse`, `--show-toplevel`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim();
-    if (realpathSync(toplevel) !== realpathSync(dir)) return null;
+    const toplevel = realpathSync(execFileSync(`git`, [`-C`, dir, `rev-parse`, `--show-toplevel`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim());
+    const real = realpathSync(dir);
+    if (real !== toplevel && real !== join(toplevel, `corpus`)) return null;
     return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim();
   } catch {
     return null;

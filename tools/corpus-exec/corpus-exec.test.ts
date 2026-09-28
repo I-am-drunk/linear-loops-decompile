@@ -7,7 +7,7 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -390,12 +390,12 @@ test(`corpusHead: a copied corpus inside another repo is null, never the contain
 });
 
 test(`corpusHead: a HEAD stamp file wins; a malformed stamp is loud`, () => {
-  const stamp = join(fixtureCorpus, `HEAD`);
+  const stamp = join(fixtureCorpus, `.corpus-head`);
   try {
     writeFileSync(stamp, `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8\n`);
     assert.equal(corpusHead(fixtureCorpus), `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8`);
     writeFileSync(stamp, `ref: refs/heads/main\n`);
-    assert.throws(() => corpusHead(fixtureCorpus), /HEAD stamp is not a commit hash/);
+    assert.throws(() => corpusHead(fixtureCorpus), /stamp is not a commit hash/);
   } finally {
     rmSync(stamp, { force: true });
   }
@@ -411,6 +411,25 @@ test(`corpusHead: a corpus that IS a git toplevel resolves its own HEAD`, (t) =>
     assert.equal(corpusHead(dir), want);
   } finally {
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test(`corpusHead: the vault layout (<toplevel>/corpus) resolves the vault's own HEAD`, () => {
+  const repo = join(here, `fixtures`, `vault-repo.tmp`);
+  rmSync(repo, { recursive: true, force: true });
+  try {
+    execFileSync(`git`, [`init`, `-q`, repo], { stdio: `pipe` });
+    execFileSync(`git`, [`-C`, repo, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `--allow-empty`, `-m`, `x`], { stdio: `pipe` });
+    const want = execFileSync(`git`, [`-C`, repo, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
+    const corpus = join(repo, `corpus`);
+    mkdirSync(corpus);
+    assert.equal(corpusHead(corpus), want);
+    // one level deeper is NOT a corpus checkout: null, never the vault head
+    const deeper = join(corpus, `client`);
+    mkdirSync(deeper);
+    assert.equal(corpusHead(deeper), null);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
   }
 });
 
