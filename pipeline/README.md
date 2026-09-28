@@ -27,7 +27,15 @@ c=/tmp/linear-loops-vault/corpus
 python3 -c "import json; print(len(json.load(open('$c/analysis/chunks.json'))))"
 find "$c/pretty/client" -name '*.js' | wc -l   # must be EQUAL to the line above
 rm -rf pipeline/corpus && cp -r "$c" pipeline/corpus
+git -C /tmp/linear-loops-vault rev-parse HEAD > pipeline/corpus/.corpus-head
 ```
+
+The `.corpus-head` marker is how golden provenance (`tools/corpus-exec`) knows
+which vault commit the bytes came from: `cp -r` copies no `.git`, and without
+the marker a bare `git rev-parse` would walk UP into THIS repo and record a
+head that moves on every merge (2026-09-28 finding — `verify` then fails
+"provenance differs" on byte-identical outputs). With neither marker nor a
+real vault checkout, provenance records `corpusHead: null`.
 
 Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
 constantly, so compare the counts against the baseline below, note material deltas

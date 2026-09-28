@@ -7,7 +7,7 @@
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
 import { SERIALIZER_VERSION, serialize, stringify } from "./serialize.ts";
@@ -92,8 +92,37 @@ export function loadCase(path: string): CaseFile {
   return c;
 }
 
-function gitHead(dir: string): string | null {
+/**
+ * The vault head the corpus bytes came from. Trust `git rev-parse HEAD` only
+ * when the corpus dir is INSIDE the vault checkout (its toplevel contains the
+ * corpus dir and is not this repo): the documented fetch path
+ * (pipeline/README.md) is `cp -r <vault>/corpus pipeline/corpus`, which copies
+ * NO `.git` — git then walks UP to the enclosing public repo and rev-parse
+ * returns THIS repo's head, poisoning provenance with a sha that moves every
+ * merge (found 2026-09-28: `verify` failed "provenance differs" on a
+ * byte-identical output). The cp fetch instead writes a `.corpus-head` marker
+ * holding the vault head; absent both, record null rather than a wrong sha.
+ */
+export function gitHead(dir: string): string | null {
+  const marker = join(dir, `.corpus-head`);
+  if (existsSync(marker)) {
+    const sha = readFileSync(marker, `utf8`).trim();
+    return /^[0-9a-f]{40}$/.test(sha) ? sha : null;
+  }
   try {
+    const toplevel = execFileSync(`git`, [`-C`, dir, `rev-parse`, `--show-toplevel`], { encoding: `utf8` }).trim();
+    // A corpus dir with no repo of its own resolves to an ANCESTOR toplevel
+    // (this repo, or any repo the user ran the tool under) whose head says
+    // nothing about the corpus bytes.
+    // Trust the head only when the corpus dir is the repo's own root (a
+    // checkout placed AT the corpus path) or sits at <toplevel>/corpus (the
+    // vault layout). A plain copied dir resolves to an ANCESTOR toplevel
+    // (e.g. this repo) whose head says nothing about the corpus bytes.
+    const dirR = resolve(dir);
+    const vaultCorpus = resolve(toplevel, `corpus`);
+    const withinCorpusRepo = existsSync(join(toplevel, `.git`)) &&
+      (dirR === resolve(toplevel) || dirR === vaultCorpus || dirR.startsWith(vaultCorpus + sep));
+    if (!withinCorpusRepo) return null;
     return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
   } catch {
     return null;

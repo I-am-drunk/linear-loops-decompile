@@ -7,11 +7,11 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { expectedBytes, loadCase, runCase, selectCorpusSource, type CaseFile } from "./run.ts";
+import { expectedBytes, gitHead, loadCase, runCase, selectCorpusSource, type CaseFile } from "./run.ts";
 import { buildSandbox, closureSize, resolveChunk } from "./sandbox.ts";
 import { serialize, stringify } from "./serialize.ts";
 
@@ -319,6 +319,43 @@ test(`loadCase rejects a case without exactly one mode and stubs without why`, (
   assert.throws(() => loadCase(join(dir, `bad-stub.json`)), /stub "x\.js" needs exactly one of "source" \| "file", plus "why"/);
   const ok = loadCase(join(dir, `ok-case.json`));
   assert.equal(ok.unit, `fixture/add`);
+});
+
+// --- provenance: corpusHead -------------------------------------------------------
+
+test(`gitHead never records an enclosing repo's head for a git-less copied corpus`, () => {
+  // fixtures/corpus has no .git and lives inside THIS repo: the documented
+  // cp -r fetch path (pipeline/README.md). Before the fix, rev-parse walked
+  // up and returned this repo's own moving head, poisoning golden provenance
+  // (2026-09-28: verify failed "provenance differs" on byte-identical output).
+  assert.equal(gitHead(fixtureCorpus), null);
+});
+
+test(`gitHead trusts a .corpus-head marker and rejects a malformed one`, () => {
+  const sha = `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8`;
+  const marker = join(fixtureCorpus, `.corpus-head`);
+  writeFileSync(marker, `${sha}\n`);
+  try {
+    assert.equal(gitHead(fixtureCorpus), sha);
+    writeFileSync(marker, `not-a-sha\n`);
+    assert.equal(gitHead(fixtureCorpus), null);
+  } finally {
+    rmSync(marker, { force: true });
+  }
+});
+
+test(`gitHead trusts a real corpus checkout (vault layout <repo>/corpus)`, () => {
+  const vault = join(here, `fixtures`, `fake-vault.tmp`);
+  rmSync(vault, { recursive: true, force: true });
+  try {
+    mkdirSync(join(vault, `corpus`), { recursive: true });
+    execFileSync(`git`, [`-C`, vault, `init`, `-q`], { stdio: `pipe` });
+    execFileSync(`git`, [`-C`, vault, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `--allow-empty`, `-m`, `x`], { stdio: `pipe` });
+    const want = execFileSync(`git`, [`-C`, vault, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
+    assert.equal(gitHead(join(vault, `corpus`)), want);
+  } finally {
+    rmSync(vault, { recursive: true, force: true });
+  }
 });
 
 // --- corpus smoke (skips without a vault corpus) ----------------------------------
