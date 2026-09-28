@@ -1,0 +1,120 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "LoopViewType.BzPUaBkC.js",
+    "closureSize": 1,
+    "stubbed": [],
+    "chunkHashes": {
+      "LoopViewType.BzPUaBkC.js": "f39b71092c42c9234a96eb71571ed6e6b370949b69c521a14f22d50982d4b08e"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "viewTypes",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "myLoops",
+              "value": {
+                "tag": "string",
+                "value": "my-loops"
+              }
+            },
+            {
+              "key": "all",
+              "value": {
+                "tag": "string",
+                "value": "all"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "labels",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "my-loops",
+              "value": {
+                "tag": "string",
+                "value": "My loops"
+              }
+            },
+            {
+              "key": "all",
+              "value": {
+                "tag": "string",
+                "value": "All"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "isViewType",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "myLoops",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "all",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "rejectsEmptyString",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "rejectsLabelString",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "rejectsEnumKey",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "rejectsUndefined",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
