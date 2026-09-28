@@ -1,0 +1,15 @@
+{
+  "unit": "agent-session-review/canOpenAgentSessionInReview",
+  "chunk": "canOpenAgentSessionInReview",
+  "stubs": {
+    "PullRequestsFeatureHelper": {
+      "file": "pull-requests-feature-helper-stub.mjs",
+      "why": "The real helper chunk's transitive closure (types.7f0h45Sh.js, ClientStorage.2mwQyaxr.js) reads `window` at module scope and cannot execute in the sandbox. The entry consumes exactly one member, areReviewsEnabledForUser; its pinned body is the helper's own raw source verified by hand (`static areReviewsEnabledForUser(e){return e.settings.showReviewsInbox}`), and every other member read throws loudly."
+    }
+  },
+  "drive": {
+    "file": "can-open-review-driver.mjs",
+    "exportMeaning": "export{t} \u2014 t(session) is the guard deciding whether an agent session's latest pull request opens in the review UI: false when there is no latestPullRequest; false when reviews are disabled for the store user (PullRequestsFeatureHelper.areReviewsEnabledForUser = user.settings.showReviewsInbox, verified in the helper's raw source); otherwise latestPullRequest.userCan(user, 'review'). The chunk's only export."
+  },
+  "notes": "G7: first pure-behavior golden (no React anywhere in the unit). Drive mode, one fixture per corpus branch plus two negative pins (no store read on the no-PR path; userCan never consulted while reviews are disabled) and an argument-identity pin (userCan receives the exact store.user object and the literal string 'review'). One stub at the entry's only import seam, pinned from the helper's hand-verified raw source with throw-on-other-reads."
+}

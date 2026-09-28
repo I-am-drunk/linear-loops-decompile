@@ -1,0 +1,17 @@
+{
+  "source": "G7 (#225 stale-claim takeover, this slice): src/agent-session-review reimplements the agent-session review guard. Evidence: canOpenAgentSessionInReview.BbTwURTH.js (matrix §E 'PR integration' row), executed from the RAW tree in drive mode — one fixture per corpus branch plus two negative pins (no store read on the no-PR path; userCan never consulted while reviews are disabled) and an argument-identity pin (userCan receives the exact store.user object and the literal string 'review'). One stub at the entry's only import seam (PullRequestsFeatureHelper — its closure reads window at module scope and cannot execute in the sandbox), pinned from the helper's hand-verified raw source (areReviewsEnabledForUser reads only user.settings.showReviewsInbox) with throw-on-other-reads. The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "canOpenAgentSessionInReview",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{t} — t(session) is the review-availability guard: false with no latestPullRequest; false when reviews are disabled for the store user (areReviewsEnabledForUser = user.settings.showReviewsInbox); else latestPullRequest.userCan(user, 'review'). Reimplemented as canOpenAgentSessionInReview(session)",
+          "evidenceLine": "src/agent-session-review/can-open-agent-session-in-review.ts + golden test"
+        }
+      ],
+      "goldens": ["can-open-review.branches"]
+    }
+  ],
+  "goldens": ["can-open-review.branches"]
+}

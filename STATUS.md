@@ -146,7 +146,16 @@ goldens, both derivation branches covered by the darkDefault/lightDefault
 pair; five declared component-seam stubs (Modal/ThemeProvider/IconButton/
 CloseIcon/LoopTemplateLibrary — each stays its own ledger row); invoke-tier
 per the G4 finding; clean reimplementation byte-matches through the tagged-v2
-driver; meter: 78 chunks · 5 golden · 73 GAP; G7/G8 in flight by peers). H3 family expansion
+driver; meter: 78 chunks · 5 golden · 73 GAP; G7/G8 in flight by peers).
+G7 seventh golden-backed chunk LANDED 2026-09-28 (src/agent-session-review:
+canOpenAgentSessionInReview — the first PURE-BEHAVIOR golden (no React) and
+the first §E chunk on the meter (PR integration row): drive mode, one fixture
+per corpus branch + negative pins (no store read on the no-PR path, userCan
+never consulted while reviews are disabled) + an argument-identity pin
+(store.user object + literal 'review'); one throw-on-other-reads stub at the
+helper seam pinned from its hand-verified raw source; clean reimplementation
+byte-matching; reclaimed after the 03:27Z claim went silent ~10h with no
+branch; meter: 78 chunks · 6 golden · 72 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
