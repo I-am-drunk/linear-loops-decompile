@@ -5,7 +5,7 @@ var H = null,
   };
 
 function jsx(e, t) {
-  return { $$typeof: Symbol.for(`react.fake`), type: e, props: t }
+  return { $$typeof: Symbol.for(`react.transitional.element`), type: e, props: t }
 }
 
 function t() {

@@ -257,7 +257,11 @@ async function runInSandbox(corpusDir: string, caseDir: string, source: CorpusSo
   };
 }
 
-/** The bytes written to <case>.expected.json. */
+/**
+ * The bytes written to <case>.expected.json. Provenance is ordinary metadata;
+ * only the observed output uses the closed tagged grammar. Keeping this
+ * envelope untagged lets verify inspect its fields when reporting a mismatch.
+ */
 export function expectedBytes(result: RunResult): string {
-  return stringify({ provenance: result.provenance, output: result.output });
+  return `${JSON.stringify({ provenance: result.provenance, output: serialize(result.output) }, null, 2)}\n`;
 }
