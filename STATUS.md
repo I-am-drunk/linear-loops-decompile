@@ -223,7 +223,32 @@ reimplementation joins src/ui-settings-guidance; route component body honest
 GAP; scouting note: TeamAgentsSettingsPage is NOT this recipe (metadata
 embeds a descriptionElement JSX fragment + a sections map calling the G11
 factory at module eval — needs a jsx-capturing stub or T2, stays GAP);
-meter: 79 chunks · 14 golden · 65 GAP). G20 golden-backed chunk LANDED
+meter: 79 chunks · 14 golden · 65 GAP). G18 sixteenth golden-backed chunk
+LANDED 2026-09-28 (TeamAgentsSettingsPage pageMetadata, fourth chunk of the
+§F family — the 'blocked' jsx-fragment metadata recipe proven T1-coverable:
+the REAL corpus jsx-runtime builds the descriptionElement fragment at module
+eval (declared {fragment:[children]} projection; DocsLink seam as a marker
+with href/children in the byte oracle, the href pinned from the raw Issue
+chunk literal), and sections.agentGuidance is the OUTPUT of the REAL
+golden-backed G11 factory executing inside the golden — the first
+cross-chunk provenance chain; page-component exports declared honest GAP
+(T2); this recipe unblocks CodingAgentSettingsPage.lcMyXnM7.js (same
+fragment + sections shape); meter: 79 chunks · 15 golden · 64 GAP).
+G19 seventeenth golden-backed chunk
+LANDED 2026-09-28 (src/ui-settings-sections:
+WorkflowAgentAutomationSettingsConstants — first golden on the §F Workflow
+automation settings row: the settings section/card/row primitives, ALL FIVE
+exports covered in one drive-mode case (ten parametrizations: section
+title/untitled/accessory, card flush + sx composition, labeled row both
+sides of the [!!divided<<0] computed-member class trick + the labelFor
+ternary + optional description, description row divided/undivided, the
+agent-automation-permissions anchor); corpus Flex/Text executed real (G9
+flatten), the three hook/forwardRef CMA seams as declared markers (G13);
+clean reimplementation byte-matching, 6/6; matrix row's brace-form token
+`WorkflowAgentAutomationSettings{Constants,Page}` expanded to the two real
+chunk names — it parsed as NO chunk evidence, hiding both from the
+denominator (the #270 matrix-gap class, second instance); meter:
+81 chunks · 16 golden · 65 GAP). G20 eighteenth golden-backed chunk LANDED
 2026-09-28 (CodingAgentSettingsPage.lcMyXnM7.js export r — the coding-sessions
 settings metadata, matrix §F Coding agent settings: the G18 jsx-fragment
 recipe on the harder sibling, a THREE-chunk cross-provenance chain (the
@@ -234,9 +259,8 @@ projection, DocsLink href pinned from the raw Issue literal (wJ as Ci); the
 three applicable closures probed (flag seam scripted both ways + flag-key
 identity, the two-feature conjunction pinned incl. agentAutomations-first
 ask order, environments granted/denied); observer components declared GAP
-(T2/T3); meter on this branch: 79 chunks · 15 golden · 64 GAP — the ordinal
-and final meter re-slot at merge against whatever lands first (G18 #273 is
-in flight). H3 family expansion
+(T2/T3); meter: 81 chunks · 17 golden ·
+64 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

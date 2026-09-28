@@ -1,0 +1,1699 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js",
+    "closureSize": 12,
+    "stubbed": [
+      "ContextualMenuActions.Dlg9Oa2U.js"
+    ],
+    "chunkHashes": {
+      "WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js": "a416fda2844ea7f1b2a634b6aa46a1dbbe931c762526627d1d92534d0625d649",
+      "Flex.BS495mgi.js": "da19446268fcbc806376f8a2fbcca7bed1fce4cf1d6587815f5cc25f7b3bd956",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "mixins.stylex.BUgiQC4g.js": "9fc03b921bb2d167fe0ac1e195126bb88ab0de4a4a8de930f60a312d93f27628",
+      "stylex.CiFZl61Z.js": "68976c03e608faf476d53e39895947f8ee1a5cc42e38136c83e33a2960e6f7f6",
+      "Text.gv7OudGa.js": "c8a54ccabc2f583746fed40cbffc4da5b387ee11faba406aed4a664fe082d3c4",
+      "ThemeProvider.BNrg3wTr.js": "dbed779ea3300f378b229176d1ed0326d09ef16e81473ba5a4381ab5fbf8fa18",
+      "hash.DpuBqitv.js": "0acd5094b5490619845bde4f5e756c1bdd8679ca9d35b82ed2a522008cef3f9b",
+      "react.Bfm_Hgom.js": "1e0e89abb243deb629f8fb7e94d2221d5c87ee86f2baf505bffe17fed85eddec",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "permissionsAnchorId",
+        "value": {
+          "tag": "string",
+          "value": "agent-automation-permissions"
+        }
+      },
+      {
+        "key": "section",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "titledWithAccessory",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "section"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "sec-1"
+                          }
+                        },
+                        {
+                          "key": "ref",
+                          "value": {
+                            "tag": "undefined"
+                          }
+                        },
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-78zum5 sx-dt5ytf sx-1v2ro7d sx-1ghz6dp sx-1nuxya2"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "element",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "div"
+                                    }
+                                  },
+                                  {
+                                    "key": "key",
+                                    "value": {
+                                      "tag": "null"
+                                    }
+                                  },
+                                  {
+                                    "key": "props",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "ref",
+                                          "value": {
+                                            "tag": "undefined"
+                                          }
+                                        },
+                                        {
+                                          "key": "className",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-uk3077 sx-1qughib sx-1a02dak sx-1v2ro7d sx-h8yej3 sc2sx-Flex-d11c8f6e"
+                                          }
+                                        },
+                                        {
+                                          "key": "style",
+                                          "value": {
+                                            "tag": "undefined"
+                                          }
+                                        },
+                                        {
+                                          "key": "children",
+                                          "value": {
+                                            "tag": "array",
+                                            "values": [
+                                              {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "element",
+                                                    "value": {
+                                                      "tag": "string",
+                                                      "value": "h3"
+                                                    }
+                                                  },
+                                                  {
+                                                    "key": "key",
+                                                    "value": {
+                                                      "tag": "null"
+                                                    }
+                                                  },
+                                                  {
+                                                    "key": "props",
+                                                    "value": {
+                                                      "tag": "object",
+                                                      "prototype": "object",
+                                                      "properties": [
+                                                        {
+                                                          "key": "ref",
+                                                          "value": {
+                                                            "tag": "undefined"
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "className",
+                                                          "value": {
+                                                            "tag": "string",
+                                                            "value": "sx-1j61x8r sx-ggjnk3 sx-84vug0 sx-11mg1s0 sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1ghz6dp sx-1lliihq sc2sx-Text-c50a30fa"
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "style",
+                                                          "value": {
+                                                            "tag": "object",
+                                                            "prototype": "object",
+                                                            "properties": [
+                                                              {
+                                                                "key": "--x-4xs81a",
+                                                                "value": {
+                                                                  "tag": "string",
+                                                                  "value": "var(--sx-1dd5bcf)"
+                                                                }
+                                                              }
+                                                            ]
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "children",
+                                                          "value": {
+                                                            "tag": "string",
+                                                            "value": "Pinned title"
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "element",
+                                                    "value": {
+                                                      "tag": "string",
+                                                      "value": "div"
+                                                    }
+                                                  },
+                                                  {
+                                                    "key": "key",
+                                                    "value": {
+                                                      "tag": "null"
+                                                    }
+                                                  },
+                                                  {
+                                                    "key": "props",
+                                                    "value": {
+                                                      "tag": "object",
+                                                      "prototype": "object",
+                                                      "properties": [
+                                                        {
+                                                          "key": "className",
+                                                          "value": {
+                                                            "tag": "string",
+                                                            "value": "sx-78zum5 sx-13a6bvl sx-5ij27j sx-8x9d4c sx-18y5l3o sx-2lah0s sx-14atkfc sx-b5nk4f"
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "children",
+                                                          "value": {
+                                                            "tag": "string",
+                                                            "value": "pin:accessory"
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "string",
+                                "value": "pin:children"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "untitled",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "section"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "sec-2"
+                          }
+                        },
+                        {
+                          "key": "ref",
+                          "value": {
+                            "tag": "undefined"
+                          }
+                        },
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-78zum5 sx-dt5ytf sx-1v2ro7d sx-1ghz6dp sx-1nuxya2"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "null"
+                              },
+                              {
+                                "tag": "string",
+                                "value": "pin:children"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "titledNoAccessory",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "section"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "sec-3"
+                          }
+                        },
+                        {
+                          "key": "ref",
+                          "value": {
+                            "tag": "undefined"
+                          }
+                        },
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-78zum5 sx-dt5ytf sx-1v2ro7d sx-1ghz6dp sx-1nuxya2"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "element",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "div"
+                                    }
+                                  },
+                                  {
+                                    "key": "key",
+                                    "value": {
+                                      "tag": "null"
+                                    }
+                                  },
+                                  {
+                                    "key": "props",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "ref",
+                                          "value": {
+                                            "tag": "undefined"
+                                          }
+                                        },
+                                        {
+                                          "key": "className",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-uk3077 sx-1qughib sx-1a02dak sx-1v2ro7d sx-h8yej3 sc2sx-Flex-d11c8f6e"
+                                          }
+                                        },
+                                        {
+                                          "key": "style",
+                                          "value": {
+                                            "tag": "undefined"
+                                          }
+                                        },
+                                        {
+                                          "key": "children",
+                                          "value": {
+                                            "tag": "array",
+                                            "values": [
+                                              {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "element",
+                                                    "value": {
+                                                      "tag": "string",
+                                                      "value": "h3"
+                                                    }
+                                                  },
+                                                  {
+                                                    "key": "key",
+                                                    "value": {
+                                                      "tag": "null"
+                                                    }
+                                                  },
+                                                  {
+                                                    "key": "props",
+                                                    "value": {
+                                                      "tag": "object",
+                                                      "prototype": "object",
+                                                      "properties": [
+                                                        {
+                                                          "key": "ref",
+                                                          "value": {
+                                                            "tag": "undefined"
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "className",
+                                                          "value": {
+                                                            "tag": "string",
+                                                            "value": "sx-1j61x8r sx-ggjnk3 sx-84vug0 sx-11mg1s0 sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1ghz6dp sx-1lliihq sc2sx-Text-c50a30fa"
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "style",
+                                                          "value": {
+                                                            "tag": "object",
+                                                            "prototype": "object",
+                                                            "properties": [
+                                                              {
+                                                                "key": "--x-4xs81a",
+                                                                "value": {
+                                                                  "tag": "string",
+                                                                  "value": "var(--sx-1dd5bcf)"
+                                                                }
+                                                              }
+                                                            ]
+                                                          }
+                                                        },
+                                                        {
+                                                          "key": "children",
+                                                          "value": {
+                                                            "tag": "string",
+                                                            "value": "Pinned title"
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "null"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "string",
+                                "value": "pin:children"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "card",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "plain",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.VP(settings-card)"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "card-1"
+                          }
+                        },
+                        {
+                          "key": "ref",
+                          "value": {
+                            "tag": "undefined"
+                          }
+                        },
+                        {
+                          "key": "sx",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "kmVPX3",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-yjmnpe"
+                                    }
+                                  },
+                                  {
+                                    "key": "kUOVxO",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-1qleswr sx-333qjd"
+                                    }
+                                  },
+                                  {
+                                    "key": "$$css",
+                                    "value": {
+                                      "tag": "boolean",
+                                      "value": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "undefined"
+                              },
+                              {
+                                "tag": "undefined"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "string",
+                            "value": "pin:children"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "flushWithSx",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.VP(settings-card)"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "card-2"
+                          }
+                        },
+                        {
+                          "key": "ref",
+                          "value": {
+                            "tag": "undefined"
+                          }
+                        },
+                        {
+                          "key": "sx",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "kmVPX3",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-yjmnpe"
+                                    }
+                                  },
+                                  {
+                                    "key": "kUOVxO",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-1qleswr sx-333qjd"
+                                    }
+                                  },
+                                  {
+                                    "key": "$$css",
+                                    "value": {
+                                      "tag": "boolean",
+                                      "value": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "kmVPX3",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-1717udv"
+                                    }
+                                  },
+                                  {
+                                    "key": "$$css",
+                                    "value": {
+                                      "tag": "boolean",
+                                      "value": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "pinned",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-fixture"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "string",
+                            "value": "pin:children"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "labeledRow",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "dividedLabeledDescribed",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "div"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-1n2onr6 sx-1cpjm7i sx-1hmns74 sx-1y3wzot sx-1elnft9 sx-w8i89x sx-dogwlo sx-nvurfn sx-1xizm9w sx-kk1bqk sx-12maryy"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "element",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.ZP(settings-list-row)"
+                                }
+                              },
+                              {
+                                "key": "key",
+                                "value": {
+                                  "tag": "null"
+                                }
+                              },
+                              {
+                                "key": "props",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "as",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "div"
+                                      }
+                                    },
+                                    {
+                                      "key": "sx",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "kAzted",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-u0aao5"
+                                            }
+                                          },
+                                          {
+                                            "key": "$$css",
+                                            "value": {
+                                              "tag": "boolean",
+                                              "value": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "array",
+                                        "values": [
+                                          {
+                                            "tag": "object",
+                                            "prototype": "object",
+                                            "properties": [
+                                              {
+                                                "key": "element",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "stub:ContextualMenuActions.MP(settings-item-content)"
+                                                }
+                                              },
+                                              {
+                                                "key": "key",
+                                                "value": {
+                                                  "tag": "null"
+                                                }
+                                              },
+                                              {
+                                                "key": "props",
+                                                "value": {
+                                                  "tag": "object",
+                                                  "prototype": "object",
+                                                  "properties": [
+                                                    {
+                                                      "key": "children",
+                                                      "value": {
+                                                        "tag": "array",
+                                                        "values": [
+                                                          {
+                                                            "tag": "object",
+                                                            "prototype": "object",
+                                                            "properties": [
+                                                              {
+                                                                "key": "element",
+                                                                "value": {
+                                                                  "tag": "string",
+                                                                  "value": "div"
+                                                                }
+                                                              },
+                                                              {
+                                                                "key": "key",
+                                                                "value": {
+                                                                  "tag": "null"
+                                                                }
+                                                              },
+                                                              {
+                                                                "key": "props",
+                                                                "value": {
+                                                                  "tag": "object",
+                                                                  "prototype": "object",
+                                                                  "properties": [
+                                                                    {
+                                                                      "key": "ref",
+                                                                      "value": {
+                                                                        "tag": "undefined"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "className",
+                                                                      "value": {
+                                                                        "tag": "string",
+                                                                        "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-6s0dn4 sx-euugli sx-1jnr06f sc2sx-Flex-d11c8f6e"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "style",
+                                                                      "value": {
+                                                                        "tag": "undefined"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "children",
+                                                                      "value": {
+                                                                        "tag": "object",
+                                                                        "prototype": "object",
+                                                                        "properties": [
+                                                                          {
+                                                                            "key": "element",
+                                                                            "value": {
+                                                                              "tag": "string",
+                                                                              "value": "label"
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            "key": "key",
+                                                                            "value": {
+                                                                              "tag": "null"
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            "key": "props",
+                                                                            "value": {
+                                                                              "tag": "object",
+                                                                              "prototype": "object",
+                                                                              "properties": [
+                                                                                {
+                                                                                  "key": "ref",
+                                                                                  "value": {
+                                                                                    "tag": "undefined"
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "htmlFor",
+                                                                                  "value": {
+                                                                                    "tag": "string",
+                                                                                    "value": "input-1"
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "className",
+                                                                                  "value": {
+                                                                                    "tag": "string",
+                                                                                    "value": "sx-1j61x8r sx-ggjnk3 sx-1srpx65 sx-11mg1s0 sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1mzt3pk sx-1fzhlzt sc2sx-Text-c50a30fa"
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "style",
+                                                                                  "value": {
+                                                                                    "tag": "object",
+                                                                                    "prototype": "object",
+                                                                                    "properties": [
+                                                                                      {
+                                                                                        "key": "--x-4xs81a",
+                                                                                        "value": {
+                                                                                          "tag": "string",
+                                                                                          "value": "var(--sx-ys2i3t)"
+                                                                                        }
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "children",
+                                                                                  "value": {
+                                                                                    "tag": "string",
+                                                                                    "value": "Pinned row title"
+                                                                                  }
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "object",
+                                                            "prototype": "object",
+                                                            "properties": [
+                                                              {
+                                                                "key": "element",
+                                                                "value": {
+                                                                  "tag": "string",
+                                                                  "value": "span"
+                                                                }
+                                                              },
+                                                              {
+                                                                "key": "key",
+                                                                "value": {
+                                                                  "tag": "null"
+                                                                }
+                                                              },
+                                                              {
+                                                                "key": "props",
+                                                                "value": {
+                                                                  "tag": "object",
+                                                                  "prototype": "object",
+                                                                  "properties": [
+                                                                    {
+                                                                      "key": "ref",
+                                                                      "value": {
+                                                                        "tag": "undefined"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "id",
+                                                                      "value": {
+                                                                        "tag": "string",
+                                                                        "value": "desc-1"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "className",
+                                                                      "value": {
+                                                                        "tag": "string",
+                                                                        "value": "sx-1j61x8r sx-167xe44 sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1mzt3pk sx-1fzhlzt sx-d4r4e8 sc2sx-Text-c50a30fa"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "style",
+                                                                      "value": {
+                                                                        "tag": "object",
+                                                                        "prototype": "object",
+                                                                        "properties": [
+                                                                          {
+                                                                            "key": "--x-4xs81a",
+                                                                            "value": {
+                                                                              "tag": "string",
+                                                                              "value": "var(--sx-1dd5bcf)"
+                                                                            }
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "children",
+                                                                      "value": {
+                                                                        "tag": "string",
+                                                                        "value": "Pinned description"
+                                                                      }
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "string",
+                                            "value": "pin:children"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "plain",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "div"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-1n2onr6"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "element",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.ZP(settings-list-row)"
+                                }
+                              },
+                              {
+                                "key": "key",
+                                "value": {
+                                  "tag": "null"
+                                }
+                              },
+                              {
+                                "key": "props",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "as",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "div"
+                                      }
+                                    },
+                                    {
+                                      "key": "sx",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "kAzted",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-u0aao5"
+                                            }
+                                          },
+                                          {
+                                            "key": "$$css",
+                                            "value": {
+                                              "tag": "boolean",
+                                              "value": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "array",
+                                        "values": [
+                                          {
+                                            "tag": "object",
+                                            "prototype": "object",
+                                            "properties": [
+                                              {
+                                                "key": "element",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "stub:ContextualMenuActions.MP(settings-item-content)"
+                                                }
+                                              },
+                                              {
+                                                "key": "key",
+                                                "value": {
+                                                  "tag": "null"
+                                                }
+                                              },
+                                              {
+                                                "key": "props",
+                                                "value": {
+                                                  "tag": "object",
+                                                  "prototype": "object",
+                                                  "properties": [
+                                                    {
+                                                      "key": "children",
+                                                      "value": {
+                                                        "tag": "array",
+                                                        "values": [
+                                                          {
+                                                            "tag": "object",
+                                                            "prototype": "object",
+                                                            "properties": [
+                                                              {
+                                                                "key": "element",
+                                                                "value": {
+                                                                  "tag": "string",
+                                                                  "value": "div"
+                                                                }
+                                                              },
+                                                              {
+                                                                "key": "key",
+                                                                "value": {
+                                                                  "tag": "null"
+                                                                }
+                                                              },
+                                                              {
+                                                                "key": "props",
+                                                                "value": {
+                                                                  "tag": "object",
+                                                                  "prototype": "object",
+                                                                  "properties": [
+                                                                    {
+                                                                      "key": "ref",
+                                                                      "value": {
+                                                                        "tag": "undefined"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "className",
+                                                                      "value": {
+                                                                        "tag": "string",
+                                                                        "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-6s0dn4 sx-euugli sx-1jnr06f sc2sx-Flex-d11c8f6e"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "style",
+                                                                      "value": {
+                                                                        "tag": "undefined"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "key": "children",
+                                                                      "value": {
+                                                                        "tag": "object",
+                                                                        "prototype": "object",
+                                                                        "properties": [
+                                                                          {
+                                                                            "key": "element",
+                                                                            "value": {
+                                                                              "tag": "string",
+                                                                              "value": "span"
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            "key": "key",
+                                                                            "value": {
+                                                                              "tag": "null"
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            "key": "props",
+                                                                            "value": {
+                                                                              "tag": "object",
+                                                                              "prototype": "object",
+                                                                              "properties": [
+                                                                                {
+                                                                                  "key": "ref",
+                                                                                  "value": {
+                                                                                    "tag": "undefined"
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "className",
+                                                                                  "value": {
+                                                                                    "tag": "string",
+                                                                                    "value": "sx-1j61x8r sx-ggjnk3 sx-1srpx65 sx-11mg1s0 sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1mzt3pk sx-1fzhlzt sc2sx-Text-c50a30fa"
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "style",
+                                                                                  "value": {
+                                                                                    "tag": "object",
+                                                                                    "prototype": "object",
+                                                                                    "properties": [
+                                                                                      {
+                                                                                        "key": "--x-4xs81a",
+                                                                                        "value": {
+                                                                                          "tag": "string",
+                                                                                          "value": "var(--sx-ys2i3t)"
+                                                                                        }
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                },
+                                                                                {
+                                                                                  "key": "children",
+                                                                                  "value": {
+                                                                                    "tag": "string",
+                                                                                    "value": "Pinned row title"
+                                                                                  }
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "null"
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "string",
+                                            "value": "pin:children"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "descriptionRow",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "divided",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "div"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-1n2onr6 sx-1cpjm7i sx-1hmns74 sx-1y3wzot sx-1elnft9 sx-w8i89x sx-dogwlo sx-nvurfn sx-1xizm9w sx-kk1bqk sx-12maryy"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "element",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.ZP(settings-list-row)"
+                                }
+                              },
+                              {
+                                "key": "key",
+                                "value": {
+                                  "tag": "null"
+                                }
+                              },
+                              {
+                                "key": "props",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "as",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "div"
+                                      }
+                                    },
+                                    {
+                                      "key": "sx",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "kAzted",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-u0aao5"
+                                            }
+                                          },
+                                          {
+                                            "key": "$$css",
+                                            "value": {
+                                              "tag": "boolean",
+                                              "value": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "element",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "span"
+                                            }
+                                          },
+                                          {
+                                            "key": "key",
+                                            "value": {
+                                              "tag": "null"
+                                            }
+                                          },
+                                          {
+                                            "key": "props",
+                                            "value": {
+                                              "tag": "object",
+                                              "prototype": "object",
+                                              "properties": [
+                                                {
+                                                  "key": "ref",
+                                                  "value": {
+                                                    "tag": "undefined"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "className",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "sx-1j61x8r sx-167xe44 sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1mzt3pk sx-1fzhlzt sx-d4r4e8 sc2sx-Text-c50a30fa"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "style",
+                                                  "value": {
+                                                    "tag": "object",
+                                                    "prototype": "object",
+                                                    "properties": [
+                                                      {
+                                                        "key": "--x-4xs81a",
+                                                        "value": {
+                                                          "tag": "string",
+                                                          "value": "var(--sx-1dd5bcf)"
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                },
+                                                {
+                                                  "key": "children",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "pin:description-children"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "undivided",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "div"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-1n2onr6"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "element",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.ZP(settings-list-row)"
+                                }
+                              },
+                              {
+                                "key": "key",
+                                "value": {
+                                  "tag": "null"
+                                }
+                              },
+                              {
+                                "key": "props",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "as",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "div"
+                                      }
+                                    },
+                                    {
+                                      "key": "sx",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "kAzted",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-u0aao5"
+                                            }
+                                          },
+                                          {
+                                            "key": "$$css",
+                                            "value": {
+                                              "tag": "boolean",
+                                              "value": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "element",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "span"
+                                            }
+                                          },
+                                          {
+                                            "key": "key",
+                                            "value": {
+                                              "tag": "null"
+                                            }
+                                          },
+                                          {
+                                            "key": "props",
+                                            "value": {
+                                              "tag": "object",
+                                              "prototype": "object",
+                                              "properties": [
+                                                {
+                                                  "key": "ref",
+                                                  "value": {
+                                                    "tag": "undefined"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "className",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "sx-1j61x8r sx-167xe44 sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sx-1mzt3pk sx-1fzhlzt sx-d4r4e8 sc2sx-Text-c50a30fa"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "style",
+                                                  "value": {
+                                                    "tag": "object",
+                                                    "prototype": "object",
+                                                    "properties": [
+                                                      {
+                                                        "key": "--x-4xs81a",
+                                                        "value": {
+                                                          "tag": "string",
+                                                          "value": "var(--sx-1dd5bcf)"
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                },
+                                                {
+                                                  "key": "children",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "pin:description-children"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
