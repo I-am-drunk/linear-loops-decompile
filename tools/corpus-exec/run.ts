@@ -6,7 +6,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
@@ -92,9 +92,37 @@ export function loadCase(path: string): CaseFile {
   return c;
 }
 
-function gitHead(dir: string): string | null {
+/**
+ * The corpus provenance head (issue #250). Resolution ladder:
+ *   1. `<corpusDir>/.corpus-head` stamp file (one hex line, written by the
+ *      pipeline/README.md fetch recipe) — the vault commit the bytes came from.
+ *   2. `git rev-parse HEAD` ONLY when the corpus dir is a real corpus
+ *      checkout: its own git toplevel, or `<toplevel>/corpus` (the vault
+ *      layout, PR #251's rung). A copied tree without `.git` must never
+ *      resolve the CONTAINING repo's HEAD: that recorded the decompile repo's
+ *      commit and made `verify` fail on byte-perfect goldens for every
+ *      reviewer on a different repo commit.
+ *   3. null — honest "unknown"; verify treats it as informational.
+ */
+export function corpusHead(dir: string): string | null {
+  const stamp = join(dir, `.corpus-head`);
+  if (existsSync(stamp)) {
+    const line = readFileSync(stamp, `utf8`).trim();
+    if (/^[0-9a-f]{7,64}$/i.test(line)) return line;
+    throw new Error(`corpus .corpus-head stamp is not a commit hash: ${stamp} (got ${JSON.stringify(line.slice(0, 40))})`);
+  }
   try {
-    return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
+    const toplevel = realpathSync(execFileSync(`git`, [`-C`, dir, `rev-parse`, `--show-toplevel`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim());
+    const real = realpathSync(dir);
+    if (real !== toplevel && real !== join(toplevel, `corpus`)) return null;
+    // Positional evidence is not enough: an unstamped COPY at
+    // <unrelated-repo>/corpus would still discover that repo and record its
+    // HEAD (CodeRabbit finding on #252). The repo's HEAD describes the corpus
+    // bytes only when the repo actually TRACKS them — a vault checkout does,
+    // a copied tree dropped into some repo does not (untracked or ignored).
+    const tracked = execFileSync(`git`, [`-C`, dir, `ls-files`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] });
+    if (tracked.trim() === ``) return null;
+    return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim();
   } catch {
     return null;
   }
@@ -246,7 +274,7 @@ async function runInSandbox(corpusDir: string, caseDir: string, source: CorpusSo
     provenance: {
       tool: `corpus-exec/g1`,
       serializer: SERIALIZER_VERSION,
-      corpusHead: gitHead(corpusDir),
+      corpusHead: corpusHead(corpusDir),
       corpusSource: { flavor: source.flavor, path: source.path },
       entry: closure.entry, // resolved full name (case may declare a prefix)
       closureSize: closure.chunks.length,

@@ -97,6 +97,19 @@ async function main(): Promise<number> {
   }
   const outputMatches = JSON.stringify(serialize(result.output), null, 2) === JSON.stringify(wantParsed.output, null, 2);
   if (outputMatches) {
+    // An UNKNOWN corpus head on the re-run (no stamp, corpus dir not a git
+    // toplevel — issue #250) is informational, not a mismatch: the byte-compare
+    // on output plus chunkHashes is the oracle. Any OTHER provenance delta
+    // (chunk hashes, stubs, serializer, or a DIFFERENT known head) stays red.
+    const wantProv = (wantParsed as { provenance?: Record<string, unknown> }).provenance;
+    const gotProv = result.provenance as unknown as Record<string, unknown>;
+    if (wantProv !== undefined && gotProv[`corpusHead`] === null) {
+      const scrub = (p: Record<string, unknown>): string => JSON.stringify({ ...p, corpusHead: null }, null, 2);
+      if (scrub(wantProv) === scrub(gotProv)) {
+        console.error(`verify: OK — output byte-identical, chunk hashes identical; corpus head unknown on this machine (no <corpus>/.corpus-head stamp and not a corpus checkout — see pipeline/README.md fetch recipe).`);
+        return 0;
+      }
+    }
     console.error(`verify: OUTPUT matches but provenance differs (corpus refresh or stub change) — re-record deliberately, in a reviewed PR.`);
   } else {
     console.error(`verify: MISMATCH in output (${expectedPath}) — upstream drift or a bad golden; diff and review before touching the golden.`);
