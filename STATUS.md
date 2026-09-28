@@ -214,7 +214,16 @@ useHydrateAgentConversations export n — the 'Editing message' banner, third
 the edit-icon seam as a declared marker; exports r/t (editing-state hook,
 hydrate effect) stay declared GAP regions behind linking-only throwing
 stubs; clean reimplementation byte-matching; meter: 79 chunks · 13 golden ·
-66 GAP). H3 family expansion
+66 GAP). G17 fifteenth golden-backed chunk LANDED 2026-09-28
+(TeamAgentConnectorsSettingsPage, §F Team agent settings row's connectors
+sibling — the G14 recipe verbatim: pure pageMetadata literal + module-eval
+displayName, drive-mode verbatim projection, six declared stubs (both
+wrappers mobx, no suspenseObserver — minor seam variation recorded);
+reimplementation joins src/ui-settings-guidance; route component body honest
+GAP; scouting note: TeamAgentsSettingsPage is NOT this recipe (metadata
+embeds a descriptionElement JSX fragment + a sections map calling the G11
+factory at module eval — needs a jsx-capturing stub or T2, stays GAP);
+meter: 79 chunks · 14 golden · 65 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
