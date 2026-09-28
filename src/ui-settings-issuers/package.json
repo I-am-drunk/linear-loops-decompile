@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-issuers",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the agent-issuers settings page metadata, golden-verified against corpus execution (G25, matrix §F Issuers)"
+}

@@ -302,6 +302,16 @@ constants pinned from raw source (GROUP_HEIGHT 32 / ROW_HEIGHT 44) behind
 an own-member-only proxy; page/component exports (query hooks, mobx list
 providers) declared honest GAP (T2/T3); clean reimplementation
 byte-matching both goldens; meter: 81 chunks · 22 golden · 59 GAP).
+G25 golden-backed chunk LANDED 2026-09-28 (src/ui-settings-issuers:
+AgentIssuersSettingsPage.BuFJumP7.js export pageMetadata — first golden on
+the §F Issuers row: the G14 pure-literal recipe with a sections-bearing
+shape variation ({id, title, description, sections:{configured, add}} — NO
+keywords member, unlike the other §F shapes; per-level ownKeys projections
+pin the absences) + the Component's module-eval displayName; the
+suspenseObserver-wrapped issuers management page (workloadIssuers
+hydration, limit gating, remove-issuer dialog) stays declared GAP (T2/T3);
+12 linking-only bomb seams + 3 module-eval wrapper stubs, closure 17;
+meter: 81 chunks · 23 golden · 58 GAP — re-slots against G24, in flight).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
