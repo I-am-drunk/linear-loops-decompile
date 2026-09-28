@@ -67,7 +67,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 | AiConversationTurn model (position, parts, status, role, responseToTurn) | `models.json` | corpus |
 | Send message | mutation `AiConversationSendMessage` (returns `success`, `lastSyncId`, `userMessage.id`, `assistantMessage.id`) | corpus |
 | Cancel | mutation `AiConversationCancel` | corpus |
-| Elicitations | mutation `AiConversationSendElicitationResponses`; `AgentElicitationResponseQueue.BM8OrYyq.js` | corpus |
+| Elicitations | mutation `AiConversationSendElicitationResponses`; `aiConversationSendElicitationResponsesMutation.CEPAjw5J.js` (the caller building that mutation); `AgentElicitationResponseQueue.BM8OrYyq.js` | corpus |
 | Prompt progress | mutation `AddUserMessageToAiPromptProgress` | corpus |
 | Conversation list/hydration | query `AiConversationsQuery`; `useHydrateAgentConversations.DJ4Hg1po.js` | corpus |
 | Entity chat hooks | `useEntityAgentChat.DCgQcFjU.js`, `useEntityAgentChatRoute.UazehM1s.js` | corpus |

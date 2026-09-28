@@ -178,7 +178,17 @@ AgentGuidanceSettings export n — the FIRST §F Settings golden: drive-mode
 projection of the settings-metadata factory, both scope branches + the
 strict-equality discriminator + the applicable predicate over five declared
 org fixtures; the observer component export t stays GAP pending the T3
-store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). H3 family expansion
+store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). G15 eleventh
+golden-backed chunk LANDED 2026-09-28 (src/ui-loops-elicitation-wire:
+aiConversationSendElicitationResponsesMutation — the FIRST golden on the §D
+chat-substrate WIRE layer (Elicitations row, issue #14 adjacency): drive-mode
+with a recording fake client; pins the full mutation document bytes, all four
+kind branches incl. the hardcoded confirmed:true quirk, per-response
+{elicitationId,data} narrowing vs top-level input passthrough, and the REAL
+UnreachableCaseError default; enum + gql-tag stubs pinned verbatim from raw
+source, throw-on-unpinned; matrix Elicitations row gains the caller chunk as
+evidence per the ledger's fix direction; meter: 79 chunks · 10 golden ·
+69 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

@@ -1,0 +1,19 @@
+{
+  "unit": "ui-loops-elicitation-wire/sendElicitationResponses",
+  "chunk": "aiConversationSendElicitationResponsesMutation",
+  "stubs": {
+    "Issue": {
+      "file": "issue-elicitation-kind-stub.mjs",
+      "why": "the model-layer chunk's module level needs browser globals (self.FormData via types.7f0h45Sh.js) and cannot execute under the runner (G12 precedent); the entry consumes exactly one export \u2014 the elicitation-kind enum \u2014 pinned VERBATIM from its raw `ek=function(e){...}` definition, throw-on-unpinned."
+    },
+    "types": {
+      "file": "types-gql-tag-stub.mjs",
+      "why": "same module-level browser-globals reason; the entry consumes exactly one export \u2014 the GraphQL template tag \u2014 pinned VERBATIM from its raw one-line template-join definition (`an=(e,...t)=>e.reduce(...)`), so the document string is the corpus's own bytes."
+    }
+  },
+  "drive": {
+    "file": "send-elicitation-responses-driver.mjs",
+    "exportMeaning": "export{r as t} \u2014 r(client, input) is the AiConversationSendElicitationResponses mutation caller: builds the GraphQL document with the x tag, maps input.responses through the per-kind payload serializer i(data) (multipleChoice\u2192selectedOptionIndex, confirmation\u2192{confirmed:!0} hardcoded, entitySelection\u2192selectedEntityIds, mcpServerConnection\u2192integrationId, default\u2192throw UnreachableCaseError), and returns client.mutate(document, {input}). The chunk's only export. The driver records the exact mutate arguments with a fake client; UnreachableCaseError executes REAL (zero-import chunk)."
+  },
+  "notes": "G15: first golden on the chat substrate's WIRE layer (matrix \u00a7D Elicitations row \u2014 the ledger's AiConversationSendElicitationResponses entry; issue #14 adjacency). Pins the full mutation document (op name, input type, selection set incl. success/lastSyncId/aiConversation.id/userTurn.id/assistantTurn.id), all four kind branches + the real UnreachableCaseError default, the hardcoded confirmed:true quirk, the per-response field narrowing ({elicitationId,data} only) vs the top-level input passthrough, and the mutate return passthrough."
+}
