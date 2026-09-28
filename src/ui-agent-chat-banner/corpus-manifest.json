@@ -1,0 +1,21 @@
+{
+  "source": "G16 (#225 claim 13:5xZ): src/ui-agent-chat-banner reimplements the 'Editing message' banner from the conversation-hydration chunk. Evidence: useHydrateAgentConversations.DJ4Hg1po.js export n (matrix §D 'Conversation list/hydration' row), executed from the RAW tree in drive mode — the G9 flatten pattern: the banner and the corpus Text it renders are hook-free, so the driver executes the real composite closure; the edit-icon seam (ContextualMenuActions rL, source fn BO) is a declared string marker pinning the props the entry passes (size:12, color:labelMuted). Exports r (editing-state hook) and p (hydrate effect) are render/effect-tier and stay declared GAP regions guarded by linking-only throwing stubs. The clean module byte-matches through the tagged-v2 serializer (declared observation driver), taking the icon seam as an argument.",
+  "reimplements": [
+    {
+      "chunkPrefix": "useHydrateAgentConversations",
+      "exports": [
+        {
+          "minified": "n",
+          "meaning": "export{f as n} — f() is the 'Editing message' banner (div 8-class stylex row > [rL edit-icon(size:12,color:labelMuted), Text(variant:mini,color:labelMuted,'Editing message')]); reimplemented as EditingMessageBanner(EditIcon). Exports r/p of the same chunk are NOT covered (hook/effect tier).",
+          "evidenceLine": "src/ui-agent-chat-banner/editing-message-banner.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "editing-message-banner"
+      ]
+    }
+  ],
+  "goldens": [
+    "editing-message-banner"
+  ]
+}

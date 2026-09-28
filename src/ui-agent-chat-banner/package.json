@@ -1,0 +1,6 @@
+{
+  "name": "ui-agent-chat-banner",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the agent-chat 'Editing message' banner, golden-verified against corpus execution (G16, matrix §D Conversation list/hydration)"
+}

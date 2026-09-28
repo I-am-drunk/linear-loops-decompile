@@ -1,0 +1,145 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "useHydrateAgentConversations.DJ4Hg1po.js",
+    "closureSize": 15,
+    "stubbed": [
+      "AgentToolbarState.DPrj1I-A.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "nodes.DrSymAVM.js",
+      "resolvePromise.B8FauNXm.js",
+      "useAsRef.CJh9aSjD.js"
+    ],
+    "chunkHashes": {
+      "useHydrateAgentConversations.DJ4Hg1po.js": "48bc023145d4626a98e0320da22431c266e4e9efdbf335a2bbdeb9da8bd38a1d",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "Text.gv7OudGa.js": "c8a54ccabc2f583746fed40cbffc4da5b387ee11faba406aed4a664fe082d3c4",
+      "mixins.stylex.BUgiQC4g.js": "9fc03b921bb2d167fe0ac1e195126bb88ab0de4a4a8de930f60a312d93f27628",
+      "stylex.CiFZl61Z.js": "68976c03e608faf476d53e39895947f8ee1a5cc42e38136c83e33a2960e6f7f6",
+      "ThemeProvider.BNrg3wTr.js": "dbed779ea3300f378b229176d1ed0326d09ef16e81473ba5a4381ab5fbf8fa18",
+      "hash.DpuBqitv.js": "0acd5094b5490619845bde4f5e756c1bdd8679ca9d35b82ed2a522008cef3f9b",
+      "react.Bfm_Hgom.js": "1e0e89abb243deb629f8fb7e94d2221d5c87ee86f2baf505bffe17fed85eddec",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "banner",
+        "value": {
+          "tag": "element",
+          "type": "div",
+          "key": {
+            "tag": "null"
+          },
+          "props": {
+            "tag": "object",
+            "prototype": "object",
+            "properties": [
+              {
+                "key": "className",
+                "value": {
+                  "tag": "string",
+                  "value": "sx-78zum5 sx-6s0dn4 sx-17d4w8g sx-euugli sx-1iorvi4 sx-mzs88n sx-jkvuk6 sx-163pfp"
+                }
+              },
+              {
+                "key": "children",
+                "value": {
+                  "tag": "array",
+                  "values": [
+                    {
+                      "tag": "element",
+                      "type": "stub:ContextualMenuActions.rL(EditIcon)",
+                      "key": {
+                        "tag": "null"
+                      },
+                      "props": {
+                        "tag": "object",
+                        "prototype": "object",
+                        "properties": [
+                          {
+                            "key": "size",
+                            "value": {
+                              "tag": "number",
+                              "value": "12"
+                            }
+                          },
+                          {
+                            "key": "color",
+                            "value": {
+                              "tag": "string",
+                              "value": "labelMuted"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "tag": "element",
+                      "type": "span",
+                      "key": {
+                        "tag": "null"
+                      },
+                      "props": {
+                        "tag": "object",
+                        "prototype": "object",
+                        "properties": [
+                          {
+                            "key": "ref",
+                            "value": {
+                              "tag": "undefined"
+                            }
+                          },
+                          {
+                            "key": "className",
+                            "value": {
+                              "tag": "string",
+                              "value": "sx-1j61x8r sx-ggjnk3 sx-167xe44 sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sc2sx-Text-c50a30fa"
+                            }
+                          },
+                          {
+                            "key": "style",
+                            "value": {
+                              "tag": "object",
+                              "prototype": "object",
+                              "properties": [
+                                {
+                                  "key": "--x-4xs81a",
+                                  "value": {
+                                    "tag": "string",
+                                    "value": "var(--sx-1dd5bcf)"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "key": "children",
+                            "value": {
+                              "tag": "string",
+                              "value": "Editing message"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
