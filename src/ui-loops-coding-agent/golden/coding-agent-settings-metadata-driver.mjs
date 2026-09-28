@@ -12,7 +12,7 @@
 // - functions project as `<function:key>` placeholders; the two `applicable`
 //   closures in the metadata are PROBED instead:
 //   * loopsRepositoryAccess.applicable = ({organization}) =>
-//     canAccess(codingSessions) && canAccess(agentAutomations) — four
+//     canAccess(agentAutomations) && canAccess(codingSessions) — four
 //     fixtures pin the conjunction and record WHICH feature keys are asked;
 //   * regionPinning.applicable = () => D.isEnabled(D.codeSandboxSizing) — the
 //     types-registry seam is scripted per-probe; both branch values pinned,
