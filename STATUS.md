@@ -201,7 +201,7 @@ route component body stays honest GAP; meter: 78 chunks · 11 golden ·
 golden-backed chunk LANDED 2026-09-28 (src/ui-agent-chat-banner:
 useHydrateAgentConversations export n — the 'Editing message' banner, third
 §D golden (Conversation list/hydration row): the G9 hook-free flatten with
-the edit-icon seam as a declared marker; exports r/p (editing-state hook,
+the edit-icon seam as a declared marker; exports r/t (editing-state hook,
 hydrate effect) stay declared GAP regions behind linking-only throwing
 stubs; clean reimplementation byte-matching; meter: 78 chunks · 12 golden ·
 66 GAP). H3 family expansion

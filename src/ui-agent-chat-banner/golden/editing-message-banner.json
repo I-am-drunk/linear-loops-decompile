@@ -7,12 +7,12 @@
       "why": "rL (source fn BO) is a pencil/edit icon component wrapping the chunk's shared Icon — a 4.7 MB chunk whose closure pulls the app core; full name pinned (the corpus carries the hash-rotated re-export twin Bcp3eWHc). The icon's own render is a separate ledger surface; this golden observes WHAT THE ENTRY PASSES IT (size:12, color:labelMuted), which the string-typed element keeps in the output (G10 Modal precedent)."
     },
     "nodes": {
-      "source": "export const et = new Proxy({}, { get(_, k) { throw new Error(`G16 stub: nodes.et read: ${String(k)} — only the r/p exports touch it, out of this golden's scope`); } });",
+      "source": "export const et = new Proxy({}, { get(_, k) { throw new Error(`G16 stub: nodes.et read: ${String(k)} — only the r/t exports (local u/p) touch it, out of this golden's scope`); } });",
       "why": "The editor nodes registry (2.6k-line ProseMirror chunk): consumed only by export `r` (the editing-state hook, via autocompleteInputClass in its keydown handler), which is out of this golden's scope. Linking-only; any read throws."
     },
     "resolvePromise": {
-      "source": "export const a = () => { throw new Error(`G16 stub: resolvePromise.a called — export p (hydrate effect) is out of this golden's scope`); };",
-      "why": "The suspense/`use` wrapper: consumed only by export `p` (the hydrate effect), out of this golden's scope. Linking-only; a call throws."
+      "source": "export const a = () => { throw new Error(`G16 stub: resolvePromise.a called — export t (hydrate effect; local fn p) is out of this golden's scope`); };",
+      "why": "The suspense/`use` wrapper: consumed only by export `t` (the hydrate effect; local function `p`), out of this golden's scope. Linking-only; a call throws."
     },
     "useAsRef": {
       "source": "export const t = () => { throw new Error(`G16 stub: useAsRef called — export r (editing-state hook) is out of this golden's scope`); };",

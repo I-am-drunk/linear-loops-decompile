@@ -6,7 +6,7 @@
       "exports": [
         {
           "minified": "n",
-          "meaning": "export{f as n} — f() is the 'Editing message' banner (div 8-class stylex row > [rL edit-icon(size:12,color:labelMuted), Text(variant:mini,color:labelMuted,'Editing message')]); reimplemented as EditingMessageBanner(EditIcon). Exports r/p of the same chunk are NOT covered (hook/effect tier).",
+          "meaning": "export{f as n} — f() is the 'Editing message' banner (div 8-class stylex row > [rL edit-icon(size:12,color:labelMuted), Text(variant:mini,color:labelMuted,'Editing message')]); reimplemented as EditingMessageBanner(EditIcon). Exports r/t of the same chunk are NOT covered (local u/p) (hook/effect tier).",
           "evidenceLine": "src/ui-agent-chat-banner/editing-message-banner.ts + golden test"
         }
       ],
