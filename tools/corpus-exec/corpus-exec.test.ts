@@ -19,6 +19,7 @@ const here = fileURLToPath(new URL(`.`, import.meta.url));
 const fixtureCorpus = join(here, `fixtures`, `corpus`);
 const fixtureChunks = join(fixtureCorpus, `pretty`, `client`);
 const dualCorpus = join(here, `fixtures`, `dual-corpus`);
+/** Suppress runner log output in tests that only assert results and provenance. */
 const noLog = (): void => undefined;
 
 // --- sandbox ---------------------------------------------------------------
