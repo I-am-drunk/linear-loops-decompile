@@ -289,7 +289,20 @@ unlike the §F shapes), the alias identity against the loaded target (the
 G21 pattern), and the entry's export-name surface; the suspense-observer
 credit-metering Component stays declared GAP (T2/T3); linking surface: 32
 mechanical throw-on-use seams generated from the import map; meter:
-81 chunks · 20 golden · 61 GAP). H3 family expansion
+81 chunks · 20 golden · 61 GAP). G23 twenty-first and twenty-second
+golden-backed chunks LANDED 2026-09-28 (src/ui-loops-management: the
+LoopsManagementPage PAIR — first §A page-level goldens (Loops management
+page row, BOTH chunks): the CVnaEF7c pageMetadata pure literal
+({id:'loops-management', title:'Manage loops', keywords} — no description
+member) projected verbatim + export-name surface, and the BAhf8Ti3 route
+shim via the G21 alias-map pattern with loaded-target identity pins from
+birth; new stub-library seam: a constructible-but-throwing base class for
+module-eval `class extends` (SettingsListProvider), SettingsList height
+constants pinned from raw source (GROUP_HEIGHT 32 / ROW_HEIGHT 44) behind
+an own-member-only proxy; page/component exports (query hooks, mobx list
+providers) declared honest GAP (T2/T3); clean reimplementation
+byte-matching both goldens; meter: 81 chunks · 22 golden · 59 GAP).
+H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-management",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the loops-management page metadata and its route shim, golden-verified against corpus execution (G23, matrix §A loops management page)"
+}
