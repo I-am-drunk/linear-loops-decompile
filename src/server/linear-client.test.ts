@@ -103,6 +103,59 @@ test("RATELIMITED on a 200 body (defensive) still maps to rate_limited", async (
   });
 });
 
+for (const window of ["complexity", "endpoint-requests"]) {
+  for (const reset of [1_030_000, 1_000_000, undefined]) {
+    test(`RATELIMITED uses the exhausted ${window} reset (${reset ?? "missing"})`, async () => {
+      const headers: Record<string, string> = {
+        ...HEADERS,
+        [`x-ratelimit-${window}-remaining`]: "0",
+      };
+      const resetHeader = `x-ratelimit-${window}-reset`;
+      if (reset === undefined) delete headers[resetHeader];
+      else headers[resetHeader] = String(reset);
+      const client = new LinearClient({
+        getToken: () => "t",
+        now: () => 1_000_000,
+        fetchImpl: (async () => jsonResponse(
+          { errors: [{ extensions: { code: "RATELIMITED" } }] },
+          { status: 400, headers },
+        )) as typeof fetch,
+      });
+      await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+        assert.equal(e.kind, "rate_limited");
+        assert.equal(e.status, 400);
+        assert.equal(e.retryAfterMs, reset !== undefined && reset > 1_000_000 ? 30_000 : undefined);
+        assert.equal(e.rateLimit?.requestsRemaining, 2499);
+        return true;
+      });
+    });
+  }
+}
+
+test("RATELIMITED waits for all known exhausted windows", async () => {
+  const client = new LinearClient({
+    getToken: () => "t",
+    now: () => 1_000_000,
+    fetchImpl: (async () => jsonResponse(
+      { errors: [{ extensions: { code: "RATELIMITED" } }] },
+      { status: 400, headers: {
+        ...HEADERS,
+        "x-ratelimit-requests-remaining": "0",
+        "x-ratelimit-requests-reset": "1010000",
+        "x-ratelimit-complexity-remaining": "0",
+        "x-ratelimit-complexity-reset": "1020000",
+        "x-ratelimit-endpoint-requests-remaining": "0",
+        "x-ratelimit-endpoint-requests-reset": "1030000",
+      } },
+    )) as typeof fetch,
+  });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    assert.equal(e.retryAfterMs, 30_000);
+    return true;
+  });
+});
+
 test("a plain 400 without RATELIMITED stays a generic http error", async () => {
   const fakeFetch = (async () =>
     jsonResponse({ errors: [{ message: "Argument Validation Error" }] }, { status: 400 })) as typeof fetch;
@@ -190,6 +243,51 @@ test("429 backfills a missing endpoint reset from Retry-After and gates the next
   });
   assert.equal(calls, 1);
 });
+
+for (const reset of [undefined, 1_000_000, 1_060_000]) {
+  test(`429 Retry-After gates exhausted complexity with reset ${reset ?? "missing"}`, async () => {
+    let now = 1_000_000;
+    let calls = 0;
+    const headers: Record<string, string> = {
+      ...HEADERS,
+      "x-ratelimit-complexity-remaining": "0",
+      "retry-after": "30",
+    };
+    if (reset === undefined) delete headers["x-ratelimit-complexity-reset"];
+    else headers["x-ratelimit-complexity-reset"] = String(reset);
+    const client = new LinearClient({
+      getToken: () => "t",
+      now: () => now,
+      fetchImpl: (async () => {
+        calls += 1;
+        return calls === 1
+          ? new Response("Too Many Requests", { status: 429, headers })
+          : jsonResponse({ data: { ok: true } });
+      }) as typeof fetch,
+    });
+    await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.status, 429);
+      assert.equal(e.retryAfterMs, 30_000);
+      return true;
+    });
+    const expectedReset = reset !== undefined && reset > now ? reset : now + 30_000;
+    now = expectedReset - 1;
+    await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.status, undefined); // refused before fetch
+      assert.match(e.message, /complexity/);
+      assert.equal(e.retryAfterMs, 1);
+      return true;
+    });
+    assert.equal(calls, 1);
+    assert.equal(client.budget().requestsRemaining, 2499);
+    assert.equal(client.budget().requestsReset, 3_600_000);
+    now = expectedReset;
+    assert.deepEqual(await client.query("query { viewer { id } }"), { ok: true });
+    assert.equal(calls, 2);
+  });
+}
 
 test("RATELIMITED beats partial data and marks the header-exhausted window", async () => {
   const fakeFetch = (async () =>
@@ -288,7 +386,11 @@ test("a stale 429 must not exhaust the new credential's budget", async () => {
 test("a stale RATELIMITED body must not exhaust the new credential's budget", async () => {
   let token = "userA";
   let resolveOldBody!: (body: unknown) => void;
-  const oldResponse = jsonResponse({}, { status: 400 });
+  const oldResponse = jsonResponse({}, { status: 400, headers: {
+    ...HEADERS,
+    "x-ratelimit-endpoint-requests-remaining": "0",
+    "x-ratelimit-endpoint-requests-reset": "1030000",
+  } });
   oldResponse.json = () => new Promise((resolve) => { resolveOldBody = resolve; });
   const fakeFetch = (async (_url: unknown, init?: RequestInit) =>
     (init?.headers as Record<string, string>).authorization === "userA"
@@ -300,7 +402,11 @@ test("a stale RATELIMITED body must not exhaust the new credential's budget", as
   token = "userB";
   await client.query("query { viewer { id } }");
   resolveOldBody({ errors: [{ extensions: { code: "RATELIMITED" } }] });
-  await assert.rejects(oldRequest, (e: LinearClientError) => e.kind === "rate_limited");
+  await assert.rejects(oldRequest, (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    assert.equal(e.retryAfterMs, 30_000); // old response's endpoint, not userB's budget
+    return true;
+  });
   assert.equal(client.budget().requestsRemaining, 2499);
 });
 
@@ -430,3 +536,68 @@ test("probe rides the client: ok path, bad token, shared budget", async () => {
   assert.equal(again.ok, true);
   assert.equal(shared.budget().requestsRemaining, 2499);
 });
+
+for (const window of ["complexity", "endpoint-requests"]) {
+  for (const reset of [1_030_000, 1_000_000, undefined]) {
+    test(`429 uses the exhausted ${window} reset (${reset ?? "missing"})`, async () => {
+      const headers: Record<string, string> = {
+        ...HEADERS,
+        [`x-ratelimit-${window}-remaining`]: "0",
+      };
+      const resetHeader = `x-ratelimit-${window}-reset`;
+      if (reset === undefined) delete headers[resetHeader];
+      else headers[resetHeader] = String(reset);
+      const client = new LinearClient({
+        getToken: () => "t",
+        now: () => 1_000_000,
+        fetchImpl: (async () => new Response("Too Many Requests", { status: 429, headers })) as typeof fetch,
+      });
+      await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+        assert.equal(e.kind, "rate_limited");
+        assert.equal(e.status, 429);
+        assert.equal(e.retryAfterMs, reset !== undefined && reset > 1_000_000 ? 30_000 : undefined);
+        return true;
+      });
+    });
+  }
+}
+
+for (const status of [200, 400, 429]) {
+  test(`all exhausted windows determine both response and preflight delays (${status})`, async () => {
+    let now = 1_000_000;
+    let calls = 0;
+    const client = new LinearClient({
+      getToken: () => "t",
+      now: () => now,
+      fetchImpl: (async () => {
+        calls += 1;
+        return jsonResponse(status === 200 ? { data: { ok: true } } : {
+          errors: [{ extensions: { code: "RATELIMITED" } }],
+        }, { status, headers: {
+          ...HEADERS,
+          "x-ratelimit-requests-remaining": "0",
+          "x-ratelimit-requests-reset": "1010000",
+          "x-ratelimit-complexity-remaining": "0",
+          "x-ratelimit-complexity-reset": "1020000",
+          "x-ratelimit-endpoint-requests-remaining": "0",
+          "x-ratelimit-endpoint-requests-reset": "1030000",
+        } });
+      }) as typeof fetch,
+    });
+    const checkDelay = (delay: number) => (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.retryAfterMs, delay);
+      return true;
+    };
+    if (status === 200) await client.query("query { viewer { id } }");
+    else await assert.rejects(client.query("query { viewer { id } }"), checkDelay(30_000));
+    await assert.rejects(client.query("query { viewer { id } }"), checkDelay(30_000));
+    now += 15_000;
+    await assert.rejects(client.query("query { viewer { id } }"), checkDelay(15_000));
+    assert.equal(calls, 1);
+    now = 1_030_001;
+    if (status === 200) await client.query("query { viewer { id } }");
+    else await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => e.kind === "rate_limited");
+    assert.equal(calls, 2);
+  });
+}
