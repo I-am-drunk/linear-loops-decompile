@@ -228,11 +228,13 @@ export class LinearClient {
    * cares). Throws LinearClientError otherwise.
    */
   async query<T>(query: string, variables?: Record<string, unknown>, opts?: { timeoutMs?: number }): Promise<T> {
-    const token = this.opts.getToken();
-    if (!token) throw new LinearClientError("not_connected", "Linear not connected");
+    if (!this.opts.getToken()) throw new LinearClientError("not_connected", "Linear not connected");
 
     await this.acquire();
     try {
+      // Credentials may be replaced or cleared while this call waits in the queue.
+      const token = this.opts.getToken();
+      if (!token) throw new LinearClientError("not_connected", "Linear not connected");
       this.gate();
       let res: Response;
       try {

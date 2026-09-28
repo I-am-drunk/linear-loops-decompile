@@ -47,6 +47,8 @@ Done 2026-09-27:
   firing on an exhausted window, 429/Retry-After + RATELIMITED mapping, FIFO
   concurrency cap; budgets never hardcoded — headers are the truth).
   probeLinear promoted onto it; new read-only `dataplane.rateBudget` RPC.
+  Queued requests re-read credentials at dispatch, honoring replacement or
+  removal while waiting; both paths have deterministic fake-fetch regressions.
   Header semantics verified against Linear's official docs (KNOWLEDGE §6);
   9 client tests + 1 RPC test, all fake-fetch. (Pulled ahead of R4: R4.1's
   page waited on the R3.4 shell; this slice is server-only, was unblocked.)
