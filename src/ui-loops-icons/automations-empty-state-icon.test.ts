@@ -65,3 +65,21 @@ test(`theme tokens flow through: a different theme changes exactly the sixteen f
     b,
   );
 });
+
+test(`reduced-motion override: isAnimated=true + prefers-reduced-motion yields the byte-identical static tree`, () => {
+  // The corpus guard `isAnimated && !useReducedMotion()`: the darkReducedMotion
+  // golden executed the corpus component with isAnimated:true and the
+  // reduced-motion stub TRUE — the output must equal the darkDefault static
+  // tree byte-for-byte. Our clean module models the static branch only, so the
+  // same theme must byte-match this golden too.
+  const overrideGolden = loadGolden(`darkReducedMotion`);
+  assert.equal(
+    JSON.stringify(overrideGolden.output),
+    JSON.stringify(loadGolden(`darkDefault`).output),
+  );
+  const ours = serialize(AutomationsEmptyStateIcon(darkDefault));
+  assert.equal(
+    `${JSON.stringify(ours, null, 2)}\n`,
+    `${JSON.stringify(overrideGolden.output, null, 2)}\n`,
+  );
+});
