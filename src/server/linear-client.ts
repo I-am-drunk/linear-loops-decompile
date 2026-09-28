@@ -169,10 +169,11 @@ export class LinearClient {
    * earned them is still the current one (a response fired before a token
    * swap must not repopulate the new user's budget).
    */
-  private recordBudget(headers: Headers, firedWithToken: string): void {
+  private recordBudget(headers: Headers, firedWithToken: string): RateLimitSnapshot | undefined {
     if (firedWithToken !== this.opts.getToken()) return;
     this.lastBudget = parseRateLimit(headers);
     this.budgetToken = firedWithToken;
+    return this.lastBudget;
   }
 
   /**
@@ -181,8 +182,11 @@ export class LinearClient {
    * request window — never overwrite a still-positive budget the headers
    * just reported (CodeRabbit #155).
    */
-  private markExhausted(firedWithToken: string, retryAfterMs?: number): void {
+  private markExhausted(firedWithToken: string, responseBudget: RateLimitSnapshot | undefined, retryAfterMs?: number): void {
     if (firedWithToken !== this.opts.getToken()) return;
+    // A different response may have replaced the snapshot while this one's
+    // JSON body was pending, even when both requests used the same token.
+    if (responseBudget !== this.lastBudget) return;
     const b = this.lastBudget;
     const now = this.opts.now();
     // As with endpoint exhaustion, Retry-After supplies a usable gate reset
@@ -270,7 +274,7 @@ export class LinearClient {
         throw new LinearClientError("network", `network: ${e instanceof Error ? e.message : String(e)}`);
       }
 
-      this.recordBudget(res.headers, token);
+      const responseBudget = this.recordBudget(res.headers, token);
 
       if (res.status === 429) {
         const retryAfterSec = Number(res.headers.get("retry-after"));
@@ -281,7 +285,7 @@ export class LinearClient {
         // We earned a 429 despite the gate: zero the window the headers show
         // exhausted (endpoint/complexity 429s must not nuke a healthy global
         // budget — only the ambiguous case falls back to the request window).
-        this.markExhausted(token, retryAfterHeaderMs);
+        this.markExhausted(token, responseBudget, retryAfterHeaderMs);
         throw new LinearClientError("rate_limited", "http 429: Linear rate limit", {
           status: 429,
           retryAfterMs,
@@ -306,7 +310,7 @@ export class LinearClient {
       // #155), anything else is belt-and-braces.
       const errors = body?.errors ?? [];
       if (errors.some((e) => e.extensions?.code === "RATELIMITED")) {
-        this.markExhausted(token);
+        this.markExhausted(token, responseBudget);
         // Use this response's headers: another query may update lastBudget
         // while its JSON body is being read. Only exhausted windows delay a
         // retry; when several are exhausted, wait for the latest known reset.

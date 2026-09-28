@@ -410,6 +410,45 @@ test("a stale RATELIMITED body must not exhaust the new credential's budget", as
   assert.equal(client.budget().requestsRemaining, 2499);
 });
 
+for (const status of [400, 200]) {
+  test(`a delayed RATELIMITED body (${status}) must not exhaust a newer same-token budget`, async () => {
+    let resolveOldBody!: (body: unknown) => void;
+    let bodyStarted!: () => void;
+    const readingBody = new Promise<void>((resolve) => { bodyStarted = resolve; });
+    const oldResponse = jsonResponse({}, { status, headers: {
+      ...HEADERS,
+      "x-ratelimit-requests-reset": "1010000",
+    } });
+    oldResponse.json = () => new Promise((resolve) => {
+      resolveOldBody = resolve;
+      bodyStarted();
+    });
+    let calls = 0;
+    const client = new LinearClient({
+      getToken: () => "t", now: () => 1_000_000, maxConcurrency: 2,
+      fetchImpl: (async () => {
+        calls += 1;
+        return calls === 1 ? oldResponse : jsonResponse({ data: { ok: true } });
+      }) as typeof fetch,
+    });
+    const oldRequest = client.query("query { viewer { id } }");
+    const rejected = assert.rejects(oldRequest, (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.retryAfterMs, 10_000); // the old response's own reset
+      return true;
+    });
+    await readingBody;
+    await client.query("query { viewer { id } }");
+    const newerBudget = client.budget();
+    assert.equal(newerBudget.requestsRemaining, 2499);
+    resolveOldBody({ errors: [{ extensions: { code: "RATELIMITED" } }] });
+    await rejected;
+    assert.deepEqual(client.budget(), newerBudget);
+    assert.deepEqual(await client.query("query { viewer { id } }"), { ok: true });
+    assert.equal(calls, 3); // the delayed error must not close the healthy gate
+  });
+}
+
 test("gate: a known-exhausted window refuses to fire until the reset passes", async () => {
   let now = 1_000_000;
   let fired = 0;
