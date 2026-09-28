@@ -1,0 +1,31 @@
+{
+  "unit": "ui-agent-chat-banner/EditingMessageBanner",
+  "chunk": "useHydrateAgentConversations",
+  "stubs": {
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "source": "export const rL = `stub:ContextualMenuActions.rL(EditIcon)`;",
+      "why": "rL (source fn BO) is a pencil/edit icon component wrapping the chunk's shared Icon — a 4.7 MB chunk whose closure pulls the app core; full name pinned (the corpus carries the hash-rotated re-export twin Bcp3eWHc). The icon's own render is a separate ledger surface; this golden observes WHAT THE ENTRY PASSES IT (size:12, color:labelMuted), which the string-typed element keeps in the output (G10 Modal precedent)."
+    },
+    "nodes": {
+      "source": "export const et = new Proxy({}, { get(_, k) { throw new Error(`G16 stub: nodes.et read: ${String(k)} — only the r/t exports (local u/p) touch it, out of this golden's scope`); } });",
+      "why": "The editor nodes registry (2.6k-line ProseMirror chunk): consumed only by export `r` (the editing-state hook, via autocompleteInputClass in its keydown handler), which is out of this golden's scope. Linking-only; any read throws."
+    },
+    "resolvePromise": {
+      "source": "export const a = () => { throw new Error(`G16 stub: resolvePromise.a called — export t (hydrate effect; local fn p) is out of this golden's scope`); };",
+      "why": "The suspense/`use` wrapper: consumed only by export `t` (the hydrate effect; local function `p`), out of this golden's scope. Linking-only; a call throws."
+    },
+    "useAsRef": {
+      "source": "export const t = () => { throw new Error(`G16 stub: useAsRef called — export r (editing-state hook) is out of this golden's scope`); };",
+      "why": "Hook used only by export `r`, out of this golden's scope. Linking-only; a call throws."
+    },
+    "AgentToolbarState.DPrj1I-A.js": {
+      "source": "export const a = new Proxy({}, { get(_, k) { throw new Error(`G16 stub: AgentToolbarState.a read: ${String(k)} — only export r touches it, out of this golden's scope`); } });",
+      "why": "The toolbar attachment registry (full name pinned — the corpus carries the hash-rotated twin BQU8f9e0): consumed only by export `r`, out of this golden's scope. Linking-only; any read throws."
+    }
+  },
+  "drive": {
+    "file": "editing-message-banner-driver.mjs",
+    "exportMeaning": "export{f as n, u as r, p as t} — f() is the 'Editing message' banner shown above the agent input while a message edit is being composed: div(8-class stylex row) > [rL edit-icon(size:12, color:labelMuted), Text(variant:mini, color:labelMuted, 'Editing message')]. Exports r (editing-state hook: useState/useCallback/useEffect + window keydown) and p (conversation-hydrate effect via resolvePromise) are render/effect-tier and stay declared GAP regions (linking-only throwing stubs guard them). The driver flattens f's hook-free composite tree by executing the corpus Text (see driver header)."
+  },
+  "notes": "G16: third §D golden (Conversation list/hydration row, useHydrateAgentConversations.DJ4Hg1po.js — this golden covers export n only; the G12 partial-chunk precedent). f is hook-free and so is its composite closure through Text; the corpus Text resolves labelMuted through ThemeProvider's static CSS-var map (var(--sx-1dd5bcf)), so no theme stub is needed (G9 finding). The icon seam is a string marker pinning the props the entry passes."
+  }

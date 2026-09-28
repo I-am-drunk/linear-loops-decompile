@@ -207,7 +207,14 @@ kind branches incl. the hardcoded confirmed:true quirk, per-response
 UnreachableCaseError default; enum + gql-tag stubs pinned verbatim from raw
 source, throw-on-unpinned; matrix Elicitations row gains the caller chunk as
 evidence per the ledger's fix direction; meter: 79 chunks · 12 golden ·
-67 GAP). H3 family expansion
+67 GAP). G16 fourteenth
+golden-backed chunk LANDED 2026-09-28 (src/ui-agent-chat-banner:
+useHydrateAgentConversations export n — the 'Editing message' banner, third
+§D golden (Conversation list/hydration row): the G9 hook-free flatten with
+the edit-icon seam as a declared marker; exports r/t (editing-state hook,
+hydrate effect) stay declared GAP regions behind linking-only throwing
+stubs; clean reimplementation byte-matching; meter: 79 chunks · 13 golden ·
+66 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
