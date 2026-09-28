@@ -237,7 +237,9 @@ be cited as a source). The Agent API facts below are sourced from
 ## §7. Process facts
 
 - Linear ships the client continuously; chunks are content-hashed. Expect drift; R1
-  re-verifies counts on each refresh (1,550 chunks / 87 models / 258 ops @ 2026-09-26).
+  re-verifies counts on each refresh (1,550 chunks / 136 models / 376 ops @
+  2026-09-28 under the layout-invariant grammars of issue #241; the earlier
+  87/258 figures were grammar undercounts on the same corpus, not drift).
 - The marketing site (linear.app homepage) is a SEPARATE build (`/web/_next/static/`,
   ~535 chunks) - plan features/pricing strings live there (`agentAutomations: "Loops"`).
 
@@ -263,7 +265,11 @@ be cited as a source). The Agent API facts below are sourced from
   `AiConversationSendMessage` itself. Whether send is credit-gated server-side for
   loop-linked conversations remains an open probe question (issue #14).
 - 2026-09-27 re-run of the pipeline on Linear v1.32.4: 1,550 chunks, 258 ops,
-  87 models, zero drift vs the 2026-09-26 baseline.
+  87 models, zero drift vs the 2026-09-26 baseline. (2026-09-28, issue #241:
+  those op/model counts were fixed-layout grammar artifacts; the corrected
+  layout-invariant extraction on the SAME corpus reads 376 ops / 136 models,
+  cross-checked exactly against the raw minified tree. The zero-drift verdict
+  stands — both runs saw the same bytes.)
 
 ### §8a. Goose trace answers (2026-09-27, sess_01a0e2c4-a88f-730b-acee-8188d527c324; full trace: `docs/golden-goose-chat-route.md`)
 

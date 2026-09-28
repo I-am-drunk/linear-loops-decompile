@@ -120,6 +120,16 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   1,541 prettified + 9 byte-exact raw fallbacks, 0 failures, --check
   1,550/1,550. Follow-up: #241 (Tier-2 extract-drift contract for analyze.mjs
   — the 9 raw fallbacks move ops/models counts; carved out of the #232 review).
+- #241 extract-drift contract LANDED: analyze.mjs grammars are now
+  layout-invariant (tree contract documented in the header; drift test
+  `pipeline/analyze.test.mjs` wired into `npm test`). Finding: the old
+  fixed-layout grammars UNDERCOUNTED the same corpus — real 1.32.4 numbers are
+  **376 ops / 136 models (all with fields)** (was 258/87: beautifier-injected
+  newlines inside template literals hid 49 model registrations; literal-pairing
+  desync on escaped newlines dropped 118 ops). Anchored grammar cross-checked
+  exactly against the raw minified tree (376 = 376, 136 = 136).
+  extracts/{models,graphql-ops}.md regenerated; vault analysis/*.json
+  re-baseline PENDING (post-merge vault push, noted on #241).
 - G1 serializer v2 LANDED 2026-09-28 (#240 squashed to main `4a909fd`, closes
   #238): the golden serializer is a closed tagged JSON grammar
   (`corpus-exec-tagged-json-v2`) — every v1 collision pair (null≡undefined,

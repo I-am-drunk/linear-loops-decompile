@@ -88,13 +88,21 @@ Stages skip existing outputs. `bash pipeline/run.sh --force` rebuilds everything
 The crawl stage is resumable (existing chunks are skipped); if a chunk 404s,
 Linear deployed mid-crawl: re-run (hashes rotate).
 
-## Expected counts (2026-09-26 baseline)
+## Expected counts (2026-09-28 baseline, layout-invariant grammars — issue #241)
 
-~1,550 chunks, ~87 models, ~258 GraphQL ops, ~490 routes (unique paths; the
-pre-2026-09-27 baseline said ~119 because only route-table registrations were
-extracted — issue #174 added match-helper route literals, recovering e.g. the
-Loops list route `/:orgKey/loops/:viewType?`). Drift is normal (Linear
-ships constantly): note material deltas in `KNOWLEDGE.md`.
+~1,550 chunks, ~136 models (all with fields), ~376 GraphQL ops, ~490 routes
+(unique paths). Earlier baselines undercounted from grammar bugs, not corpus
+drift: the pre-#241 baseline said 87 models / 258 ops because (a) the old
+beautifier injected newlines inside template literals, hiding 49 model
+registrations from the fixed-layout grammar, and (b) the global literal-pairing
+regex desynced on escaped newlines, dropping 118 ops (the anchored grammar
+agrees exactly with the raw minified tree, 376 = 376). The pre-2026-09-27
+route baseline said ~119 because only route-table registrations were extracted
+— issue #174 added match-helper route literals, recovering e.g. the Loops list
+route `/:orgKey/loops/:viewType?`. Drift is normal (Linear ships constantly):
+note material deltas in `KNOWLEDGE.md`. `pipeline/analyze.test.mjs` holds the
+layout-invariance contract (identical facts from a beautified and a minified
+rendering).
 
 ## Finding things in the corpus
 
