@@ -11,13 +11,14 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { expectedBytes, loadCase, runCase, type CaseFile } from "./run.ts";
+import { expectedBytes, loadCase, runCase, selectCorpusSource, type CaseFile } from "./run.ts";
 import { buildSandbox, closureSize, resolveChunk } from "./sandbox.ts";
 import { serialize, stringify } from "./serialize.ts";
 
 const here = fileURLToPath(new URL(`.`, import.meta.url));
 const fixtureCorpus = join(here, `fixtures`, `corpus`);
 const fixtureChunks = join(fixtureCorpus, `pretty`, `client`);
+const dualCorpus = join(here, `fixtures`, `dual-corpus`);
 const noLog = (): void => undefined;
 
 // --- sandbox ---------------------------------------------------------------
@@ -51,6 +52,27 @@ test(`side-effect imports join the closure (import "./x" without from)`, async (
 
 test(`a missing chunk fails loudly, naming it`, () => {
   assert.throws(() => buildSandbox(fixtureChunks, join(here, `fixtures`), `nope.ZZZZ.js`, {}), /chunk not found in corpus: nope\.ZZZZ\.js/);
+});
+
+test(`raw client is selected over a co-located pretty projection`, async () => {
+  assert.deepEqual(selectCorpusSource(fixtureCorpus), {
+    flavor: `pretty`, path: `pretty/client`, chunksDir: join(fixtureCorpus, `pretty`, `client`),
+  });
+  assert.deepEqual(selectCorpusSource(dualCorpus), {
+    flavor: `raw`, path: `client`, chunksDir: join(dualCorpus, `client`),
+  });
+  const c: CaseFile = {
+    unit: `fixture/raw-selection`,
+    chunk: `value.AAAA.js`,
+    invoke: { export: `n`, exportMeaning: `raw-vs-pretty fixture value`, args: [] },
+  };
+  const result = await runCase(dualCorpus, join(here, `fixtures`), c, noLog);
+  assert.equal(result.output, `raw`);
+  assert.deepEqual(result.provenance.corpusSource, { flavor: `raw`, path: `client` });
+});
+
+test(`a corpus without raw or legacy pretty chunks fails naming both layouts`, () => {
+  assert.throws(() => selectCorpusSource(join(here, `fixtures`, `missing-corpus`)), /neither client\/ \(raw\) nor pretty\/client\/ \(legacy\)/);
 });
 
 test(`closureSize probes without building`, () => {
@@ -287,8 +309,15 @@ test(`loadCase rejects a case without exactly one mode and stubs without why`, (
 test(`corpus smoke: re-derive a generateTheme shell value against the H2 goldens`, async (t) => {
   const corpus = join(here, `..`, `..`, `pipeline`, `corpus`);
   const golden = join(here, `..`, `..`, `src`, `ui-theme`, `golden`, `golden-derived-retina0.json`);
-  if (!existsSync(join(corpus, `pretty`, `client`, `ThemeHelper.CeMKYPhf.js`)) || !existsSync(golden)) {
+  const hasRaw = existsSync(join(corpus, `client`));
+  const hasLegacyPretty = existsSync(join(corpus, `pretty`, `client`));
+  if ((!hasRaw && !hasLegacyPretty) || !existsSync(golden)) {
     t.skip(`no local corpus (pipeline/corpus) — fetch per pipeline/README.md to run the smoke`);
+    return;
+  }
+  const source = selectCorpusSource(corpus);
+  if (!existsSync(join(source.chunksDir, `ThemeHelper.CeMKYPhf.js`))) {
+    t.skip(`local corpus has no ThemeHelper chunk — refresh per pipeline/README.md`);
     return;
   }
   const want = JSON.parse(readFileSync(golden, `utf8`)) as Record<string, { color: Record<string, string> }>;
@@ -305,6 +334,7 @@ test(`corpus smoke: re-derive a generateTheme shell value against the H2 goldens
     },
   };
   const mod = await runCase(corpus, join(here, `fixtures`), c, noLog);
+  assert.deepEqual(mod.provenance.corpusSource, { flavor: `raw`, path: `client` });
   const theme = mod.output as { color: Record<string, string>; hash: string };
   // pick projected away the live derived-theme functions; color+hash are the pinned regions
   assert.equal(theme.color[`labelBase`], want[`darkDefault`].color[`labelBase`]);

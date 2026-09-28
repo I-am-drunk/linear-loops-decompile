@@ -1,6 +1,6 @@
 # corpus-exec — the golden runner (G1; SPECS/ui-parity.md "golden tier")
 
-Executes a corpus chunk offline and records its computed outputs, so a
+Executes a captured raw corpus chunk offline and records its computed outputs, so a
 hand-made golden test is cheap to author and mechanical to re-verify. It
 generalizes the H2/#215 recipe (issue #168) that produced the generateTheme
 golden vectors, plus the render-mode spike from #225.
@@ -10,6 +10,14 @@ the case file by hand, reads the emitted draft against the corpus source,
 and commits it only after the verification block in the PR is filled. The
 REVIEWER re-executes with `--verify` (mechanical byte-compare) and spot-reads
 the corpus source. See the D2 protocol on issue #225.
+
+### Executable source
+
+When a corpus contains `client/`, corpus-exec executes that captured **raw**
+ESM tree and records `{ flavor: "raw", path: "client" }` in provenance. The
+readable `pretty/client/` projection is used only for legacy corpora that lack
+raw bytes; it is never preferred when both exist. This prevents a prettifier
+transform from becoming the behavioral oracle.
 
 ## Usage (needs a local corpus — pipeline/README.md)
 
