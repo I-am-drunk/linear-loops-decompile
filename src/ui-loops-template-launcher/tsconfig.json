@@ -10,9 +10,7 @@
     "skipLibCheck": true,
     "types": [
       "node"
-    ],
-    "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true
+    ]
   },
   "include": [
     "**/*.ts",
