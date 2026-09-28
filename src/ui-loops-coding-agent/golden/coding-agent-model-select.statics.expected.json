@@ -1,0 +1,412 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "CodingAgentModelSelect.USYHzowP.js",
+    "closureSize": 11,
+    "stubbed": [
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "PullRequestsFeatureHelper.woc0KNxh.js",
+      "Select.CkdP5uts.js",
+      "mobxreactlite.BAMBvwfh.js"
+    ],
+    "chunkHashes": {
+      "CodingAgentModelSelect.USYHzowP.js": "0e2595fb0ec0e97c0482c3d8ff942aefc411ac3ec8e83ecbb06bdfa4f8931cc4",
+      "Integration.B02xjlHD.js": "f70a022e7f3e9a0325960cee0b536c0a7121a3458071c110f1619c6d1612dc4e",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "react.Bfm_Hgom.js": "1e0e89abb243deb629f8fb7e94d2221d5c87ee86f2baf505bffe17fed85eddec"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "repo",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "hostName",
+              "value": {
+                "tag": "string",
+                "value": "github.com"
+              }
+            },
+            {
+              "key": "fullName",
+              "value": {
+                "tag": "string",
+                "value": "linear/linear"
+              }
+            },
+            {
+              "key": "labelGithub",
+              "value": {
+                "tag": "string",
+                "value": "linear/linear"
+              }
+            },
+            {
+              "key": "labelOtherHost",
+              "value": {
+                "tag": "string",
+                "value": "acme/app (git.acme.dev)"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "helper",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "sandboxSizes",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "value",
+                        "value": {
+                          "tag": "string",
+                          "value": "small"
+                        }
+                      },
+                      {
+                        "key": "label",
+                        "value": {
+                          "tag": "string",
+                          "value": "Small"
+                        }
+                      },
+                      {
+                        "key": "description",
+                        "value": {
+                          "tag": "string",
+                          "value": "1 vCPU · 8 GB memory"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "value",
+                        "value": {
+                          "tag": "string",
+                          "value": "medium"
+                        }
+                      },
+                      {
+                        "key": "label",
+                        "value": {
+                          "tag": "string",
+                          "value": "Medium"
+                        }
+                      },
+                      {
+                        "key": "description",
+                        "value": {
+                          "tag": "string",
+                          "value": "2 vCPU · 16 GB memory"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "value",
+                        "value": {
+                          "tag": "string",
+                          "value": "large"
+                        }
+                      },
+                      {
+                        "key": "label",
+                        "value": {
+                          "tag": "string",
+                          "value": "Large"
+                        }
+                      },
+                      {
+                        "key": "description",
+                        "value": {
+                          "tag": "string",
+                          "value": "4 vCPU · 32 GB memory"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "key": "harnesses",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "claude"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "codex"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "open-source"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "descriptions",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "agent",
+                    "value": {
+                      "tag": "string",
+                      "value": "Choose which agent Linear uses in coding sessions"
+                    }
+                  },
+                  {
+                    "key": "model",
+                    "value": {
+                      "tag": "string",
+                      "value": "May affect quality and cost of code changes"
+                    }
+                  },
+                  {
+                    "key": "repository",
+                    "value": {
+                      "tag": "string",
+                      "value": "Choose which repository coding sessions use in this environment"
+                    }
+                  },
+                  {
+                    "key": "environmentVariables",
+                    "value": {
+                      "tag": "string",
+                      "value": "Set environment variables for coding sessions. Names and values are visible to the agent"
+                    }
+                  },
+                  {
+                    "key": "secretEnvironmentVariables",
+                    "value": {
+                      "tag": "string",
+                      "value": "Secret values are encrypted before saving. Saved secret rows are masked and can’t be changed."
+                    }
+                  },
+                  {
+                    "key": "files",
+                    "value": {
+                      "tag": "string",
+                      "value": "Add files to the environment’s home directory"
+                    }
+                  },
+                  {
+                    "key": "customGuidance",
+                    "value": {
+                      "tag": "string",
+                      "value": "Add instructions for the agent to follow in this environment"
+                    }
+                  },
+                  {
+                    "key": "prepareScript",
+                    "value": {
+                      "tag": "string",
+                      "value": "Runs while Linear prepares the environment"
+                    }
+                  },
+                  {
+                    "key": "toolVersions",
+                    "value": {
+                      "tag": "string",
+                      "value": "Add the tools that Linear should install in this environment"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "labels",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "claude",
+                    "value": {
+                      "tag": "string",
+                      "value": "Claude Code"
+                    }
+                  },
+                  {
+                    "key": "codex",
+                    "value": {
+                      "tag": "string",
+                      "value": "Codex"
+                    }
+                  },
+                  {
+                    "key": "openSource",
+                    "value": {
+                      "tag": "string",
+                      "value": "Open source"
+                    }
+                  },
+                  {
+                    "key": "passthroughDefault",
+                    "value": {
+                      "tag": "string",
+                      "value": "some-future-harness"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "autoPreference",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "claude",
+                    "value": {
+                      "tag": "string",
+                      "value": "anthropic/auto"
+                    }
+                  },
+                  {
+                    "key": "codex",
+                    "value": {
+                      "tag": "string",
+                      "value": "openai/auto"
+                    }
+                  },
+                  {
+                    "key": "openSource",
+                    "value": {
+                      "tag": "string",
+                      "value": "open-source/auto"
+                    }
+                  },
+                  {
+                    "key": "throwMessage",
+                    "value": {
+                      "tag": "string",
+                      "value": "Unhandled coding agent harness: not-a-harness"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "icons",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "claude",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "type",
+                          "value": {
+                            "tag": "string",
+                            "value": "stub:ClaudeIcon(vI)"
+                          }
+                        },
+                        {
+                          "key": "props",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": []
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "codex",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "type",
+                          "value": {
+                            "tag": "string",
+                            "value": "stub:CodexIcon(yI)"
+                          }
+                        },
+                        {
+                          "key": "props",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": []
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "openSource",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "passthroughDefault",
+                    "value": {
+                      "tag": "string",
+                      "value": "literal-passthrough"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "modelDescriptionDefault",
+              "value": {
+                "tag": "string",
+                "value": "May affect quality and cost of code changes"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

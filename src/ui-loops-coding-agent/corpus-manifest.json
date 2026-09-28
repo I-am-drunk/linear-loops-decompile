@@ -1,0 +1,26 @@
+{
+  "source": "G12 (#225 claim, this slice): src/ui-loops-coding-agent reimplements the coding-agent settings/repo helper statics. Evidence: CodingAgentModelSelect.USYHzowP.js (matrix \u00a7E 'Coding harness' row), executed from the RAW tree in drive mode with five declared stubs (Issue model-layer enums pinned verbatim + throw-on-unpinned, render-only boundary components throw-if-rendered). The golden pins: repo hostName/fullName/label incl. the github.com-vs-other-host branch; sandboxSizes and their vCPU\u00b7memory copy; harnesses order; the nine settings description strings; per-harness label() incl. passthrough; autoPreference() incl. the Unhandled-harness throw message; the harness\u2192icon identity mapping; modelDescription's default branch. Out of scope (unpinned, still GAP-honest): isAvailable, the non-ZDR description branch, icon render output, the observer Select component.",
+  "reimplements": [
+    {
+      "chunkPrefix": "CodingAgentModelSelect",
+      "exports": [
+        {
+          "minified": "r",
+          "meaning": "export{g as r} \u2014 static repo helper class (hostName/fullName/label); reimplemented as CodingAgentRepoHelper",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-helpers.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{y as n} \u2014 static coding-agent settings helper (harnesses, sandboxSizes, descriptions, label, autoPreference, icon mapping, default modelDescription); reimplemented as CodingAgentSettingsHelper (statics only \u2014 isAvailable/non-ZDR branch/observer component out of scope)",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-helpers.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "coding-agent-model-select.statics"
+      ]
+    }
+  ],
+  "goldens": [
+    "coding-agent-model-select.statics"
+  ]
+}

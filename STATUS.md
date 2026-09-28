@@ -163,7 +163,17 @@ clock pinned through the driver; pins the six analytics events + payloads,
 idempotence guards, templateKey gating, the 7-day expiry filter and the
 100-entry cap; clean class byte-matching via the replayed lifecycle; taken
 over stale per the 13:16Z precedent; meter: 78 chunks · 7 golden · 71 GAP).
-H3 family expansion
+G12 ninth golden-backed chunk LANDED 2026-09-28 (src/ui-loops-coding-agent:
+CodingAgentModelSelect — the FIRST §E Coding-harness golden: drive-mode
+statics on the raw tree, five declared stubs (Issue model-layer enums pinned
+verbatim + throw-on-unpinned; render-only boundary throws if rendered);
+pins the repo label github.com-vs-other-host branch, sandbox-size copy,
+harness labels/order, autoPreference incl. its throw message, the
+harness→icon identity mapping, and the nine settings description strings;
+clean reimplementation byte-matching through the declared serializer-v2
+driver, 7/7 tests; out of scope and still honest GAP regions: isAvailable,
+the non-ZDR description branch, the observer component; meter:
+78 chunks · 8 golden · 70 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
