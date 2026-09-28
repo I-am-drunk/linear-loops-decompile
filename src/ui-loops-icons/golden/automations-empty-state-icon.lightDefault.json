@@ -1,0 +1,20 @@
+{
+  "unit": "ui-loops-icons/AutomationsEmptyStateIcon",
+  "chunk": "AutomationsEmptyStateIcon",
+  "stubs": {
+    "ThemeProvider": {
+      "file": "theme-stub-light.mjs",
+      "why": "useTheme needs a React context provider tree; the stub returns the three color tokens this SVG's static branch reads (labelBase/labelMuted/labelFaint), pinned to the H2 corpus-executed lightDefault golden \u2014 the SAME hand-verified stub file the merged #249 golden uses (provenance chains across goldens)."
+    },
+    "useReducedMotion": {
+      "source": "export const t = () => false;",
+      "why": "media-query hook (matchMedia via useSyncExternalStore); pinned to false = animations allowed. The case's props pin isAnimated:false, so p = isAnimated && !reducedMotion is false on EITHER stub value \u2014 the static branch is the case's subject; the animated branch (gradient defs keyed by useId) is out of this golden's scope and stays unverified."
+    }
+  },
+  "notes": "G5: second golden-backed chunk (matrix \u00a7A 'Empty states' row, AutomationsEmptyStateIcon.CWP-Klc2.js). Static branch, lightDefault retina0 parametrization; lightDefault sibling case pins token flow (the #249 pair pattern). Component uses useId/useReducedMotion hooks unconditionally, so this is render-tier: the G1 micro-dispatcher pins useId (the static output never contains it \u2014 the id feeds only the animated branch's gradient urls).",
+  "render": {
+    "export": "AutomationsEmptyStateIconShouldBeLazyLoaded",
+    "exportMeaning": "export{s as AutomationsEmptyStateIconShouldBeLazyLoaded} \u2014 s(props) is the automations empty-state SVG function component (120x120 viewBox, 16 paths in two <g> groups + an animated defs branch behind isAnimated && !reducedMotion). The chunk's only export.",
+    "props": { "isAnimated": false }
+  }
+}
