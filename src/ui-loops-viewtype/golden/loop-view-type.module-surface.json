@@ -1,0 +1,9 @@
+{
+  "unit": "ui-loops-viewtype/LoopViewType",
+  "chunk": "LoopViewType",
+  "notes": "G6: third golden-backed chunk (matrix \u00a7A 'Loop view types' row, LoopViewType.BzPUaBkC.js). Zero-import pure-value chunk: the view-type enum, the display-label map, and the validator. Drive mode (the first real drive-mode golden): the chunk exports two value objects plus a function \u2014 invoke can only observe one function call, so the driver projects the whole module surface: both objects verbatim, plus the validator's value on every enum member and on representative rejects (the empty string, the label-side string 'My loops', the enum KEY 'myLoops' \u2014 a key is not a value \u2014 and undefined). One case pins the full observable behavior; there is no theme or other input DOF.",
+  "drive": {
+    "file": "loop-view-type-driver.mjs",
+    "exportMeaning": "export{n,t as r,e as t} \u2014 e (exported as t) is the view-type enum {myLoops:'my-loops', all:'all'}; t (exported as r) is the display-label map keyed by the enum VALUES {'my-loops':'My loops', all:'All'}; n is the validator: true iff the argument is one of the enum's values (Object.values(e).some). The driver returns {viewTypes, labels, isViewType:{...probes}}."
+  }
+}

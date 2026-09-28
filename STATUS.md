@@ -108,7 +108,12 @@ second golden-backed chunk LANDED 2026-09-28 (AutomationsEmptyStateIcon,
 same matrix row: render-tier via the G1 micro-dispatcher — useReducedMotion
 stubbed false, static branch only, the isAnimated gradient branch explicitly
 out of scope until the T2 renderer — darkDefault+lightDefault golden pair +
-clean reimplementation; meter: 78 chunks · 2 golden · 76 GAP). H3 family expansion
+clean reimplementation; meter: 78 chunks · 2 golden · 76 GAP). G6 third
+golden-backed chunk LANDED 2026-09-28 (LoopViewType, matrix §A loop view
+types: zero-import pure-value chunk, first real DRIVE-mode golden — the
+driver projects the module surface: enum + label map + validator probes;
+with G4 invoke and G5 render this completes a worked example of all three
+case modes; meter: 78 chunks · 3 golden · 75 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

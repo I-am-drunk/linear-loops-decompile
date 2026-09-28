@@ -1,0 +1,27 @@
+{
+  "source": "G6 (#225 claim 03:14Z): src/ui-loops-viewtype reimplements the loop view-type chunk. Evidence: LoopViewType.BzPUaBkC.js (matrix \u00a7A 'Loop view types' row), executed from the RAW tree with NO stubs (zero-import pure-value chunk) via a drive-mode driver that projects the whole module surface. The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "LoopViewType",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{e as t} \u2014 the view-type enum object {myLoops:'my-loops', all:'all'}; reimplemented as LoopViewType",
+          "evidenceLine": "src/ui-loops-viewtype/loop-view-type.ts + golden test"
+        },
+        {
+          "minified": "r",
+          "meaning": "export{t as r} \u2014 the display-label map keyed by enum VALUES {'my-loops':'My loops', all:'All'}; reimplemented as loopViewTypeLabels",
+          "evidenceLine": "src/ui-loops-viewtype/loop-view-type.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{n} \u2014 the validator: true iff the argument is one of the enum's VALUES (Object.values.some); reimplemented as isLoopViewType",
+          "evidenceLine": "src/ui-loops-viewtype/loop-view-type.ts + golden test"
+        }
+      ],
+      "goldens": ["loop-view-type.module-surface"]
+    }
+  ],
+  "goldens": ["loop-view-type.module-surface"]
+}
