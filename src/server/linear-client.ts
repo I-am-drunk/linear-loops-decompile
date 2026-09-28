@@ -169,9 +169,9 @@ export class LinearClient {
    * earned them is still the current one (a response fired before a token
    * swap must not repopulate the new user's budget).
    */
-  private recordBudget(headers: Headers, firedWithToken: string): void {
+  private recordBudget(budget: RateLimitSnapshot, firedWithToken: string): void {
     if (firedWithToken !== this.opts.getToken()) return;
-    this.lastBudget = parseRateLimit(headers);
+    this.lastBudget = budget;
     this.budgetToken = firedWithToken;
   }
 
@@ -181,9 +181,7 @@ export class LinearClient {
    * request window — never overwrite a still-positive budget the headers
    * just reported (CodeRabbit #155).
    */
-  private markExhausted(firedWithToken: string, retryAfterMs?: number): void {
-    if (firedWithToken !== this.opts.getToken()) return;
-    const b = this.lastBudget;
+  private markExhausted(b: RateLimitSnapshot, retryAfterMs?: number): void {
     const now = this.opts.now();
     // As with endpoint exhaustion, Retry-After supplies a usable gate reset
     // when a complexity-limited 429 omits it or reports an expired window.
@@ -270,22 +268,25 @@ export class LinearClient {
         throw new LinearClientError("network", `network: ${e instanceof Error ? e.message : String(e)}`);
       }
 
-      this.recordBudget(res.headers, token);
+      // Keep each response attached to its own snapshot: reading its body may
+      // yield while another response replaces the shared budget.
+      const responseBudget = parseRateLimit(res.headers);
+      this.recordBudget(responseBudget, token);
 
       if (res.status === 429) {
         const retryAfterSec = Number(res.headers.get("retry-after"));
         const retryAfterHeaderMs = Number.isFinite(retryAfterSec) && retryAfterSec > 0
           ? retryAfterSec * 1000 : undefined;
         const retryAfterMs = retryAfterHeaderMs ??
-          retryDelay(parseRateLimit(res.headers), this.opts.now(), true);
+          retryDelay(responseBudget, this.opts.now(), true);
         // We earned a 429 despite the gate: zero the window the headers show
         // exhausted (endpoint/complexity 429s must not nuke a healthy global
         // budget — only the ambiguous case falls back to the request window).
-        this.markExhausted(token, retryAfterHeaderMs);
+        this.markExhausted(responseBudget, retryAfterHeaderMs);
         throw new LinearClientError("rate_limited", "http 429: Linear rate limit", {
           status: 429,
           retryAfterMs,
-          rateLimit: this.budget(),
+          rateLimit: { ...responseBudget },
         });
       }
       // Parse the body BEFORE the generic !res.ok throw: the DOCUMENTED
@@ -306,26 +307,26 @@ export class LinearClient {
       // #155), anything else is belt-and-braces.
       const errors = body?.errors ?? [];
       if (errors.some((e) => e.extensions?.code === "RATELIMITED")) {
-        this.markExhausted(token);
+        this.markExhausted(responseBudget);
         // Use this response's headers: another query may update lastBudget
         // while its JSON body is being read. Only exhausted windows delay a
         // retry; when several are exhausted, wait for the latest known reset.
-        const retryAfterMs = retryDelay(parseRateLimit(res.headers), this.opts.now(), true);
+        const retryAfterMs = retryDelay(responseBudget, this.opts.now(), true);
         throw new LinearClientError("rate_limited", "Linear: RATELIMITED", {
           status: res.ok ? undefined : res.status,
           retryAfterMs,
-          rateLimit: this.budget(),
+          rateLimit: { ...responseBudget },
         });
       }
       if (!res.ok) {
-        throw new LinearClientError("http", `http ${res.status}`, { status: res.status, rateLimit: this.budget() });
+        throw new LinearClientError("http", `http ${res.status}`, { status: res.status, rateLimit: { ...responseBudget } });
       }
       if (body === undefined) {
-        throw new LinearClientError("http", "invalid JSON from Linear", { status: res.status, rateLimit: this.budget() });
+        throw new LinearClientError("http", "invalid JSON from Linear", { status: res.status, rateLimit: { ...responseBudget } });
       }
       if (body.data === undefined || body.data === null) {
         const message = errors.map((e) => e.message ?? "?").join("; ") || "GraphQL error (no message)";
-        throw new LinearClientError("graphql", message, { rateLimit: this.budget() });
+        throw new LinearClientError("graphql", message, { rateLimit: { ...responseBudget } });
       }
       return body.data;
     } finally {
