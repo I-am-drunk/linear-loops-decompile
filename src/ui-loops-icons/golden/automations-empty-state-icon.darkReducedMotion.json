@@ -1,0 +1,20 @@
+{
+  "unit": "ui-loops-icons/AutomationsEmptyStateIcon",
+  "chunk": "AutomationsEmptyStateIcon",
+  "stubs": {
+    "ThemeProvider": {
+      "file": "theme-stub-automations-dark.mjs",
+      "why": "useTheme needs a React context provider tree; the stub pins the four tokens this SVG can read to the H2 corpus-executed darkDefault golden (hand-verified)."
+    },
+    "useReducedMotion": {
+      "file": "reduced-motion-stub-true.mjs",
+      "why": "The corpus hook samples matchMedia('(prefers-reduced-motion: reduce)') — ambient environment the golden must pin. true = the user prefers reduced motion, so isAnimated:true must be OVERRIDDEN back to the static tree. This is the accessibility behavior the matrix row's exactness bar includes."
+    }
+  },
+  "notes": "AutomationsEmptyStateIcon reduced-motion override: isAnimated=true but prefers-reduced-motion wins \u2014 the output must equal the darkStatic tree byte-for-byte (the golden test asserts that equality against the darkStatic expected file).",
+  "render": {
+    "export": "AutomationsEmptyStateIconShouldBeLazyLoaded",
+    "exportMeaning": "export{s as AutomationsEmptyStateIconShouldBeLazyLoaded} \u2014 s({isAnimated?}) is the 120\u00d7120 automations empty-state SVG function component; isAnimated && !useReducedMotion() is false when reduced motion is preferred, so the static tree renders.",
+    "props": { "isAnimated": true }
+  }
+}

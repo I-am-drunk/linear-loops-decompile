@@ -103,7 +103,13 @@ slice copies) with its CLEAN REIMPLEMENTATION landed the same day (pure
 theme->host-element-tree module, byte-matches the golden through the
 tagged-v2 serializer as the declared observation driver; corpus-manifest joins
 the G2 ledger: first golden-backed chunk on the meter, 78 chunks · 1 golden ·
-77 GAP)). H3 family expansion
+77 GAP; lightDefault pair case via #249), and the SECOND golden-backed chunk
+2026-09-28: AutomationsEmptyStateIcon.CWP-Klc2.js — first real-corpus RENDER-
+mode goldens (corpus React useId via the G1 dispatcher), static branch +
+reduced-motion-override branch pinned (two cases, byte-identical trees = the
+override behavior), clean module byte-matches both; its ANIMATED defs branch
+is blocked on a T2 renderer (composite child element) and refuses loudly
+instead of shipping unverified — meter 78 chunks · 2 golden · 76 GAP)). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

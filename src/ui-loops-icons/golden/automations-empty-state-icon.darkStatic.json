@@ -1,0 +1,20 @@
+{
+  "unit": "ui-loops-icons/AutomationsEmptyStateIcon",
+  "chunk": "AutomationsEmptyStateIcon",
+  "stubs": {
+    "ThemeProvider": {
+      "file": "theme-stub-automations-dark.mjs",
+      "why": "useTheme needs a React context provider tree; the stub pins the four tokens this SVG can read to the H2 corpus-executed darkDefault golden (hand-verified). Everything else except useReducedMotion is real corpus code."
+    },
+    "useReducedMotion": {
+      "file": "reduced-motion-stub-false.mjs",
+      "why": "The corpus hook samples matchMedia('(prefers-reduced-motion: reduce)') — ambient environment the golden must pin. false = motion allowed; with no isAnimated prop the component must STILL render the static tree (isAnimated defaults to false), which is what this case pins."
+    }
+  },
+  "notes": "AutomationsEmptyStateIcon static branch, default props: isAnimated defaults to false, so no <defs>, plain token fills. Matrix \u00a7A 'Empty states' row, second chunk. First real-corpus render-mode golden (the component calls corpus React useId, pinned to ':golden:' by the G1 dispatcher).",
+  "render": {
+    "export": "AutomationsEmptyStateIconShouldBeLazyLoaded",
+    "exportMeaning": "export{s as AutomationsEmptyStateIconShouldBeLazyLoaded} \u2014 s({isAnimated?}) is the 120\u00d7120 automations empty-state SVG function component (17 paths in two <g> groups; labelBase/labelMuted/labelFaint fills, defs gradients only when animated).",
+    "props": {}
+  }
+}
