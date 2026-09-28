@@ -40,7 +40,10 @@ test(`clean module byte-matches the corpus-executed golden (whole wire surface)`
     responses: [
       // extraPerResponse must be dropped by the per-response narrowing.
       { elicitationId: `el-1`, extraPerResponse: `dropped`, data: { kind: `multipleChoice`, selectedOptionIndex: 2 } } as never,
-      { elicitationId: `el-2`, data: { kind: `confirmation`, confirmed: false } },
+      // test-only cast: the corpus IGNORES the caller's value (hardcodes true);
+      // the type deliberately refuses `false` so a typed caller cannot send a
+      // negative confirmation — this fixture pins the ignore-quirk.
+      { elicitationId: `el-2`, data: { kind: `confirmation`, confirmed: false } as unknown as ElicitationResponseData },
       { elicitationId: `el-3`, data: { kind: `entitySelection`, selectedEntityIds: [`ent-a`, `ent-b`] } },
       { elicitationId: `el-4`, data: { kind: `mcpServerConnection`, integrationId: `int-9` } },
     ],

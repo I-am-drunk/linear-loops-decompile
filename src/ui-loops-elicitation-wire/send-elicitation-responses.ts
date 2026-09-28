@@ -31,7 +31,12 @@ export const elicitationResponseKind = {
 
 export type ElicitationResponseData =
   | { kind: `multipleChoice`; selectedOptionIndex: number }
-  | { kind: `confirmation`; confirmed?: boolean }
+  // The corpus wire serializer HARDCODES confirmed: true (verified: `confirmed:!0`),
+  // so the type refuses a negative confirmation a typed caller could mistake
+  // for a refusal path (CodeRabbit finding on #270); the golden's `false`
+  // fixture drives the CORPUS code (which ignores it) and our test casts
+  // explicitly to keep pinning that quirk.
+  | { kind: `confirmation`; confirmed?: true }
   | { kind: `entitySelection`; selectedEntityIds: string[] }
   | { kind: `mcpServerConnection`; integrationId: string };
 
