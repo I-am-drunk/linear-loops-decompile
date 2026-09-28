@@ -24,6 +24,16 @@ export type ProjectedNode = {
   props: Record<string, unknown>;
 };
 
+/**
+ * The node vocabulary this module operates in: the PROJECTED space the golden
+ * was recorded in (strings, numbers, null/undefined, projected elements, and
+ * arrays thereof) — NOT raw React elements. A raw host element passed here
+ * would serialize differently than the golden driver's recursive projection
+ * (CodeRabbit finding on #274), so the types refuse it: callers project
+ * first, exactly as the observation driver does.
+ */
+export type ProjectedChild = string | number | boolean | null | undefined | ProjectedNode | ProjectedChild[];
+
 const el = (element: string, props: Record<string, unknown>): ProjectedNode => ({ element, key: null, props });
 
 /** The seam markers the golden pins (ContextualMenuActions stubs, G13 style). */
@@ -56,9 +66,9 @@ const SX_ROW = { kAzted: `sx-u0aao5`, $$css: true };
 
 export interface SettingsSectionProps {
   id?: string;
-  title?: unknown;
-  accessory?: unknown;
-  children?: unknown;
+  title?: ProjectedChild;
+  accessory?: ProjectedChild;
+  children?: ProjectedChild;
   ref?: unknown;
 }
 
@@ -95,7 +105,7 @@ export interface SettingsCardProps {
   id?: string;
   flush?: boolean;
   sx?: unknown;
-  children?: unknown;
+  children?: ProjectedChild;
   ref?: unknown;
 }
 
@@ -112,12 +122,12 @@ export function SettingsCard(props: SettingsCardProps): ProjectedNode {
 }
 
 export interface SettingsLabeledRowProps {
-  title?: unknown;
-  description?: unknown;
+  title?: ProjectedChild;
+  description?: ProjectedChild;
   labelFor?: string;
   descriptionId?: string;
   divided?: boolean;
-  children?: unknown;
+  children?: ProjectedChild;
 }
 
 /** Corpus export `a` (chunk-local `l`): the labeled settings row. */
@@ -170,7 +180,7 @@ export function SettingsLabeledRow(props: SettingsLabeledRowProps): ProjectedNod
 
 export interface SettingsDescriptionRowProps {
   divided?: boolean;
-  children?: unknown;
+  children?: ProjectedChild;
 }
 
 /** Corpus export `i` (chunk-local `u`): the description-only row. */
