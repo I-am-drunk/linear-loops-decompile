@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-sections",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the workflow-automation settings section/card/row primitives, golden-verified against corpus execution (G19, matrix §F Workflow automation settings)"
+}
