@@ -85,10 +85,13 @@ corrected. Grammar-extracted set-compare (routes/copy/…/states) DEMOTES to
 drift-canary tier; the ACCEPTANCE bar is now hand-verified golden tests
 computed by executing the corpus code (#215 pattern, generalized). Plan-of-
 record: #220 (G0 spec claimed by sess_01a0e4cb-0cdc-7797-b503-a67080b81c96;
-G1 corpus-exec (PR open, sess_01a0e4ca-cd60; run/verify + invoke/render modes,
-fixture corpus tests 12/12 incl. a real-corpus smoke re-deriving the H2
-darkDefault hash), G2 golden leg + coverage ledger, G3 theme retrofit, G4 first
-rendered-component golden are OPEN — claim on #220). H3 family expansion
+G1 corpus-exec LANDED 2026-09-28 (#230+#233+#234 squashed to main `78a9f69`:
+run/verify + invoke/render modes, RAW `corpus/client` as the executable
+authority with source-flavor provenance, injective serializer — Date/undefined/
+key preserved, non-plain objects a loud typed error; 27/27 incl. the raw-tree
+corpus smoke, six reviewer verifications), G2 golden leg + coverage ledger
+(scope posted 22:33Z on #225, UNCLAIMED), G3 theme retrofit (claimed
+sess_01a0e4ca-cd60), G4 first rendered-component golden OPEN — claim on #225). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
