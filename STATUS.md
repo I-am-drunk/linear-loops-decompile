@@ -260,7 +260,19 @@ three applicable closures probed (flag seam scripted both ways + flag-key
 identity, the two-feature conjunction pinned incl. agentAutomations-first
 ask order, environments granted/denied); observer components declared GAP
 (T2/T3); meter: 81 chunks · 17 golden ·
-64 GAP). G21 nineteenth golden-backed chunk LANDED 2026-09-28
+64 GAP). G22 nineteenth golden-backed chunk LANDED 2026-09-28
+(src/ui-loops-template-launcher: useLoopTemplateLauncher export r — first
+golden on the §A Template library + launcher row: the template-card
+presenter statics in drive mode; pins the full trigger-copy switch
+(Hourly/Daily/Weekly + On new issue/On triage/On issue change + both
+UnreachableCaseError throw paths executing REAL) and the icon-color pipeline
+(toCss RGB ∘ fromCss on hex + lch() fixtures, plus the fromCss [0,0,0]
+fallback for out-of-grammar formats — real corpus ColorConverter executes,
+provenance chains to the H2 goldens; the reimplementation composes our
+golden-backed src/ui-theme color math); seventeen linking seams as declared
+throw-on-use bombs (the G20 wide-linking pattern); exports n/t (builders,
+launcher hook) honest GAP pending T2/store tiers; meter: 81 chunks ·
+18 golden · 63 GAP). G21 nineteenth golden-backed chunk LANDED 2026-09-28
 (CodingAgentSettingsPage.C73HMBrM.js — the re-export-shim pattern first
 exercised (the G7 scouting note: cheapest GAP chunk once its target is
 golden-backed): the shim executes as entry over the REAL G20 target chunk,
