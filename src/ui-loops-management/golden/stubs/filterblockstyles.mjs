@@ -1,0 +1,10 @@
+// Hand-written linking-only stub for FilterBlockStyles.BPSPHYHd.js (G23 case; original code).
+// Read only inside the entry's component/hook bodies (the declared-GAP
+// page/component exports); every use throws loudly.
+const a = new Proxy(function(){}, { get(_t, k){ if (typeof k === `symbol` || k === `displayName`) return undefined; throw new Error(`G23 stub: FilterBlockStyles.a.${String(k)} read — component-body-only`); }, apply(){ throw new Error(`G23 stub: FilterBlockStyles.a called — component-body-only`); } });
+const i = new Proxy(function(){}, { get(_t, k){ if (typeof k === `symbol` || k === `displayName`) return undefined; throw new Error(`G23 stub: FilterBlockStyles.i.${String(k)} read — component-body-only`); }, apply(){ throw new Error(`G23 stub: FilterBlockStyles.i called — component-body-only`); } });
+const l = new Proxy(function(){}, { get(_t, k){ if (typeof k === `symbol` || k === `displayName`) return undefined; throw new Error(`G23 stub: FilterBlockStyles.l.${String(k)} read — component-body-only`); }, apply(){ throw new Error(`G23 stub: FilterBlockStyles.l called — component-body-only`); } });
+const o = new Proxy(function(){}, { get(_t, k){ if (typeof k === `symbol` || k === `displayName`) return undefined; throw new Error(`G23 stub: FilterBlockStyles.o.${String(k)} read — component-body-only`); }, apply(){ throw new Error(`G23 stub: FilterBlockStyles.o called — component-body-only`); } });
+const r = new Proxy(function(){}, { get(_t, k){ if (typeof k === `symbol` || k === `displayName`) return undefined; throw new Error(`G23 stub: FilterBlockStyles.r.${String(k)} read — component-body-only`); }, apply(){ throw new Error(`G23 stub: FilterBlockStyles.r called — component-body-only`); } });
+const u = new Proxy(function(){}, { get(_t, k){ if (typeof k === `symbol` || k === `displayName`) return undefined; throw new Error(`G23 stub: FilterBlockStyles.u.${String(k)} read — component-body-only`); }, apply(){ throw new Error(`G23 stub: FilterBlockStyles.u called — component-body-only`); } });
+export { a, i, l, o, r, u };
