@@ -56,6 +56,9 @@ Done 2026-09-27:
   now use the same exhausted-window calculation: simultaneous exhaustion waits
   for the latest reset, and missing/expired endpoint resets do not borrow a
   healthy global window. Nine additional fake-fetch regressions cover this.
+  Complexity-limited 429s also backfill missing/expired resets from Retry-After
+  so preflight blocks until that delay expires. Three fake-fetch cases cover
+  missing, expired, and preserved future resets, including gate reopening.
 
 Now:
 - R4.1 loops domain slice: server half claimed by sess_01a0e392-f0c2-7545-
