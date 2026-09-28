@@ -1,5 +1,5 @@
 {
-  "source": "G25 (#225 claim): src/ui-settings-issuers reimplements the agent-issuers settings page metadata. Evidence: AgentIssuersSettingsPage.BuFJumP7.js export pageMetadata (matrix \u00a7F 'Issuers' row, first golden) \u2014 a pure module-level literal {id, title, description, sections:{configured:{id,title}, add:{id,title}}}, the G14 recipe with a sections-bearing shape variation: NO keywords member, NO applicable, NO scope parameter (per-level ownKeys projections pin the absences). The Component export (suspenseObserver-wrapped issuers management page) is declared GAP pending T2/T3; its module-eval displayName is golden-pinned. The clean module byte-matches through the tagged-v2 serializer.",
+  "source": "G25 (#225 claim): src/ui-settings-issuers reimplements the agent-issuers settings page metadata. Evidence: AgentIssuersSettingsPage.BuFJumP7.js export pageMetadata (matrix \u00a7F 'Issuers' row, first golden) \u2014 a pure module-level literal {id, title, description, sections:{configured:{id,title}, add:{id,title}}}, the G14 recipe with a sections-bearing shape variation: NO keywords member, NO applicable, NO scope parameter (per-level ownKeys projections pin the absences). The Component export (suspenseObserver-wrapped issuers management page) is declared GAP pending T2/T3; its module-eval displayName is golden-pinned. The clean module byte-matches through the tagged-v2 serializer. || G26 (#225 claim 2026-09-28 17:54Z, sess_01a0e901-88e4-77f4-88b7-0e725d577f01): src/ui-settings-issuers reimplements the new-agent-issuer settings page metadata. Evidence: NewAgentIssuerSettingsPage.iSpIpxtS.js (matrix \u00a7F 'Issuers' row, second chunk), executed from the RAW tree via a drive-mode driver projecting the pure module-level pageMetadata literal verbatim (two keys \u2014 the smallest \u00a7F metadata shape; ownKeys pins the absence of description/keywords/sections) plus the Component export's module-eval displayName; 17 declared stubs (three module-eval wrappers return values \u2014 react interop, jsx-runtime factory, suspenseObserver identity \u2014 the rest linking-only throw-on-use). The route Component body (useSearchParams/useStore keying the issuer form) and the module-LOCAL callback-params class (static parse/redirect URL validation) are NOT covered: render/effect/store-tier and unexported module-locals respectively \u2014 both wait for a Component-tier golden (T2/T3).",
   "reimplements": [
     {
       "chunkPrefix": "AgentIssuersSettingsPage",
@@ -18,9 +18,28 @@
       "goldens": [
         "agent-issuers.metadata"
       ]
+    },
+    {
+      "chunkPrefix": "NewAgentIssuerSettingsPage",
+      "exports": [
+        {
+          "minified": "pageMetadata",
+          "meaning": "export{k as pageMetadata} \u2014 a pure module-level two-key literal {id:`new-agent-issuer`, title:`Add approved issuer`} \u2014 no description, no keywords, no sections (each absence pinned by the golden's ownKeys-verbatim projection). Reimplemented as newAgentIssuerPageMetadata",
+          "evidenceLine": "src/ui-settings-issuers/new-agent-issuer-metadata.ts + golden test"
+        },
+        {
+          "minified": "Component",
+          "meaning": "export{A as Component} \u2014 the outer route component (useSearchParams + useStore, keying the suspenseObserver-wrapped issuer form on `${organization.id}:${search}`); its module-eval displayName ('NewAgentIssuerSettingsPage') IS golden-pinned, but the component body (and the module-local callback-params class D with its URL-validation branches, unexported and unreachable from the module surface) is NOT T1-coverable \u2014 declared GAP pending T2/T3",
+          "evidenceLine": "displayName pinned in the golden; body + module-locals out of scope \u2014 see source note"
+        }
+      ],
+      "goldens": [
+        "new-agent-issuer.metadata"
+      ]
     }
   ],
   "goldens": [
-    "agent-issuers.metadata"
+    "agent-issuers.metadata",
+    "new-agent-issuer.metadata"
   ]
 }

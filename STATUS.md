@@ -311,7 +311,20 @@ pin the absences) + the Component's module-eval displayName; the
 suspenseObserver-wrapped issuers management page (workloadIssuers
 hydration, limit gating, remove-issuer dialog) stays declared GAP (T2/T3);
 12 linking-only bomb seams + 3 module-eval wrapper stubs, closure 17;
-meter: 81 chunks · 23 golden · 58 GAP — re-slots against G24, in flight).
+meter: 81 chunks · 23 golden · 58 GAP).
+G26 golden-backed chunk LANDED 2026-09-28
+(src/ui-settings-issuers: NewAgentIssuerSettingsPage export pageMetadata —
+the §F Issuers row's second chunk: the G14 pure-literal recipe, a two-key
+literal ({id:'new-agent-issuer', title:'Add approved issuer'} — the
+smallest §F metadata shape; ownKeys pins the absence of
+description/keywords/sections) + the Component's module-eval displayName;
+17 declared stubs (react interop / jsx factory / suspenseObserver identity
+return values, fourteen linking-only bombs); the route Component body AND
+the module-LOCAL callback-params class (static parse/redirect URL
+validation incl. the allowed-return-origins check — unexported,
+unreachable from the module surface, the AiConversationCancel precedent)
+stay declared GAP pending T2/T3; clean reimplementation byte-matching;
+meter: 81 chunks · 24 golden · 57 GAP).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
