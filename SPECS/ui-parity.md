@@ -103,8 +103,9 @@ Plus two non-set facts:
     popover | drawer | …), exact-compared: a route can be exact while the
     primitive is wrong. Extracted (#213 slice 1) from two unambiguous
     compiled signals only: `pageMetadata` inside an `export { … }` list (the
-    routed-page chunk contract; import sites don't count) → `page`; a
-    `role: `dialog`` JSX prop → `dialog`. No signal, or conflicting signals
+    routed-page chunk contract; import sites don't count, and the identifier
+    is word-boundary matched) → `page`; a ``role: `dialog``` JSX prop in
+    property position → `dialog`. No signal, or conflicting signals
     across a surface's chunk builds → no fact (`onRequestClose` alone is NOT
     a signal — openers like `AutomationNewButton` carry it too; unverifiable
     stays unmarked, never guessed).

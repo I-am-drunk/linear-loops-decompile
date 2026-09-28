@@ -138,6 +138,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         let mut surface = Surface::default();
         // order chains per matched chunk (a surface can match several chunk
         // builds; the longest chain wins — see below)
+        let mut primitive_conflict = false;
         let mut order_candidates: Vec<Vec<String>> = Vec::new();
         // chunk files for this surface pattern (hashes rotate; match by prefix)
         let mut matched_any = false;
@@ -164,14 +165,16 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             // (a surface can split across hash-rotated chunk builds).
             if let Some(p) = extract_primitive(&text) {
                 match &surface.primitive {
-                    Some(existing) if existing != &p => surface.primitive = Some(String::new()),
+                    Some(existing) if existing != &p => primitive_conflict = true,
                     Some(_) => {}
                     None => surface.primitive = Some(p),
                 }
             }
         }
-        // the empty marker means "conflicting signals across chunks" — no fact
-        if surface.primitive.as_deref() == Some("") {
+        // Conflicting signals across a surface's chunk builds = no fact
+        // (audit rule: never guess). Tracked explicitly, not via a sentinel
+        // value that could collide with a real extracted string (#229 review).
+        if primitive_conflict {
             surface.primitive = None;
         }
         // A surface may match several chunk builds of the same component
@@ -817,7 +820,7 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
 /// AutomationNewButton also carry — is NO fact: an unverifiable value stays
 /// unmarked, never guessed (audit rule; SPECS/ui-parity.md).
 fn extract_primitive(text: &str) -> Option<String> {
-    let is_dialog = text.contains("role: `dialog`");
+    let is_dialog = has_dialog_jsx_prop(text);
     // pageMetadata must appear inside an `export { … }` list, not merely as a
     // word (dozens of chunks IMPORT it; the routed page chunk EXPORTS it).
     let is_page = exports_page_metadata(text);
@@ -828,14 +831,58 @@ fn extract_primitive(text: &str) -> Option<String> {
     }
 }
 
-/// True when `pageMetadata` appears inside an `export { … }` list.
+/// True when `role: `dialog`` occurs in PROPERTY POSITION inside an object
+/// literal: the nearest non-whitespace byte before it is `{` or `,` and the
+/// nearest after is `,` or `}`. A whole-chunk substring also matches string
+/// constants and comments (#229 review); property position excludes both
+/// (a string match is preceded by a quote, a line comment by its own text).
+/// A distance-bounded jsx( opener window was tried and rejected: AgentPanel's
+/// prop sits >300 bytes into a large animation-props object, and any window
+/// size is a guess. Measured on 1.32.4: identical result set (2 dialog
+/// surfaces: AutomationNewDialog, AgentPanel), zero false positives.
+fn has_dialog_jsx_prop(text: &str) -> bool {
+    let needle = "role: `dialog`";
+    let mut from = 0;
+    while let Some(rel) = text[from..].find(needle) {
+        let at = from + rel;
+        let before_ok = text[..at]
+            .chars()
+            .rev()
+            .find(|c| !c.is_whitespace())
+            .is_some_and(|c| c == '{' || c == ',');
+        let after_ok = text[at + needle.len()..]
+            .chars()
+            .find(|c| !c.is_whitespace())
+            .is_some_and(|c| c == ',' || c == '}');
+        if before_ok && after_ok {
+            return true;
+        }
+        from = at + needle.len();
+    }
+    false
+}
+
+/// True when the exact identifier `pageMetadata` appears inside an
+/// `export { … }` list. Word-boundary matched: an alias such as
+/// `as pageMetadataV2` is a DIFFERENT export and not the routed-page
+/// contract (#229 review).
 fn exports_page_metadata(text: &str) -> bool {
     let mut rest = text;
     while let Some(idx) = rest.find("export {") {
         let after = &rest[idx + 8..];
         let Some(end) = after.find('}') else { return false };
-        if after[..end].contains("pageMetadata") {
-            return true;
+        let list = &after[..end];
+        let mut search = 0;
+        while let Some(rel) = list[search..].find("pageMetadata") {
+            let at = search + rel;
+            let before_ok = at == 0
+                || !list[..at].chars().next_back().is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+            let tail = &list[at + "pageMetadata".len()..];
+            let after_ok = !tail.chars().next().is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+            if before_ok && after_ok {
+                return true;
+            }
+            search = at + "pageMetadata".len();
         }
         rest = &after[end..];
     }
