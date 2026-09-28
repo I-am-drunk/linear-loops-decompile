@@ -1,0 +1,31 @@
+{
+  "unit": "ui-loops-coding-agent/CodingAgentHelpers",
+  "chunk": "CodingAgentModelSelect",
+  "stubs": {
+    "Issue": {
+      "file": "issue-enums-stub.mjs",
+      "why": "the model-layer chunk's module level needs browser globals (self.FormData via types.7f0h45Sh.js) and cannot execute under the runner; the entry consumes five pure VALUE exports (three enum/const objects pinned verbatim from the raw source, hand-verified) plus two surfaces the driven statics never reach (workspace-permission enum, CodingAgentPreferencesHelper) which THROW on any read, so corpus drift that adds a read fails loudly."
+    },
+    "Select": {
+      "source": "const s=n=>{const f=()=>{throw new Error(`stubbed Select member called: ${n}`)};f.displayName=n;return f};export const t={Option:s(`stub:Select.Option`),Group:s(`stub:Select.Group`)};",
+      "why": "render-only Select primitives consumed by the (not driven) observer component's option-list builder; throws if rendered."
+    },
+    "mobxreactlite": {
+      "source": "export const t=(c)=>c;",
+      "why": "observer() HOC identity-passthrough; the wrapped component is render-tier and not driven by this golden, and the identity wrap keeps the module-level `b.displayName = ...` assignment executing real."
+    },
+    "PullRequestsFeatureHelper": {
+      "source": "export const t=new Proxy({},{get(_,k){throw new Error(`unpinned PullRequestsFeatureHelper read: ${String(k)}`)}});",
+      "why": "consumed only by repo.isAvailable (an integration-graph predicate, declared out of this golden's scope); throws on any read so a scope violation cannot pass silently."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "render-boundary-stubs.mjs",
+      "why": "render-only import boundary (permission select, external link, the two harness icon components); the driven statics reference the icons only as element TYPES, which the driver projects to the stubs' declared identities — the pinned fact is the harness→icon mapping, not the icons' render output. Full name pinned: the corpus carries a hash-rotated duplicate (ContextualMenuActions.Bcp3eWHc.js); the entry imports the Dlg9Oa2U build."
+    }
+  },
+  "drive": {
+    "file": "coding-agent-model-select-driver.mjs",
+    "exportMeaning": "export{y as n, g as r, b as t} — g (exported r) is the static repo helper (hostName/fullName/label with the github.com-vs-other-host branch); y (exported n) is the static coding-agent settings helper (sandboxSizes incl. the vCPU/memory copy, harnesses order, nine settings description strings, per-harness label() incl. passthrough default, autoPreference() incl. the Unhandled-harness throw message, icon() as element-type identity, modelDescription()'s default branch); b (exported t) is the mobx-observer Select component, render-tier, NOT driven. The driver projects the driven surface only."
+  },
+  "notes": "G12: first golden-backed chunk on matrix §E (Coding harness row). Copy-dense pure-value surface driven in the G6 pattern: both label() branches per harness plus the throw path are pinned; the vCPU·memory copy and the nine settings descriptions are verbatim corpus strings. OUT of scope, staying unpinned on the ledger: repo.isAvailable, modelDescription's non-ZDR branch (needs the stubbed CodingAgentPreferencesHelper + rendered prose), and the observer Select component (render-tier)."
+}

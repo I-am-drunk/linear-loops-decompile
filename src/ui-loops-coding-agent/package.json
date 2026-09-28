@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-coding-agent",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the coding-agent settings/repo helper statics, golden-verified against corpus execution (G12, matrix §E Coding harness)"
+}
