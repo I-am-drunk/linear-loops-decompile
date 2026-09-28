@@ -223,7 +223,18 @@ reimplementation joins src/ui-settings-guidance; route component body honest
 GAP; scouting note: TeamAgentsSettingsPage is NOT this recipe (metadata
 embeds a descriptionElement JSX fragment + a sections map calling the G11
 factory at module eval — needs a jsx-capturing stub or T2, stays GAP);
-meter: 79 chunks · 14 golden · 65 GAP). H3 family expansion
+meter: 79 chunks · 14 golden · 65 GAP). G18 sixteenth golden-backed chunk
+LANDED 2026-09-28 (TeamAgentsSettingsPage pageMetadata, fourth chunk of the
+§F family — the 'blocked' jsx-fragment metadata recipe proven T1-coverable:
+the REAL corpus jsx-runtime builds the descriptionElement fragment at module
+eval (declared {fragment:[children]} projection; DocsLink seam as a marker
+with href/children in the byte oracle, the href pinned from the raw Issue
+chunk literal), and sections.agentGuidance is the OUTPUT of the REAL
+golden-backed G11 factory executing inside the golden — the first
+cross-chunk provenance chain; page-component exports declared honest GAP
+(T2); this recipe unblocks CodingAgentSettingsPage.lcMyXnM7.js (same
+fragment + sections shape); meter: 79 chunks · 15 golden · 64 GAP).
+H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
