@@ -141,6 +141,16 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
   merged into it; server 26/26). Stays open per the #157 freeze.
 
+Product contract clarification (2026-09-28, owner directive): the rebuild is an
+original **Loops-only** product. The sidebar contains Loops, only the Loops-required
+views (such as Runs/Templates as built), and our Settings—not Linear tracker navigation
+or Linear Settings. The connected account's PAT/OAuth is the documented data-plane
+connection for reads/write-back. The golden goose is a separately managed user-session
+bridge to normal Linear chat and remains the primary brain; external inference is
+fallback-only. This changes scope wording and architecture, not the EXACT UI/behavior
+bar for the Loops surfaces or the public-code legal line. Binding detail:
+`SPECS/product-contract.md`; boot-level rule: `AGENTS.md`.
+
 Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
 trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by
 `parity check`.
