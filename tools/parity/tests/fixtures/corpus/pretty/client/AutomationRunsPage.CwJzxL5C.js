@@ -30,3 +30,6 @@ const cls = isActive ? `activeRow` : `row`;
 const expr = ok ? `Done` : fallbackFn();
 const compact = tight?`Archived view`:`Active view`;
 const optional = maybe?.thing ?? `Not copy here`;
+export {
+  t as Component, e as pageMetadata
+};

@@ -26,6 +26,8 @@ pub struct ExtractStats {
     pub order: usize,
     /// state-alternate facts across surfaces (H3 #213 slice 3)
     pub states: usize,
+    /// surfaces that carry a primitive fact (H3 #213 slice 1)
+    pub primitives: usize,
     /// (passed, total) when a canary list was enforced.
     pub canaries: Option<(usize, usize)>,
 }
@@ -129,13 +131,14 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
     let components = matrix_components(&matrix_text);
 
     let client_dir = corpus.join("pretty/client");
-    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, canaries: None };
+    let mut stats = ExtractStats { surfaces: 0, chunks_read: 0, routes: 0, copy: 0, edges: 0, tokens: 0, order: 0, states: 0, primitives: 0, canaries: None };
     let mut unmatched: Vec<String> = Vec::new();
 
     for (comp, exact) in &components {
         let mut surface = Surface::default();
         // order chains per matched chunk (a surface can match several chunk
         // builds; the longest chain wins — see below)
+        let mut primitive_conflict = false;
         let mut order_candidates: Vec<Vec<String>> = Vec::new();
         // chunk files for this surface pattern (hashes rotate; match by prefix)
         let mut matched_any = false;
@@ -158,6 +161,21 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
             surface.structure.extend(extract_edges(&text));
             surface.tokens.extend(extract_tokens(&text));
             order_candidates.extend(extract_order(&text));
+            // primitive: keep the signal, tracking cross-chunk conflicts
+            // (a surface can split across hash-rotated chunk builds).
+            if let Some(p) = extract_primitive(&text) {
+                match &surface.primitive {
+                    Some(existing) if existing != &p => primitive_conflict = true,
+                    Some(_) => {}
+                    None => surface.primitive = Some(p),
+                }
+            }
+        }
+        // Conflicting signals across a surface's chunk builds = no fact
+        // (audit rule: never guess). Tracked explicitly, not via a sentinel
+        // value that could collide with a real extracted string (#229 review).
+        if primitive_conflict {
+            surface.primitive = None;
         }
         // A surface may match several chunk builds of the same component
         // (hash-rotated duplicates); their order chains are the same fact.
@@ -181,6 +199,7 @@ pub fn run(corpus: &Path, matrix: &Path, out: &Path, canaries: Option<&Path>) ->
         stats.tokens += surface.tokens.len();
         stats.order += usize::from(!surface.order.is_empty());
         stats.states += surface.states.len();
+        stats.primitives += usize::from(surface.primitive.is_some());
         facts.surfaces.insert(comp.clone(), surface);
         stats.surfaces += 1;
     }
@@ -792,6 +811,84 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
 
 /// Component containment edges: `from "./Child.<hash>.js"` inside a chunk is a
 /// real usage edge "Parent>Child". Only Capitalized children (components).
+/// The surface's interaction primitive, from unambiguous compiled signals
+/// (issue #213 slice 1, corpus recon on Linear 1.32.4):
+/// - `export { … as pageMetadata }` — the routed-page chunk contract
+///   (LoopsManagementPage, LoopLimitsPage, the settings pages) → "page".
+/// - a `role: `dialog`` JSX prop (AutomationNewDialog, AgentPanel) → "dialog".
+/// Anything else — including `onRequestClose` alone, which openers like
+/// AutomationNewButton also carry — is NO fact: an unverifiable value stays
+/// unmarked, never guessed (audit rule; SPECS/ui-parity.md).
+fn extract_primitive(text: &str) -> Option<String> {
+    let is_dialog = has_dialog_jsx_prop(text);
+    // pageMetadata must appear inside an `export { … }` list, not merely as a
+    // word (dozens of chunks IMPORT it; the routed page chunk EXPORTS it).
+    let is_page = exports_page_metadata(text);
+    match (is_page, is_dialog) {
+        (true, false) => Some("page".to_string()),
+        (false, true) => Some("dialog".to_string()),
+        _ => None, // neither, or both (ambiguous): no fact, never a guess
+    }
+}
+
+/// True when `role: `dialog`` occurs in PROPERTY POSITION inside an object
+/// literal: the nearest non-whitespace byte before it is `{` or `,` and the
+/// nearest after is `,` or `}`. A whole-chunk substring also matches string
+/// constants and comments (#229 review); property position excludes both
+/// (a string match is preceded by a quote, a line comment by its own text).
+/// A distance-bounded jsx( opener window was tried and rejected: AgentPanel's
+/// prop sits >300 bytes into a large animation-props object, and any window
+/// size is a guess. Measured on 1.32.4: identical result set (2 dialog
+/// surfaces: AutomationNewDialog, AgentPanel), zero false positives.
+fn has_dialog_jsx_prop(text: &str) -> bool {
+    let needle = "role: `dialog`";
+    let mut from = 0;
+    while let Some(rel) = text[from..].find(needle) {
+        let at = from + rel;
+        let before_ok = text[..at]
+            .chars()
+            .rev()
+            .find(|c| !c.is_whitespace())
+            .is_some_and(|c| c == '{' || c == ',');
+        let after_ok = text[at + needle.len()..]
+            .chars()
+            .find(|c| !c.is_whitespace())
+            .is_some_and(|c| c == ',' || c == '}');
+        if before_ok && after_ok {
+            return true;
+        }
+        from = at + needle.len();
+    }
+    false
+}
+
+/// True when the exact identifier `pageMetadata` appears inside an
+/// `export { … }` list. Word-boundary matched: an alias such as
+/// `as pageMetadataV2` is a DIFFERENT export and not the routed-page
+/// contract (#229 review).
+fn exports_page_metadata(text: &str) -> bool {
+    let mut rest = text;
+    while let Some(idx) = rest.find("export {") {
+        let after = &rest[idx + 8..];
+        let Some(end) = after.find('}') else { return false };
+        let list = &after[..end];
+        let mut search = 0;
+        while let Some(rel) = list[search..].find("pageMetadata") {
+            let at = search + rel;
+            let before_ok = at == 0
+                || !list[..at].chars().next_back().is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+            let tail = &list[at + "pageMetadata".len()..];
+            let after_ok = !tail.chars().next().is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+            if before_ok && after_ok {
+                return true;
+            }
+            search = at + "pageMetadata".len();
+        }
+        rest = &after[end..];
+    }
+    false
+}
+
 fn extract_edges(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let mut rest = text;

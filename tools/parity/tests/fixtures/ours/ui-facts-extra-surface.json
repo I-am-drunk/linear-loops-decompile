@@ -10,7 +10,8 @@
       "structure": [
         "LoopTemplateLibrary"
       ],
-      "tokens": []
+      "tokens": [],
+      "primitive": "dialog"
     },
     "AutomationRunsPage": {
       "routes": [],
@@ -39,7 +40,8 @@
       "states": [
         "alt:Archived view|Active view",
         "alt:No matching runs|No runs to show"
-      ]
+      ],
+      "primitive": "page"
     },
     "app.routes": {
       "routes": [

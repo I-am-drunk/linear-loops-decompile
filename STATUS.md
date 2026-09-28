@@ -130,9 +130,11 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   values into the parity theme-values family (#162 ramp).
 - H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
   as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
-  grammars, 2 chains on 1.32.4); states family in PR #217 (ternary-alternate
-  grammar, 45 alt facts on 1.32.4, states canaries); primitive claimed on
-  #213; behavior open.
+  grammars, 2 chains on 1.32.4); states family SHIPPED via #217
+  (ternary-alternate grammar, states canaries); primitive family SHIPPED via
+  #229 (pageMetadata-export/role:dialog signals, 8 primitives on 1.32.4 —
+  drift-canary tier per the #220 pivot); behavior/bindings/icons ON HOLD per
+  the pivot.
 - H4 DONE (issue #185, closed): docs-site digests complete to the 26-page
   sitemap bar (#184/#190/#197 merged); citation hard rule + docs drift-check
   leg + reviewer two-source checklist merged (#196); agent-signals +
