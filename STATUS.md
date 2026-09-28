@@ -95,7 +95,9 @@ corpus smoke, six reviewer verifications), G2 coverage ledger LANDED 2026-09-28
 (#237: tools/coverage — matrix x corpus-manifests x goldens ->
 golden|improvement|GAP per surface + off-matrix table; corpus-free `coverage
 check` wired as a never-vacuous ci/check-ui.sh leg; ui-theme reference
-manifest), G3 theme retrofit (claimed sess_01a0e4ca-cd60), G4 first
+manifest) — hardened same day: a multi-entry manifest must
+scope goldens per entry (consistency ERROR + GAP otherwise; #237 review repro 4,
+fix-forward PR), G3 theme retrofit (claimed sess_01a0e4ca-cd60), G4 first
 rendered-component golden LANDED 2026-09-28 (src/ui-loops-icons:
 AgentAutomationEmptyStateIcon darkDefault — corpus-executed, hand-verified vs
 source, serializer-v2 bytes, TZ/locale-invariant; the pattern every rendered
