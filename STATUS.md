@@ -155,7 +155,15 @@ never consulted while reviews are disabled) + an argument-identity pin
 (store.user object + literal 'review'); one throw-on-other-reads stub at the
 helper seam pinned from its hand-verified raw source; clean reimplementation
 byte-matching; reclaimed after the 03:27Z claim went silent ~10h with no
-branch; meter: 78 chunks · 6 golden · 72 GAP). H3 family expansion
+branch; meter: 78 chunks · 6 golden · 72 GAP). G8 eighth golden-backed
+chunk LANDED 2026-09-28 (src/ui-loops-creation-tracker: LoopCreationTracker,
+matrix §A AI-assisted loop compose — the FIRST stateful/behavioral golden:
+drive-mode class lifecycle with declared ClientStorage/uuid stubs and the
+clock pinned through the driver; pins the six analytics events + payloads,
+idempotence guards, templateKey gating, the 7-day expiry filter and the
+100-entry cap; clean class byte-matching via the replayed lifecycle; taken
+over stale per the 13:16Z precedent; meter: 78 chunks · 7 golden · 71 GAP).
+H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-creation-tracker",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the loop-creation analytics tracker, golden-verified against corpus execution (G8, matrix \u00a7A AI-assisted loop compose)"
+}
