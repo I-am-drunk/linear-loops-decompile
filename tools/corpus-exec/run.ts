@@ -6,7 +6,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
@@ -92,9 +92,28 @@ export function loadCase(path: string): CaseFile {
   return c;
 }
 
-function gitHead(dir: string): string | null {
+/**
+ * The corpus provenance head (issue #250). Resolution ladder:
+ *   1. `<corpusDir>/HEAD` stamp file (one hex line, written by the
+ *      pipeline/README.md fetch recipe) — the vault commit the bytes came from.
+ *   2. `git rev-parse HEAD` ONLY when the corpus dir is itself a git toplevel
+ *      (e.g. a vault clone). A copied tree without `.git` must never resolve
+ *      the CONTAINING repo's HEAD: that recorded the decompile repo's commit
+ *      and made `verify` fail on byte-perfect goldens for every reviewer on a
+ *      different repo commit.
+ *   3. null — honest "unknown"; verify treats it as informational.
+ */
+export function corpusHead(dir: string): string | null {
+  const stamp = join(dir, `HEAD`);
+  if (existsSync(stamp)) {
+    const line = readFileSync(stamp, `utf8`).trim();
+    if (/^[0-9a-f]{7,64}$/i.test(line)) return line;
+    throw new Error(`corpus HEAD stamp is not a commit hash: ${stamp} (got ${JSON.stringify(line.slice(0, 40))})`);
+  }
   try {
-    return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
+    const toplevel = execFileSync(`git`, [`-C`, dir, `rev-parse`, `--show-toplevel`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim();
+    if (realpathSync(toplevel) !== realpathSync(dir)) return null;
+    return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim();
   } catch {
     return null;
   }
@@ -246,7 +265,7 @@ async function runInSandbox(corpusDir: string, caseDir: string, source: CorpusSo
     provenance: {
       tool: `corpus-exec/g1`,
       serializer: SERIALIZER_VERSION,
-      corpusHead: gitHead(corpusDir),
+      corpusHead: corpusHead(corpusDir),
       corpusSource: { flavor: source.flavor, path: source.path },
       entry: closure.entry, // resolved full name (case may declare a prefix)
       closureSize: closure.chunks.length,

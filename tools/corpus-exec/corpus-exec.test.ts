@@ -11,7 +11,7 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { expectedBytes, loadCase, runCase, selectCorpusSource, type CaseFile } from "./run.ts";
+import { corpusHead, expectedBytes, loadCase, runCase, selectCorpusSource, type CaseFile } from "./run.ts";
 import { buildSandbox, closureSize, resolveChunk } from "./sandbox.ts";
 import { serialize, stringify } from "./serialize.ts";
 
@@ -377,5 +377,80 @@ test(`verify against a malformed golden is MISMATCH exit 1, never a crash exit 2
     } finally {
       rmSync(badGolden, { force: true });
     }
+  }
+});
+
+// --- corpusHead provenance ladder (issue #250) -------------------------------
+
+test(`corpusHead: a copied corpus inside another repo is null, never the containing repo's HEAD`, () => {
+  // fixtures/corpus has no .git and no HEAD stamp, but lives INSIDE this git
+  // repo — the old behavior resolved the decompile repo's HEAD here, which made
+  // verify fail on byte-perfect goldens for every reviewer (issue #250).
+  assert.equal(corpusHead(fixtureCorpus), null);
+});
+
+test(`corpusHead: a HEAD stamp file wins; a malformed stamp is loud`, () => {
+  const stamp = join(fixtureCorpus, `HEAD`);
+  try {
+    writeFileSync(stamp, `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8\n`);
+    assert.equal(corpusHead(fixtureCorpus), `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8`);
+    writeFileSync(stamp, `ref: refs/heads/main\n`);
+    assert.throws(() => corpusHead(fixtureCorpus), /HEAD stamp is not a commit hash/);
+  } finally {
+    rmSync(stamp, { force: true });
+  }
+});
+
+test(`corpusHead: a corpus that IS a git toplevel resolves its own HEAD`, (t) => {
+  const dir = join(here, `fixtures`, `head-repo.tmp`);
+  rmSync(dir, { recursive: true, force: true });
+  try {
+    execFileSync(`git`, [`init`, `-q`, dir], { stdio: `pipe` });
+    execFileSync(`git`, [`-C`, dir, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `--allow-empty`, `-m`, `x`], { stdio: `pipe` });
+    const want = execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
+    assert.equal(corpusHead(dir), want);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test(`verify: unknown re-run head on a byte-identical output is OK, not a provenance red`, async () => {
+  const mainPath = join(here, `main.ts`);
+  const casePath = join(here, `fixtures`, `ok-case.json`);
+  const golden = join(here, `fixtures`, `head-golden.tmp.json`);
+  const c = loadCase(casePath);
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  assert.equal(result.provenance.corpusHead, null); // this machine: copied tree
+  const known = JSON.parse(expectedBytes(result)) as { provenance: { corpusHead: string | null } };
+  known.provenance.corpusHead = `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8`; // author had a vault clone
+  try {
+    writeFileSync(golden, JSON.stringify(known, null, 2) + `\n`);
+    const out = execFileSync(process.execPath, [`--experimental-strip-types`, mainPath, `verify`, casePath, `--corpus`, fixtureCorpus, `--expected`, golden], { stdio: `pipe` }).toString();
+    void out; // exit 0 is the assertion (execFileSync throws otherwise)
+  } finally {
+    rmSync(golden, { force: true });
+  }
+});
+
+test(`verify: unknown head does NOT excuse a chunk-hash delta — still exit 1`, async () => {
+  const mainPath = join(here, `main.ts`);
+  const casePath = join(here, `fixtures`, `ok-case.json`);
+  const golden = join(here, `fixtures`, `head-golden2.tmp.json`);
+  const c = loadCase(casePath);
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  const forged = JSON.parse(expectedBytes(result)) as { provenance: { corpusHead: string | null; chunkHashes: Record<string, string> } };
+  forged.provenance.corpusHead = `c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8`;
+  const firstChunk = Object.keys(forged.provenance.chunkHashes)[0] as string;
+  forged.provenance.chunkHashes[firstChunk] = `0`.repeat(64);
+  try {
+    writeFileSync(golden, JSON.stringify(forged, null, 2) + `\n`);
+    execFileSync(process.execPath, [`--experimental-strip-types`, mainPath, `verify`, casePath, `--corpus`, fixtureCorpus, `--expected`, golden], { stdio: `pipe` });
+    assert.fail(`verify must not exit 0 when chunk hashes differ`);
+  } catch (e) {
+    const err = e as { status?: number; stderr?: Buffer };
+    assert.equal(err.status, 1, err.stderr?.toString());
+    assert.match(err.stderr?.toString() ?? ``, /provenance differs/);
+  } finally {
+    rmSync(golden, { force: true });
   }
 });

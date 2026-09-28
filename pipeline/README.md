@@ -27,6 +27,10 @@ c=/tmp/linear-loops-vault/corpus
 python3 -c "import json; print(len(json.load(open('$c/analysis/chunks.json'))))"
 find "$c/pretty/client" -name '*.js' | wc -l   # must be EQUAL to the line above
 rm -rf pipeline/corpus && cp -r "$c" pipeline/corpus
+# provenance stamp (issue #250): a copied tree has no .git, so corpus-exec
+# reads this one-line stamp as the corpus head instead of mis-resolving the
+# CONTAINING repo's HEAD. Without it, provenance honestly records "unknown".
+git -C /tmp/linear-loops-vault rev-parse HEAD > pipeline/corpus/HEAD
 ```
 
 Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
