@@ -1,0 +1,76 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "canOpenAgentSessionInReview.BbTwURTH.js",
+    "closureSize": 2,
+    "stubbed": [
+      "PullRequestsFeatureHelper.woc0KNxh.js"
+    ],
+    "chunkHashes": {
+      "canOpenAgentSessionInReview.BbTwURTH.js": "65b57896387672bf706791c99e7aef0d8c70c66444550f1c3392f2cfa11f3d71"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "noPr",
+        "value": {
+          "tag": "boolean",
+          "value": false
+        }
+      },
+      {
+        "key": "reviewsDisabled",
+        "value": {
+          "tag": "boolean",
+          "value": false
+        }
+      },
+      {
+        "key": "allowedAndGranted",
+        "value": {
+          "tag": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "enabledButDenied",
+        "value": {
+          "tag": "boolean",
+          "value": false
+        }
+      },
+      {
+        "key": "userCanReceived",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "sameUserObject",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "permission",
+              "value": {
+                "tag": "string",
+                "value": "review"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

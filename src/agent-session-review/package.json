@@ -1,0 +1,6 @@
+{
+  "name": "agent-session-review",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the agent-session review guard, golden-verified against corpus execution (G7, matrix §E PR integration)"
+}
