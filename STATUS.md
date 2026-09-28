@@ -19,8 +19,12 @@ in #225 and reproduced by three sessions on PR #256: (1) #171 parity check in
 ci/check-ui.sh incl. the theme-VALUES drift family (#224); (2) #168 ui-theme
 goldens 13/13; (3) G1 corpus-exec + G2 coverage ledger landed, corpus-free leg
 never vacuous; (4) surfaces rebuilt end-to-end golden-green —
-src/ui-loops-icons and src/ui-loops-viewtype on the ledger (3 golden · 75 GAP
-at exit); (5) R3.4 archived (tag `archive/r3.4-ui-shell`). The progress meter
+src/ui-loops-icons and src/ui-loops-viewtype each carry a hand-verified
+`corpus-manifest.json` whose golden claims resolve, their golden tests
+byte-match the corpus-executed expected files (icons 5/5, viewtype 2/2 in
+`ci/check-src.sh`), and the `coverage check` leg in `ci/check-ui.sh` is green
+(3 golden · 75 GAP at exit); (5) R3.4 archived (tag `archive/r3.4-ui-shell`).
+The progress meter
 is the coverage ledger's golden count, not merged-PR volume.**
 
 Done 2026-09-27:
