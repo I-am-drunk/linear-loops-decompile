@@ -128,7 +128,10 @@ ordinary software-collaboration request it is. The full method, evidence rules,
 and legal lines live in README/AGENTS/KNOWLEDGE, which the session reads in its
 first minutes anyway — nothing is lost by keeping the prompt itself simple.
 Do not reintroduce project jargon or dramatic framing here; if the method
-changes, update README/AGENTS and leave this prompt generic.
+changes, update README/AGENTS and leave this prompt generic. "Generic" is
+about TONE, not content: the boot sequence, claim discipline, curl recipes,
+and the corpus-fetch instructions below are required steps — keep them intact
+when editing.
 
 ```
 You work on the public repo github.com/I-am-drunk/linear-loops-decompile:
