@@ -1,0 +1,79 @@
+{
+  "unit": "ui-settings-issuers/newAgentIssuerPageMetadata",
+  "chunk": "NewAgentIssuerSettingsPage",
+  "stubs": {
+    "react.Bfm_Hgom.js": {
+      "file": "stubs/react.mjs",
+      "why": "Module-eval namespace interop (var E = e(u())); inert namespace, member reads throw (G13/G18/G20/G22/G23 precedent)."
+    },
+    "jsx-runtime.BH9nBM82.js": {
+      "file": "stubs/jsx-runtime.mjs",
+      "why": "The chunk calls the factory at module eval (O = f()); jsx/jsxs used only inside the two component bodies — throw-on-use (the G17 seam)."
+    },
+    "suspenseObserver.Cawdgu7K.js": {
+      "file": "stubs/suspense-observer.mjs",
+      "why": "Module-eval wrap of the inner form component (j = x(fn)); identity, never rendered (the G14/G18/G20/G22/G23 seam)."
+    },
+    "Issue.DRYymPCa.js": {
+      "file": "stubs/issue.mjs",
+      "why": "ha/lg/mg/z (settings path helper, limit helpers, action group) read only inside component bodies; linking-only, every use throws."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/contextualmenuactions.mjs",
+      "why": "GI/VP/oF/sF/tL (icons + settings page/section wrappers) read only inside component bodies; linking-only, every use throws. Full chunk name pinned from the entry's import literal (hash-rotated duplicate prefixes exist — the G17 finding)."
+    },
+    "Text.gv7OudGa.js": {
+      "file": "stubs/text.mjs",
+      "why": "Component-body-only jsx element type; linking-only, every use throws."
+    },
+    "Logger.qFaEBF6-.js": {
+      "file": "stubs/logger.mjs",
+      "why": "Error formatter called only in the submit handler; linking-only, every use throws."
+    },
+    "hooks.D4LfSm6u.js": {
+      "file": "stubs/hooks-d4lfsm6u.mjs",
+      "why": "Navigation hook called only inside the form component body; linking-only, every use throws. Full name pinned (a hooks.CWG3Ngg6.js twin exists in the corpus — the G23 finding — though only D4LfSm6u is imported here)."
+    },
+    "lib.3x4I7cm8.js": {
+      "file": "stubs/lib.mjs",
+      "why": "useSearchParams-style hook called only inside the outer Component body; linking-only, every use throws."
+    },
+    "Flex.BS495mgi.js": {
+      "file": "stubs/flex.mjs",
+      "why": "Component-body-only jsx element type; linking-only, every use throws."
+    },
+    "resolvePromise.B8FauNXm.js": {
+      "file": "stubs/resolvepromise.mjs",
+      "why": "Suspense hydration helper called only inside the form component body; linking-only, every use throws."
+    },
+    "Button.DD4dEZh7.js": {
+      "file": "stubs/button.mjs",
+      "why": "Component-body-only jsx element type; linking-only, every use throws."
+    },
+    "useStore.BpZDR8VN.js": {
+      "file": "stubs/usestore.mjs",
+      "why": "Store hook called inside both component bodies; linking-only, every use throws."
+    },
+    "ErrorBoundary.Biei1WuN.js": {
+      "file": "stubs/errorboundary.mjs",
+      "why": "Component-body-only jsx element type; linking-only, every use throws."
+    },
+    "Input.CX9538jp.js": {
+      "file": "stubs/input.mjs",
+      "why": "Component-body-only jsx element type; linking-only, every use throws."
+    },
+    "Form.D0HBDYj2.js": {
+      "file": "stubs/form.mjs",
+      "why": "s/t (form primitives) are component-body-only jsx element types; linking-only, every use throws."
+    },
+    "WorkloadIssuerRegistry.CCSU2pyj.js": {
+      "file": "stubs/workloadissuerregistry.mjs",
+      "why": "The issuer registry is read only inside the module-LOCAL class D's static methods and the component bodies — never at module eval; linking-only, every use throws."
+    }
+  },
+  "drive": {
+    "file": "new-agent-issuer-metadata-driver.mjs",
+    "exportMeaning": "export{A as Component, k as pageMetadata} — k is the pure module-level two-key literal {id:`new-agent-issuer`, title:`Add approved issuer`} (no description, no keywords, no sections — the smallest metadata shape in the §F family; ownKeys pins each absence). A is the outer route component whose module-eval displayName (`NewAgentIssuerSettingsPage`) is projected as a fact; its body (useSearchParams + useStore keying the suspenseObserver-wrapped issuer form) is render/effect/store-tier and stays declared GAP pending T2/T3."
+  },
+  "notes": "G26: second chunk of the matrix §F 'Issuers' row (sibling of the G25-claimed AgentIssuersSettingsPage), the G14 pure-literal recipe. Module-eval surface hand-read in the raw tree: react interop + jsx factory (O=f()) + the metadata literal k + the displayName assignment on A + the suspenseObserver wrap j=x(fn); the callback-params class D (static parse/redirect — URL validation incl. the allowed-return-origins check) and the sx table M also evaluate at import but are module-LOCAL and unexported, so they are unreachable from the module surface and their pins ride a future Component-tier golden (the AiConversationCancel precedent). 17 declared stubs: three module-eval wrappers return values, fourteen linking-only throw-on-use seams."
+}

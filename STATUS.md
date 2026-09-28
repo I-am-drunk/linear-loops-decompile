@@ -302,6 +302,20 @@ constants pinned from raw source (GROUP_HEIGHT 32 / ROW_HEIGHT 44) behind
 an own-member-only proxy; page/component exports (query hooks, mobx list
 providers) declared honest GAP (T2/T3); clean reimplementation
 byte-matching both goldens; meter: 81 chunks · 22 golden · 59 GAP).
+G26 twenty-third golden-backed chunk LANDED 2026-09-28
+(src/ui-settings-issuers: NewAgentIssuerSettingsPage export pageMetadata —
+first golden on the matrix §F Issuers row: the G14 pure-literal recipe on
+the row's second chunk, a two-key literal ({id:'new-agent-issuer',
+title:'Add approved issuer'} — the smallest §F metadata shape; ownKeys pins
+the absence of description/keywords/sections) + the Component's module-eval
+displayName; 17 declared stubs (react interop / jsx factory /
+suspenseObserver identity return values, fourteen linking-only bombs); the
+route Component body AND the module-LOCAL callback-params class (static
+parse/redirect URL validation incl. the allowed-return-origins check —
+unexported, unreachable from the module surface, the AiConversationCancel
+precedent) stay declared GAP pending T2/T3; clean reimplementation
+byte-matching; meter: 81 chunks · 23 golden · 58 GAP — re-slots against
+G25 (AgentIssuersSettingsPage, claimed 17:51Z by a peer) at merge.
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
