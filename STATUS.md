@@ -97,7 +97,20 @@ sess_01a0e4ca-cd60), G4 first rendered-component golden OPEN — claim on #225).
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
-- #231 pipeline execution-integrity guard (PR #232; sess_01a0e510-3543-77fa-88cc-732b1e29915c): raw corpus execution requires every generated `pretty/client` artifact to parse and retain raw template-token structure; the vault raw-tree slice supplies captured bytes, while the public pipeline validates beautifier output, records explicit byte-faithful raw fallbacks, and rejects corrupt caches before reuse.
+- #231 pipeline execution-integrity guard LANDED 2026-09-28 (#232 + #239
+  fix-forward squashed to main `6b5854c`, closes #231): prettify output is
+  gated on parse + FULL token-stream signature vs raw (subsumes the template
+  check; zero false positives measured on all 1,541 prettifiable chunks);
+  cached raw fallbacks are byte-verified pre-UTF-8-decode. Real-corpus rebuild:
+  1,541 prettified + 9 byte-exact raw fallbacks, 0 failures, --check
+  1,550/1,550. Follow-up: #241 (Tier-2 extract-drift contract for analyze.mjs
+  — the 9 raw fallbacks move ops/models counts; carved out of the #232 review).
+- G1 serializer v2 LANDED 2026-09-28 (#240 squashed to main `4a909fd`, closes
+  #238): the golden serializer is a closed tagged JSON grammar
+  (`corpus-exec-tagged-json-v2`) — every v1 collision pair (null≡undefined,
+  0≡-0, Date≡string, sparse holes, …) now yields distinct bytes; loud,
+  path-naming refusal outside the grammar; own-key order preserved. G2 goldens
+  build on v2 bytes.
 - H1 follow-ups: #177 closed (routes.json union + `?` params landed via
   #171/#189/#181). declaredIn route tagging LANDED (#208
   closed; #211 merged — 43 routeMeta entries, roles verified); extract
