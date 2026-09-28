@@ -52,7 +52,10 @@ Done 2026-09-27:
   page waited on the R3.4 shell; this slice is server-only, was unblocked.)
   Follow-up: RATELIMITED retry delays use the response's exhausted windows,
   including endpoint/complexity resets, with seven regression cases and a
-  delayed-body credential-swap check.
+  delayed-body credential-swap check. HTTP 429 fallbacks and preflight failures
+  now use the same exhausted-window calculation: simultaneous exhaustion waits
+  for the latest reset, and missing/expired endpoint resets do not borrow a
+  healthy global window. Nine additional fake-fetch regressions cover this.
 
 Now:
 - R4.1 loops domain slice: server half claimed by sess_01a0e392-f0c2-7545-

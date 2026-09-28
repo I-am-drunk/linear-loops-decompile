@@ -106,6 +106,20 @@ function parseRateLimit(headers: Headers): RateLimitSnapshot {
   return snap;
 }
 
+/** Latest future reset among exhausted windows; ambiguous limit responses may
+ * fall back to the request reset. Preflight checks require explicit exhaustion. */
+function retryDelay(b: RateLimitSnapshot, now: number, ambiguousLimit = false): number | undefined {
+  const windows = [
+    [b.requestsRemaining, b.requestsReset],
+    [b.complexityRemaining, b.complexityReset],
+    [b.endpointRequestsRemaining, b.endpointRequestsReset],
+  ].filter(([remaining]) => remaining === 0);
+  const resets = windows.length ? windows.map(([, reset]) => reset)
+    : ambiguousLimit ? [b.requestsReset] : [];
+  const futureResets = resets.filter((reset): reset is number => reset !== undefined && reset > now);
+  return futureResets.length ? Math.max(...futureResets) - now : undefined;
+}
+
 export class LinearClient {
   private opts: Required<Pick<LinearClientOptions, "fetchImpl" | "now" | "maxConcurrency" | "timeoutMs">> & LinearClientOptions;
   private lastBudget: RateLimitSnapshot = {};
@@ -197,17 +211,18 @@ export class LinearClient {
     if (token !== this.budgetToken) this.lastBudget = {};
     const now = this.opts.now();
     const b = this.lastBudget;
+    const retryAfterMs = retryDelay(b, now);
     const exhausted = (remaining?: number, reset?: number): reset is number =>
       remaining === 0 && reset !== undefined && reset > now;
     if (exhausted(b.requestsRemaining, b.requestsReset)) {
       throw new LinearClientError("rate_limited", "Linear request budget exhausted; window resets later", {
-        retryAfterMs: (b.requestsReset as number) - now,
+        retryAfterMs,
         rateLimit: this.budget(),
       });
     }
     if (exhausted(b.complexityRemaining, b.complexityReset)) {
       throw new LinearClientError("rate_limited", "Linear complexity budget exhausted; window resets later", {
-        retryAfterMs: (b.complexityReset as number) - now,
+        retryAfterMs,
         rateLimit: this.budget(),
       });
     }
@@ -215,7 +230,7 @@ export class LinearClient {
     // into one earns the 429 this client exists to avoid.
     if (exhausted(b.endpointRequestsRemaining, b.endpointRequestsReset)) {
       throw new LinearClientError("rate_limited", `Linear endpoint budget exhausted (${b.endpointName ?? "endpoint"}); window resets later`, {
-        retryAfterMs: (b.endpointRequestsReset as number) - now,
+        retryAfterMs,
         rateLimit: this.budget(),
       });
     }
@@ -253,9 +268,7 @@ export class LinearClient {
         const retryAfterHeaderMs = Number.isFinite(retryAfterSec) && retryAfterSec > 0
           ? retryAfterSec * 1000 : undefined;
         const retryAfterMs = retryAfterHeaderMs ??
-          (this.lastBudget.requestsReset !== undefined && this.lastBudget.requestsReset > this.opts.now()
-            ? this.lastBudget.requestsReset - this.opts.now()
-            : undefined);
+          retryDelay(parseRateLimit(res.headers), this.opts.now(), true);
         // We earned a 429 despite the gate: zero the window the headers show
         // exhausted (endpoint/complexity 429s must not nuke a healthy global
         // budget — only the ambiguous case falls back to the request window).
@@ -288,20 +301,10 @@ export class LinearClient {
         // Use this response's headers: another query may update lastBudget
         // while its JSON body is being read. Only exhausted windows delay a
         // retry; when several are exhausted, wait for the latest known reset.
-        const b = parseRateLimit(res.headers);
-        const windows = [
-          [b.requestsRemaining, b.requestsReset],
-          [b.complexityRemaining, b.complexityReset],
-          [b.endpointRequestsRemaining, b.endpointRequestsReset],
-        ].filter(([remaining]) => remaining === 0);
-        // Match markExhausted's conservative request-window fallback when
-        // the response does not identify which budget was exhausted.
-        const resets = windows.length ? windows.map(([, reset]) => reset) : [b.requestsReset];
-        const now = this.opts.now();
-        const futureResets = resets.filter((reset): reset is number => reset !== undefined && reset > now);
+        const retryAfterMs = retryDelay(parseRateLimit(res.headers), this.opts.now(), true);
         throw new LinearClientError("rate_limited", "Linear: RATELIMITED", {
           status: res.ok ? undefined : res.status,
-          retryAfterMs: futureResets.length ? Math.max(...futureResets) - now : undefined,
+          retryAfterMs,
           rateLimit: this.budget(),
         });
       }
