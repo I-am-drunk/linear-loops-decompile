@@ -346,7 +346,8 @@ test("a stale in-flight response must not repopulate the new credential's budget
   const resolvers: Array<(r: Response) => void> = [];
   const fakeFetch = (async () => new Promise<Response>((r) => resolvers.push(r))) as typeof fetch;
   const client = new LinearClient({ getToken: () => token, fetchImpl: fakeFetch, maxConcurrency: 2 });
-  const p1 = client.query("query { viewer { id } }"); // fired as userA
+  const p1 = client.query("query { viewer { id } }");
+  await new Promise((r) => setImmediate(r)); // dispatch userA before replacing it
   token = "userB";
   const p2 = client.query("query { viewer { id } }"); // fired as userB
   await new Promise((r) => setImmediate(r)); // let both fetchImpl calls land
@@ -445,6 +446,45 @@ test("http 401 surfaces as an http error with status", async () => {
     return true;
   });
 });
+
+for (const replacement of ["userB", undefined]) {
+  test(`queued requests honor credential ${replacement ? "replacement" : "removal"} before dispatch`, async () => {
+    let token: string | undefined = "userA";
+    const sentTokens: string[] = [];
+    let finishFirst!: (response: Response) => void;
+    const fakeFetch = (async (_url: unknown, init?: RequestInit) => {
+      sentTokens.push((init?.headers as Record<string, string>).authorization);
+      if (sentTokens.length === 1) {
+        return new Promise<Response>((resolve) => { finishFirst = resolve; });
+      }
+      return jsonResponse({ data: { ok: true } });
+    }) as typeof fetch;
+    const client = new LinearClient({
+      getToken: () => token, fetchImpl: fakeFetch, maxConcurrency: 1, now: () => 1_000_000,
+    });
+    const first = client.query("query { viewer { id } }");
+    await new Promise((resolve) => setImmediate(resolve));
+    const queued = client.query("query { viewer { id } }");
+    const queuedResult = replacement === undefined
+      ? assert.rejects(queued, (e: LinearClientError) => e.kind === "not_connected")
+      : queued;
+    assert.deepEqual(sentTokens, ["userA"]);
+
+    token = replacement;
+    finishFirst(jsonResponse({ data: { ok: true } }, {
+      headers: { ...HEADERS, "x-ratelimit-requests-remaining": "0" },
+    }));
+    await first;
+    await queuedResult;
+    assert.deepEqual(sentTokens, replacement ? ["userA", replacement] : ["userA"]);
+
+    // A rejected queued call must release its slot so reconnecting can proceed.
+    token = "userB";
+    await client.query("query { viewer { id } }");
+    assert.equal(sentTokens.at(-1), "userB");
+    assert.equal(client.budget().requestsRemaining, 2499);
+  });
+}
 
 test("concurrency cap: at most N in flight, the rest run FIFO", async () => {
   let inFlight = 0;
