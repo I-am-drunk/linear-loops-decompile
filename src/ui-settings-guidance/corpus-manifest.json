@@ -1,0 +1,17 @@
+{
+  "source": "G11 (#225 claim 2026-09-28 13:03Z): src/ui-settings-guidance reimplements the agent-guidance settings-metadata factory. Evidence: AgentGuidanceSettings.BgeC_uVo.js (matrix \u00a7F 'Agent guidance' row), executed from the RAW tree via a drive-mode driver (the metadata carries a function member, so the driver projects the applicable predicate against five declared org fixtures spanning its condition; all seven import seams are linking-only throw-on-use stubs). The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver). The chunk's OTHER export (t, the mobx-observer settings component) is NOT covered: it needs the T3 store-fixture tier and remains a gap.",
+  "reimplements": [
+    {
+      "chunkPrefix": "AgentGuidanceSettings",
+      "exports": [
+        {
+          "minified": "n",
+          "meaning": "export{p as n} \u2014 the settings-metadata factory: scope-strict-equal-`team` branch gives {id:`team-agent-guidance`, title:`Additional guidance`, team description copy, keywords:`team guidance instructions rules prompt`, applicable}; any other scope gives {id:`workspace-agent-guidance`, title:`Workspace guidance`, workspace description copy, keywords:`guidance instructions rules prompt`, applicable}; applicable({organization}) = organization.agentAppUsers.some(u => u.isActive && !!u.oauthClientId). Reimplemented as agentGuidanceSettingsMetadata",
+          "evidenceLine": "src/ui-settings-guidance/agent-guidance-metadata.ts + golden test"
+        }
+      ],
+      "goldens": ["agent-guidance-metadata"]
+    }
+  ],
+  "goldens": ["agent-guidance-metadata"]
+}
