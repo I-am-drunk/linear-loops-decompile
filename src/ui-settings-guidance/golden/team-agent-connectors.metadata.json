@@ -1,0 +1,35 @@
+{
+  "unit": "ui-settings-guidance/teamAgentConnectorsPageMetadata",
+  "chunk": "TeamAgentConnectorsSettingsPage",
+  "stubs": {
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/g17-contextual-menu-actions.mjs",
+      "why": "cF/oF/sF (back-link helper + settings page/section wrappers) are read only inside the component bodies; linking-only, throw-on-use. Full chunk name pinned: the prefix is ambiguous (Bcp3eWHc/Dlg9Oa2U hash-rotated duplicates); the entry chunk's import literal names Dlg9Oa2U."
+    },
+    "jsx-runtime.BH9nBM82.js": {
+      "file": "stubs/g17-jsx-runtime.mjs",
+      "why": "the chunk runs `var c = r()` at module eval, so the export must be callable during import; the returned jsx/jsxs throw on use — no render in this case."
+    },
+    "Integration.B02xjlHD.js": {
+      "file": "stubs/g17-integration.mjs",
+      "why": "`l` (Integration service enum; the component body reads l.mcpServer) is touched only inside the component body; throwing Proxy keeps any read loud."
+    },
+    "mobxreactlite.BAMBvwfh.js": {
+      "file": "stubs/g17-mobxreactlite.mjs",
+      "why": "the chunk wraps BOTH components at module eval (`u = a(fn)`, `d = a(fn)` — no suspenseObserver in this chunk, unlike G14) and assigns d.displayName; identity-wrap satisfies all of it honestly. Never rendered here."
+    },
+    "useRouteData.DN0g9O-t.js": {
+      "file": "stubs/g17-use-route-data.mjs",
+      "why": "route-data hook called only inside the route component body; linking-only, throw-on-use."
+    },
+    "McpConnectorList.A-Wz50eq.js": {
+      "file": "stubs/g17-mcp-connector-list.mjs",
+      "why": "used only as a jsx element type inside the component body; linking-only, throw-on-use."
+    }
+  },
+  "notes": "G17: third \u00a7F Settings golden (matrix \u00a7F 'Team agent settings' row, third chunk: TeamAgentConnectorsSettingsPage.DcAOUyLv.js) \u2014 the G14 recipe verbatim on the row's connectors sibling. The observed export `pageMetadata` (chunk-local `l`) is a pure module-level literal {id:'team-agent-connectors', title:'Agent connectors', description, keywords} \u2014 no scope parameter, no applicable member; the verbatim (own-key-order) projection pins both. The Component export's module-eval displayName ('TeamAgentConnectorsSettingsPage') is projected as a fact; the component body (mobx route component reading useRouteData('/:orgKey/settings/teams/:teamKey/agent-connectors') \u2192 settings wrappers \u2192 McpConnectorList with service Integration.mcpServer) renders composite children and stays out of T1 scope, declared in corpus-manifest.json. Six seams stubbed: two module-eval wrappers must return values (jsx-runtime factory, mobx identity \u2014 this chunk uses mobx for BOTH wrappers, no suspenseObserver, a minor variation on G14 recorded here); four are throw-on-use bombs. Closure is the entry chunk alone; no ambient DOF; one case.",
+  "drive": {
+    "file": "team-agent-connectors-driver.mjs",
+    "exportMeaning": "export{d as Component, l as pageMetadata} \u2014 l is the pure metadata literal {id:'team-agent-connectors', title:'Agent connectors', description:'Add MCP connectors that team members can use with Linear Agent', keywords:'agent connectors mcp model context protocol shared linear agent'}; d is the mobx-wrapped route component with displayName='TeamAgentConnectorsSettingsPage' assigned at module eval (component body out of golden scope). The driver returns {pageMetadata, componentDisplayName}."
+  }
+}
