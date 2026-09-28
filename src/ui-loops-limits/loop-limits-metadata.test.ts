@@ -2,7 +2,7 @@
  * Golden test (the G0 acceptance bar): our clean module, projected with the
  * SAME driver shape (golden/loop-limits-metadata-driver.mjs, mirrored) through
  * the SAME tagged-v2 grammar, must byte-match the committed corpus-executed
- * golden's value regions; the alias identity is asserted on both sides.
+ * golden's value and alias-identity regions.
  */
 
 import { strict as assert } from "node:assert";
@@ -31,4 +31,10 @@ test(`clean metadata literal byte-matches the corpus-executed golden (value + ke
 
 test(`the page-level name is the exact usage-subpage constant (the corpus Z=V alias, mirrored)`, () => {
   assert.equal(loopLimitsPageMetadata, loopSpendLimitsMetadata);
+  assert.equal(
+    JSON.stringify(serialize({
+      pageMetadataIsUsageSubpageT: loopLimitsPageMetadata === loopSpendLimitsMetadata,
+    })),
+    region(`aliasIdentity`),
+  );
 });
