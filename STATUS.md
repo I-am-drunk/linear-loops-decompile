@@ -272,7 +272,15 @@ provenance chains to the H2 goldens; the reimplementation composes our
 golden-backed src/ui-theme color math); seventeen linking seams as declared
 throw-on-use bombs (the G20 wide-linking pattern); exports n/t (builders,
 launcher hook) honest GAP pending T2/store tiers; meter: 81 chunks ·
-18 golden · 63 GAP). H3 family expansion
+18 golden · 63 GAP). G21 nineteenth golden-backed chunk LANDED 2026-09-28
+(CodingAgentSettingsPage.C73HMBrM.js — the re-export-shim pattern first
+exercised (the G7 scouting note: cheapest GAP chunk once its target is
+golden-backed): the shim executes as entry over the REAL G20 target chunk,
+the golden pins the alias map (public export names + which target export
+each surfaces) and its metadata/probes regions byte-match the G20 golden's;
+component aliases stay GAP with their targets; reimplementation re-exports
+our golden-backed builder; meter: 81 chunks · 19 golden · 62 GAP).
+H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

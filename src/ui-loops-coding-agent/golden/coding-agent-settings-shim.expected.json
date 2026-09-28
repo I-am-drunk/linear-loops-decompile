@@ -1,0 +1,765 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "CodingAgentSettingsPage.C73HMBrM.js",
+    "closureSize": 42,
+    "stubbed": [
+      "ActionGroups.DFZZ7QMk.js",
+      "ActionTrigger.CLIWDN56.js",
+      "AlertDialog.Nxv6sEJD.js",
+      "AnimatePresence.CtBZ-ACJ.js",
+      "Avatar.DGwSs61a.js",
+      "Button.DD4dEZh7.js",
+      "CodeBlockIcon.D5GzJ9CR.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "GitHubCodeAccessFeatureSetting.U57u6ZBL.js",
+      "Issue.DRYymPCa.js",
+      "Logger.qFaEBF6-.js",
+      "ManageAiCreditsButton.9UxqKkes.js",
+      "PlusIcon.B0xt_MlV.js",
+      "PullRequestsFeatureHelper.woc0KNxh.js",
+      "RefreshManager.DpVjn8XM.js",
+      "Select.CkdP5uts.js",
+      "Text.gv7OudGa.js",
+      "Toast.BT3vaG2a.js",
+      "UpsellBox.DiIr0WGS.js",
+      "UsageAutoTopupSection.CHdzin93.js",
+      "currency.f0EU3rYF.js",
+      "mobx.BEIB-Y2s.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "productIntelligenceSettingsContent.B0n-oZkD.js",
+      "proxy.CKtU-u9d.js",
+      "react.Bfm_Hgom.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "types.7f0h45Sh.js",
+      "useApplicationStore.CfXY1l0i.js",
+      "useFlag.D9K3DJCO.js",
+      "usePromise.DcmGSp67.js",
+      "useStore.BpZDR8VN.js",
+      "useUser.CGqqjeJr.js",
+      "validation.DM_YZW7p.js"
+    ],
+    "chunkHashes": {
+      "CodingAgentSettingsPage.C73HMBrM.js": "fdc15ac0914960e3405d8c70c2fcffc7103fb5eb07be358f68db0644460b5dc1",
+      "CodingAgentSettingsPage.lcMyXnM7.js": "aeea6085ff47eb14b47acb241d2f5c015cc066a4aaded62be49d8b4e4ee70bf6",
+      "CodingAgentModelSelect.USYHzowP.js": "0e2595fb0ec0e97c0482c3d8ff942aefc411ac3ec8e83ecbb06bdfa4f8931cc4",
+      "Integration.B02xjlHD.js": "f70a022e7f3e9a0325960cee0b536c0a7121a3458071c110f1619c6d1612dc4e",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "CommitSigningWorkspaceSetting.C5kHh6fg.js": "ad9b6efd7b80208a9cb6adaddff462ec69869e00ef39471ccbf5d767ccd076c8"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "aliasSurface",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "ownExportNames",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "CodingAgentSettingsContent"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "Component"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "pageMetadata"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "aliasIdentity",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "pageMetadataIsTargetR",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "componentIsTargetN",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "contentIsTargetT",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "componentExportsPresent",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "Component",
+                    "value": {
+                      "tag": "string",
+                      "value": "function"
+                    }
+                  },
+                  {
+                    "key": "CodingAgentSettingsContent",
+                    "value": {
+                      "tag": "string",
+                      "value": "function"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "metadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "coding-sessions"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Coding sessions"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "Let Linear Agent write code and open pull requests."
+              }
+            },
+            {
+              "key": "descriptionElement",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "fragment",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "Let Linear Agent write code and open pull requests. "
+                        },
+                        {
+                          "tag": "object",
+                          "prototype": "object",
+                          "properties": [
+                            {
+                              "key": "element",
+                              "value": {
+                                "tag": "string",
+                                "value": "stub:ContextualMenuActions.uP(DocsLink)"
+                              }
+                            },
+                            {
+                              "key": "key",
+                              "value": {
+                                "tag": "null"
+                              }
+                            },
+                            {
+                              "key": "props",
+                              "value": {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "href",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "https://linear.app/docs/coding-sessions"
+                                    }
+                                  },
+                                  {
+                                    "key": "children",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "Docs"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "coding sessions agent pull requests implementation model claude codex"
+              }
+            },
+            {
+              "key": "sections",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "general",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "coding-sessions-settings"
+                          }
+                        },
+                        {
+                          "key": "items",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "enableCodingSessions",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "id",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding-sessions"
+                                      }
+                                    },
+                                    {
+                                      "key": "title",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Enable coding sessions"
+                                      }
+                                    },
+                                    {
+                                      "key": "description",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Allow Linear Agent to write code and create pull requests when assigned or asked to implement an issue"
+                                      }
+                                    },
+                                    {
+                                      "key": "keywords",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "pull requests implementation coding sessions"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "harness",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "id",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding-agent-agent"
+                                      }
+                                    },
+                                    {
+                                      "key": "title",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Agent"
+                                      }
+                                    },
+                                    {
+                                      "key": "description",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Choose which agent Linear uses in coding sessions"
+                                      }
+                                    },
+                                    {
+                                      "key": "keywords",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "claude codex coding sessions harness"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "model",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "id",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding-agent-model"
+                                      }
+                                    },
+                                    {
+                                      "key": "title",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Model"
+                                      }
+                                    },
+                                    {
+                                      "key": "description",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "May affect quality and cost of code changes"
+                                      }
+                                    },
+                                    {
+                                      "key": "keywords",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "model claude codex anthropic openai"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "commitSigning",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "id",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding-agent-commit-signing"
+                                      }
+                                    },
+                                    {
+                                      "key": "title",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Require signed commits"
+                                      }
+                                    },
+                                    {
+                                      "key": "description",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Users must upload a signing key before starting a coding session"
+                                      }
+                                    },
+                                    {
+                                      "key": "keywords",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "commit signing signed commits ssh"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "regionPinning",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "id",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding-agent-region-pinning"
+                                      }
+                                    },
+                                    {
+                                      "key": "title",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Pin sandbox region"
+                                      }
+                                    },
+                                    {
+                                      "key": "description",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Pin new coding session sandboxes to the US. Region pinning raises the sandbox compute price."
+                                      }
+                                    },
+                                    {
+                                      "key": "keywords",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding sessions sandbox region pinning data residency compute"
+                                      }
+                                    },
+                                    {
+                                      "key": "applicable",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "<function:applicable>"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "loopsRepositoryAccess",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "id",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "coding-sessions-loops-repository-access"
+                                      }
+                                    },
+                                    {
+                                      "key": "title",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Repository access for Loops"
+                                      }
+                                    },
+                                    {
+                                      "key": "description",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Choose which repos Loops can use for coding sessions"
+                                      }
+                                    },
+                                    {
+                                      "key": "keywords",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "loops automations repository access repositories github"
+                                      }
+                                    },
+                                    {
+                                      "key": "applicable",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "<function:applicable>"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "environments",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "coding-environments"
+                          }
+                        },
+                        {
+                          "key": "title",
+                          "value": {
+                            "tag": "string",
+                            "value": "Environments"
+                          }
+                        },
+                        {
+                          "key": "description",
+                          "value": {
+                            "tag": "string",
+                            "value": "Create reusable environments for coding sessions."
+                          }
+                        },
+                        {
+                          "key": "keywords",
+                          "value": {
+                            "tag": "string",
+                            "value": "coding sessions environments repositories agent model compute"
+                          }
+                        },
+                        {
+                          "key": "applicable",
+                          "value": {
+                            "tag": "string",
+                            "value": "<function:applicable>"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            },
+            {
+              "tag": "string",
+              "value": "description"
+            },
+            {
+              "tag": "string",
+              "value": "descriptionElement"
+            },
+            {
+              "tag": "string",
+              "value": "keywords"
+            },
+            {
+              "tag": "string",
+              "value": "sections"
+            }
+          ]
+        }
+      },
+      {
+        "key": "sectionsOwnKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "general"
+            },
+            {
+              "tag": "string",
+              "value": "environments"
+            }
+          ]
+        }
+      },
+      {
+        "key": "generalItemsOwnKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "enableCodingSessions"
+            },
+            {
+              "tag": "string",
+              "value": "harness"
+            },
+            {
+              "tag": "string",
+              "value": "model"
+            },
+            {
+              "tag": "string",
+              "value": "commitSigning"
+            },
+            {
+              "tag": "string",
+              "value": "regionPinning"
+            },
+            {
+              "tag": "string",
+              "value": "loopsRepositoryAccess"
+            }
+          ]
+        }
+      },
+      {
+        "key": "probes",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "loopsRepositoryAccess",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "both",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "onlyCoding",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "onlyAutomations",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "neither",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "askedKeysOnBoth",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "agentAutomations"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "codingSessions"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "regionPinning",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "whenEnabled",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "whenDisabled",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "askedFlags",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "flag:codeSandboxSizing"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "flag:codeSandboxSizing"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "environments",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "granted",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "denied",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
