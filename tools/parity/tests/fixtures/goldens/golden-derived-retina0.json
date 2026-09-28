@@ -1,0 +1,13 @@
+{
+  "darkDefault": {
+    "hash": "abc123",
+    "shadowColor": "#07070726",
+    "contrast": 27,
+    "isDark": true,
+    "color": {
+      "bgBase": "#111212",
+      "labelTitle": "#ffffff"
+    },
+    "derived": { "elevated": { "color": {} } }
+  }
+}

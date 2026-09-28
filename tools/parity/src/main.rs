@@ -44,7 +44,7 @@ fn usage() {
         "parity — compute that our Loops UI matches Linear's compiled client\n\
          \n\
          usage:\n\
-         \x20 parity extract [--corpus DIR] [--matrix FILE] [--out FILE]\n\
+         \x20 parity extract [--corpus DIR] [--matrix FILE] [--out FILE] [--goldens DIR]\n\
          \x20 parity check   [--facts FILE] [--ref FILE] [--tolerances FILE]\n\
          \x20                 [--improvements FILE] [--report FILE]\n\
          \n\
@@ -67,6 +67,7 @@ struct Opts {
     improvements: Option<PathBuf>,
     report: Option<PathBuf>,
     canaries: Option<PathBuf>,
+    goldens: Option<PathBuf>,
 }
 
 impl Default for Opts {
@@ -81,6 +82,7 @@ impl Default for Opts {
             improvements: None,
             report: None,
             canaries: None,
+            goldens: None,
         }
     }
 }
@@ -110,6 +112,7 @@ fn parse_opts(args: &[String]) -> Result<Opts, String> {
             "--improvements" => o.improvements = Some(PathBuf::from(take(&mut i)?)),
             "--report" => o.report = Some(PathBuf::from(take(&mut i)?)),
             "--canaries" => o.canaries = Some(PathBuf::from(take(&mut i)?)),
+            "--goldens" => o.goldens = Some(PathBuf::from(take(&mut i)?)),
             other => return Err(format!("unknown flag: {}", other)),
         }
         i += 1;
@@ -129,7 +132,14 @@ fn cmd_extract(args: &[String]) -> ExitCode {
         let p = PathBuf::from("tools/parity/policy/canaries.txt");
         p.exists().then_some(p)
     });
-    match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref()) {
+    // default goldens: src/ui-theme/golden when present (same convention as
+    // the canaries default) — absent dir = no theme-value surfaces, and the
+    // stats line says so.
+    let goldens = o.goldens.clone().or_else(|| {
+        let p = PathBuf::from("src/ui-theme/golden");
+        p.is_dir().then_some(p)
+    });
+    match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref(), goldens.as_deref()) {
         Ok(stats) => {
             println!(
                 "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains · {} state alternates · {} primitives → {}",
@@ -144,6 +154,10 @@ fn cmd_extract(args: &[String]) -> ExitCode {
                 stats.primitives,
                 o.out.display()
             );
+            match stats.theme_values {
+                Some((surfaces, facts)) => println!("theme values: {} parametrization surfaces · {} value facts", surfaces, facts),
+                None => println!("theme values: no goldens dir — value families uncovered (src/ui-theme/golden or --goldens)"),
+            }
             if let Some((passed, total)) = stats.canaries {
                 println!("canaries: {}/{} pass", passed, total);
             }

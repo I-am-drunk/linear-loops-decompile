@@ -540,6 +540,77 @@ fn compact_ternary_and_malformed_canary_lines() {
     let _ = std::fs::remove_dir_all(&tmp);
 }
 
+
+#[test]
+fn theme_values_from_goldens_and_value_canary() {
+    // #218: golden vectors become theme.values.* surfaces with token=value
+    // facts; a value canary pins the wiring; a wrong canary fails loudly.
+    let tmp = std::env::temp_dir().join(format!("parity-test-goldens-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = tmp.join("ref.json");
+    let good_canaries = tmp.join("canaries.txt");
+    std::fs::write(&good_canaries, "value:theme.values.darkDefault.retina0=bgBase=#111212\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(&reference)
+        .arg("--canaries").arg(&good_canaries)
+        .arg("--goldens").arg(fixtures().join("goldens"))
+        .output()
+        .expect("run parity extract");
+    assert!(out.status.success(), "extract with goldens: {}", String::from_utf8_lossy(&out.stderr));
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("theme values: 1 parametrization surfaces"), "stats: {}", stdout);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    assert!(text.contains("theme.values.darkDefault.retina0"), "value surface present");
+    assert!(text.contains("bgBase=#111212"), "color fact present");
+    assert!(text.contains("hash=abc123"), "scalar shell fact present");
+    assert!(text.contains("isDark=true"), "bool shell fact present");
+    assert!(!text.contains("derived="), "nested derived objects are not scalar facts");
+
+    // a value canary that mismatches fails extract loudly
+    let bad_canaries = tmp.join("canaries-bad.txt");
+    std::fs::write(&bad_canaries, "value:theme.values.darkDefault.retina0=bgBase=#000000\n").unwrap();
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref2.json"))
+        .arg("--canaries").arg(&bad_canaries)
+        .arg("--goldens").arg(fixtures().join("goldens"))
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "mismatched value canary must fail");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("value canary"));
+
+    // a value canary configured with NO goldens names the real cause
+    let out = bin()
+        .arg("extract")
+        .arg("--corpus").arg(fixtures().join("corpus"))
+        .arg("--matrix").arg(fixtures().join("docs/feature-matrix.md"))
+        .arg("--out").arg(tmp.join("ref3.json"))
+        .arg("--canaries").arg(&good_canaries)
+        .output()
+        .expect("run parity extract");
+    assert!(!out.status.success(), "value canary without goldens must fail");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("no goldens were loaded"));
+
+    // ramp: a facts file that omits theme.values.* surfaces is NOT violated
+    // by them (they are not mandatory synthetics like app.routes/theme.tokens)
+    let out = bin()
+        .arg("check")
+        .arg("--facts").arg(fixtures().join("ours/ui-facts-clean.json"))
+        .arg("--ref").arg(&reference)
+        .output()
+        .expect("run parity check");
+    assert_eq!(out.status.code(), Some(0), "value surfaces ramp as not-built: {}", String::from_utf8_lossy(&out.stdout));
+    assert!(String::from_utf8_lossy(&out.stdout).contains("not-built"));
+
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
 #[test]
 fn extract_emits_primitives_from_unambiguous_signals() {
     // issue #213 slice 1: role:`dialog` → dialog; export{…pageMetadata} → page;
