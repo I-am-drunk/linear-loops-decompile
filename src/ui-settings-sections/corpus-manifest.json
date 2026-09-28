@@ -1,0 +1,41 @@
+{
+  "source": "G19 (#225 claim, this slice): src/ui-settings-sections reimplements the workflow-automation settings section/card/row primitives. Evidence: WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js (matrix \u00a7F 'Workflow automation settings' row), executed from the RAW tree in drive mode with one declared stub boundary (the three hook/forwardRef-bearing ContextualMenuActions seams as string markers, full chunk name pinned against the hash-rotated twin; corpus Flex/Text execute REAL and flatten per the G9 discipline). Ten parametrizations pin every branch: section title/untitled/accessory, card flush on/off + [card, flush&&cardFlush, sx] composition, labeled row labelFor+description+divided vs plain (both sides of the [!!divided<<0] computed-member class trick), description row divided/undivided, and the agent-automation-permissions anchor constant. All five exports are covered.",
+  "reimplements": [
+    {
+      "chunkPrefix": "WorkflowAgentAutomationSettingsConstants",
+      "exports": [
+        {
+          "minified": "r",
+          "meaning": "export{s as r} \u2014 SettingsSection: section > optional header Flex(align:flex-end, justify:space-between, gap:12, wrap) with Text(as:h3, miniPlus, labelMuted) title + optional 8-class accessory div; reimplemented as SettingsSection",
+          "evidenceLine": "src/ui-settings-sections/settings-sections.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{c as n} \u2014 SettingsCard: the VP themed-card seam with sx [card, flush&&cardFlush, sx]; reimplemented as SettingsCard",
+          "evidenceLine": "src/ui-settings-sections/settings-sections.ts + golden test"
+        },
+        {
+          "minified": "a",
+          "meaning": "export{l as a} \u2014 labeled settings row: divided computed-member class, MP/ZP seams, labelFor ? Text(as:label, htmlFor) : Text, optional description Text(mini, labelMuted); reimplemented as SettingsLabeledRow",
+          "evidenceLine": "src/ui-settings-sections/settings-sections.ts + golden test"
+        },
+        {
+          "minified": "i",
+          "meaning": "export{u as i} \u2014 description-only settings row (same divided trick); reimplemented as SettingsDescriptionRow",
+          "evidenceLine": "src/ui-settings-sections/settings-sections.ts + golden test"
+        },
+        {
+          "minified": "t",
+          "meaning": "export{f as t} \u2014 the `agent-automation-permissions` section anchor id; reimplemented as AGENT_AUTOMATION_PERMISSIONS_ANCHOR",
+          "evidenceLine": "src/ui-settings-sections/settings-sections.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "settings-sections.branches"
+      ]
+    }
+  ],
+  "goldens": [
+    "settings-sections.branches"
+  ]
+}

@@ -223,7 +223,21 @@ reimplementation joins src/ui-settings-guidance; route component body honest
 GAP; scouting note: TeamAgentsSettingsPage is NOT this recipe (metadata
 embeds a descriptionElement JSX fragment + a sections map calling the G11
 factory at module eval — needs a jsx-capturing stub or T2, stays GAP);
-meter: 79 chunks · 14 golden · 65 GAP). H3 family expansion
+meter: 79 chunks · 14 golden · 65 GAP). G19 sixteenth golden-backed chunk
+LANDED 2026-09-28 (src/ui-settings-sections:
+WorkflowAgentAutomationSettingsConstants — first golden on the §F Workflow
+automation settings row: the settings section/card/row primitives, ALL FIVE
+exports covered in one drive-mode case (ten parametrizations: section
+title/untitled/accessory, card flush + sx composition, labeled row both
+sides of the [!!divided<<0] computed-member class trick + the labelFor
+ternary + optional description, description row divided/undivided, the
+agent-automation-permissions anchor); corpus Flex/Text executed real (G9
+flatten), the three hook/forwardRef CMA seams as declared markers (G13);
+clean reimplementation byte-matching, 6/6; matrix row's brace-form token
+`WorkflowAgentAutomationSettings{Constants,Page}` expanded to the two real
+chunk names — it parsed as NO chunk evidence, hiding both from the
+denominator (the #270 matrix-gap class, second instance); meter:
+81 chunks · 15 golden · 66 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

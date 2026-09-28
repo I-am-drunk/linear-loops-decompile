@@ -96,7 +96,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 | Agent guidance | `AgentGuidanceSettings.BgeC_uVo.js` | corpus |
 | Skills | `AgentSkillDetailSuggestion`, `agentSkillsSettingsBackLink` | corpus |
 | Issuers | `AgentIssuersSettingsPage`, `NewAgentIssuerSettingsPage` | corpus |
-| Workflow automation settings | `WorkflowAgentAutomationSettings{Constants,Page}`, `TeamAutomationSettingsPage` | corpus |
+| Workflow automation settings | `WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js`, `WorkflowAgentAutomationSettingsPage._wV8723k.js`, `TeamAutomationSettingsPage` | corpus |
 | MCP settings | `LinearAgentMcpSettings.8HfTvzal.js` | corpus |
 | Coding agent settings | `CodingAgentSettingsPage.{C73HMBrM,lcMyXnM7}.js` | corpus |
 
