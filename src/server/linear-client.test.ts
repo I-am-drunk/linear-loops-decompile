@@ -601,3 +601,48 @@ for (const status of [200, 400, 429]) {
     assert.equal(calls, 2);
   });
 }
+
+for (const remaining of ["0", "2499"]) {
+  test(`a delayed RATELIMITED body cannot exhaust a newer healthy snapshot (${remaining})`, async () => {
+    let finishBody!: (body: unknown) => void;
+    let bodyStarted!: () => void;
+    const readingBody = new Promise<void>((resolve) => { bodyStarted = resolve; });
+    let calls = 0;
+    let now = 1_000_000;
+    const limited = jsonResponse({}, { status: 400, headers: {
+      ...HEADERS,
+      "x-ratelimit-requests-remaining": remaining,
+      "x-ratelimit-requests-reset": "1030000",
+    } });
+    limited.json = () => {
+      bodyStarted();
+      return new Promise((resolve) => { finishBody = resolve; });
+    };
+    const client = new LinearClient({
+      getToken: () => "t",
+      now: () => now,
+      fetchImpl: (async () => {
+        calls += 1;
+        return calls === 1 ? limited : jsonResponse({ data: { ok: true } });
+      }) as typeof fetch,
+    });
+    const pending = client.query("query { viewer { id } }");
+    await readingBody;
+    // The old window expires while its body is still streaming. A newer
+    // response reports a healthy window before that old body completes.
+    now = 1_030_001;
+    await client.query("query { viewer { id } }");
+    const healthy = client.budget();
+    finishBody({ errors: [{ extensions: { code: "RATELIMITED" } }] });
+    await assert.rejects(pending, (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.rateLimit?.requestsRemaining, 0);
+      assert.equal(e.rateLimit?.requestsReset, 1_030_000);
+      assert.equal(e.retryAfterMs, undefined);
+      return true;
+    });
+    assert.deepEqual(client.budget(), healthy);
+    assert.deepEqual(await client.query("query { viewer { id } }"), { ok: true });
+    assert.equal(calls, 3);
+  });
+}
