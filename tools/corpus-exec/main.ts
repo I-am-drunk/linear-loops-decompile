@@ -10,7 +10,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { expectedBytes, loadCase, runCase } from "./run.ts";
-import { stringify } from "./serialize.ts";
+import { serialize } from "./serialize.ts";
 
 function usage(): void {
   console.error(
@@ -95,7 +95,7 @@ async function main(): Promise<number> {
     console.error(`verify: MISMATCH — committed golden at ${expectedPath} is not a golden object (got ${wantParsed === null ? `null` : typeof wantParsed}); a corrupt golden is a red, review it.`);
     return 1;
   }
-  const outputMatches = stringify(result.output) === `${JSON.stringify(wantParsed.output, null, 2)}\n`;
+  const outputMatches = JSON.stringify(serialize(result.output), null, 2) === JSON.stringify(wantParsed.output, null, 2);
   if (outputMatches) {
     console.error(`verify: OUTPUT matches but provenance differs (corpus refresh or stub change) — re-record deliberately, in a reviewed PR.`);
   } else {
