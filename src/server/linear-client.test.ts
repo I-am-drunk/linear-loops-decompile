@@ -169,6 +169,28 @@ test("429 keeps a still-positive global budget the headers report", async () => 
   assert.equal(b.endpointRequestsRemaining, 0);
 });
 
+test("429 backfills a missing endpoint reset from Retry-After and gates the next call", async () => {
+  let calls = 0;
+  const fakeFetch = (async () => {
+    calls += 1;
+    return new Response("Too Many Requests", {
+      status: 429,
+      headers: { ...HEADERS, "x-ratelimit-endpoint-requests-remaining": "0", "x-ratelimit-endpoint-name": "IssueCreate", "retry-after": "30" },
+    });
+  }) as typeof fetch;
+  const client = new LinearClient({ getToken: () => "t", fetchImpl: fakeFetch, now: () => 1_000_000 });
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => e.kind === "rate_limited");
+  assert.equal(client.budget().requestsRemaining, 2499);
+  assert.equal(client.budget().endpointRequestsReset, 1_030_000);
+  await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+    assert.equal(e.kind, "rate_limited");
+    assert.match(e.message, /IssueCreate/);
+    assert.equal(e.retryAfterMs, 30_000);
+    return true;
+  });
+  assert.equal(calls, 1);
+});
+
 test("RATELIMITED beats partial data and marks the header-exhausted window", async () => {
   const fakeFetch = (async () =>
     jsonResponse(
@@ -240,6 +262,44 @@ test("a stale in-flight response must not repopulate the new credential's budget
     headers: { ...HEADERS, "x-ratelimit-requests-remaining": "0", "x-ratelimit-requests-reset": "3600000" },
   }));
   await p1;
+  assert.equal(client.budget().requestsRemaining, 2499);
+});
+
+test("a stale 429 must not exhaust the new credential's budget", async () => {
+  let token = "userA";
+  let resolveOld!: (response: Response) => void;
+  const fakeFetch = (async (_url: unknown, init?: RequestInit) => {
+    if ((init?.headers as Record<string, string>).authorization === "userA") {
+      return new Promise<Response>((resolve) => { resolveOld = resolve; });
+    }
+    return jsonResponse({ data: { ok: true } });
+  }) as typeof fetch;
+  const client = new LinearClient({ getToken: () => token, fetchImpl: fakeFetch, now: () => 1_000_000 });
+  const oldRequest = client.query("query { viewer { id } }");
+  await new Promise((resolve) => setImmediate(resolve));
+  token = "userB";
+  await client.query("query { viewer { id } }");
+  resolveOld(new Response("Too Many Requests", { status: 429, headers: { "retry-after": "30" } }));
+  await assert.rejects(oldRequest, (e: LinearClientError) => e.kind === "rate_limited");
+  assert.equal(client.budget().requestsRemaining, 2499);
+});
+
+test("a stale RATELIMITED body must not exhaust the new credential's budget", async () => {
+  let token = "userA";
+  let resolveOldBody!: (body: unknown) => void;
+  const oldResponse = jsonResponse({}, { status: 400 });
+  oldResponse.json = () => new Promise((resolve) => { resolveOldBody = resolve; });
+  const fakeFetch = (async (_url: unknown, init?: RequestInit) =>
+    (init?.headers as Record<string, string>).authorization === "userA"
+      ? oldResponse
+      : jsonResponse({ data: { ok: true } })) as typeof fetch;
+  const client = new LinearClient({ getToken: () => token, fetchImpl: fakeFetch, now: () => 1_000_000 });
+  const oldRequest = client.query("query { viewer { id } }");
+  await new Promise((resolve) => setImmediate(resolve));
+  token = "userB";
+  await client.query("query { viewer { id } }");
+  resolveOldBody({ errors: [{ extensions: { code: "RATELIMITED" } }] });
+  await assert.rejects(oldRequest, (e: LinearClientError) => e.kind === "rate_limited");
   assert.equal(client.budget().requestsRemaining, 2499);
 });
 
