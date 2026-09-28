@@ -1,0 +1,147 @@
+{
+  "unit": "ui-loops-coding-agent/codingAgentSettingsShim",
+  "chunk": "CodingAgentSettingsPage.C73HMBrM.js",
+  "stubs": {
+    "Issue.DRYymPCa.js": {
+      "file": "stubs-g20/issue.mjs",
+      "why": "Full name pinned; window at module scope (G7 finding). Entry module eval reads Ci (docs URL, pinned from the raw literal `wJ as Ci`); the G12 value pins carried verbatim for the real CodingAgentModelSelect; all component-body members throw."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs-g20/contextual-menu-actions.mjs",
+      "why": "Full name pinned (twin). uP is the only module-eval consumer (the descriptionElement Docs link) \u2014 string marker, href/children in the byte oracle (G18 recipe); the G12 icon seams stay named throwing functions; everything else throws on use."
+    },
+    "react.Bfm_Hgom.js": {
+      "file": "stubs-g20/react.mjs",
+      "why": "Module-eval namespace interop; inert namespace, member reads throw (G13/G18 precedent)."
+    },
+    "types.7f0h45Sh.js": {
+      "file": "stubs-g20/types.mjs",
+      "why": "window at module scope. The regionPinning.applicable closure reads the feature-flag registry \u2014 scripted per-probe (both branch values pinned + the flag key identity); all other members throw."
+    },
+    "PullRequestsFeatureHelper.woc0KNxh.js": {
+      "file": "stubs-g20/pull-requests-feature-helper.mjs",
+      "why": "window at module scope (G7 finding). The applicable closures read only the usage-feature enum members codingSessions/agentAutomations \u2014 pinned verbatim from the raw enum function; other members throw."
+    },
+    "mobxreactlite.BAMBvwfh.js": {
+      "file": "stubs-g20/mobxreactlite.mjs",
+      "why": "Module-eval observer wraps in the entry and both real cross-chunk deps; identity, never rendered (G11 verbatim)."
+    },
+    "suspenseObserver.Cawdgu7K.js": {
+      "file": "stubs-g20/suspense-observer.mjs",
+      "why": "Module-eval page wraps with displayName assignments; identity, never rendered (G14/G18 seam)."
+    },
+    "Avatar.DGwSs61a.js": {
+      "file": "stubs-g20/avatar.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "Text.gv7OudGa.js": {
+      "file": "stubs-g20/text.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "ActionGroups.DFZZ7QMk.js": {
+      "file": "stubs-g20/action-groups.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "mobx.BEIB-Y2s.js": {
+      "file": "stubs-g20/mobx.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "validation.DM_YZW7p.js": {
+      "file": "stubs-g20/validation.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "Logger.qFaEBF6-.js": {
+      "file": "stubs-g20/logger.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "currency.f0EU3rYF.js": {
+      "file": "stubs-g20/currency.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "RefreshManager.DpVjn8XM.js": {
+      "file": "stubs-g20/refresh-manager.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "Button.DD4dEZh7.js": {
+      "file": "stubs-g20/button.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "useStore.BpZDR8VN.js": {
+      "file": "stubs-g20/use-store.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "Toast.BT3vaG2a.js": {
+      "file": "stubs-g20/toast.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "AlertDialog.Nxv6sEJD.js": {
+      "file": "stubs-g20/alert-dialog.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "proxy.CKtU-u9d.js": {
+      "file": "stubs-g20/proxy.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "AnimatePresence.CtBZ-ACJ.js": {
+      "file": "stubs-g20/animate-presence.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "Select.CkdP5uts.js": {
+      "file": "stubs-g20/select.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "CodeBlockIcon.D5GzJ9CR.js": {
+      "file": "stubs-g20/code-block-icon.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "useUser.CGqqjeJr.js": {
+      "file": "stubs-g20/use-user.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "useFlag.D9K3DJCO.js": {
+      "file": "stubs-g20/use-flag.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "usePromise.DcmGSp67.js": {
+      "file": "stubs-g20/use-promise.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "useApplicationStore.CfXY1l0i.js": {
+      "file": "stubs-g20/use-application-store.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "PlusIcon.B0xt_MlV.js": {
+      "file": "stubs-g20/plus-icon.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "ActionTrigger.CLIWDN56.js": {
+      "file": "stubs-g20/action-trigger.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "UpsellBox.DiIr0WGS.js": {
+      "file": "stubs-g20/upsell-box.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "GitHubCodeAccessFeatureSetting.U57u6ZBL.js": {
+      "file": "stubs-g20/github-code-access.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "UsageAutoTopupSection.CHdzin93.js": {
+      "file": "stubs-g20/usage-auto-topup.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "ManageAiCreditsButton.9UxqKkes.js": {
+      "file": "stubs-g20/manage-ai-credits.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    },
+    "productIntelligenceSettingsContent.B0n-oZkD.js": {
+      "file": "stubs-g20/product-intelligence.mjs",
+      "why": "Component-body-only (declared-GAP exports); linking-only, every use throws."
+    }
+  },
+  "drive": {
+    "file": "coding-agent-settings-shim-driver.mjs",
+    "exportMeaning": "export{n as Component, t as CodingAgentSettingsContent, r as pageMetadata} over import{n,r,t} from CodingAgentSettingsPage.lcMyXnM7.js \u2014 a pure re-export shim: the target's metadata export r surfaces as the public name `pageMetadata`; the two component exports surface as Component/CodingAgentSettingsContent (their targets are declared GAP). The shim's entire behavior is the alias map."
+  },
+  "notes": "G21: the re-export-shim pattern first exercised (the G7 scouting note: 'the cheapest GAP chunk once its target chunk is golden-backed'). The golden executes the SHIM as entry with the REAL target chunk in the closure (the G20 stub set verbatim) and drives the re-exported pageMetadata through the SAME projection+probes as the G20 golden, plus an alias-map region pinning which public names exist and that pageMetadata IS the target's r (the metadata region byte-matches the G20 golden's). Component re-exports stay declared GAP with their targets."
+}
