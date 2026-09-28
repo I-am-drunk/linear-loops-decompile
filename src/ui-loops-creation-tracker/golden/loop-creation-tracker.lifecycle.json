@@ -1,0 +1,19 @@
+{
+  "unit": "ui-loops-creation-tracker/LoopCreationTracker",
+  "chunk": "LoopCreationTracker",
+  "stubs": {
+    "ClientStorage": {
+      "file": "client-storage-stub.mjs",
+      "why": "the real chunk writes window.localStorage (and its module level touches window.__toStaticUrl via the Vite dep map) — browser ambient. The stub is an in-memory get/set that preserves the JSON-snapshot contract and RECORDS every write so persistence behavior lands in the golden instead of vanishing; any other method throws loudly."
+    },
+    "v4": {
+      "file": "v4-stub.mjs",
+      "why": "uuid-v4 over crypto.getRandomValues — ambient RNG. The tracker uses it only as an opaque setupId; pinned to a deterministic counter so bytes are stable while the value still differs per start() (the uniqueness property the corpus relies on, preserved observably)."
+    }
+  },
+  "drive": {
+    "file": "loop-creation-tracker-driver.mjs",
+    "exportMeaning": "export{n as t} — n is the LoopCreationTracker class: static start(user, opts) / scratchEntryPoint(ep) / forDraft(user, draft); instance attachDraft/started/failed/converted/abandoned with ClientStorage persistence under `loopTemplateSetups:${user.id}` (7-day expiry filter, 100-entry sort-by-startedAt cap) and user.store.analytics.track events. The driver walks the full lifecycle with a pinned Date.now (see driver header)."
+  },
+  "notes": "G8: first stateful/behavioral golden (matrix §A 'AI-assisted loop compose' row, LoopCreationTracker.BAiVgMLN.js). Pins: the six analytics event names + full payload shapes (elapsedMs from the pinned clock), the converted/abandoned idempotence guards, trackTemplate gating on templateKey, forDraft resolution, the 7-day expiry filter (6048e5), the 100-entry cap keeping the NEWEST by startedAt, and the persisted storage shape. Every remaining behavioral GAP chunk (trackers, hooks, launchers) copies this pattern."
+}
