@@ -1,6 +1,24 @@
 {
-  "source": "G26 (#225 claim 2026-09-28 17:54Z, sess_01a0e901-88e4-77f4-88b7-0e725d577f01): src/ui-settings-issuers reimplements the new-agent-issuer settings page metadata. Evidence: NewAgentIssuerSettingsPage.iSpIpxtS.js (matrix \u00a7F 'Issuers' row, second chunk), executed from the RAW tree via a drive-mode driver projecting the pure module-level pageMetadata literal verbatim (two keys \u2014 the smallest \u00a7F metadata shape; ownKeys pins the absence of description/keywords/sections) plus the Component export's module-eval displayName; 17 declared stubs (three module-eval wrappers return values \u2014 react interop, jsx-runtime factory, suspenseObserver identity \u2014 the rest linking-only throw-on-use). The route Component body (useSearchParams/useStore keying the issuer form) and the module-LOCAL callback-params class (static parse/redirect URL validation) are NOT covered: render/effect/store-tier and unexported module-locals respectively \u2014 both wait for a Component-tier golden (T2/T3).",
+  "source": "G25 (#225 claim): src/ui-settings-issuers reimplements the agent-issuers settings page metadata. Evidence: AgentIssuersSettingsPage.BuFJumP7.js export pageMetadata (matrix \u00a7F 'Issuers' row, first golden) \u2014 a pure module-level literal {id, title, description, sections:{configured:{id,title}, add:{id,title}}}, the G14 recipe with a sections-bearing shape variation: NO keywords member, NO applicable, NO scope parameter (per-level ownKeys projections pin the absences). The Component export (suspenseObserver-wrapped issuers management page) is declared GAP pending T2/T3; its module-eval displayName is golden-pinned. The clean module byte-matches through the tagged-v2 serializer. || G26 (#225 claim 2026-09-28 17:54Z, sess_01a0e901-88e4-77f4-88b7-0e725d577f01): src/ui-settings-issuers reimplements the new-agent-issuer settings page metadata. Evidence: NewAgentIssuerSettingsPage.iSpIpxtS.js (matrix \u00a7F 'Issuers' row, second chunk), executed from the RAW tree via a drive-mode driver projecting the pure module-level pageMetadata literal verbatim (two keys \u2014 the smallest \u00a7F metadata shape; ownKeys pins the absence of description/keywords/sections) plus the Component export's module-eval displayName; 17 declared stubs (three module-eval wrappers return values \u2014 react interop, jsx-runtime factory, suspenseObserver identity \u2014 the rest linking-only throw-on-use). The route Component body (useSearchParams/useStore keying the issuer form) and the module-LOCAL callback-params class (static parse/redirect URL validation) are NOT covered: render/effect/store-tier and unexported module-locals respectively \u2014 both wait for a Component-tier golden (T2/T3).",
   "reimplements": [
+    {
+      "chunkPrefix": "AgentIssuersSettingsPage",
+      "exports": [
+        {
+          "minified": "pageMetadata",
+          "meaning": "export{M as pageMetadata} \u2014 the pure metadata literal {id:'agent-issuers', title:'Agent issuers', description:<approved-issuer/tenant copy>, sections:{configured:{id:'configured-agent-issuers', title:'Configured agent issuers'}, add:{id:'add-agent-issuers', title:'Available issuers'}}}. Reimplemented as agentIssuersPageMetadata.",
+          "evidenceLine": "src/ui-settings-issuers/agent-issuers-metadata.ts + golden test"
+        },
+        {
+          "minified": "Component",
+          "meaning": "export{N as Component} \u2014 the suspenseObserver-wrapped issuers management page (workloadIssuers hydration, sorted list, max-issuer limit via Issue limit registry, remove-issuer AlertDialog flow, add-issuer directory). NOT covered: render/effect/store-tier, declared GAP pending T2/T3. Its module-eval displayName ('AgentIssuersSettingsPage') IS golden-pinned and carried by agentIssuersComponentDisplayName.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        }
+      ],
+      "goldens": [
+        "agent-issuers.metadata"
+      ]
+    },
     {
       "chunkPrefix": "NewAgentIssuerSettingsPage",
       "exports": [
@@ -21,6 +39,7 @@
     }
   ],
   "goldens": [
+    "agent-issuers.metadata",
     "new-agent-issuer.metadata"
   ]
 }
