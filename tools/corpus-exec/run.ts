@@ -6,7 +6,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { readFileSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
@@ -44,10 +44,19 @@ export type CaseFile = {
   notes?: string;
 };
 
+export type CorpusSource = {
+  /** Captured raw bytes are the execution authority; pretty is legacy/recon only. */
+  flavor: `raw` | `pretty`;
+  /** Stable path relative to corpus root, never a machine-specific absolute path. */
+  path: `client` | `pretty/client`;
+  chunksDir: string;
+};
+
 export type RunResult = {
   provenance: {
     tool: string;
     corpusHead: string | null;
+    corpusSource: { flavor: `raw` | `pretty`; path: `client` | `pretty/client` };
     entry: string;
     closureSize: number;
     stubbed: string[];
@@ -90,6 +99,19 @@ function gitHead(dir: string): string | null {
   }
 }
 
+/**
+ * Select the executable corpus representation. `client/` is captured raw ESM
+ * and therefore authoritative. `pretty/client/` is retained only for legacy
+ * corpora and human/recon work; never prefer it when raw bytes are present.
+ */
+export function selectCorpusSource(corpusDir: string): CorpusSource {
+  const raw = join(corpusDir, `client`);
+  if (existsSync(raw)) return { flavor: `raw`, path: `client`, chunksDir: raw };
+  const pretty = join(corpusDir, `pretty`, `client`);
+  if (existsSync(pretty)) return { flavor: `pretty`, path: `pretty/client`, chunksDir: pretty };
+  throw new Error(`corpus has neither client/ (raw) nor pretty/client/ (legacy): ${corpusDir}`);
+}
+
 /** The render-phase micro-dispatcher. Unimplemented hooks throw loudly. */
 function makeDispatcher(contextValue: unknown): Record<string, unknown> {
   return {
@@ -112,17 +134,17 @@ function makeDispatcher(contextValue: unknown): Record<string, unknown> {
 
 /** `caseDir` anchors relative stub/driver file paths (the case file's dir). */
 export async function runCase(corpusDir: string, caseDir: string, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
-  const chunksDir = join(corpusDir, `pretty`, `client`);
-  const closure: Closure = buildSandbox(chunksDir, caseDir, c.chunk, c.stubs ?? {});
+  const source = selectCorpusSource(corpusDir);
+  const closure: Closure = buildSandbox(source.chunksDir, caseDir, c.chunk, c.stubs ?? {});
   try {
-    return await runInSandbox(corpusDir, caseDir, closure, c, log);
+    return await runInSandbox(corpusDir, caseDir, source, closure, c, log);
   } finally {
     rmSync(closure.dir, { recursive: true, force: true });
   }
 }
 
-async function runInSandbox(corpusDir: string, caseDir: string, closure: Closure, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
-  log(`sandbox: ${closure.chunks.length} chunks (${closure.stubbed.length} stubbed) at ${closure.dir}`);
+async function runInSandbox(corpusDir: string, caseDir: string, source: CorpusSource, closure: Closure, c: CaseFile, log: (line: string) => void): Promise<RunResult> {
+  log(`sandbox: ${source.flavor} ${source.path}, ${closure.chunks.length} chunks (${closure.stubbed.length} stubbed) at ${closure.dir}`);
   for (const name of closure.chunks) {
     log(`  ${closure.stubbed.includes(name) ? `[stub] ` : ``}${name}`);
   }
@@ -215,6 +237,7 @@ async function runInSandbox(corpusDir: string, caseDir: string, closure: Closure
     provenance: {
       tool: `corpus-exec/g1`,
       corpusHead: gitHead(corpusDir),
+      corpusSource: { flavor: source.flavor, path: source.path },
       entry: closure.entry, // resolved full name (case may declare a prefix)
       closureSize: closure.chunks.length,
       stubbed: closure.stubbed,
