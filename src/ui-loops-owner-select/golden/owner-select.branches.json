@@ -1,0 +1,67 @@
+{
+  "unit": "ui-loops-owner-select/AutomationOwnerSelect",
+  "chunk": "AutomationOwnerSelect",
+  "stubs": {
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "source": "export const E_ = `stub:ContextualMenuActions.E_(secondary-action)`; export const K_ = `stub:ContextualMenuActions.K_(property-trigger)`; export const lt = { id: `stub:ContextualMenuActions.lt(change-owner-action)` }; export const v_ = `stub:ContextualMenuActions.v_(users-tooltip)`;",
+      "why": "full chunk name pinned (hash-rotated twin exists, the G10/G11 finding). E_ is the secondary-trigger action the entry spreads into secondaryTrigger.actions; lt is the base change-owner action object AutomationHelper returns (pinned as an id-marked object so the spread in the disabled branch is observable); K_ is the property trigger component; v_ the users tooltip."
+    },
+    "AutomationHistoryDialog.DYWJ3DgX.js": {
+      "source": "export const t = `stub:AutomationHistoryDialog.t`;",
+      "why": "full chunk name pinned (a re-export twin B86oepp7 exists); imported only by the out-of-scope hook C; linking-only marker."
+    },
+    "Avatar.DGwSs61a.js": {
+      "source": "export const t = `stub:Avatar.t(Avatar)`; export const Ht = `stub:Avatar.Ht(UserName)`;",
+      "why": "Full chunk name pinned (hash-rotated twin Avatar.C9xkUBJK.js exists; the entry's import literal names DGwSs61a). Component seams: export t is the Avatar component (entry-local n), export Ht the user-name renderer (entry-local t). String markers keep the tree host-tier; the props the entry passes (user/size/enablePresence, enableLink/enablePopover) are the byte oracle; each chunk stays its own ledger row."
+    },
+    "hooks.D4LfSm6u.js": {
+      "source": "export const f = () => { throw new Error(`G13 stub: hooks.f (dispatch) called \u2014 out of the component export's scope`); };",
+      "why": "Full chunk name pinned (hash-rotated twin hooks.CWG3Ngg6.js exists; the entry's import literal names D4LfSm6u). imported only by the out-of-scope hook C; linking-only, throws on call."
+    },
+    "AutomationHelper.B0HEcOoo.js": {
+      "source": "export const t = { getChangeAutomationOwnerAction(access) { if (access.configure.kind !== `disabled`) return { id: `stub:ContextualMenuActions.lt(change-owner-action)` }; const { reason } = access.configure; return { id: `stub:ContextualMenuActions.lt(change-owner-action)`, disabledReason: () => reason }; } };",
+      "why": "Full chunk name pinned per the entry's import literal. the entry calls exactly ONE static member. Its pinned body is the helper's own raw source, hand-verified in AutomationHelper.B0HEcOoo.js (`static getChangeAutomationOwnerAction(e){if(e.configure.kind!==`disabled`)return O;let{reason:t}=e.configure;return{...O,disabledReason:()=>t}}` where O is the ContextualMenuActions.lt base action, represented by the same id-marked object as the lt stub so the spread semantics are preserved). The 50KB helper's closure reads window at module scope and cannot execute in the sandbox (the G7 finding)."
+    },
+    "Text.gv7OudGa.js": {
+      "source": "export const t = `stub:Text.t`;",
+      "why": "Full chunk name pinned per the entry's import literal. component seam; marker \u2014 props (variant/color/truncate) are the oracle."
+    },
+    "Button.DD4dEZh7.js": {
+      "source": "export const t = `stub:Button.t`;",
+      "why": "Full chunk name pinned per the entry's import literal. component seam; marker \u2014 props (variant/size/iconContainerSize/monotoneIcon/sx) are the oracle."
+    },
+    "ActionTrigger.CLIWDN56.js": {
+      "source": "export const t = `stub:ActionTrigger.t`;",
+      "why": "Full chunk name pinned per the entry's import literal. component seam (the inline branch's trigger); marker \u2014 the spread trigger config props are the oracle."
+    },
+    "AlertDialog.Nxv6sEJD.js": {
+      "source": "export const r = new Proxy({}, { get(_, k){ throw new Error(`G13 stub: AlertDialog.r.${String(k)} read \u2014 out of the component export's scope`); } });",
+      "why": "Full chunk name pinned per the entry's import literal. imported only by the out-of-scope hook C (g.show/g.widths); throws on any member read."
+    },
+    "useUser.CGqqjeJr.js": {
+      "source": "export const t = () => { throw new Error(`G13 stub: useUser called \u2014 out of the component export's scope`); };",
+      "why": "Full chunk name pinned per the entry's import literal. imported only by the out-of-scope hook C; linking-only, throws on call."
+    },
+    "react.Bfm_Hgom.js": {
+      "source": "export const t = () => new Proxy({}, { get(_, k){ if (k === `default` || k === `__esModule` || typeof k === `symbol`) return undefined; throw new Error(`G13 stub: react member read: ${String(k)} \u2014 the entry export t is hook-free and must not need React`); } });",
+      "why": "Full chunk name pinned per the entry's import literal. The MODULE EVAL runs `x = interop(react.t())` (rolldown-runtime interop of the react namespace), so the factory must return an inert namespace at eval time; any hook/member READ still throws loudly (the hooks belong to the out-of-scope export C \u2014 reaching them from the component export would fail the draft)."
+    },
+    "Issue.DRYymPCa.js": {
+      "source": "const bomb = (name) => new Proxy(function(){}, { get(_, k){ if (k === Symbol.toPrimitive || k === 'toString') return () => `stub:Issue.${name}`; throw new Error(`G13 stub: unpinned Issue member read: ${name}.${String(k)}`); }, apply(){ throw new Error(`G13 stub: Issue.${name} called`); } }); export const Da = bomb(`Da`); export const y_ = bomb(`y_`);",
+      "why": "Full chunk name pinned per the entry's import literal. imported only by the OTHER export (the restore-history hook C, out of this golden's scope \u2014 see manifest); linking-only, throws on any use so accidental execution fails loudly."
+    },
+    "ActionGroups.DFZZ7QMk.js": {
+      "source": "export const U = `stub:ActionGroups.U(group)`;",
+      "why": "Full chunk name pinned per the entry's import literal. imported only by the out-of-scope hook C (its action.group); linking-only marker."
+    },
+    "mobxreactlite.BAMBvwfh.js": {
+      "source": "export const t = (c) => c;",
+      "why": "Full chunk name pinned per the entry's import literal. observer() wraps the component at module-eval time; identity preserves the render function unchanged (the G11/G12 precedent). The component reads no observables in this driver \u2014 fixtures are plain objects."
+    }
+  },
+  "drive": {
+    "file": "owner-select-driver.mjs",
+    "exportMeaning": "export{C as n, w as t} \u2014 w (exported t) is the owner-select component (mobx observer wrap): UsersTooltip(users:[workflow.effectiveOwner]) around a render prop that builds the trigger config (targets/action/dangerouslyNeverDisabled/tooltipContentFactory/tooltipInteractive/secondaryTrigger) and renders the `inline` branch (ActionTrigger > Button > Text > UserName) or the default `property` branch (PropertyTrigger > [Avatar, Text > UserName]). C (exported n) is the restore-history HOOK (useCallback/useMemo + AlertDialog side effects) \u2014 OUT of this golden's scope, declared GAP in the manifest."
+  },
+  "notes": "G13: matrix \u00a7A 'Owner select' row. Drive mode; three parametrizations: propertyAllowed (default appearance + configure.kind allowed \u2192 dangerouslyNeverDisabled true), inlineAllowed (inline branch, sx forwarding, Button/Text/UserName nesting), propertyDisabledKind (kind disabled \u2192 dangerouslyNeverDisabled false AND the action object carries disabledReason \u2014 the helper's disabled branch). The render prop is invoked with a pinned interactiveUsersTooltipContent marker (the exact seam the tooltip chunk fills); functions in props project as <function:name> placeholders (onClick etc. cannot serialize \u2014 declared projection). The entry's own sx tables (detailsProperty kVQacm sx-b3r6kr / inlineButton kmuXW sx-s83m0k kpe85a sx-1ug7bdz) land verbatim in the output."
+}

@@ -1,0 +1,1465 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "AutomationOwnerSelect.Cl2Nhq6T.js",
+    "closureSize": 17,
+    "stubbed": [
+      "ActionGroups.DFZZ7QMk.js",
+      "ActionTrigger.CLIWDN56.js",
+      "AlertDialog.Nxv6sEJD.js",
+      "AutomationHelper.B0HEcOoo.js",
+      "AutomationHistoryDialog.DYWJ3DgX.js",
+      "Avatar.DGwSs61a.js",
+      "Button.DD4dEZh7.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "Text.gv7OudGa.js",
+      "hooks.D4LfSm6u.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "react.Bfm_Hgom.js",
+      "useUser.CGqqjeJr.js"
+    ],
+    "chunkHashes": {
+      "AutomationOwnerSelect.Cl2Nhq6T.js": "149d97b4168982f21f320e1bc63d9dd16d49c69e102347e294c9712161974d54",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "propertyAllowed",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "tooltip",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.v_(users-tooltip)"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "users",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "id",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "user-owner-1"
+                                    }
+                                  },
+                                  {
+                                    "key": "name",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "Owner Fixture"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "renderPropResult",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.K_(property-trigger)"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "targets",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "id",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "wf-1"
+                                    }
+                                  },
+                                  {
+                                    "key": "effectiveOwner",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "user-owner-1"
+                                          }
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "Owner Fixture"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "action",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "id",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.lt(change-owner-action)"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "dangerouslyNeverDisabled",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "tooltipContentFactory",
+                          "value": {
+                            "tag": "string",
+                            "value": "pin:interactiveUsersTooltipContent"
+                          }
+                        },
+                        {
+                          "key": "tooltipInteractive",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "secondaryTrigger",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "actions",
+                                "value": {
+                                  "tag": "array",
+                                  "values": [
+                                    {
+                                      "tag": "string",
+                                      "value": "stub:ContextualMenuActions.E_(secondary-action)"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "targets",
+                                "value": {
+                                  "tag": "array",
+                                  "values": [
+                                    {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "user-owner-1"
+                                          }
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "Owner Fixture"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "sx",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "kVQacm",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-b3r6kr"
+                                    }
+                                  },
+                                  {
+                                    "key": "$$css",
+                                    "value": {
+                                      "tag": "boolean",
+                                      "value": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "undefined"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "element",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "stub:Avatar.t(Avatar)"
+                                    }
+                                  },
+                                  {
+                                    "key": "key",
+                                    "value": {
+                                      "tag": "null"
+                                    }
+                                  },
+                                  {
+                                    "key": "props",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "user",
+                                          "value": {
+                                            "tag": "object",
+                                            "prototype": "object",
+                                            "properties": [
+                                              {
+                                                "key": "id",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "user-owner-1"
+                                                }
+                                              },
+                                              {
+                                                "key": "name",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "Owner Fixture"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "key": "size",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "small"
+                                          }
+                                        },
+                                        {
+                                          "key": "enablePresence",
+                                          "value": {
+                                            "tag": "boolean",
+                                            "value": false
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "element",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "stub:Text.t"
+                                    }
+                                  },
+                                  {
+                                    "key": "key",
+                                    "value": {
+                                      "tag": "null"
+                                    }
+                                  },
+                                  {
+                                    "key": "props",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "variant",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "small"
+                                          }
+                                        },
+                                        {
+                                          "key": "color",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "labelTitle"
+                                          }
+                                        },
+                                        {
+                                          "key": "truncate",
+                                          "value": {
+                                            "tag": "boolean",
+                                            "value": true
+                                          }
+                                        },
+                                        {
+                                          "key": "children",
+                                          "value": {
+                                            "tag": "object",
+                                            "prototype": "object",
+                                            "properties": [
+                                              {
+                                                "key": "element",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "stub:Avatar.Ht(UserName)"
+                                                }
+                                              },
+                                              {
+                                                "key": "key",
+                                                "value": {
+                                                  "tag": "null"
+                                                }
+                                              },
+                                              {
+                                                "key": "props",
+                                                "value": {
+                                                  "tag": "object",
+                                                  "prototype": "object",
+                                                  "properties": [
+                                                    {
+                                                      "key": "user",
+                                                      "value": {
+                                                        "tag": "object",
+                                                        "prototype": "object",
+                                                        "properties": [
+                                                          {
+                                                            "key": "id",
+                                                            "value": {
+                                                              "tag": "string",
+                                                              "value": "user-owner-1"
+                                                            }
+                                                          },
+                                                          {
+                                                            "key": "name",
+                                                            "value": {
+                                                              "tag": "string",
+                                                              "value": "Owner Fixture"
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    },
+                                                    {
+                                                      "key": "enableLink",
+                                                      "value": {
+                                                        "tag": "boolean",
+                                                        "value": false
+                                                      }
+                                                    },
+                                                    {
+                                                      "key": "enablePopover",
+                                                      "value": {
+                                                        "tag": "boolean",
+                                                        "value": false
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "inlineAllowed",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "tooltip",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.v_(users-tooltip)"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "users",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "id",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "user-owner-1"
+                                    }
+                                  },
+                                  {
+                                    "key": "name",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "Owner Fixture"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "renderPropResult",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ActionTrigger.t"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "targets",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "id",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "wf-1"
+                                    }
+                                  },
+                                  {
+                                    "key": "effectiveOwner",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "user-owner-1"
+                                          }
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "Owner Fixture"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "action",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "id",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.lt(change-owner-action)"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "dangerouslyNeverDisabled",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "tooltipContentFactory",
+                          "value": {
+                            "tag": "string",
+                            "value": "pin:interactiveUsersTooltipContent"
+                          }
+                        },
+                        {
+                          "key": "tooltipInteractive",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "secondaryTrigger",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "actions",
+                                "value": {
+                                  "tag": "array",
+                                  "values": [
+                                    {
+                                      "tag": "string",
+                                      "value": "stub:ContextualMenuActions.E_(secondary-action)"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "targets",
+                                "value": {
+                                  "tag": "array",
+                                  "values": [
+                                    {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "user-owner-1"
+                                          }
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "Owner Fixture"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "noAriaLabel",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "noMinWidth",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "sx",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "pinned",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "sx-fixture"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "element",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:Button.t"
+                                }
+                              },
+                              {
+                                "key": "key",
+                                "value": {
+                                  "tag": "null"
+                                }
+                              },
+                              {
+                                "key": "props",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "variant",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "borderless"
+                                      }
+                                    },
+                                    {
+                                      "key": "size",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "small"
+                                      }
+                                    },
+                                    {
+                                      "key": "icon",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "element",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "stub:Avatar.t(Avatar)"
+                                            }
+                                          },
+                                          {
+                                            "key": "key",
+                                            "value": {
+                                              "tag": "null"
+                                            }
+                                          },
+                                          {
+                                            "key": "props",
+                                            "value": {
+                                              "tag": "object",
+                                              "prototype": "object",
+                                              "properties": [
+                                                {
+                                                  "key": "user",
+                                                  "value": {
+                                                    "tag": "object",
+                                                    "prototype": "object",
+                                                    "properties": [
+                                                      {
+                                                        "key": "id",
+                                                        "value": {
+                                                          "tag": "string",
+                                                          "value": "user-owner-1"
+                                                        }
+                                                      },
+                                                      {
+                                                        "key": "name",
+                                                        "value": {
+                                                          "tag": "string",
+                                                          "value": "Owner Fixture"
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                },
+                                                {
+                                                  "key": "size",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "tiny"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "enablePresence",
+                                                  "value": {
+                                                    "tag": "boolean",
+                                                    "value": false
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "iconContainerSize",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "content"
+                                      }
+                                    },
+                                    {
+                                      "key": "monotoneIcon",
+                                      "value": {
+                                        "tag": "boolean",
+                                        "value": false
+                                      }
+                                    },
+                                    {
+                                      "key": "sx",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "kmuXW",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-s83m0k"
+                                            }
+                                          },
+                                          {
+                                            "key": "kpe85a",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-1ug7bdz"
+                                            }
+                                          },
+                                          {
+                                            "key": "$$css",
+                                            "value": {
+                                              "tag": "boolean",
+                                              "value": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "element",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "stub:Text.t"
+                                            }
+                                          },
+                                          {
+                                            "key": "key",
+                                            "value": {
+                                              "tag": "null"
+                                            }
+                                          },
+                                          {
+                                            "key": "props",
+                                            "value": {
+                                              "tag": "object",
+                                              "prototype": "object",
+                                              "properties": [
+                                                {
+                                                  "key": "variant",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "mini"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "color",
+                                                  "value": {
+                                                    "tag": "string",
+                                                    "value": "currentColor"
+                                                  }
+                                                },
+                                                {
+                                                  "key": "truncate",
+                                                  "value": {
+                                                    "tag": "boolean",
+                                                    "value": true
+                                                  }
+                                                },
+                                                {
+                                                  "key": "children",
+                                                  "value": {
+                                                    "tag": "object",
+                                                    "prototype": "object",
+                                                    "properties": [
+                                                      {
+                                                        "key": "element",
+                                                        "value": {
+                                                          "tag": "string",
+                                                          "value": "stub:Avatar.Ht(UserName)"
+                                                        }
+                                                      },
+                                                      {
+                                                        "key": "key",
+                                                        "value": {
+                                                          "tag": "null"
+                                                        }
+                                                      },
+                                                      {
+                                                        "key": "props",
+                                                        "value": {
+                                                          "tag": "object",
+                                                          "prototype": "object",
+                                                          "properties": [
+                                                            {
+                                                              "key": "user",
+                                                              "value": {
+                                                                "tag": "object",
+                                                                "prototype": "object",
+                                                                "properties": [
+                                                                  {
+                                                                    "key": "id",
+                                                                    "value": {
+                                                                      "tag": "string",
+                                                                      "value": "user-owner-1"
+                                                                    }
+                                                                  },
+                                                                  {
+                                                                    "key": "name",
+                                                                    "value": {
+                                                                      "tag": "string",
+                                                                      "value": "Owner Fixture"
+                                                                    }
+                                                                  }
+                                                                ]
+                                                              }
+                                                            },
+                                                            {
+                                                              "key": "enableLink",
+                                                              "value": {
+                                                                "tag": "boolean",
+                                                                "value": false
+                                                              }
+                                                            },
+                                                            {
+                                                              "key": "enablePopover",
+                                                              "value": {
+                                                                "tag": "boolean",
+                                                                "value": false
+                                                              }
+                                                            }
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "propertyDisabledKind",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "tooltip",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.v_(users-tooltip)"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "users",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "id",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "user-owner-1"
+                                    }
+                                  },
+                                  {
+                                    "key": "name",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "Owner Fixture"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "renderPropResult",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "element",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:ContextualMenuActions.K_(property-trigger)"
+                    }
+                  },
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "null"
+                    }
+                  },
+                  {
+                    "key": "props",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "targets",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "id",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "wf-1"
+                                    }
+                                  },
+                                  {
+                                    "key": "effectiveOwner",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "user-owner-1"
+                                          }
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "Owner Fixture"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "action",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "id",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "stub:ContextualMenuActions.lt(change-owner-action)"
+                                }
+                              },
+                              {
+                                "key": "disabledReason",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "<function:disabledReason>"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "dangerouslyNeverDisabled",
+                          "value": {
+                            "tag": "boolean",
+                            "value": false
+                          }
+                        },
+                        {
+                          "key": "tooltipContentFactory",
+                          "value": {
+                            "tag": "string",
+                            "value": "pin:interactiveUsersTooltipContent"
+                          }
+                        },
+                        {
+                          "key": "tooltipInteractive",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "secondaryTrigger",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "actions",
+                                "value": {
+                                  "tag": "array",
+                                  "values": [
+                                    {
+                                      "tag": "string",
+                                      "value": "stub:ContextualMenuActions.E_(secondary-action)"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "targets",
+                                "value": {
+                                  "tag": "array",
+                                  "values": [
+                                    {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "user-owner-1"
+                                          }
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "Owner Fixture"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "sx",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "kVQacm",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "sx-b3r6kr"
+                                    }
+                                  },
+                                  {
+                                    "key": "$$css",
+                                    "value": {
+                                      "tag": "boolean",
+                                      "value": true
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "undefined"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "element",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "stub:Avatar.t(Avatar)"
+                                    }
+                                  },
+                                  {
+                                    "key": "key",
+                                    "value": {
+                                      "tag": "null"
+                                    }
+                                  },
+                                  {
+                                    "key": "props",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "user",
+                                          "value": {
+                                            "tag": "object",
+                                            "prototype": "object",
+                                            "properties": [
+                                              {
+                                                "key": "id",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "user-owner-1"
+                                                }
+                                              },
+                                              {
+                                                "key": "name",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "Owner Fixture"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "key": "size",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "small"
+                                          }
+                                        },
+                                        {
+                                          "key": "enablePresence",
+                                          "value": {
+                                            "tag": "boolean",
+                                            "value": false
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "element",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "stub:Text.t"
+                                    }
+                                  },
+                                  {
+                                    "key": "key",
+                                    "value": {
+                                      "tag": "null"
+                                    }
+                                  },
+                                  {
+                                    "key": "props",
+                                    "value": {
+                                      "tag": "object",
+                                      "prototype": "object",
+                                      "properties": [
+                                        {
+                                          "key": "variant",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "small"
+                                          }
+                                        },
+                                        {
+                                          "key": "color",
+                                          "value": {
+                                            "tag": "string",
+                                            "value": "labelTitle"
+                                          }
+                                        },
+                                        {
+                                          "key": "truncate",
+                                          "value": {
+                                            "tag": "boolean",
+                                            "value": true
+                                          }
+                                        },
+                                        {
+                                          "key": "children",
+                                          "value": {
+                                            "tag": "object",
+                                            "prototype": "object",
+                                            "properties": [
+                                              {
+                                                "key": "element",
+                                                "value": {
+                                                  "tag": "string",
+                                                  "value": "stub:Avatar.Ht(UserName)"
+                                                }
+                                              },
+                                              {
+                                                "key": "key",
+                                                "value": {
+                                                  "tag": "null"
+                                                }
+                                              },
+                                              {
+                                                "key": "props",
+                                                "value": {
+                                                  "tag": "object",
+                                                  "prototype": "object",
+                                                  "properties": [
+                                                    {
+                                                      "key": "user",
+                                                      "value": {
+                                                        "tag": "object",
+                                                        "prototype": "object",
+                                                        "properties": [
+                                                          {
+                                                            "key": "id",
+                                                            "value": {
+                                                              "tag": "string",
+                                                              "value": "user-owner-1"
+                                                            }
+                                                          },
+                                                          {
+                                                            "key": "name",
+                                                            "value": {
+                                                              "tag": "string",
+                                                              "value": "Owner Fixture"
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    },
+                                                    {
+                                                      "key": "enableLink",
+                                                      "value": {
+                                                        "tag": "boolean",
+                                                        "value": false
+                                                      }
+                                                    },
+                                                    {
+                                                      "key": "enablePopover",
+                                                      "value": {
+                                                        "tag": "boolean",
+                                                        "value": false
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
