@@ -1,11 +1,13 @@
 # Linear Client GraphQL Operations (condensed catalog)
 
-Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual interface data for interoperability. Regenerate with pipeline/run.sh. 258 operations.
+Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual interface data for interoperability. Regenerate with pipeline/run.sh. 376 operations.
 
 - **mutation** `AccessKeyCreate` `($pipelineId: String!)`
 - **mutation** `AccessKeyRevoke` `($id: String!, $immediate: Boolean)`
 - **mutation** `AccessKeyRotate` `($id: String!, $revokeImmediately: Boolean)`
 - **mutation** `AddUserMessageToAiPromptProgress` `($progressId: String!, $message: String!)`
+- **mutation** `AdminJobStart` `($input: AdminJobWorkflowStartConfiguration!)`
+- **query** `AdminJobsStatusQuery` `(includeRecentlyCompleted: true)`
 - **query** `AgentSessionCodingHarness` `($id: String!)`
 - **query** `AgentSessionCodingHarnessModelLabel` `($id: String!)`
 - **mutation** `AgentSessionRestartWithDefaultModel` `($id: String!)`
@@ -14,22 +16,31 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `AgentSkillDetailSuggestion` `($input: AgentSkillDetailSuggestionInput!)`
 - **query** `AgentsWithSessionSupport` `(filter: { app: { eq: true } })`
 - **mutation** `AiConversationCancel` `($id: String!)`
+- **query** `AiConversationDebugBraintrustUrl` `($id: String!)`
+- **mutation** `AiConversationDebugCompact` `($id: String!)`
 - **query** `AiConversationDebugExecutions` `($limit: Int, $userId: String, $sourceType: AiConversationInitialSource!)`
+- **mutation** `AiConversationDebugNotifyLoopCompleted` `($id: String!)`
+- **mutation** `AiConversationDebugStartWorkspaceOnboarding`
 - **query** `AiConversationDebugThreadState` `($id: String!)`
 - **mutation** `AiConversationSendElicitationResponses` `($input: AiConversationSendElicitationResponsesInput!)`
 - **mutation** `AiConversationSendMessage` `($input: AiConversationSendMessageInput!)`
 - **query** `AiConversationsQuery` `( $first: Int $after: String $last: Int $before: String $filter: AiConversationFilter )`
+- **mutation** `AirbyteIntegrationConnect` `($input: AirbyteConfigurationInput!)`
+- **mutation** `AppUserOauthTokensRevoke` `($appUserId: String!)`
+- **query** `ApplicationInfoByIdsQuery` `($ids: [String!]!)`
 - **query** `ApplicationInfoQuery` `($clientId: String!)`
 - **query** `ApplicationWithAuthorizationQuery` `( $clientId: String! $scope: [String!]! $redirectUri: String! $actor: String )`
 - **query** `ArchivedCustomerNeedsCount` `($customerId: String!)`
 - **query** `ArchivedIntegrationsQuery`
 - **query** `ArchivedTeamsQuery`
+- **mutation** `AsksConnectChannel` `($code: String!, $redirectUri: String!)`
 - **mutation** `AsksWebSettingsCustomHostnameRefreshMutation` `($asksWebSettingsId: String!)`
 - **mutation** `AttachmentLinkFront` `($issueId: String!, $conversationId: String!)`
 - **mutation** `AttachmentLinkGitHubIssue` `($issueId: String!, $url: String!)`
 - **mutation** `AttachmentLinkGitHubPR` `($issueId: String!, $url: String!, $linkKind: GitLinkKind)`
 - **mutation** `AttachmentLinkGitLabMR` `( $issueId: String! $url: String! $projectPathWithNamespace: String! $number: Float! )`
 - **mutation** `AttachmentLinkSlack` `($url: String!, $issueId: String!, $syncToCommentThread: Boolean)`
+- **query** `AttachmentSources` `($teamId: String)`
 - **mutation** `AttachmentSyncToSlack` `($id: String!)`
 - **query** `AuditLogSettingsPage` `($first: Int, $last: Int, $after: String, $before: String, $type: String, $notType: String)`
 - **query** `AuditLogWebhookFailureEventsQuery` `($webhookId: String!)`
@@ -37,6 +48,8 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `AuthorizedApplicationsQuery`
 - **query** `AutomationTrustedSources`
 - **query** `AutomationTrustedSourcesWithUsage`
+- **mutation** `BillingDetailsUpdate` `($input: BillingDetailsUpdateInput!)`
+- **mutation** `BulkRerunAutomation` `($input: BulkRerunAutomationInput!)`
 - **query** `CachedBillingDetails`
 - **query** `CachedBillingInvoices`
 - **query** `CachedUsageAnalytics` `( $from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatu)`
@@ -44,6 +57,10 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `CachedUsageLimitSpend` `($subjectType: UsageLimitSubjectType!, $fallbackPeriod: UsageLimitPeriod!)`
 - **query** `CachedUsageSourceBreakdown` `($range: UsageSummaryRange!, $cursor: String)`
 - **query** `CachedUsageSummary` `($range: UsageSummaryRange!, $cursor: String)`
+- **mutation** `CancelSuggestionsWorkflow` `($issueId: String!)`
+- **query** `CheckChatMessagesCapabilityGrantEligibility` `($integrationId: String!)`
+- **query** `CheckScopes` `($integrationId: String!, $scopes: [String!]!)`
+- **query** `ClientPreviews`
 - **query** `CodingEnvironmentLatestSnapshotStatus` `($id: String!)`
 - **mutation** `CodingEnvironmentRefresh` `($id: String!)`
 - **mutation** `CodingEnvironmentSecretKeyCreate` `($codingEnvironmentId: String!)`
@@ -54,53 +71,86 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `CommitSigningKeyCreate` `($name: String!, $privateKey: String!)`
 - **mutation** `CommitSigningKeyDelete`
 - **mutation** `CompleteMcpOAuth`
+- **mutation** `ConnectCustomViewSlackChannel` `($code: String!, $customViewId: String!, $redirectUri: String!)`
+- **mutation** `ConnectInitiativeSlackChannel` `($code: String!, $initiativeId: String!, $redirectUri: String!)`
+- **mutation** `ConnectProjectMicrosoftTeamsChannel` `( $projectId: String! $teamId: String! $teamName: String! $channelId: String! $channelName: String! $membershipType: String! )`
+- **mutation** `ConnectProjectSlackChannel` `($code: String!, $projectId: String!, $redirectUri: String!, $service: String!)`
+- **mutation** `ConnectTeamSlackChannel` `($code: String!, $teamId: String!, $redirectUri: String!)`
 - **query** `ContributorRunsQuery` `($input: AiConversationRootReferencesInput!)`
 - **mutation** `CreateCsvExportReport` `($includePrivateTeamIds: [String!], $includeRestrictedTeamIds: [String!])`
+- **mutation** `CreateOrganizationFromOnboarding` `($name: String!, $urlKey: String!, $domainAccess: Boolean, $timezone: String, $utm: String, $utmFirstTouch: String, $companyRole: String, $companySize: String, $)`
 - **query** `CustomViewHasSubscribers` `($id: String!)`
 - **query** `CustomViewSuggestions` `($input: JSONObject!, $modelName: String)`
 - **query** `CustomerAttributesSyncProgressQuery`
 - **mutation** `CustomerAttributesTriggerRefreshMutation` `($customerId: String!)`
 - **mutation** `CustomerAttributesTriggerSyncMutation`
+- **query** `CustomersQuery` `($first: Int, $after: String, $filter: CustomerFilter, $sorts: [CustomerSortInput!])`
 - **mutation** `CycleShiftAll` `($id: String!, $daysToShift: Float!)`
 - **mutation** `CycleStartUpcomingCycleToday` `($id: String!)`
+- **query** `DatadogFeatureFlagRolloutStage` `($integrationId: String!, $id: String!)`
 - **mutation** `DebugAddUsageCredit` `($input: DebugAddUsageCreditInput!)`
 - **query** `DebugAgentSessionUsage` `($agentSessionId: String!)`
 - **query** `DebugAiConversationUsage` `($aiConversationId: String!)`
+- **mutation** `DebugCodingSessionModelRoute` `($issueId: String!)`
 - **mutation** `DebugCreateAgentUser`
+- **mutation** `DebugCreateStubGitHubIntegration`
+- **mutation** `DebugCreateSubscription` `($subscriptionType: String!)`
+- **mutation** `DebugCreateTestData`
+- **mutation** `DebugCreateUsers` `($input: DebugCreateUsersInput!)`
 - **mutation** `DebugFillInbox` `($input: DebugFillInboxInput!)`
 - **mutation** `DebugFlagOverrideSet` `($flag: String!, $value: JSONObject)`
 - **query** `DebugFlagOverrides`
 - **mutation** `DebugFlagOverridesClear` `($flags: [String!])`
+- **mutation** `DebugImportMeetingTranscript` `($input: DebugImportMeetingTranscriptInput!)`
 - **mutation** `DebugKeepFlagOverridesSet` `($keepFlagOverrides: Boolean!)`
 - **mutation** `DebugRecomputeUsageEntitlements`
 - **mutation** `DebugReleaseChannelOverrideSet` `($releaseChannel: ReleaseChannel)`
 - **mutation** `DebugResetUsageData`
 - **mutation** `DebugSeedUsageEventBreakdowns`
+- **mutation** `DebugSetAiProviderRestrictions` `($preset: DebugAiProviderRestrictionPreset!)`
+- **mutation** `DebugSetTrial` `($planType: String)`
 - **mutation** `DebugSimulateUsageSpend` `($input: DebugSimulateUsageSpendInput!)`
+- **mutation** `DebugToggleSubscriptionItem` `($addOnPrice: String!)`
 - **mutation** `DebugTriggerUsageAlert` `($input: DebugTriggerUsageAlertInput!)`
 - **mutation** `DesktopTerminalHandoffConsume` `($token: String!)`
 - **mutation** `DesktopTerminalHandoffCreate` `($input: DesktopTerminalHandoffCreateInput!)`
 - **query** `DiffFiles` `($id: String!)`
+- **mutation** `DiscoverMcpOAuth` `($mcpUrl: String!, $mcpServerDefinitionId: String, $integrationId: String)`
+- **query** `DocumentContentAgentCheckpoint` `( $documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String! )`
 - **mutation** `DocumentContentAgentCheckpointCompact` `($aiConversationId: String!)`
+- **query** `DocumentContentAgentCheckpointHead` `( $documentContentId: String! $aiConversationId: String! $mode: DocumentContentAgentCheckpointMode! )`
+- **mutation** `DocumentContentAgentCheckpointRestore` `($documentContentId: String!, $checkpointId: String!)`
 - **mutation** `DocumentContentAgentCheckpointRestoreTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
 - **mutation** `DocumentContentAgentCheckpointRevert` `( $documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String! )`
 - **mutation** `DocumentContentAgentCheckpointRevertTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
+- **query** `DocumentContentAgentCheckpointsForConversation` `($aiConversationId: String!)`
+- **query** `DocumentContentAgentCheckpointsForTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
+- **query** `DocumentContentHistoryEntries` `($entryIds: [String!]!)`
+- **query** `DocumentContentHistoryTimeline` `($documentContentId: String!)`
 - **mutation** `DocumentContentRevisionReview` `($id: String!)`
 - **query** `EmailIntakeAddressDnsRecordsQuery` `($emailIntakeAddressId: String!)`
 - **mutation** `EmailIntakeAddressRefreshSesDomainStatusMutation` `($emailIntakeAddressId: String!)`
 - **mutation** `EmailIntakeAddressRotate` `($id: String!)`
+- **mutation** `EmailTokenUserAccountAuth` `($email: String!, $token: String!, $timezone: String!, $inviteLink: String, $clientAuthCode: String)`
+- **mutation** `EmailUserAccountAuthChallenge` `( $email: String! $clientAuthCode: String $isDesktop: Boolean $inviteLink: String $loginCodeOnly: Boolean $challengeResponse: String $sessionId: String )`
 - **query** `EmbedInfo` `($url: String!)`
 - **query** `EmojiSearch` `($input: EmojiSearchInput!)`
 - **query** `FailuresForOauthWebhooksQuery` `($oauthClientId: String!)`
 - **mutation** `FeatureFlagDefaultIntegration` `($integrationId: String)`
+- **query** `FeatureFlagFromProviderQuery` `($integrationId: String)`
 - **mutation** `FeatureFlagIntegrationUpdate` `($integrationId: String!, $allowFlagCreation: Boolean!)`
+- **mutation** `FeatureFlagRollout` `($id: String!, $rolloutStageId: String!)`
 - **query** `FeatureFlagSegmentsQuery` `($integrationId: String)`
 - **query** `FigmaEmbedInfo` `($fileId: String!, $nodeId: String)`
 - **mutation** `FileUploadMutation` `( $filename: String! $contentType: String! $size: Int! $metaData: JSON $makePublic: Boolean )`
 - **query** `Flags` `($releaseChannelOverride: ReleaseChannel, $flagClient: FlagClient)`
+- **query** `FlagsMetadata`
 - **query** `FlashcardsRecentWork` `($userId: ID!, $since: DateTimeOrDuration!)`
 - **mutation** `FlashcardsWhatIf` `($input: FlashcardsWhatIfInput!)`
 - **query** `FreeLoopCredit`
+- **mutation** `GenerateIssueSuggestions` `($issueId: String!)`
+- **query** `GiphySearch` `($query: String!, $limit: Float, $offset: Float)`
+- **query** `GiphyTrending` `($limit: Float, $offset: Float)`
 - **mutation** `GitHubCommitIntegrationCreate`
 - **mutation** `GithubArchivedIntegrationDismissMutation` `($id: String!, $dismissed: Boolean)`
 - **mutation** `GitlabIntegrationConnect` `( $accessToken: String! $gitlabUrl: String! $validationProjectPath: String $readonly: Boolean $expiresAt: String )`
@@ -108,6 +158,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `GitlabRotateToken` `($integrationId: String!)`
 - **mutation** `GitlabUpdateRotationSettings` `($integrationId: String!, $enabled: Boolean!)`
 - **mutation** `GitlabUpdateToken` `( $integrationId: String! $accessToken: String! $readonly: Boolean $expiresAt: DateTime )`
+- **mutation** `GoogleUserAccountAuth` `( $code: String!, $inviteLink: String, $redirectUri: String!, $timezone: String! $disallowSignup: Boolean $sessionId: String )`
 - **query** `IconSearch` `($input: IconSearchInput!)`
 - **query** `IconSuggestion` `($input: IconSuggestionInput!)`
 - **mutation** `IdentityProviderConfigureSamlViaXml` `($id: String!, $samlConfigXml: String, $samlConfigXmlUrl: String)`
@@ -115,7 +166,9 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `IdentityProviderRotateScimToken` `($id: String!)`
 - **mutation** `IdentityProviderUpdateScimRoleGroupName` `($id: String!, $role: UserRoleType!, $groupName: String!)`
 - **query** `InaccessiblePrivateAsksChannelIds` `($integrationId: String!)`
+- **query** `InitiativeFilterSuggestion` `($input: String!, $teamId: String)`
 - **query** `Insight` `($payload: InsightPayload!)`
+- **mutation** `IntegrationAsksLinkSlackUserId` `($integrationId: String!, $code: String!, $redirectUri: String!)`
 - **mutation** `IntegrationAsksNotifyAutoCreateEnabled` `($integrationId: String!, $channelId: String!, $channelName: String!)`
 - **mutation** `IntegrationCustomerDataAttributesRefreshMutation` `($input: IntegrationCustomerDataAttributesRefreshInput!)`
 - **mutation** `IntegrationDatadogConnect` `( $site: String! $apiKey: String! $applicationKey: String! $environmentId: String! )`
@@ -124,12 +177,23 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `IntegrationGitHubEnterpriseServerPreviouslyConnected`
 - **mutation** `IntegrationGithubConnect` `( $installationId: String! $code: String! $codeAccess: Boolean $githubHost: String $confirmReplace: Boolean )`
 - **mutation** `IntegrationGithubImportRefreshMutation` `($id: String!)`
+- **mutation** `IntegrationGithubRemoveCodeAccess` `($integrationId: String!)`
+- **mutation** `IntegrationJiraCustomOAuthConnect` `($input: JiraCustomOAuthConfigurationInput!)`
+- **mutation** `IntegrationJiraCustomOAuthUpdate` `($input: JiraCustomOAuthUpdateInput!)`
 - **query** `IntegrationJiraProjectStatuses` `($integrationId: String!, $projectId: String!)`
+- **mutation** `IntegrationJiraUpdate` `($input: JiraUpdateInput!)`
+- **mutation** `IntegrationMcpServerConnect` `( $serverUrl: String! $teamId: String $workflowDefinitionId: String $workflowDefinitionDraftId: String $mcpServerDefinitionId: String $customHeaders: [McpServerC)`
+- **mutation** `IntegrationMcpServerPersonalConnect` `( $serverUrl: String! $mcpServerDefinitionId: String $customHeaders: [McpServerCustomHeaderInput!] )`
 - **mutation** `IntegrationSalesforceMetadataRefreshMutation` `($id: String!)`
+- **mutation** `IntegrationSlackCustomerChannelLink` `($code: String!, $customerId: String!, $redirectUri: String!)`
+- **mutation** `IntegrationSlackImportEmojis` `($code: String!, $redirectUri: String!)`
+- **mutation** `IntegrationSlackOrAsksUpdateSlackTeamName` `($integrationId: String!)`
+- **mutation** `IntegrationSlackWorkflowAccessUpdate` `($integrationId: String!, $enabled: Boolean!)`
 - **query** `IntegrationWorkflowChatTriggerChannels` `($integrationId: String!)`
 - **mutation** `IntegrationZendeskBearerTokenConnect` `( $subdomain: String! $accessToken: String! $botUserRole: String $botUserId: String $customApiUrl: String )`
 - **mutation** `IssueDelete` `($issueId: String!)`
 - **mutation** `IssueExternalSyncDisable` `($attachmentId: String!)`
+- **query** `IssueFilterSuggestion` `($input: String!, $projectId: String, $teamId: String)`
 - **query** `IssueImportCheckCSV` `($csvUrl: String!, $service: String!)`
 - **query** `IssueImportCheckSync` `($issueImportId: String!)`
 - **mutation** `IssueImportCreateAsana` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $asanaToken: String! $asanaTeamName: String! )`
@@ -141,16 +205,22 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `IssueImportDelete` `($issueImportId: String!)`
 - **query** `IssueImportJqlCheckQuery` `( $jiraHostname: String! $jiraEmail: String! $jiraToken: String! $jiraProject: String! $jql: String! )`
 - **mutation** `IssueImportProcess` `($issueImportId: String!, $mapping: JSONObject!)`
+- **query** `IssuePromptContext` `($issueId: String!)`
 - **query** `IssueSuggestions` `($issueId: String, $text: String)`
 - **query** `IssueTitleSuggestion` `($description: String!)`
 - **query** `IssueTitleSuggestionFromCustomerRequest` `($input: String!)`
+- **mutation** `JiraIntegrationConnect` `($input: JiraConfigurationInput!)`
+- **mutation** `JoinOrganizationFromOnboarding` `($organizationId: String!, $inviteLink: String)`
+- **mutation** `LeaveOrganization` `($organizationId: String!)`
 - **mutation** `LogoutOtherSessions`
 - **mutation** `LogoutSession` `($sessionId: String!)`
 - **query** `LoopRunStats` `($id: String!, $startDate: DateTime!, $endDate: DateTime!, $dateAggregation: DateAggregation!)`
 - **mutation** `McpServerDefinitionCreate` `($input: McpServerDefinitionCreateInput!)`
+- **query** `MicrosoftTeamsChannels`
 - **mutation** `MoveMilestone` `($id: String!, $input: ProjectMilestoneMoveInput!)`
 - **mutation** `OAuthClientApprovalCreateMutation` `($input: OauthClientApprovalCreateInput!)`
 - **mutation** `OauthAuthStringAuthorizeMutation` `($appId: String!, $authString: String!)`
+- **query** `OauthClientClientIdQuery` `($id: String!)`
 - **query** `OauthClientGetAppUserRequestedSyncGroups` `($id: String!)`
 - **mutation** `OauthClientRotateSecret` `($id: String!)`
 - **mutation** `OauthClientRotateWebhookSecret` `($id: String!)`
@@ -165,45 +235,73 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `OrganizationDomainClaimMutation` `($id: String!)`
 - **query** `OrganizationDomainClaimRequest` `($id: String!)`
 - **mutation** `OrganizationDomainVerify` `($organizationDomainId: String!, $verificationCode: String!)`
+- **query** `OrganizationExists` `($urlKey: String!)`
+- **query** `OrganizationInviteDetails` `($id: String!)`
 - **query** `OrganizationInviteLink`
 - **query** `OrganizationInviteLinkDetails` `($inviteLink: String!)`
 - **mutation** `OrganizationInviteLinkDisable`
 - **mutation** `OrganizationInviteLinkEnable`
+- **query** `OrganizationMeta` `($urlKey: String!)`
 - **mutation** `OrganizationOverrideQuota` `($id: String!, $input: AdminOverrideQuotaInput!)`
 - **mutation** `OrganizationUpdateSamlSettings` `($settings: OrganizationSamlSettingsInput!)`
 - **mutation** `PartnerOfferCheckoutSessionCreate`
+- **mutation** `PartnerOfferRedeem` `($token: String!, $organizationId: String!)`
 - **mutation** `PartnerOfferRedemptionCancel` `($id: String!)`
+- **query** `PartnerOfferWorkspaces` `($token: String!)`
 - **mutation** `PasskeyDelete` `($id: String!)`
+- **mutation** `PasskeyLoginFinishMutation` `($authId: String!, $response: JSONObject!)`
+- **mutation** `PasskeyLoginStartMutation` `($authId: String!)`
 - **mutation** `PasskeyRegisterFinish` `($response: JSONObject!)`
 - **mutation** `PasskeyRegisterStart`
 - **mutation** `PasskeyUpdate` `($id: String!, $input: PasskeyUpdateInput!)`
 - **query** `PasskeysQuery`
+- **mutation** `PrepareFlare` `($input: FlareUploadInput!)`
+- **mutation** `ProjectAttachmentLinkJiraEpic` `($projectId: String!, $jiraIssueKey: String!, $url: String)`
+- **mutation** `ProjectCreateSlackChannel` `($id: String!, $slackChannelName: String!, $integrationId: String)`
+- **mutation** `ProjectDismissSlackChannelCreationFailure` `($id: String!)`
+- **mutation** `ProjectExternalSyncDisable` `($projectId: String!, $syncSource: ExternalSyncService!)`
+- **query** `ProjectFeatureFlagNames` `($projectId: String!)`
+- **query** `ProjectFilterSuggestion` `($input: String!, $teamId: String)`
+- **mutation** `ProjectReassignStatusAndArchive` `($newProjectStatusId: String!, $originalProjectStatusId: String!)`
+- **query** `ProjectStatusProjectCount` `($id: String!)`
 - **mutation** `PullRequestAgentFixDispatch` `($input: PullRequestAgentFixDispatchInput!)`
 - **mutation** `PullRequestAgentSessionCreate` `($input: PullRequestAgentSessionCreateInput!)`
+- **mutation** `PullRequestApprove` `($id: String!, $headSha: String!)`
+- **mutation** `PullRequestApproveOnBehalfOfLinear` `($id: String!, $headSha: String!)`
 - **query** `PullRequestByGitHubInfo` `($owner: String!, $repo: String!, $number: Int!)`
 - **mutation** `PullRequestClose` `($id: String!)`
 - **mutation** `PullRequestCommentDispatchToAgent` `($input: PullRequestCommentDispatchToAgentInput!)`
+- **mutation** `PullRequestCommit` `($input: PullRequestCommitInput!)`
 - **mutation** `PullRequestConvertToDraft` `($id: String!)`
 - **mutation** `PullRequestDisableAutoMerge` `($id: String!)`
 - **mutation** `PullRequestDismissReview` `($id: String!, $reviewerId: String!, $reason: String!)`
 - **mutation** `PullRequestEnableAutoMerge` `($id: String!, $mergeMethod: PullRequestMergeMethod)`
+- **mutation** `PullRequestEraseTour` `($id: String!)`
 - **query** `PullRequestIdByIdentifier` `($id: String!)`
 - **mutation** `PullRequestMarkReadyForReview` `($id: String!)`
 - **mutation** `PullRequestMerge` `($id: String!, $mergeMethod: PullRequestMergeMethod)`
+- **mutation** `PullRequestPendingReviewSubmit` `($id: String!, $decision: String!)`
+- **mutation** `PullRequestRefresh` `($id: String!, $force: Boolean, $generateTour: Boolean, $preGenerate: Boolean)`
 - **mutation** `PullRequestRemoveFromMergeQueue` `($id: String!)`
 - **mutation** `PullRequestReopen` `($id: String!)`
+- **mutation** `PullRequestRerunAiAnalysis` `($id: String!)`
+- **mutation** `PullRequestRerunReview` `($id: String!)`
+- **mutation** `PullRequestRunTour` `($id: String!)`
 - **query** `PullRequestStackTitle` `($input: PullRequestStackTitleInput!)`
 - **mutation** `PullRequestSuggestIssue` `($id: String!)`
 - **query** `PushSubscriptionTest` `($strategy: SendStrategy)`
 - **mutation** `ReactionCreate` `( $id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pu)`
 - **mutation** `ReactionDelete` `($id: String!)`
+- **mutation** `ReconnectMcpIntegration` `( $integrationId: String! $customHeaders: [McpServerCustomHeaderInput!] )`
 - **mutation** `RegisterOAuthState` `($state: String!)`
 - **query** `ReleasePipelineAccessKey` `($id: String!)`
+- **query** `ReleaseSearchQuery` `($term: String, $first: Int, $filter: ReleaseFilter)`
 - **query** `ReleasesQuery` `($first: Int, $after: String, $filter: ReleaseFilter)`
 - **mutation** `RemindAboutInitiativeUpdate` `($initiativeId: String!, $userId: String!)`
 - **mutation** `RemindAboutProjectUpdate` `($projectId: String!, $userId: String!)`
 - **mutation** `ResendOrganizationInviteByEmailMutation` `($email: String!)`
 - **query** `RetrieveDeepSearchCandidates` `($query: String!, $retrieverType: String!, $options: DeepSearchOptionsInput)`
+- **mutation** `SamlTokenUserAccountAuth` `($email: String!, $token: String!, $timezone: String!)`
 - **query** `SearchAll` `( $term: String! $first: Int $modelNames: [String!] $includeArchived: Boolean $boosts: SearchAllBoosts )`
 - **query** `SearchAllByFilter` `( $includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $init)`
 - **query** `SearchCombined` `( $term: String! $includeArchived: Boolean $filter: JSONObject $type: SearchResultType $orderBy: PaginationOrderBy $useSearchAgent: Boolean )`
@@ -216,11 +314,18 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `SearchProjectsByFilter` `( $includeArchived: Boolean $filter: ProjectFilter $orderBy: PaginationOrderBy $first: Int )`
 - **query** `SimilarIssues` `($issueId: String!, $topK: Int = 5, $minSimilarity: Float)`
 - **query** `SlackProfileTitle`
+- **query** `SsoUrlFromEmailQuery` `($email: String!, $isDesktop: Boolean, $type: IdentityProviderType!)`
+- **mutation** `SubmitFlare` `($submissionId: String!)`
+- **mutation** `SubscriptionSessionCreate` `($plan: String!, $coupon: String)`
+- **mutation** `SubscriptionUpdateSessionCreate`
+- **mutation** `SubscriptionUpgrade` `($id: String!, $type: String!, $immediate: Boolean!)`
 - **query** `SyncCheck` `( $id: String! $issueUpdatedAt: DateTime! $commentCount: Int! $issueHistoryCount: Int! $contentStateLength: Int! )`
 - **query** `SyncEntityCount`
 - **mutation** `TeamCyclesDelete` `($teamId: String!)`
+- **mutation** `TeamUnarchive` `($teamId: String!)`
 - **mutation** `TimeScheduleUpdate` `($id: String!, $input: TimeScheduleUpdateInput!)`
 - **mutation** `TimeScheduleUpsertExternal` `($externalId: String!, $input: TimeScheduleUpdateInput!)`
+- **mutation** `TrackAnonymousEvent` `($event: String!, $properties: JSONObject, $sessionId: String)`
 - **mutation** `UpdateTeamParent` `($teamId: String!, $mapping: InheritanceEntityMapping, $input: TeamUpdateInput!)`
 - **query** `UsageAutoTopup`
 - **mutation** `UsageAutoTopupCreate` `($input: UsageAutoTopupCreateInput!)`
@@ -230,6 +335,8 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `UsageAutoTopupResume`
 - **mutation** `UsageAutoTopupRetry`
 - **mutation** `UsageAutoTopupUpdate` `($input: UsageAutoTopupUpdateInput!)`
+- **query** `UsageCredit`
+- **mutation** `UsageCreditTopupSessionCreate` `($quantity: Int!, $tosAccepted: Boolean!)`
 - **query** `UsageFilteredHistory` `( $range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinition)`
 - **mutation** `UsageLimitGroupPeriodUpdate` `($input: UsageLimitGroupPeriodUpdateInput!)`
 - **mutation** `UsageLimitResetScheduleUpdate` `($input: UsageLimitResetScheduleInput!)`
@@ -237,25 +344,36 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `UserAccountExists` `($email: String!)`
 - **mutation** `UserChangeRole` `($id: String!, $role: UserRoleType!)`
 - **mutation** `UserFlagUpdate` `(flag: ${e}, operation: ${t})`
+- **mutation** `UserRevokeAllSessions` `($id: String!)`
+- **mutation** `UserRevokeSession` `($id: String!, $sessionId: String!)`
+- **query** `UserSessions` `($id: String!)`
 - **mutation** `UserSettingsFlagsReset`
 - **mutation** `UserSuspend` `($id: String!)`
+- **mutation** `UserUnlinkFromIdentityProvider` `($id: String!)`
 - **mutation** `UserUnsuspend` `($id: String!)`
 - **mutation** `ValidateOAuthState` `($state: String, $callbackPath: String, $integration: OAuthIntegrationInput)`
 - **query** `VerifyGitHubEnterpriseServerInstallation` `($integrationId: String!)`
 - **query** `WebhookFailureEventsQuery` `($webhookId: String!)`
 - **mutation** `WebhookRotateSecret` `($id: String!)`
 - **mutation** `WorkflowDefinitionMcpApprovalUpdate` `($id: String!, $input: WorkflowDefinitionMcpApprovalInput!)`
+- **mutation** `WorkflowDefinitionMove` `($id: String!, $input: WorkflowDefinitionMoveInput!)`
 - **mutation** `WorkflowDefinitionSourceTrustUpdate` `($id: String!, $sourceKey: String!)`
 - **mutation** `WorkflowDefinitionStatsRefresh` `($id: String!)`
+- **mutation** `WorkspaceAnnouncementRecall` `($id: String!)`
+- **mutation** `WorkspaceAnnouncementSend` `($id: String!)`
+- **mutation** `WorkspaceAnnouncementTestNotification` `($id: String!)`
 - **query** `WorkspaceAuthorizedApplication` `($clientId: String!)`
 - **query** `WorkspaceAuthorizedApplicationsWithAppUserQuery`
 - **query** `WorkspaceMcpServerConnections`
 - **mutation** `WorkspaceMcpServerConnectionsDisconnectAll` `($serverUrl: String!)`
+- **mutation** `aiFeedback` `($input: AiFeedbackInput!)`
 - **query** `filteredUsersLastSeen` `($cursor: String, $first: Int, $filter: UserFilter!)`
+- **mutation** `logout` `($reason: String)`
 - **query** `oauthClientExternalWorkspaceCountQuery` `($id: String!)`
 - **query** `oauthWebhookSecretQuery` `($id: String!)`
 - **mutation** `organizationStartTrialForPlan` `($planType: String!)`
 - **mutation** `userAccountEmailChangeCancel`
+- **mutation** `userAccountEmailChangeCreate` `($id: String!, $newEmail: String!)`
 - **query** `userAccountEmailChangeFind`
 - **mutation** `userAccountEmailChangeVerifyCode` `($email: String!, $code: String!)`
 - **query** `usersLastSeen` `($cursor: String, $first: Int)`

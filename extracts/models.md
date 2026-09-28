@@ -1,6 +1,6 @@
 # Linear Sync Model Registry (extracted reference)
 
-Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual interface data for interoperability. Regenerate with pipeline/run.sh. Total models: 87
+Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual interface data for interoperability. Regenerate with pipeline/run.sh. Total models: 136
 
 ## Activity
 
@@ -161,6 +161,26 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `lastUsedAt`
 - `recentUsageCount`
 
+## AiPromptMemory
+
+- `organization`
+- `team`
+- `project`
+- `user`
+- `workflowDefinition`
+- `type`
+- `bodyData`
+- `changes`
+- `metadata`
+- `subjectUser`
+- `subjectTeam`
+- `subjectProject`
+- `subjectLabel`
+- `subjectIssue`
+- `subjectPullRequest`
+- `subjectIntegration`
+- `asMarkdown`
+
 ## AiPromptProgress
 
 - `issue`
@@ -283,6 +303,19 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `branchTips`
 - `defaultBranchCommits`
 
+## CodingEnvironment
+
+- `organization`
+- `name`
+- `gitHubHostName`
+- `codeRepositories`
+- `ownerIds`
+- `agent`
+- `network`
+- `environmentSettingsMiseConfig`
+- `dependencyManagement`
+- `generatedDependencyMiseConfig`
+
 ## Comment
 
 - `bodyData`
@@ -333,6 +366,159 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `bodyMarkdown`
 - `bodyTextContent`
 - `notificationText`
+
+## CustomAttribute
+
+- `value`
+- `type`
+- `field`
+- `customer`
+
+## CustomView
+
+- `name`
+- `description`
+- `icon`
+- `color`
+- `organization`
+- `team`
+- `creator`
+- `updatedBy`
+- `owner`
+- `filterData`
+- `projectFilterData`
+- `initiativeFilterData`
+- `feedItemFilterData`
+- `shared`
+- `favorite`
+- `subscription`
+- `integrationsSettings`
+- `viewPreferences`
+- `project`
+- `initiative`
+- `facet`
+- `slugId`
+- `traits`
+- `slug`
+- `shareType`
+- `modelType`
+- `_viewPreferences`
+- `unfilteredProjects`
+- `unfilteredFeedItems`
+- `projects`
+- `unfilteredInitiatives`
+- `initiatives`
+- `unfilteredIssues`
+- `filter`
+- `projectFilter`
+- `initiativeFilter`
+- `feedItemFilter`
+- `stateFilter`
+- `includesTriageIssues`
+- `includesOnlyTriageIssues`
+- `isTeamScoped`
+- `teams`
+- `rootTeams`
+- `preFilteredTeams`
+- `initiativeFilterTeams`
+- `initiativeFromFilter`
+- `assignees`
+- `projectsFromFilter`
+- `hasNoAssigneeOption`
+- `hydratedFacet`
+- `toggleFavorite`
+- `hydrateIssues`
+- `isServerBacked`
+- `issueHydrator`
+
+## Customer
+
+- `name`
+- `logoUrl`
+- `domains`
+- `externalIds`
+- `slackChannelId`
+- `owner`
+- `sourceMetadata`
+- `metadata`
+- `revenue`
+- `size`
+- `approximateNeedCount`
+- `traits`
+- `slugId`
+- `status`
+- `tier`
+- `organization`
+- `mainSourceId`
+- `needs`
+- `attributes`
+- `favorite`
+- `notifications`
+- `subscription`
+- `markNotificationAsRead`
+- `toggleFavorite`
+- `displayRevenue`
+- `hasArchivedCustomerNeeds`
+- `requestCount`
+
+## CustomerGeneratedContent
+
+- `type`
+- `organization`
+- `creator`
+- `project`
+- `bodyData`
+- `evalLogId`
+
+## CustomerNeed
+
+- `priority`
+- `attachmentUrl`
+- `bodyData`
+- `creator`
+- `customer`
+- `issue`
+- `comment`
+- `project`
+- `attachment`
+- `projectAttachment`
+- `sourceMetadata`
+- `originalIssue`
+- `notifications`
+- `organization`
+- `effectiveAttachment`
+- `baseSearchableText`
+- `customerPageSearchableText`
+- `projectPageSearchableText`
+
+## CustomerSchema
+
+- `displayName`
+- `integration`
+- `fields`
+
+## CustomerSchemaField
+
+- `name`
+- `type`
+- `enabled`
+- `schema`
+
+## CustomerStatus
+
+- `displayName`
+- `color`
+- `description`
+- `position`
+- `organization`
+
+## CustomerTier
+
+- `displayName`
+- `color`
+- `description`
+- `position`
+- `organization`
 
 ## Cycle
 
@@ -387,9 +573,42 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `previousCycle`
 - `nextCycle`
 
+## Dashboard
+
+- `name`
+- `description`
+- `icon`
+- `color`
+- `sortOrder`
+- `organization`
+- `team`
+- `teams`
+- `creator`
+- `updatedBy`
+- `owner`
+- `shared`
+- `slugId`
+- `favorite`
+- `issueFilter`
+- `projectFilter`
+- `widgets`
+- `slug`
+- `ensureName`
+- `displayName`
+- `shareType`
+- `filterTeams`
+- `toggleFavorite`
+- `makePersonal`
+- `makeWorkspace`
+- `toggleTeam`
+
 ## DiaryEntry
 
-- (not statically extractable; see prettified source)
+- `bodyData`
+- `user`
+- `date`
+- `markdownContent`
+- `weekKey`
 
 ## Diff
 
@@ -449,6 +668,39 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `moveTo`
 - `resourceFolder`
 
+## DocumentContent
+
+- `contentState`
+- `restoredAt`
+- `traits`
+- `issue`
+- `pullRequest`
+- `project`
+- `projectMilestone`
+- `document`
+- `meeting`
+- `initiative`
+- `aiPromptRules`
+- `welcomeMessage`
+- `workspaceAnnouncement`
+- `releaseNote`
+- `workflowDefinitionDraft`
+- `revision`
+- `comments`
+- `mediaMetadata`
+- `viewers`
+- `contentData`
+- `activeCommentThreadCount`
+- `resolvedCommentThreadCount`
+- `removedCommentThreadCount`
+- `markdownContent`
+- `hasContent`
+- `documentVersion`
+- `replaceWithContent`
+- `appendContent`
+- `prependContent`
+- `applyState`
+
 ## DocumentContentAgentCheckpoint
 
 - `documentContent`
@@ -471,6 +723,31 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `actors`
 - `contentDataSnapshotAt`
 - `metadata`
+
+## Draft
+
+- `user`
+- `isAutogenerated`
+- `wasLocalDraft`
+- `data`
+- `anchor`
+- `issue`
+- `team`
+- `project`
+- `projectUpdate`
+- `initiative`
+- `initiativeUpdate`
+- `post`
+- `parentComment`
+- `pullRequest`
+- `parentPullRequestComment`
+- `bodyData`
+- `parentModel`
+- `topLevelModel`
+- `agentSession`
+- `location`
+- `bodyTextContent`
+- `bodyPersistable`
 
 ## EmailIntakeAddress
 
@@ -522,6 +799,21 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `enrichedLabel`
 - `resolvedDocument`
 
+## ExternalEntityRelation
+
+- `externalEntityType`
+- `externalId`
+- `metadata`
+- `syncErrors`
+- `comment`
+- `issue`
+- `project`
+- `projectUpdate`
+- `initiativeUpdate`
+- `label`
+- `pullRequestComment`
+- `integration`
+
 ## ExternalUser
 
 - `name`
@@ -542,9 +834,85 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `effectiveGitHubLogin`
 - `mentionText`
 
+## Facet
+
+- `sortOrder`
+- `creator`
+- `favorite`
+- `sourceOrganization`
+- `sourceTeam`
+- `sourceProject`
+- `sourceInitiative`
+- `sourceFeedUser`
+- `sourcePage`
+- `targetCustomView`
+
 ## Favorite
 
-- (not statically extractable; see prettified source)
+- `type`
+- `parent`
+- `children`
+- `folderName`
+- `liveFolderPreset`
+- `liveFolderDefinition`
+- `sortOrder`
+- `issue`
+- `predefinedViewTeam`
+- `predefinedViewType`
+- `project`
+- `projectTab`
+- `facet`
+- `cycle`
+- `customView`
+- `document`
+- `initiative`
+- `initiativeTab`
+- `label`
+- `projectLabel`
+- `initiativeLabel`
+- `user`
+- `customer`
+- `dashboard`
+- `pullRequest`
+- `aiConversation`
+- `release`
+- `releasePipeline`
+- `pipelineTab`
+- `releaseNote`
+- `team`
+- `workflowDefinition`
+- `owner`
+- `isActive`
+- `targetModel`
+
+## FeatureFlag
+
+- `project`
+- `issue`
+- `rolloutStage`
+- `pendingRolloutStage`
+- `key`
+- `defaultKey`
+- `defaultName`
+- `externalUrl`
+- `isEnabled`
+- `status`
+- `lastStageUpdatedAt`
+- `lastStageUpdatedBy`
+- `organization`
+- `integration`
+- `displayedKey`
+
+## FeatureFlagRolloutStage
+
+- `name`
+- `description`
+- `segmentKeys`
+- `type`
+- `sortOrder`
+- `featureFlags`
+- `organization`
+- `integration`
 
 ## FeedItem
 
@@ -568,6 +936,20 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `initiative`
 - `isSubscribed`
 - `isSubscribedToSubProjects`
+
+## GitAutomationState
+
+- `state`
+- `team`
+- `targetBranch`
+- `event`
+
+## GitAutomationTargetBranch
+
+- `team`
+- `branchPattern`
+- `isRegex`
+- `automationStates`
 
 ## GithubTeam
 
@@ -619,6 +1001,98 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `isSamlConfigured`
 - `claimedDomains`
 
+## Initiative
+
+- `name`
+- `description`
+- `slugId`
+- `number`
+- `customIdentifier`
+- `previousIdentifiers`
+- `identifier`
+- `sortOrder`
+- `prioritySortOrder`
+- `priority`
+- `color`
+- `icon`
+- `trashed`
+- `sourceMetadata`
+- `organization`
+- `creator`
+- `parents`
+- `children`
+- `descendants`
+- `owner`
+- `leadTeam`
+- `private`
+- `public`
+- `visibility`
+- `customViews`
+- `meetings`
+- `initiativeUpdates`
+- `lastUpdate`
+- `integrationsSettings`
+- `draftInitiativeUpdatesOrComments`
+- `history`
+- `childRelations`
+- `parentRelations`
+- `reminders`
+- `resourceFolders`
+- `documentContent`
+- `aiConversations`
+- `rootAiConversations`
+- `rootAiConversation`
+- `targetDate`
+- `targetDateResolution`
+- `startedAt`
+- `completedAt`
+- `canceledAt`
+- `status`
+- `traits`
+- `favorites`
+- `documents`
+- `links`
+- `subscription`
+- `facets`
+- `labels`
+- `health`
+- `healthUpdatedAt`
+- `updateReminderFrequency`
+- `frequencyResolution`
+- `updateRemindersDay`
+- `updateRemindersHour`
+- `initiativeToProjects`
+- `viewPreferences`
+- `_projectsViewPreferences`
+- `_projectsViewPreferencesOverview`
+- `_subInitiativesViewPreferences`
+- `progressHistoryEntries`
+- `reminder`
+- `organizationViewPreferences`
+- `projects`
+- `projectsInherited`
+- `projectsInheritedOnly`
+- `projectsGroupedByHealth`
+- `comments`
+- `notifications`
+- `velocity`
+- `activity`
+- `activityType`
+- `accessibleTeams`
+- `teams`
+- `ancestors`
+- `hasSubInitiatives`
+- `allDocumentTemplates`
+- `statusSortOrder`
+- `isRootFavorited`
+- `toggleFavorite`
+- `markNotificationAsRead`
+
+## InitiativeHistory
+
+- `initiative`
+- `entries`
+
 ## InitiativeLabel
 
 - `name`
@@ -644,9 +1118,66 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `isInBatchOperation`
 - `_viewPreferences`
 
+## InitiativeRelation
+
+- `initiative`
+- `relatedInitiative`
+- `sortOrder`
+
+## InitiativeToProject
+
+- `initiative`
+- `project`
+- `sortOrder`
+
+## InitiativeUpdate
+
+- `bodyData`
+- `editedAt`
+- `health`
+- `slugId`
+- `user`
+- `externalEntityRelations`
+- `activeExternalEntityRelations`
+- `comments`
+- `draftComments`
+- `reactionData`
+- `notifications`
+- `initiative`
+- `mediaMetadata`
+- `organization`
+- `previousUpdate`
+- `infoSnapshot`
+- `isDiffHidden`
+- `diffBaseline`
+- `snapshotDiff`
+
 ## Integration
 
-- (not statically extractable; see prettified source)
+- `service`
+- `serviceId`
+- `team`
+- `project`
+- `initiative`
+- `workflowDefinition`
+- `workflowDefinitionDraft`
+- `customView`
+- `creator`
+- `organization`
+- `settings`
+- `featureFlags`
+- `rolloutStages`
+- `aiPromptRules`
+- `integrationTemplates`
+- `timeSchedules`
+- `authError`
+- `metadata`
+
+## IntegrationTemplate
+
+- `template`
+- `integration`
+- `foreignEntityId`
 
 ## Issue
 
@@ -807,6 +1338,38 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `markNotificationAsRead`
 - `markNonImportantNotificationsAsRead`
 
+## IssueDraft
+
+- `title`
+- `teamId`
+- `team`
+- `cycleId`
+- `projectId`
+- `projectMilestoneId`
+- `descriptionData`
+- `parent`
+- `parentIssue`
+- `sourceCommentId`
+- `sourcePullRequestCommentId`
+- `children`
+- `priority`
+- `estimate`
+- `creator`
+- `assigneeId`
+- `delegateId`
+- `state`
+- `stateId`
+- `subIssueSortOrder`
+- `labels`
+- `dueDate`
+- `attachments`
+- `needs`
+- `releaseIds`
+- `relations`
+- `schedule`
+- `markdownDescription`
+- `mergeInto`
+
 ## IssueHistory
 
 - `issue`
@@ -877,6 +1440,55 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `errorMetadata`
 - `serviceMetadata`
 
+## IssueLabel
+
+- `name`
+- `description`
+- `color`
+- `isGroup`
+- `groupType`
+- `lastAppliedAt`
+- `retiredAt`
+- `approximateIssueCount`
+- `traits`
+- `retiredBy`
+- `organization`
+- `team`
+- `favorite`
+- `subscription`
+- `issues`
+- `issueDrafts`
+- `creator`
+- `parent`
+- `inheritedFrom`
+- `inheritedFromRoot`
+- `inheritedBy`
+- `children`
+- `externalEntityRelations`
+- `activeExternalEntityRelations`
+- `viewPreferences`
+- `approximateIssueCountWithInherited`
+- `totalApproximateIssueCount`
+- `usedByTriageRuleCount`
+- `associatedTriageRules`
+- `usedBySLARuleCount`
+- `associatedSLARules`
+- `isInBatchOperation`
+- `sortName`
+- `allIssues`
+- `allIssuesInherited`
+- `_viewPreferences`
+- `type`
+- `isRetired`
+
+## IssueRelation
+
+- `createdBy`
+- `type`
+- `metadata`
+- `issue`
+- `relatedIssue`
+
 ## IssueSuggestion
 
 - `type`
@@ -926,6 +1538,20 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `name`
 - `knownIntegrationKey`
 
+## MediaMetadata
+
+- `assetUrl`
+- `documentContent`
+- `comment`
+- `projectUpdate`
+- `initiativeUpdate`
+- `transcription`
+- `summary`
+- `title`
+- `captionsUrl`
+- `chapters`
+- `status`
+
 ## Meeting
 
 - `title`
@@ -954,9 +1580,64 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `markAccepted`
 - `markDismissed`
 
+## Notification
+
+- `type`
+- `actor`
+- `externalUserActor`
+- `sourceMetadata`
+- `metadata`
+- `user`
+- `readAt`
+- `snoozedUntilAt`
+- `unsnoozedAt`
+- `subscriptions`
+- `subscriptionType`
+- `issue`
+- `relatedIssue`
+- `workflowState`
+- `comment`
+- `parentComment`
+- `reactionEmoji`
+- `customerNeed`
+- `customer`
+- `document`
+- `project`
+- `initiative`
+- `initiativeUpdate`
+- `projectUpdate`
+- `projectMilestone`
+- `pullRequest`
+- `pullRequestComment`
+- `oauthClientApproval`
+- `post`
+- `welcomeMessage`
+- `workspaceAnnouncement`
+- `usageAlert`
+- `productAnnouncement`
+- `workflowDefinition`
+- `_locallyArchivedAt`
+
 ## NotificationSubscription
 
-- (not statically extractable; see prettified source)
+- `subscriber`
+- `customView`
+- `customer`
+- `label`
+- `project`
+- `team`
+- `user`
+- `initiative`
+- `contextViewType`
+- `userContextViewType`
+- `notificationSubscriptionTypes`
+- `active`
+- `includeSubInitiativeUpdates`
+- `notifications`
+- `disable`
+- `enable`
+- `subscribeToNotificationType`
+- `unsubscribeFromNotificationType`
 
 ## OauthClient
 
@@ -978,6 +1659,20 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `webhookSecret`
 - `useRefreshTokens`
 - `supportsClientCredentials`
+
+## OauthClientApproval
+
+- `organization`
+- `oauthClientId`
+- `requester`
+- `responder`
+- `status`
+- `scopes`
+- `requestReason`
+- `denyReason`
+- `newlyRequestedScopes`
+- `notifications`
+- `markNotificationAsRead`
 
 ## Organization
 
@@ -1232,6 +1927,183 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `offerEndsAt`
 - `organization`
 
+## Post
+
+- `organization`
+- `type`
+- `feedSummaryScheduleAtCreate`
+- `bodyData`
+- `writtenSummaryData`
+- `creator`
+- `editedAt`
+- `reactionData`
+- `comments`
+- `draftComments`
+- `team`
+- `user`
+- `slugId`
+- `title`
+- `evalLogId`
+- `notifications`
+- `postType`
+- `isSummary`
+- `slug`
+- `numberOfComments`
+- `mentionedUserIds`
+- `markNotificationAsRead`
+
+## ProductAnnouncement
+
+- `organization`
+- `campaignId`
+- `kind`
+- `title`
+- `headline`
+- `description`
+- `notifications`
+- `markNotificationAsRead`
+
+## Project
+
+- `name`
+- `description`
+- `slugId`
+- `number`
+- `customIdentifier`
+- `previousIdentifiers`
+- `identifier`
+- `icon`
+- `color`
+- `status`
+- `links`
+- `reminders`
+- `documents`
+- `projectMilestones`
+- `comments`
+- `notifications`
+- `projectUpdates`
+- `labels`
+- `lastUpdate`
+- `draftProjectUpdatesOrComments`
+- `favorites`
+- `subscription`
+- `integrationsSettings`
+- `featureFlags`
+- `resourceFolders`
+- `issues`
+- `history`
+- `aiPromptMemories`
+- `facets`
+- `creator`
+- `lead`
+- `leadTeam`
+- `leadTeamKey`
+- `members`
+- `organization`
+- `startDate`
+- `health`
+- `healthUpdatedAt`
+- `createdFromDraftId`
+- `slackChannelName`
+- `updateReminderFrequency`
+- `frequencyResolution`
+- `updateRemindersDay`
+- `updateRemindersHour`
+- `sourceMetadata`
+- `startDateResolution`
+- `targetDate`
+- `targetDateResolution`
+- `startedAt`
+- `completedAt`
+- `canceledAt`
+- `sortOrder`
+- `prioritySortOrder`
+- `priority`
+- `trashed`
+- `convertedFromIssue`
+- `lastAppliedTemplate`
+- `currentProgress`
+- `issueCountHistory`
+- `scopeHistory`
+- `completedScopeHistory`
+- `inProgressScopeHistory`
+- `traits`
+- `progressHistory`
+- `progressHistoryEntries`
+- `reminder`
+- `teams`
+- `initiativeToProjects`
+- `documentContent`
+- `aiConversations`
+- `meetings`
+- `rootAiConversations`
+- `rootAiConversation`
+- `customViews`
+- `relations`
+- `inverseRelations`
+- `needs`
+- `customerGeneratedContents`
+- `viewPreferences`
+- `externalEntityRelations`
+- `activeExternalEntityRelations`
+- `isInheritedReadOnly`
+- `dependedOnByRelations`
+- `dependsOnRelations`
+- `blockingRelations`
+- `activeBlockingRelations`
+- `blockedByRelations`
+- `activeBlockedByRelations`
+- `violatedRelations`
+- `allNeeds`
+- `allRelations`
+- `allRelatedProjects`
+- `initiatives`
+- `initiativesAndAncestors`
+- `teamsAndAncestors`
+- `nextProjectMilestone`
+- `completedProjectMilestones`
+- `activeMilestone`
+- `accessibleTeams`
+- `accessibleTeamsLeadFirst`
+- `contributingTeams`
+- `nonCloneIssues`
+- `progress`
+- `estimationEnabled`
+- `progressEstimatePoints`
+- `currentWeekEstimatePoints`
+- `inProgressEstimatePoints`
+- `completedEstimatePoints`
+- `totalEstimatePoints`
+- `totalIssueCount`
+- `lastContentUpdate`
+- `workflowDefinitions`
+- `workflowDefinitionDrafts`
+- `_viewPreferences`
+- `_viewPreferencesOverview`
+- `_viewPreferencesLoops`
+- `customerCount`
+- `customerImportantCount`
+- `aggregatedCustomersRevenue`
+- `sortedCustomerByImpact`
+- `slug`
+- `searchableContent`
+- `allDocumentTemplates`
+- `predictedCompletionDates`
+- `progressVelocity`
+- `currentVelocity`
+- `currentVelocityIssueCount`
+- `activity`
+- `activityType`
+- `nonLeadMembers`
+- `applyDraftValues`
+- `mergeDraftIssues`
+- `moveIssuesToAccessibleTeams`
+- `isRootFavorited`
+- `applyTemplate`
+- `clearTemplate`
+- `markNotificationAsRead`
+- `shouldUseDailyVelocityData`
+
 ## ProjectAttachment
 
 - `title`
@@ -1277,6 +2149,82 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `assignMissingMilestoneIds`
 - `mergeInto`
 
+## ProjectHistory
+
+- `project`
+- `entries`
+
+## ProjectLabel
+
+- `name`
+- `description`
+- `color`
+- `lastAppliedAt`
+- `retiredAt`
+- `retiredBy`
+- `isGroup`
+- `organization`
+- `team`
+- `favorite`
+- `projects`
+- `creator`
+- `parent`
+- `inheritedFrom`
+- `inheritedFromRoot`
+- `inheritedBy`
+- `children`
+- `viewPreferences`
+- `sortName`
+- `allProjects`
+- `type`
+- `isRetired`
+- `isPlanRestricted`
+- `_viewPreferences`
+- `usedByTriageRuleCount`
+- `associatedTriageRules`
+- `usedBySLARuleCount`
+- `associatedSLARules`
+- `isInBatchOperation`
+
+## ProjectMilestone
+
+- `name`
+- `documentContent`
+- `targetDate`
+- `draftReferenceId`
+- `currentProgress`
+- `sortOrder`
+- `project`
+- `notifications`
+- `issues`
+- `relations`
+- `inverseRelations`
+- `traits`
+- `issuesWithoutClones`
+- `status`
+- `progress`
+- `progressPercent`
+- `progressText`
+- `totalEstimatePoints`
+- `totalIssueCount`
+- `inTriageEstimatePoints`
+- `doneDate`
+- `draftMilestoneId`
+
+## ProjectRelation
+
+- `type`
+- `project`
+- `projectMilestone`
+- `anchorType`
+- `relatedProject`
+- `relatedProjectMilestone`
+- `relatedAnchorType`
+- `user`
+- `isViolated`
+- `violationDescription`
+- `inverseViolationDescription`
+
 ## ProjectStatus
 
 - `name`
@@ -1293,6 +2241,28 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `statusSetStartedCount`
 - `globalPosition`
 - `globalPositionList`
+
+## ProjectUpdate
+
+- `bodyData`
+- `editedAt`
+- `health`
+- `user`
+- `slugId`
+- `project`
+- `notifications`
+- `externalEntityRelations`
+- `activeExternalEntityRelations`
+- `comments`
+- `draftComments`
+- `mediaMetadata`
+- `previousUpdate`
+- `reactionData`
+- `shortSummary`
+- `infoSnapshot`
+- `isDiffHidden`
+- `diffBaseline`
+- `snapshotDiff`
 
 ## PullRequest
 
@@ -1463,6 +2433,43 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `diffEditPinnedReviewRevisionId`
 - `diffEditRevisionPinVisible`
 
+## PullRequestComment
+
+- `bodyData`
+- `anchor`
+- `localCreatedAt`
+- `externalThreadId`
+- `externalReviewId`
+- `pendingReview`
+- `decision`
+- `traits`
+- `pullRequest`
+- `linkedAgentActivity`
+- `linkedAgentSession`
+- `notifications`
+- `parent`
+- `children`
+- `draftReplies`
+- `editedAt`
+- `resolvingUser`
+- `resolvedAt`
+- `user`
+- `externalUser`
+- `sourceMetadata`
+- `reactionData`
+- `pendingUploads`
+- `createdIssues`
+- `aiConversations`
+- `externalEntityRelations`
+- `activeExternalEntityRelations`
+- `onBehalfOf`
+- `sortTimestamp`
+- `root`
+- `threadComments`
+- `hasEmojiOnlyBody`
+- `notificationText`
+- `bodyTextContent`
+
 ## PullRequestFile
 
 - `pullRequestRevisions`
@@ -1520,6 +2527,22 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 
 - `pullRequest`
 - `entries`
+
+## PullRequestPendingReview
+
+- `decision`
+- `submittedAt`
+- `reviewedFiles`
+- `pullRequest`
+- `reviewer`
+- `comments`
+- `hydratedComments`
+- `hasPendingUploads`
+- `submit`
+- `markFileAsReviewed`
+- `unmarkFileAsReviewed`
+- `setFilesReviewed`
+- `deleteIfEmpty`
 
 ## PullRequestRevision
 
@@ -1670,6 +2693,18 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `pipeline`
 - `releases`
 
+## Reminder
+
+- `comment`
+- `project`
+- `issue`
+- `document`
+- `initiative`
+- `user`
+- `remindAt`
+- `schedule`
+- `parent`
+
 ## RepositoryAccessPolicy
 
 - `organization`
@@ -1678,6 +2713,24 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `allowAutomations`
 - `repoScope`
 - `allowedRepositories`
+
+## ResourceFolder
+
+- `name`
+- `icon`
+- `color`
+- `slugId`
+- `sortOrder`
+- `creator`
+- `updatedBy`
+- `sourceTeam`
+- `sourceProject`
+- `sourceInitiative`
+- `documents`
+- `links`
+- `layout`
+- `children`
+- `parent`
 
 ## SesDomainIdentity
 
@@ -1961,6 +3014,18 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `setSchedule`
 - `setFormFields`
 
+## TimeSchedule
+
+- `name`
+- `entries`
+- `config`
+- `integration`
+- `oauthClientId`
+- `organization`
+- `externalId`
+- `externalUrl`
+- `triageResponsibilities`
+
 ## TransientReviewComment
 
 - `bodyData`
@@ -1974,6 +3039,22 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `updateBody`
 - `updateAnchor`
 - `setPromptVisible`
+
+## TriageResponsibility
+
+- `team`
+- `action`
+- `manualSelection`
+- `timeSchedule`
+
+## UsageAlert
+
+- `organization`
+- `type`
+- `metadata`
+- `resolvedAt`
+- `notifications`
+- `markNotificationAsRead`
 
 ## UsageLimit
 
@@ -2107,6 +3188,44 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 
 - `user`
 - `issue`
+
+## ViewPreferences
+
+- `type`
+- `viewType`
+- `team`
+- `project`
+- `initiative`
+- `label`
+- `projectLabel`
+- `initiativeLabel`
+- `releasePipeline`
+- `user`
+- `customView`
+- `organization`
+- `setPreference`
+- `setPreferencesInBulk`
+- `materializeQuickViewDefaults`
+- `setAndSavePreference`
+- `batchAndSavePreferenceChanges`
+- `currentInsight`
+- `setInsights`
+- `updateInsights`
+- `setAndSaveInsightPreference`
+- `teamOrder`
+- `customViewsOrder`
+- `dashboardsOrder`
+- `setPreferencesAsDefaultForOrganization`
+- `updateInsightOrganizationSettings`
+- `combinedUserAndOrgPreferences`
+- `userPreferences`
+- `serializedSettings`
+- `hasDependencies`
+- `shareableProperties`
+- `cacheBoardPreferences`
+- `commonViewPreferences`
+- `preferences`
+- `insights`
 
 ## Webhook
 
@@ -2258,6 +3377,27 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - `integrations`
 - `workflowDefinition`
 - `prompt`
+
+## WorkflowState
+
+- `name`
+- `description`
+- `color`
+- `position`
+- `type`
+- `team`
+- `gitAutomationStates`
+- `issues`
+- `inheritedFrom`
+- `inheritedFromRoot`
+- `inheritedBy`
+- `compositeKey`
+- `displayCompletionPercentage`
+- `indexWithinStateType`
+- `sortOrderWithinStateType`
+- `indexInWorkflow`
+- `usedByTriageRuleCount`
+- `associatedTriageRules`
 
 ## WorkloadIdentity
 
