@@ -115,6 +115,13 @@ export function corpusHead(dir: string): string | null {
     const toplevel = realpathSync(execFileSync(`git`, [`-C`, dir, `rev-parse`, `--show-toplevel`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim());
     const real = realpathSync(dir);
     if (real !== toplevel && real !== join(toplevel, `corpus`)) return null;
+    // Positional evidence is not enough: an unstamped COPY at
+    // <unrelated-repo>/corpus would still discover that repo and record its
+    // HEAD (CodeRabbit finding on #252). The repo's HEAD describes the corpus
+    // bytes only when the repo actually TRACKS them — a vault checkout does,
+    // a copied tree dropped into some repo does not (untracked or ignored).
+    const tracked = execFileSync(`git`, [`-C`, dir, `ls-files`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] });
+    if (tracked.trim() === ``) return null;
     return execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8`, stdio: [`ignore`, `pipe`, `ignore`] }).trim();
   } catch {
     return null;

@@ -406,7 +406,9 @@ test(`corpusHead: a corpus that IS a git toplevel resolves its own HEAD`, (t) =>
   rmSync(dir, { recursive: true, force: true });
   try {
     execFileSync(`git`, [`init`, `-q`, dir], { stdio: `pipe` });
-    execFileSync(`git`, [`-C`, dir, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `--allow-empty`, `-m`, `x`], { stdio: `pipe` });
+    writeFileSync(join(dir, `x.txt`), `x`);
+    execFileSync(`git`, [`-C`, dir, `add`, `x.txt`], { stdio: `pipe` });
+    execFileSync(`git`, [`-C`, dir, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `-m`, `x`], { stdio: `pipe` });
     const want = execFileSync(`git`, [`-C`, dir, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
     assert.equal(corpusHead(dir), want);
   } finally {
@@ -419,15 +421,38 @@ test(`corpusHead: the vault layout (<toplevel>/corpus) resolves the vault's own 
   rmSync(repo, { recursive: true, force: true });
   try {
     execFileSync(`git`, [`init`, `-q`, repo], { stdio: `pipe` });
-    execFileSync(`git`, [`-C`, repo, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `--allow-empty`, `-m`, `x`], { stdio: `pipe` });
-    const want = execFileSync(`git`, [`-C`, repo, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
     const corpus = join(repo, `corpus`);
     mkdirSync(corpus);
+    writeFileSync(join(corpus, `chunk.js`), `export {}`);
+    execFileSync(`git`, [`-C`, repo, `add`, `corpus/chunk.js`], { stdio: `pipe` });
+    execFileSync(`git`, [`-C`, repo, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `-m`, `x`], { stdio: `pipe` });
+    const want = execFileSync(`git`, [`-C`, repo, `rev-parse`, `HEAD`], { encoding: `utf8` }).trim();
     assert.equal(corpusHead(corpus), want);
     // one level deeper is NOT a corpus checkout: null, never the vault head
     const deeper = join(corpus, `client`);
     mkdirSync(deeper);
     assert.equal(corpusHead(deeper), null);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
+  }
+});
+
+test(`corpusHead: an UNTRACKED corpus copy at <some-repo>/corpus is null, never that repo's HEAD`, () => {
+  // The CodeRabbit finding on #252: positional evidence (<toplevel>/corpus) is
+  // not enough — an unstamped COPY dropped into an unrelated repo's corpus/
+  // dir would record that repo's meaningless HEAD. The repo's HEAD counts only
+  // when the repo TRACKS the corpus bytes.
+  const repo = join(here, `fixtures`, `untracked-copy-repo.tmp`);
+  rmSync(repo, { recursive: true, force: true });
+  try {
+    execFileSync(`git`, [`init`, `-q`, repo], { stdio: `pipe` });
+    writeFileSync(join(repo, `project.txt`), `some unrelated project`);
+    execFileSync(`git`, [`-C`, repo, `add`, `project.txt`], { stdio: `pipe` });
+    execFileSync(`git`, [`-C`, repo, `-c`, `user.email=t@t`, `-c`, `user.name=t`, `commit`, `-q`, `-m`, `x`], { stdio: `pipe` });
+    const corpus = join(repo, `corpus`);
+    mkdirSync(corpus);
+    writeFileSync(join(corpus, `chunk.js`), `export {}`); // copied, never committed
+    assert.equal(corpusHead(corpus), null);
   } finally {
     rmSync(repo, { recursive: true, force: true });
   }
