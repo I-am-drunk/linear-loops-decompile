@@ -45,10 +45,12 @@ function h(type: unknown, props: Record<string, unknown>): HostElement {
 /** The theme surface this dialog reads (corpus: `useTheme().baseTheme ?? theme`,
  * then `.elevatedTheme()`). The elevated theme itself is opaque here — the
  * component only routes it. */
-export interface DialogTheme {
-  baseTheme?: { elevatedTheme(): unknown } | undefined;
-  elevatedTheme?: () => unknown;
-}
+export type DialogTheme =
+  | { baseTheme?: undefined; elevatedTheme(): unknown }
+  | {
+      baseTheme: { elevatedTheme(): unknown };
+      elevatedTheme?: () => unknown;
+    };
 
 /** The four child-component seams (each is its own ledger row / future golden). */
 export interface DialogComponents {
@@ -83,7 +85,7 @@ export function AutomationNewDialog(
   props: AutomationNewDialogProps,
 ): HostElement {
   const base = theme.baseTheme ?? theme;
-  const elevated = (base as { elevatedTheme(): unknown }).elevatedTheme();
+  const elevated = base.elevatedTheme();
   return h(c.Modal, {
     isOpen: true,
     onRequestClose: props.onRequestClose,
