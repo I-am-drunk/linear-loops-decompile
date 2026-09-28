@@ -132,7 +132,13 @@ golden-backed chunk LANDED 2026-09-28 (LoopViewType, matrix §A loop view
 types: zero-import pure-value chunk, first real DRIVE-mode golden — the
 driver projects the module surface: enum + label map + validator probes;
 with G4 invoke and G5 render this completes a worked example of all three
-case modes; meter: 78 chunks · 3 golden · 75 GAP). H3 family expansion
+case modes; meter: 78 chunks · 3 golden · 75 GAP). G9 fifth golden-backed
+chunk LANDED 2026-09-28 (src/ui-loops-elicitation: AgentElicitationResponseQueue
+— the FIRST golden outside §A, on the §D chat substrate (Elicitations row):
+drive-mode flatten of a hook-free composite closure (corpus Flex/Text executed,
+0 stubs, 11 chunks), three parametrizations pinning both label branches +
+the static class/var chain; clean reimplementation byte-matching; meter:
+78 chunks · 4 golden · 74 GAP, G7/G8 in flight by peers). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

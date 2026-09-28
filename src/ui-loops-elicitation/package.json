@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-elicitation",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the elicitation-progress status line, golden-verified against corpus execution (G9, matrix §D Elicitations)"
+}
