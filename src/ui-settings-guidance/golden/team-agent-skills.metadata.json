@@ -1,0 +1,35 @@
+{
+  "unit": "ui-settings-guidance/teamAgentSkillsPageMetadata",
+  "chunk": "TeamAgentSkillsSettingsPage",
+  "stubs": {
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/g14-contextual-menu-actions.mjs",
+      "why": "cF/oF/sF (back-link helper + settings page/section wrappers) are read only inside the component bodies; linking-only, throw-on-use. Full chunk name pinned: the prefix is ambiguous (Bcp3eWHc/Dlg9Oa2U hash-rotated duplicates); the entry chunk's import literal names Dlg9Oa2U."
+    },
+    "jsx-runtime.BH9nBM82.js": {
+      "file": "stubs/g14-jsx-runtime.mjs",
+      "why": "the chunk runs `var c = r()` at module eval, so the export must be callable during import; the returned jsx/jsxs throw on use — no render in this case."
+    },
+    "mobxreactlite.BAMBvwfh.js": {
+      "file": "stubs/g14-mobxreactlite.mjs",
+      "why": "the chunk wraps its route component at module eval (`d = i(fn)`) and then assigns d.displayName; identity-wrap satisfies both honestly. Never rendered here."
+    },
+    "suspenseObserver.Cawdgu7K.js": {
+      "file": "stubs/g14-suspense-observer.mjs",
+      "why": "the chunk wraps its inner settings component at module eval (`u = a(fn)`) — the third module-eval wrapper seam in the pattern library. Identity-wrap; never rendered here."
+    },
+    "useRouteData.DN0g9O-t.js": {
+      "file": "stubs/g14-use-route-data.mjs",
+      "why": "route-data hook called only inside the route component body; linking-only, throw-on-use."
+    },
+    "SkillsList.DMPqCUWU.js": {
+      "file": "stubs/g14-skills-list.mjs",
+      "why": "used only as a jsx element type inside the component body; linking-only, throw-on-use."
+    }
+  },
+  "notes": "G14: second \u00a7F Settings golden (matrix \u00a7F 'Team agent settings' row, TeamAgentSkillsSettingsPage.C2EeluTr.js), verifying the G11 scouting that \u00a7F settings pages share the metadata shape. The observed export `pageMetadata` (chunk-local `l`) is a pure module-level literal {id:'team-agent-skills', title:'Agent skills', description, keywords} \u2014 unlike G11's factory it takes NO scope parameter and carries NO applicable member; the driver's verbatim projection (own-key order preserved) pins both facts. Drive mode because the module surface is a value plus one module-eval fact: the Component export's displayName ('TeamAgentSkillsSettingsPage', assigned at module eval) is projected as a string; the component function itself (mobx+suspenseObserver-wrapped route component reading useRouteData('/:orgKey/settings/teams/:teamKey/agent-skills')) renders composite children and stays out of T1 scope, declared in corpus-manifest.json. All six import seams stubbed: three module-eval wrappers (jsx-runtime factory, suspenseObserver, mobx \u2014 the latter two identity-wrap, a NEW combination vs G11) must return values; the other three are throw-on-use bombs, so the closure is the entry chunk alone and corpus drift that adds a real read throws. No ambient DOF: pure strings, one case.",
+  "drive": {
+    "file": "team-agent-skills-driver.mjs",
+    "exportMeaning": "export{d as Component, l as pageMetadata} \u2014 l is the pure metadata literal {id:'team-agent-skills', title:'Agent skills', description:'Add reusable instructions team members can use with Linear Agent', keywords:'agent skills shared prompt linear agent'}; d is the mobx-wrapped route component with displayName='TeamAgentSkillsSettingsPage' assigned at module eval (component body out of golden scope). The driver returns {pageMetadata, componentDisplayName}."
+  }
+}
