@@ -3,20 +3,25 @@
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: FREEZE — EXIT PROPOSED (2026-09-28), awaiting the owner's word on
-issue #157. The freeze is a user directive, so no PR can lift it; this banner
-records that every PLAN.md exit condition now verifiably holds on main
-(audited in #225 and reproduced by three sessions on PR #256): (1) #171
-parity check in ci/check-ui.sh incl. the theme-VALUES drift family (#224);
-(2) #168 ui-theme goldens 13/13; (3) G1 corpus-exec + G2 coverage ledger
-landed, corpus-free leg never vacuous; (4) a surface rebuilt end-to-end
-golden-green — src/ui-loops-icons, golden-backed on the ledger; (5) R3.4
-archived (tag `archive/r3.4-ui-shell`). Until the owner acks: the freeze-safe
-work list stands (audits, corpus extraction, docs, goldens, harness). After
-the ack: R4.1 (corrected PascalCase trigger model) becomes claimable, and
-EVERY feature slice is per-row golden-gated (SPECS/ui-parity.md Tier 1) and
-scope-checked against SPECS/product-contract.md. The progress meter is the
-coverage ledger's golden count, not merged-PR volume.**
+**Phase: HARNESS-FIRST REBUILD (freeze exited 2026-09-28 — owner ack on
+PR #256, 03:29Z): "i approve using our harness to verify slowly and carefully
+seeing if we can actually do the exact ui implementation properly this time,
+still putting 70 percent of our effort into improving the harness." Effect:
+(a) exact-UI implementation slices may proceed SLOWLY AND CAREFULLY, each one
+golden-gated through the harness (SPECS/ui-parity.md Tier 1) and scope-checked
+against SPECS/product-contract.md — one thin slice at a time, corpus-executed
+golden first, reimplementation second; (b) ~70% of collective effort stays on
+improving the harness itself (corpus-exec modes, coverage ledger, serializer,
+parity families, pipeline integrity); (c) E1 (the live golden-goose chat
+experiment) is explicitly NOT started — owner's words, same comment: "we are
+not going to start E1 yet." The exit conditions that earned this were audited
+in #225 and reproduced by three sessions on PR #256: (1) #171 parity check in
+ci/check-ui.sh incl. the theme-VALUES drift family (#224); (2) #168 ui-theme
+goldens 13/13; (3) G1 corpus-exec + G2 coverage ledger landed, corpus-free leg
+never vacuous; (4) surfaces rebuilt end-to-end golden-green —
+src/ui-loops-icons and src/ui-loops-viewtype on the ledger (3 golden · 75 GAP
+at exit); (5) R3.4 archived (tag `archive/r3.4-ui-shell`). The progress meter
+is the coverage ledger's golden count, not merged-PR volume.**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
@@ -176,7 +181,8 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   best-practices prose digests merged (#201).
 - R5.1 dataplane PR #155: the blocking 400/RATELIMITED finding and the
   markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
-  merged into it; server 26/26). Stays open per the #157 freeze.
+  merged into it; server 26/26). Freeze exited: needs a re-slice review
+  against the merged docs-site rate-limit facts before merge (see Next).
 
 Product contract clarification (2026-09-28, owner directive): the rebuild is an
 original **Loops-only** product. The sidebar contains Loops, only the Loops-required
@@ -188,24 +194,27 @@ fallback-only. This changes scope wording and architecture, not the EXACT UI/beh
 bar for the Loops surfaces or the public-code legal line. Binding detail:
 `SPECS/product-contract.md`; boot-level rule: `AGENTS.md`.
 
-Next (once the owner acks the exit on #157, per the banner): R4.1 redo
-(corrected PascalCase trigger model) -> R4/R5/R6 slices -> matrix rows to
-exact parity. Every feature slice ships with its corpus-executed golden(s)
-and moves the ledger, answers the four product-contract questions in its PR,
-and is gated by `parity check` (Tier-2 drift) + `coverage check` (Tier-1
-goldens). #155 (R5.1 dataplane) unfreezes with the rest: its two blocking
-findings are fixed on-branch — it needs a re-slice review against the merged
-docs-site rate-limit facts, not a rewrite.
+Next (per the owner ack, banner above): the harness track keeps ~70% of
+effort (more goldens on GAP chunks, corpus-exec T2/T3 render+store tiers,
+serializer/ledger/pipeline hardening). The remaining ~30%: careful exact-UI
+slices — R4.1 redo (corrected PascalCase trigger model) -> R4/R5/R6 slices ->
+matrix rows to exact parity. Every feature slice ships with its
+corpus-executed golden(s) and moves the ledger, answers the four
+product-contract questions in its PR, and is gated by `parity check` (Tier-2
+drift) + `coverage check` (Tier-1 goldens). #155 (R5.1 dataplane) unfreezes
+with the rest: its two blocking findings are fixed on-branch — it needs a
+re-slice review against the merged docs-site rate-limit facts, not a rewrite.
 
-More goldens are always claimable now (freeze-safe): the ledger names every
-GAP chunk; the G4/G5 pattern (case file + hand-verified golden + per-entry
-manifest + reimplementation) is the template.
+More goldens are always claimable (the 70% track): the ledger names every
+GAP chunk; the G4/G5/G6 patterns (case file + hand-verified golden +
+per-entry manifest + reimplementation; invoke/render/drive modes all have
+merged worked examples) are the template.
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
 #20); golden-goose next steps after the trace (issue #14): **E1 live
-experiment — the one user-gated item; claimed 2026-09-27 22:08Z, no result
-posted since, so the stale-claim rule applies: any session with the user
-present may reclaim it on #14** + minimal sync-reader slice when R6 lands.
+experiment is ON HOLD by owner directive (PR #256, 2026-09-28 03:29Z: "we are
+not going to start E1 yet") — do NOT reclaim or start it until the owner says
+otherwise** + minimal sync-reader slice when R6 lands.
 
 Infra note: GitHub Actions is billing-locked; the gate runs locally:
 `bash ci/check-src.sh`.
