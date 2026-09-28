@@ -128,7 +128,15 @@ for (const n of names) {
 fs.writeFileSync(`${EXTRACTS}/models.md`, md);
 let gd = `# Linear Client GraphQL Operations (condensed catalog)\n\n${stamp}. ${graphqlOps.size} operations.\n\n`;
 for (const [name, op] of [...graphqlOps.entries()].sort()) {
-  const full = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1].replace(/\s+/g, ' ');
+  // Layout-invariant signature text (#254 review): collapse whitespace, then
+  // drop the layout-only spaces a beautifier inserts around GraphQL
+  // punctuation (`String !` / `[ ID ! ]` / `$a , $b`) so the same op yields
+  // identical signature bytes from the pretty and raw trees.
+  const full = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1]
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([!,:)\]])/g, '$1')
+    .replace(/([([])\s+/g, '$1')
+    .trim();
   // Mark a cut signature as cut (#254 review): an unfinished `$var` or type
   // name presented as a complete signature is a wrong fact, not a short one.
   const sig = full.length > 160 ? full.slice(0, 160) + ' …[truncated]' : full;

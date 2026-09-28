@@ -98,3 +98,30 @@ test('the facts include what the old grammars missed', () => {
   assert.deepEqual(names, ['AlphaQuery', 'TrickyMutation', 'WrappedQuery']);
   assert.deepEqual(facts.routes, ['/:orgKey/alpha/:alphaId', '/settings/alpha']);
 });
+
+test('signature text is layout-invariant across pretty and raw renderings', () => {
+  // #254 review (the punctuation-normalization thread): a beautifier may
+  // render `String !`, `[ ID ! ]`, `$a , $b` — the catalog signature must be
+  // byte-identical to the minified rendering's.
+  const MIN_SIG = 'function s1(e){return e.query($n`query SigQuery($id: String!, $refs: [ID!]) { sig(id: $id) { id } }`)}';
+  const PRETTY_SIG = 'function s1(e) {\n  return e.query($n`query SigQuery($id: String ! , $refs: [ ID ! ]) { sig(id: $id) { id } }`)\n}\n';
+  const min = runAnalyzeMd(MIN_SIG);
+  const pretty = runAnalyzeMd(PRETTY_SIG);
+  assert.equal(pretty, min);
+  assert.match(min, /\(\$id: String!, \$refs: \[ID!\]\)/);
+});
+
+// Like runAnalyze but returns the SigQuery line of the generated
+// extracts/graphql-ops.md (the human-facing signature bytes the review is
+// about), not the JSON facts.
+function runAnalyzeMd(chunkText) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'analyze-sig-'));
+  fs.mkdirSync(path.join(dir, 'pretty/client'), { recursive: true });
+  fs.writeFileSync(path.join(dir, 'pretty/client/Fixture.AAAA.js'), chunkText);
+  execFileSync(process.execPath, [ANALYZE], { cwd: dir, env: { ...process.env, EXTRACTS_DIR: path.join(dir, 'extracts') } });
+  const md = fs.readFileSync(path.join(dir, 'extracts', 'graphql-ops.md'), 'utf8');
+  fs.rmSync(dir, { recursive: true, force: true });
+  const line = md.split('\n').find((l) => l.includes('SigQuery'));
+  assert.ok(line, 'SigQuery present in the catalog');
+  return line;
+}

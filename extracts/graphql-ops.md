@@ -24,12 +24,12 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `AiConversationDebugThreadState` `($id: String!)`
 - **mutation** `AiConversationSendElicitationResponses` `($input: AiConversationSendElicitationResponsesInput!)`
 - **mutation** `AiConversationSendMessage` `($input: AiConversationSendMessageInput!)`
-- **query** `AiConversationsQuery` `( $first: Int $after: String $last: Int $before: String $filter: AiConversationFilter )`
+- **query** `AiConversationsQuery` `($first: Int $after: String $last: Int $before: String $filter: AiConversationFilter)`
 - **mutation** `AirbyteIntegrationConnect` `($input: AirbyteConfigurationInput!)`
 - **mutation** `AppUserOauthTokensRevoke` `($appUserId: String!)`
 - **query** `ApplicationInfoByIdsQuery` `($ids: [String!]!)`
 - **query** `ApplicationInfoQuery` `($clientId: String!)`
-- **query** `ApplicationWithAuthorizationQuery` `( $clientId: String! $scope: [String!]! $redirectUri: String! $actor: String )`
+- **query** `ApplicationWithAuthorizationQuery` `($clientId: String! $scope: [String!]! $redirectUri: String! $actor: String)`
 - **query** `ArchivedCustomerNeedsCount` `($customerId: String!)`
 - **query** `ArchivedIntegrationsQuery`
 - **query** `ArchivedTeamsQuery`
@@ -38,7 +38,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `AttachmentLinkFront` `($issueId: String!, $conversationId: String!)`
 - **mutation** `AttachmentLinkGitHubIssue` `($issueId: String!, $url: String!)`
 - **mutation** `AttachmentLinkGitHubPR` `($issueId: String!, $url: String!, $linkKind: GitLinkKind)`
-- **mutation** `AttachmentLinkGitLabMR` `( $issueId: String! $url: String! $projectPathWithNamespace: String! $number: Float! )`
+- **mutation** `AttachmentLinkGitLabMR` `($issueId: String! $url: String! $projectPathWithNamespace: String! $number: Float!)`
 - **mutation** `AttachmentLinkSlack` `($url: String!, $issueId: String!, $syncToCommentThread: Boolean)`
 - **query** `AttachmentSources` `($teamId: String)`
 - **mutation** `AttachmentSyncToSlack` `($id: String!)`
@@ -52,7 +52,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `BulkRerunAutomation` `($input: BulkRerunAutomationInput!)`
 - **query** `CachedBillingDetails`
 - **query** `CachedBillingInvoices`
-- **query** `CachedUsageAnalytics` `( $from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatu …[truncated])`
+- **query** `CachedUsageAnalytics` `($from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatur …[truncated])`
 - **query** `CachedUsageLimitRecentHighSpend` `($subjectType: UsageLimitSubjectType!)`
 - **query** `CachedUsageLimitSpend` `($subjectType: UsageLimitSubjectType!, $fallbackPeriod: UsageLimitPeriod!)`
 - **query** `CachedUsageSourceBreakdown` `($range: UsageSummaryRange!, $cursor: String)`
@@ -73,7 +73,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `CompleteMcpOAuth`
 - **mutation** `ConnectCustomViewSlackChannel` `($code: String!, $customViewId: String!, $redirectUri: String!)`
 - **mutation** `ConnectInitiativeSlackChannel` `($code: String!, $initiativeId: String!, $redirectUri: String!)`
-- **mutation** `ConnectProjectMicrosoftTeamsChannel` `( $projectId: String! $teamId: String! $teamName: String! $channelId: String! $channelName: String! $membershipType: String! )`
+- **mutation** `ConnectProjectMicrosoftTeamsChannel` `($projectId: String! $teamId: String! $teamName: String! $channelId: String! $channelName: String! $membershipType: String!)`
 - **mutation** `ConnectProjectSlackChannel` `($code: String!, $projectId: String!, $redirectUri: String!, $service: String!)`
 - **mutation** `ConnectTeamSlackChannel` `($code: String!, $teamId: String!, $redirectUri: String!)`
 - **query** `ContributorRunsQuery` `($input: AiConversationRootReferencesInput!)`
@@ -116,12 +116,12 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `DesktopTerminalHandoffCreate` `($input: DesktopTerminalHandoffCreateInput!)`
 - **query** `DiffFiles` `($id: String!)`
 - **mutation** `DiscoverMcpOAuth` `($mcpUrl: String!, $mcpServerDefinitionId: String, $integrationId: String)`
-- **query** `DocumentContentAgentCheckpoint` `( $documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String! )`
+- **query** `DocumentContentAgentCheckpoint` `($documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String!)`
 - **mutation** `DocumentContentAgentCheckpointCompact` `($aiConversationId: String!)`
-- **query** `DocumentContentAgentCheckpointHead` `( $documentContentId: String! $aiConversationId: String! $mode: DocumentContentAgentCheckpointMode! )`
+- **query** `DocumentContentAgentCheckpointHead` `($documentContentId: String! $aiConversationId: String! $mode: DocumentContentAgentCheckpointMode!)`
 - **mutation** `DocumentContentAgentCheckpointRestore` `($documentContentId: String!, $checkpointId: String!)`
 - **mutation** `DocumentContentAgentCheckpointRestoreTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
-- **mutation** `DocumentContentAgentCheckpointRevert` `( $documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String! )`
+- **mutation** `DocumentContentAgentCheckpointRevert` `($documentContentId: String! $aiConversationId: String! $aiConversationTurnId: String!)`
 - **mutation** `DocumentContentAgentCheckpointRevertTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
 - **query** `DocumentContentAgentCheckpointsForConversation` `($aiConversationId: String!)`
 - **query** `DocumentContentAgentCheckpointsForTurn` `($aiConversationId: String!, $aiConversationTurnId: String!)`
@@ -132,7 +132,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `EmailIntakeAddressRefreshSesDomainStatusMutation` `($emailIntakeAddressId: String!)`
 - **mutation** `EmailIntakeAddressRotate` `($id: String!)`
 - **mutation** `EmailTokenUserAccountAuth` `($email: String!, $token: String!, $timezone: String!, $inviteLink: String, $clientAuthCode: String)`
-- **mutation** `EmailUserAccountAuthChallenge` `( $email: String! $clientAuthCode: String $isDesktop: Boolean $inviteLink: String $loginCodeOnly: Boolean $challengeResponse: String $sessionId: String )`
+- **mutation** `EmailUserAccountAuthChallenge` `($email: String! $clientAuthCode: String $isDesktop: Boolean $inviteLink: String $loginCodeOnly: Boolean $challengeResponse: String $sessionId: String)`
 - **query** `EmbedInfo` `($url: String!)`
 - **query** `EmojiSearch` `($input: EmojiSearchInput!)`
 - **query** `FailuresForOauthWebhooksQuery` `($oauthClientId: String!)`
@@ -142,7 +142,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `FeatureFlagRollout` `($id: String!, $rolloutStageId: String!)`
 - **query** `FeatureFlagSegmentsQuery` `($integrationId: String)`
 - **query** `FigmaEmbedInfo` `($fileId: String!, $nodeId: String)`
-- **mutation** `FileUploadMutation` `( $filename: String! $contentType: String! $size: Int! $metaData: JSON $makePublic: Boolean )`
+- **mutation** `FileUploadMutation` `($filename: String! $contentType: String! $size: Int! $metaData: JSON $makePublic: Boolean)`
 - **query** `Flags` `($releaseChannelOverride: ReleaseChannel, $flagClient: FlagClient)`
 - **query** `FlagsMetadata`
 - **query** `FlashcardsRecentWork` `($userId: ID!, $since: DateTimeOrDuration!)`
@@ -153,12 +153,12 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `GiphyTrending` `($limit: Float, $offset: Float)`
 - **mutation** `GitHubCommitIntegrationCreate`
 - **mutation** `GithubArchivedIntegrationDismissMutation` `($id: String!, $dismissed: Boolean)`
-- **mutation** `GitlabIntegrationConnect` `( $accessToken: String! $gitlabUrl: String! $validationProjectPath: String $readonly: Boolean $expiresAt: String )`
+- **mutation** `GitlabIntegrationConnect` `($accessToken: String! $gitlabUrl: String! $validationProjectPath: String $readonly: Boolean $expiresAt: String)`
 - **mutation** `GitlabIntegrationTestConnection` `($integrationId: String!)`
 - **mutation** `GitlabRotateToken` `($integrationId: String!)`
 - **mutation** `GitlabUpdateRotationSettings` `($integrationId: String!, $enabled: Boolean!)`
-- **mutation** `GitlabUpdateToken` `( $integrationId: String! $accessToken: String! $readonly: Boolean $expiresAt: DateTime )`
-- **mutation** `GoogleUserAccountAuth` `( $code: String!, $inviteLink: String, $redirectUri: String!, $timezone: String! $disallowSignup: Boolean $sessionId: String )`
+- **mutation** `GitlabUpdateToken` `($integrationId: String! $accessToken: String! $readonly: Boolean $expiresAt: DateTime)`
+- **mutation** `GoogleUserAccountAuth` `($code: String!, $inviteLink: String, $redirectUri: String!, $timezone: String! $disallowSignup: Boolean $sessionId: String)`
 - **query** `IconSearch` `($input: IconSearchInput!)`
 - **query** `IconSuggestion` `($input: IconSuggestionInput!)`
 - **mutation** `IdentityProviderConfigureSamlViaXml` `($id: String!, $samlConfigXml: String, $samlConfigXmlUrl: String)`
@@ -171,39 +171,39 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `IntegrationAsksLinkSlackUserId` `($integrationId: String!, $code: String!, $redirectUri: String!)`
 - **mutation** `IntegrationAsksNotifyAutoCreateEnabled` `($integrationId: String!, $channelId: String!, $channelName: String!)`
 - **mutation** `IntegrationCustomerDataAttributesRefreshMutation` `($input: IntegrationCustomerDataAttributesRefreshInput!)`
-- **mutation** `IntegrationDatadogConnect` `( $site: String! $apiKey: String! $applicationKey: String! $environmentId: String! )`
+- **mutation** `IntegrationDatadogConnect` `($site: String! $apiKey: String! $applicationKey: String! $environmentId: String!)`
 - **mutation** `IntegrationDatadogEnvironments` `($site: String!, $apiKey: String!, $applicationKey: String!)`
 - **mutation** `IntegrationGitHubEnterpriseServerConnect` `($githubUrl: String!, $organizationName: String!)`
 - **query** `IntegrationGitHubEnterpriseServerPreviouslyConnected`
-- **mutation** `IntegrationGithubConnect` `( $installationId: String! $code: String! $codeAccess: Boolean $githubHost: String $confirmReplace: Boolean )`
+- **mutation** `IntegrationGithubConnect` `($installationId: String! $code: String! $codeAccess: Boolean $githubHost: String $confirmReplace: Boolean)`
 - **mutation** `IntegrationGithubImportRefreshMutation` `($id: String!)`
 - **mutation** `IntegrationGithubRemoveCodeAccess` `($integrationId: String!)`
 - **mutation** `IntegrationJiraCustomOAuthConnect` `($input: JiraCustomOAuthConfigurationInput!)`
 - **mutation** `IntegrationJiraCustomOAuthUpdate` `($input: JiraCustomOAuthUpdateInput!)`
 - **query** `IntegrationJiraProjectStatuses` `($integrationId: String!, $projectId: String!)`
 - **mutation** `IntegrationJiraUpdate` `($input: JiraUpdateInput!)`
-- **mutation** `IntegrationMcpServerConnect` `( $serverUrl: String! $teamId: String $workflowDefinitionId: String $workflowDefinitionDraftId: String $mcpServerDefinitionId: String $customHeaders: [McpServerC …[truncated])`
-- **mutation** `IntegrationMcpServerPersonalConnect` `( $serverUrl: String! $mcpServerDefinitionId: String $customHeaders: [McpServerCustomHeaderInput!] )`
+- **mutation** `IntegrationMcpServerConnect` `($serverUrl: String! $teamId: String $workflowDefinitionId: String $workflowDefinitionDraftId: String $mcpServerDefinitionId: String $customHeaders: [McpServerCu …[truncated])`
+- **mutation** `IntegrationMcpServerPersonalConnect` `($serverUrl: String! $mcpServerDefinitionId: String $customHeaders: [McpServerCustomHeaderInput!])`
 - **mutation** `IntegrationSalesforceMetadataRefreshMutation` `($id: String!)`
 - **mutation** `IntegrationSlackCustomerChannelLink` `($code: String!, $customerId: String!, $redirectUri: String!)`
 - **mutation** `IntegrationSlackImportEmojis` `($code: String!, $redirectUri: String!)`
 - **mutation** `IntegrationSlackOrAsksUpdateSlackTeamName` `($integrationId: String!)`
 - **mutation** `IntegrationSlackWorkflowAccessUpdate` `($integrationId: String!, $enabled: Boolean!)`
 - **query** `IntegrationWorkflowChatTriggerChannels` `($integrationId: String!)`
-- **mutation** `IntegrationZendeskBearerTokenConnect` `( $subdomain: String! $accessToken: String! $botUserRole: String $botUserId: String $customApiUrl: String )`
+- **mutation** `IntegrationZendeskBearerTokenConnect` `($subdomain: String! $accessToken: String! $botUserRole: String $botUserId: String $customApiUrl: String)`
 - **mutation** `IssueDelete` `($issueId: String!)`
 - **mutation** `IssueExternalSyncDisable` `($attachmentId: String!)`
 - **query** `IssueFilterSuggestion` `($input: String!, $projectId: String, $teamId: String)`
 - **query** `IssueImportCheckCSV` `($csvUrl: String!, $service: String!)`
 - **query** `IssueImportCheckSync` `($issueImportId: String!)`
-- **mutation** `IssueImportCreateAsana` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $asanaToken: String! $asanaTeamName: String! )`
-- **mutation** `IssueImportCreateCSVJira` `( $organizationId: String $teamId: String $teamName: String $csvUrl: String! $jiraToken: String $jiraHostname: String $jiraEmail: String )`
-- **mutation** `IssueImportCreateClubhouse` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $clubhouseToken: String! $clubhouseGroupName: String! )`
-- **mutation** `IssueImportCreateGithub` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $githubRepoIds: [Int!]! $githubLabels: [String!] )`
-- **mutation** `IssueImportCreateJira` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $jiraEmail: String! $jiraHostname: String! $jiraProject: String! $jiraToken: String! $jql: Stri …[truncated])`
+- **mutation** `IssueImportCreateAsana` `($teamId: String $teamName: String $includeClosedIssues: Boolean $asanaToken: String! $asanaTeamName: String!)`
+- **mutation** `IssueImportCreateCSVJira` `($organizationId: String $teamId: String $teamName: String $csvUrl: String! $jiraToken: String $jiraHostname: String $jiraEmail: String)`
+- **mutation** `IssueImportCreateClubhouse` `($teamId: String $teamName: String $includeClosedIssues: Boolean $clubhouseToken: String! $clubhouseGroupName: String!)`
+- **mutation** `IssueImportCreateGithub` `($teamId: String $teamName: String $includeClosedIssues: Boolean $githubRepoIds: [Int!]! $githubLabels: [String!])`
+- **mutation** `IssueImportCreateJira` `($teamId: String $teamName: String $includeClosedIssues: Boolean $jiraEmail: String! $jiraHostname: String! $jiraProject: String! $jiraToken: String! $jql: Strin …[truncated])`
 - **mutation** `IssueImportCreateLinearV2` `($linearSourceOrganizationId: String!)`
 - **mutation** `IssueImportDelete` `($issueImportId: String!)`
-- **query** `IssueImportJqlCheckQuery` `( $jiraHostname: String! $jiraEmail: String! $jiraToken: String! $jiraProject: String! $jql: String! )`
+- **query** `IssueImportJqlCheckQuery` `($jiraHostname: String! $jiraEmail: String! $jiraToken: String! $jiraProject: String! $jql: String!)`
 - **mutation** `IssueImportProcess` `($issueImportId: String!, $mapping: JSONObject!)`
 - **query** `IssuePromptContext` `($issueId: String!)`
 - **query** `IssueSuggestions` `($issueId: String, $text: String)`
@@ -224,7 +224,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `OauthClientGetAppUserRequestedSyncGroups` `($id: String!)`
 - **mutation** `OauthClientRotateSecret` `($id: String!)`
 - **mutation** `OauthClientRotateWebhookSecret` `($id: String!)`
-- **mutation** `OauthClientUpdateAppUserRequestedSyncGroups` `( $oauthClientId: String! $appUserId: String! $teamIds: [String!]! $requestAllPublicTeams: Boolean! )`
+- **mutation** `OauthClientUpdateAppUserRequestedSyncGroups` `($oauthClientId: String! $appUserId: String! $teamIds: [String!]! $requestAllPublicTeams: Boolean!)`
 - **mutation** `OauthCreateDeveloperToken` `($oauthClientId: String!, $actorMode: String!, $scope: [String!])`
 - **mutation** `OauthTokenRevoke` `($appId: String!, $scope: [String!]!)`
 - **mutation** `OauthTokenWorkspaceRevoke` `($appId: String!)`
@@ -290,9 +290,9 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `PullRequestStackTitle` `($input: PullRequestStackTitleInput!)`
 - **mutation** `PullRequestSuggestIssue` `($id: String!)`
 - **query** `PushSubscriptionTest` `($strategy: SendStrategy)`
-- **mutation** `ReactionCreate` `( $id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pu …[truncated])`
+- **mutation** `ReactionCreate` `($id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pul …[truncated])`
 - **mutation** `ReactionDelete` `($id: String!)`
-- **mutation** `ReconnectMcpIntegration` `( $integrationId: String! $customHeaders: [McpServerCustomHeaderInput!] )`
+- **mutation** `ReconnectMcpIntegration` `($integrationId: String! $customHeaders: [McpServerCustomHeaderInput!])`
 - **mutation** `RegisterOAuthState` `($state: String!)`
 - **query** `ReleasePipelineAccessKey` `($id: String!)`
 - **query** `ReleaseSearchQuery` `($term: String, $first: Int, $filter: ReleaseFilter)`
@@ -302,16 +302,16 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `ResendOrganizationInviteByEmailMutation` `($email: String!)`
 - **query** `RetrieveDeepSearchCandidates` `($query: String!, $retrieverType: String!, $options: DeepSearchOptionsInput)`
 - **mutation** `SamlTokenUserAccountAuth` `($email: String!, $token: String!, $timezone: String!)`
-- **query** `SearchAll` `( $term: String! $first: Int $modelNames: [String!] $includeArchived: Boolean $boosts: SearchAllBoosts )`
-- **query** `SearchAllByFilter` `( $includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $init …[truncated])`
-- **query** `SearchCombined` `( $term: String! $includeArchived: Boolean $filter: JSONObject $type: SearchResultType $orderBy: PaginationOrderBy $useSearchAgent: Boolean )`
-- **query** `SearchCustomViewsByFilter` `( $includeArchived: Boolean $filter: CustomViewFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchDashboardsByFilter` `( $includeArchived: Boolean $filter: DashboardFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchDocumentsByFilter` `( $includeArchived: Boolean $filter: DocumentFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SearchAll` `($term: String! $first: Int $modelNames: [String!] $includeArchived: Boolean $boosts: SearchAllBoosts)`
+- **query** `SearchAllByFilter` `($includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $initi …[truncated])`
+- **query** `SearchCombined` `($term: String! $includeArchived: Boolean $filter: JSONObject $type: SearchResultType $orderBy: PaginationOrderBy $useSearchAgent: Boolean)`
+- **query** `SearchCustomViewsByFilter` `($includeArchived: Boolean $filter: CustomViewFilter $orderBy: PaginationOrderBy $first: Int)`
+- **query** `SearchDashboardsByFilter` `($includeArchived: Boolean $filter: DashboardFilter $orderBy: PaginationOrderBy $first: Int)`
+- **query** `SearchDocumentsByFilter` `($includeArchived: Boolean $filter: DocumentFilter $orderBy: PaginationOrderBy $first: Int)`
 - **mutation** `SearchIndexWarmup`
-- **query** `SearchInitiativesByFilter` `( $includeArchived: Boolean $filter: InitiativeFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchIssuesByFilter` `( $includeArchived: Boolean $filter: IssueFilter $orderBy: PaginationOrderBy $first: Int )`
-- **query** `SearchProjectsByFilter` `( $includeArchived: Boolean $filter: ProjectFilter $orderBy: PaginationOrderBy $first: Int )`
+- **query** `SearchInitiativesByFilter` `($includeArchived: Boolean $filter: InitiativeFilter $orderBy: PaginationOrderBy $first: Int)`
+- **query** `SearchIssuesByFilter` `($includeArchived: Boolean $filter: IssueFilter $orderBy: PaginationOrderBy $first: Int)`
+- **query** `SearchProjectsByFilter` `($includeArchived: Boolean $filter: ProjectFilter $orderBy: PaginationOrderBy $first: Int)`
 - **query** `SimilarIssues` `($issueId: String!, $topK: Int = 5, $minSimilarity: Float)`
 - **query** `SlackProfileTitle`
 - **query** `SsoUrlFromEmailQuery` `($email: String!, $isDesktop: Boolean, $type: IdentityProviderType!)`
@@ -319,7 +319,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `SubscriptionSessionCreate` `($plan: String!, $coupon: String)`
 - **mutation** `SubscriptionUpdateSessionCreate`
 - **mutation** `SubscriptionUpgrade` `($id: String!, $type: String!, $immediate: Boolean!)`
-- **query** `SyncCheck` `( $id: String! $issueUpdatedAt: DateTime! $commentCount: Int! $issueHistoryCount: Int! $contentStateLength: Int! )`
+- **query** `SyncCheck` `($id: String! $issueUpdatedAt: DateTime! $commentCount: Int! $issueHistoryCount: Int! $contentStateLength: Int!)`
 - **query** `SyncEntityCount`
 - **mutation** `TeamCyclesDelete` `($teamId: String!)`
 - **mutation** `TeamUnarchive` `($teamId: String!)`
@@ -337,10 +337,10 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `UsageAutoTopupUpdate` `($input: UsageAutoTopupUpdateInput!)`
 - **query** `UsageCredit`
 - **mutation** `UsageCreditTopupSessionCreate` `($quantity: Int!, $tosAccepted: Boolean!)`
-- **query** `UsageFilteredHistory` `( $range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinition …[truncated])`
+- **query** `UsageFilteredHistory` `($range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinitionI …[truncated])`
 - **mutation** `UsageLimitGroupPeriodUpdate` `($input: UsageLimitGroupPeriodUpdateInput!)`
 - **mutation** `UsageLimitResetScheduleUpdate` `($input: UsageLimitResetScheduleInput!)`
-- **query** `UsageSessionCostBreakdowns` `( $sessions: [UsageSessionCostBreakdownInput!]! $periodStart: DateTime! $periodEnd: DateTime! )`
+- **query** `UsageSessionCostBreakdowns` `($sessions: [UsageSessionCostBreakdownInput!]! $periodStart: DateTime! $periodEnd: DateTime!)`
 - **query** `UserAccountExists` `($email: String!)`
 - **mutation** `UserChangeRole` `($id: String!, $role: UserRoleType!)`
 - **mutation** `UserFlagUpdate` `(flag: ${e}, operation: ${t})`
