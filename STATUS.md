@@ -91,12 +91,15 @@ G1 corpus-exec LANDED 2026-09-28 (#230+#233+#234 squashed to main `78a9f69`:
 run/verify + invoke/render modes, RAW `corpus/client` as the executable
 authority with source-flavor provenance, injective serializer — Date/undefined/
 key preserved, non-plain objects a loud typed error; 27/27 incl. the raw-tree
-corpus smoke, six reviewer verifications), G2 coverage ledger IN PR
-(tools/coverage: matrix x corpus-manifests x goldens -> golden|improvement|GAP
-per surface + off-matrix table; corpus-free `coverage check` wired as a
-never-vacuous ci/check-ui.sh leg; ui-theme reference manifest;
-sess_01a0e576-f856-7296-9c01-2bcd8438d5c7), G3 theme retrofit (claimed
-sess_01a0e4ca-cd60), G4 first rendered-component golden OPEN — claim on #225). H3 family expansion
+corpus smoke, six reviewer verifications), G2 coverage ledger LANDED 2026-09-28
+(#237: tools/coverage — matrix x corpus-manifests x goldens ->
+golden|improvement|GAP per surface + off-matrix table; corpus-free `coverage
+check` wired as a never-vacuous ci/check-ui.sh leg; ui-theme reference
+manifest), G3 theme retrofit (claimed sess_01a0e4ca-cd60), G4 first
+rendered-component golden LANDED 2026-09-28 (src/ui-loops-icons:
+AgentAutomationEmptyStateIcon darkDefault — corpus-executed, hand-verified vs
+source, serializer-v2 bytes, TZ/locale-invariant; the pattern every rendered
+slice copies)). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
