@@ -562,6 +562,54 @@ for (const window of ["complexity", "endpoint-requests"]) {
   }
 }
 
+for (const window of ["complexity", "endpoint-requests"]) {
+  for (const reset of [undefined, 1_000_000, 1_060_000]) {
+    test(`429 Retry-After gates requests alongside ${window} with request reset ${reset ?? "missing"}`, async () => {
+      let now = 1_000_000;
+      let calls = 0;
+      const headers: Record<string, string> = {
+        ...HEADERS,
+        "retry-after": "30",
+        "x-ratelimit-requests-remaining": "0",
+        [`x-ratelimit-${window}-remaining`]: "0",
+        [`x-ratelimit-${window}-reset`]: "1010000",
+      };
+      if (reset === undefined) delete headers["x-ratelimit-requests-reset"];
+      else headers["x-ratelimit-requests-reset"] = String(reset);
+      const client = new LinearClient({
+        getToken: () => "t",
+        now: () => now,
+        fetchImpl: (async () => {
+          calls += 1;
+          return calls === 1
+            ? new Response("Too Many Requests", { status: 429, headers })
+            : jsonResponse({ data: { ok: true } });
+        }) as typeof fetch,
+      });
+      await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+        assert.equal(e.kind, "rate_limited");
+        assert.equal(e.status, 429);
+        assert.equal(e.retryAfterMs, 30_000);
+        return true;
+      });
+      const gateReset = reset !== undefined && reset > now ? reset : now + 30_000;
+      // The other window has reopened, but the request window must still gate.
+      now = 1_010_000;
+      await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+        assert.equal(e.kind, "rate_limited");
+        assert.equal(e.status, undefined);
+        assert.equal(e.retryAfterMs, gateReset - now);
+        return true;
+      });
+      assert.equal(calls, 1);
+      assert.equal(client.budget().requestsReset, gateReset);
+      now = gateReset;
+      assert.deepEqual(await client.query("query { viewer { id } }"), { ok: true });
+      assert.equal(calls, 2);
+    });
+  }
+}
+
 for (const status of [200, 400, 429]) {
   test(`all exhausted windows determine both response and preflight delays (${status})`, async () => {
     let now = 1_000_000;

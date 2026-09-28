@@ -61,6 +61,10 @@ Done 2026-09-27:
   Complexity-limited 429s also backfill missing/expired resets from Retry-After
   so preflight blocks until that delay expires. Three fake-fetch cases cover
   missing, expired, and preserved future resets, including gate reopening.
+  Simultaneously exhausted request windows now receive the same Retry-After
+  backfill even when an endpoint or complexity window is exhausted too. Six
+  fake-fetch cases cover missing/expired request resets and future-reset
+  preservation, including refusal after the other window resets and reopening.
 
 Now:
 - R4.1 loops domain slice: server half claimed by sess_01a0e392-f0c2-7545-
