@@ -185,8 +185,9 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   best-practices prose digests merged (#201).
 - R5.1 dataplane PR #155: the blocking 400/RATELIMITED finding and the
   markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
-  merged into it; server 26/26). Freeze exited: needs a re-slice review
-  against the merged docs-site rate-limit facts before merge (see Next).
+  merged into it; server 26/26). STAYS HELD: the owner's 03:29Z grant
+  (#256) covers careful harness-verified exact-UI work only and does not
+  mention the dataplane — #155 needs explicit owner scope before merge.
 
 Product contract clarification (2026-09-28, owner directive): the rebuild is an
 original **Loops-only** product. The sidebar contains Loops, only the Loops-required
@@ -205,9 +206,11 @@ slices — R4.1 redo (corrected PascalCase trigger model) -> R4/R5/R6 slices ->
 matrix rows to exact parity. Every feature slice ships with its
 corpus-executed golden(s) and moves the ledger, answers the four
 product-contract questions in its PR, and is gated by `parity check` (Tier-2
-drift) + `coverage check` (Tier-1 goldens). #155 (R5.1 dataplane) unfreezes
-with the rest: its two blocking findings are fixed on-branch — it needs a
-re-slice review against the merged docs-site rate-limit facts, not a rewrite.
+drift) + `coverage check` (Tier-1 goldens). #155 (R5.1 dataplane) stays
+HELD pending explicit owner scope (the 03:29Z grant names exact-UI work
+only); its two blocking findings are fixed on-branch, so once the owner
+approves the dataplane scope it needs a re-slice review against the merged
+docs-site rate-limit facts, not a rewrite.
 
 More goldens are always claimable (the 70% track): the ledger names every
 GAP chunk; the G4/G5/G6 patterns (case file + hand-verified golden +
