@@ -103,3 +103,101 @@ test(`REAL repo: ledger builds, ui-theme reference manifest is golden-backed, re
   // determinism: two builds render byte-identically (--check's regeneration bar)
   assert.equal(renderReport(l), renderReport(buildLedger(repoRoot)));
 });
+
+test(`#237 review: grammar keeps AgentPanel* globs and bare use* hooks`, () => {
+  const rows = chunkRefsFromMatrix(
+    `## A. UI\n\n| Feature | Corpus evidence | Status |\n|---|---|---|\n| Panel | \`AgentPanel*\` chunks | corpus |\n| Recents | \`useTrackRecentLoop.DJGSsw3v.js\`, \`useLoopTemplateLauncher\` | corpus |\n| Op | mutation \`aiConversationSendMessage\` field \`success\` | corpus |\n`,
+  );
+  const chunks = rows.flatMap((r) => r.chunks);
+  assert.ok(chunks.includes(`AgentPanel`));
+  assert.ok(chunks.includes(`useTrackRecentLoop.DJGSsw3v.js`));
+  assert.ok(chunks.includes(`useLoopTemplateLauncher`));
+  assert.ok(!chunks.includes(`aiConversationSendMessage`)); // lowercase non-hook op field stays out
+  assert.ok(!chunks.includes(`success`));
+});
+
+test(`#237 review: null root and non-array reimplements are consistency errors, never crashes`, () => {
+  const rootNull = fixtureRepo({});
+  const pkgN = join(rootNull, `src`, `pkg-null`);
+  mkdirSync(pkgN, { recursive: true });
+  writeFileSync(join(pkgN, `corpus-manifest.json`), `null`);
+  const lNull = buildLedger(rootNull);
+  assert.ok(lNull.errors.some((e) => e.includes(`manifest root must be an object`)));
+
+  const lBad = buildLedger(
+    fixtureRepo({ manifest: { source: `t`, reimplements: `nope`, goldens: [] } }),
+  );
+  assert.ok(lBad.errors.some((e) => e.includes(`"reimplements" must be an array`)));
+});
+
+test(`#237 review: golden id must match \${id}.json exactly — a sibling case.extra.json cannot satisfy it`, () => {
+  const manifest = {
+    source: `t`,
+    reimplements: [{ chunkPrefix: `ThemeHelper` }],
+    goldens: [`case`],
+  };
+  const l = buildLedger(fixtureRepo({ manifest, goldenFiles: [`case.extra.json`] }));
+  assert.equal(l.golden, 0);
+  assert.ok(l.errors.some((e) => e.includes(`no committed file case.json`)));
+});
+
+test(`#237 review: per-entry goldens scope the claim — chunk B without its own case stays GAP`, () => {
+  const manifest = {
+    source: `t`,
+    reimplements: [
+      { chunkPrefix: `LoopsManagementPage`, goldens: [`lmp`] },
+      { chunkPrefix: `ThemeHelper`, goldens: [] },
+    ],
+    goldens: [`lmp`],
+  };
+  const l = buildLedger(fixtureRepo({ manifest, goldenFiles: [`lmp.json`] }));
+  const theme = l.rows.find((r) => r.chunk.startsWith(`ThemeHelper`));
+  const lmp = l.rows.filter((r) => r.chunk.startsWith(`LoopsManagementPage`));
+  assert.equal(theme?.cls, `GAP`);
+  assert.ok(lmp.every((r) => r.cls === `golden`));
+});
+
+test(`#237 review: improvements carry explicit chunk identity; bare strings are a consistency error`, () => {
+  const good = buildLedger(
+    fixtureRepo({
+      manifest: {
+        source: `t`,
+        reimplements: [],
+        goldens: [],
+        improvements: [{ chunkPrefix: `ThemeHelper`, ref: `https://github.com/I-am-drunk/linear-loops-decompile/issues/42` }],
+      },
+    }),
+  );
+  assert.equal(good.improvement, 1);
+  assert.equal(good.errors.length, 0);
+
+  const bad = buildLedger(
+    fixtureRepo({
+      manifest: { source: `t`, reimplements: [], goldens: [], improvements: [`issues/42`] },
+    }),
+  );
+  assert.equal(bad.improvement, 0);
+  assert.ok(bad.errors.some((e) => e.includes(`{ chunkPrefix, ref }`)));
+});
+
+test(`#237 review: a later package's golden-backed claim is not shadowed by an earlier package's improvement`, () => {
+  const root = fixtureRepo({
+    manifest: {
+      source: `a`,
+      reimplements: [],
+      goldens: [],
+      improvements: [{ chunkPrefix: `ThemeHelper`, ref: `issue-1` }],
+    },
+  });
+  const pkgB = join(root, `src`, `pkg-b`);
+  mkdirSync(join(pkgB, `golden`), { recursive: true });
+  writeFileSync(
+    join(pkgB, `corpus-manifest.json`),
+    JSON.stringify({ source: `b`, reimplements: [{ chunkPrefix: `ThemeHelper` }], goldens: [`v`] }),
+  );
+  writeFileSync(join(pkgB, `golden`, `v.json`), `{}\n`);
+  const l = buildLedger(root);
+  const theme = l.rows.find((r) => r.chunk.startsWith(`ThemeHelper`));
+  assert.equal(theme?.cls, `golden`);
+  assert.equal(theme?.pkg, `pkg-b`);
+});

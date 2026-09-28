@@ -27,15 +27,26 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 export type ManifestExport = { minified: string; meaning: string; evidenceLine?: string };
-export type ManifestEntry = { chunkPrefix: string; exports?: ManifestExport[] };
+export type ManifestEntry = {
+  chunkPrefix: string;
+  exports?: ManifestExport[];
+  /** golden case ids backing THIS chunk. When absent, the package-level
+   * goldens list is the claim for every entry (fine for a single-substrate
+   * package like ui-theme where every golden executes all three chunks);
+   * a multi-chunk package with per-chunk cases should scope them here so one
+   * chunk's golden can never back another (#237 review). */
+  goldens?: string[];
+};
 export type CorpusManifest = {
   /** package-relative provenance note; free text but required (why/where) */
   source: string;
   reimplements: ManifestEntry[];
   /** golden case ids: file basenames (without .json) under <pkg>/golden/ */
   goldens: string[];
-  /** declared deviations: refs into tools/parity/policy/improvements.json or issue URLs */
-  improvements?: string[];
+  /** declared deviations: each names the chunk it covers explicitly plus a
+   * ref into tools/parity/policy/improvements.json or an issue URL — a bare
+   * URL carries no chunk identity, so the join needs the prefix (#237 review). */
+  improvements?: { chunkPrefix: string; ref: string }[];
 };
 
 export type ChunkClass = `golden` | `improvement` | `GAP`;
@@ -83,7 +94,7 @@ export function chunkRefsFromMatrix(md: string): { section: string; surface: str
     const surface = cells[1].replace(/`/g, ``);
     const evidence = cells[2] ?? ``;
     const chunks: string[] = [];
-    for (const m of evidence.matchAll(/`([A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z0-9_{},*-]+)*\.js|[A-Za-z][A-Za-z0-9]*(?:\.\*)?)`/g)) {
+    for (const m of evidence.matchAll(/`([A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z0-9_{},*-]+)*\.js|[A-Za-z][A-Za-z0-9]*(?:\.\*|\*)?)`/g)) {
       const ref = m[1];
       // brace expansion: A.{H1,H2}.js → A.H1.js, A.H2.js
       const brace = ref.match(/^([A-Za-z0-9]+)\.\{([^}]+)\}\.js$/);
@@ -91,8 +102,10 @@ export function chunkRefsFromMatrix(md: string): { section: string; surface: str
         for (const h2 of brace[2].split(`,`)) chunks.push(`${brace[1]}.${h2.trim()}.js`);
         continue;
       }
-      if (/^[a-z]/.test(ref) && !ref.endsWith(`.js`)) continue; // hook-ish bare lowercase: keep — hooks are chunks too
-      chunks.push(ref.replace(/\.\*$/, ``));
+      // bare lowercase refs are op fields/keywords, EXCEPT use* hooks — hooks
+      // are real chunks (`useTrackRecentLoop.DJGSsw3v.js` etc).
+      if (/^[a-z]/.test(ref) && !ref.endsWith(`.js`) && !/^use[A-Z]/.test(ref)) continue;
+      chunks.push(ref.replace(/\.\*$/, ``).replace(/\*$/, ``));
     }
     if (chunks.length > 0) out.push({ section, surface, chunks });
   }
@@ -116,25 +129,55 @@ export function loadManifests(srcDir: string): { pkg: string; manifest: CorpusMa
     const mPath = join(srcDir, pkg.name, `corpus-manifest.json`);
     if (!existsSync(mPath)) continue;
     const errors: string[] = [];
-    let manifest: CorpusManifest;
+    let raw: unknown;
     try {
-      manifest = JSON.parse(readFileSync(mPath, `utf8`)) as CorpusManifest;
+      raw = JSON.parse(readFileSync(mPath, `utf8`));
     } catch (e) {
       out.push({ pkg: pkg.name, manifest: { source: ``, reimplements: [], goldens: [] }, goldenFiles: [], errors: [`${mPath}: invalid JSON — ${e instanceof Error ? e.message : String(e)}`] });
       continue;
     }
-    if (typeof manifest.source !== `string` || manifest.source === ``) errors.push(`${mPath}: missing "source" provenance`);
-    if (!Array.isArray(manifest.reimplements)) errors.push(`${mPath}: "reimplements" must be an array`);
-    if (!Array.isArray(manifest.goldens)) errors.push(`${mPath}: "goldens" must be an array`);
+    // Validate + NORMALIZE before the ledger ever touches it: a malformed
+    // manifest is a consistency error (exit 1), never a tooling crash
+    // (exit 2) (#237 review).
+    if (raw === null || typeof raw !== `object` || Array.isArray(raw)) {
+      out.push({ pkg: pkg.name, manifest: { source: ``, reimplements: [], goldens: [] }, goldenFiles: [], errors: [`${mPath}: manifest root must be an object`] });
+      continue;
+    }
+    const r = raw as Record<string, unknown>;
+    if (typeof r.source !== `string` || r.source === ``) errors.push(`${mPath}: missing "source" provenance`);
+    if (!Array.isArray(r.reimplements)) errors.push(`${mPath}: "reimplements" must be an array`);
+    if (!Array.isArray(r.goldens)) errors.push(`${mPath}: "goldens" must be an array`);
+    if (r.improvements !== undefined && !Array.isArray(r.improvements)) errors.push(`${mPath}: "improvements" must be an array`);
+    const reimplements: ManifestEntry[] = [];
+    for (const entry of Array.isArray(r.reimplements) ? r.reimplements : []) {
+      if (entry === null || typeof entry !== `object` || typeof (entry as ManifestEntry).chunkPrefix !== `string` || (entry as ManifestEntry).chunkPrefix === ``) {
+        errors.push(`${mPath}: reimplements entry missing chunkPrefix`);
+        continue;
+      }
+      const e = entry as ManifestEntry;
+      if (e.goldens !== undefined && !Array.isArray(e.goldens)) {
+        errors.push(`${mPath}: reimplements["${e.chunkPrefix}"].goldens must be an array`);
+        continue;
+      }
+      reimplements.push(e);
+    }
+    const improvements: { chunkPrefix: string; ref: string }[] = [];
+    for (const imp of Array.isArray(r.improvements) ? r.improvements : []) {
+      if (imp === null || typeof imp !== `object` || typeof (imp as { chunkPrefix?: unknown }).chunkPrefix !== `string` || typeof (imp as { ref?: unknown }).ref !== `string`) {
+        errors.push(`${mPath}: improvements entries must be { chunkPrefix, ref } objects (a bare URL carries no chunk identity)`);
+        continue;
+      }
+      improvements.push(imp as { chunkPrefix: string; ref: string });
+    }
+    const goldens = (Array.isArray(r.goldens) ? r.goldens : []).filter((g): g is string => typeof g === `string`);
+    const manifest: CorpusManifest = { source: typeof r.source === `string` ? r.source : ``, reimplements, goldens, improvements };
     const goldenDir = join(srcDir, pkg.name, `golden`);
     const goldenFiles = existsSync(goldenDir) ? readdirSync(goldenDir).filter((f) => f.endsWith(`.json`)) : [];
-    for (const id of Array.isArray(manifest.goldens) ? manifest.goldens : []) {
-      if (!goldenFiles.some((f) => f === `${id}.json` || f.startsWith(`${id}.`))) {
-        errors.push(`${mPath}: golden case id "${id}" has no committed file under ${pkg.name}/golden/ — a dangling id cannot back a coverage claim`);
+    const allDeclaredIds = [...goldens, ...reimplements.flatMap((e) => e.goldens ?? [])];
+    for (const id of allDeclaredIds) {
+      if (!goldenFiles.includes(`${id}.json`)) {
+        errors.push(`${mPath}: golden case id "${id}" has no committed file ${id}.json under ${pkg.name}/golden/ — a dangling id cannot back a coverage claim`);
       }
-    }
-    for (const entry of Array.isArray(manifest.reimplements) ? manifest.reimplements : []) {
-      if (typeof entry.chunkPrefix !== `string` || entry.chunkPrefix === ``) errors.push(`${mPath}: reimplements entry missing chunkPrefix`);
     }
     out.push({ pkg: pkg.name, manifest, goldenFiles, errors });
   }
@@ -152,23 +195,34 @@ export function buildLedger(repoRoot: string): Ledger {
       let cls: ChunkClass = `GAP`;
       let pkg: string | undefined;
       let exportsCovered: number | undefined;
+      // Two passes over ALL manifests (#237 review: never let iteration order
+      // or an early improvement `break` shadow a golden-backed claim):
+      // 1) reimplementation claims — golden wins as soon as any package backs
+      //    the chunk with a resolvable case;
+      // 2) improvement claims — only for chunks no reimplementation covers.
       for (const m of manifests) {
-        const hit = m.manifest.reimplements.find((r) => typeof r.chunkPrefix === `string` && refCovers(r.chunkPrefix, chunk));
-        if (hit !== undefined) {
-          // golden only when the manifest also commits at least one resolvable case
-          const backed = m.manifest.goldens.length > 0 && m.errors.every((e) => !e.includes(`dangling`) && !e.includes(`has no committed file`));
-          cls = backed ? `golden` : `GAP`;
-          if (backed) {
-            pkg = m.pkg;
-            exportsCovered = hit.exports?.length;
-          }
-          if (!backed) errors.push(`src/${m.pkg}: declares ${chunk} but commits no resolvable golden — stays GAP (never a silent claim)`);
+        const hit = m.manifest.reimplements.find((r) => refCovers(r.chunkPrefix, chunk));
+        if (hit === undefined) continue;
+        // The cases backing THIS chunk: per-entry goldens when scoped, else
+        // the package list. All ids were resolution-checked in loadManifests;
+        // any dangling id in the relevant set voids the claim.
+        const caseIds = hit.goldens ?? m.manifest.goldens;
+        const backed = caseIds.length > 0 && caseIds.every((id) => m.goldenFiles.includes(`${id}.json`));
+        if (backed) {
+          cls = `golden`;
+          pkg = m.pkg;
+          exportsCovered = hit.exports?.length;
           break;
         }
-        if ((m.manifest.improvements ?? []).some((ref) => ref.includes(chunk.replace(/\.js$/, ``).split(`.`)[0]))) {
-          cls = `improvement`;
-          pkg = m.pkg;
-          break;
+        errors.push(`src/${m.pkg}: declares ${chunk} but commits no resolvable golden — stays GAP (never a silent claim)`);
+      }
+      if (cls === `GAP`) {
+        for (const m of manifests) {
+          if ((m.manifest.improvements ?? []).some((imp) => refCovers(imp.chunkPrefix, chunk))) {
+            cls = `improvement`;
+            pkg = m.pkg;
+            break;
+          }
         }
       }
       rows.push({ surface: s.surface.slice(0, 60), section: s.section, chunk, cls, pkg, exportsCovered });
@@ -180,7 +234,9 @@ export function buildLedger(repoRoot: string): Ledger {
     for (const r of Array.isArray(m.manifest.reimplements) ? m.manifest.reimplements : []) {
       if (typeof r.chunkPrefix !== `string` || r.chunkPrefix === ``) continue;
       if (!allMatrixChunks.some((c) => refCovers(r.chunkPrefix, c))) {
-        offMatrix.push({ pkg: m.pkg, chunkPrefix: r.chunkPrefix, goldenBacked: m.manifest.goldens.length > 0 });
+        const caseIds = r.goldens ?? m.manifest.goldens;
+        const goldenBacked = caseIds.length > 0 && caseIds.every((id) => m.goldenFiles.includes(`${id}.json`));
+        offMatrix.push({ pkg: m.pkg, chunkPrefix: r.chunkPrefix, goldenBacked });
       }
     }
   }

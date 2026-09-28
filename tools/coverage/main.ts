@@ -44,7 +44,12 @@ function main(): number {
   if (cmd === `report`) {
     const report = renderReport(ledger);
     if (out !== undefined) {
-      writeFileSync(out, report);
+      try {
+        writeFileSync(out, report);
+      } catch (e) {
+        console.error(`coverage: cannot write ${out} — ${e instanceof Error ? e.message : String(e)}`);
+        return 2;
+      }
       console.error(`coverage: wrote ${out}`);
     } else {
       console.log(report);
