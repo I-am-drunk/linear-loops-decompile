@@ -260,7 +260,17 @@ three applicable closures probed (flag seam scripted both ways + flag-key
 identity, the two-feature conjunction pinned incl. agentAutomations-first
 ask order, environments granted/denied); observer components declared GAP
 (T2/T3); meter: 81 chunks · 17 golden ·
-64 GAP). H3 family expansion
+64 GAP). G22 golden-backed chunk LANDED 2026-09-28 (src/ui-loops-limits:
+LoopLimitsPage.BrXlWYB3.js export pageMetadata — the FIRST §C golden (Credit
+metering surface row): the export is a pure alias (Z=V) of the zero-import
+UsageSubpageMetadata chunk, which executes REAL; the golden pins the
+loop-spend-limits literal verbatim (own-key order — no description member,
+unlike the §F shapes), the alias identity against the loaded target (the
+G21 pattern), and the entry's export-name surface; the suspense-observer
+credit-metering Component stays declared GAP (T2/T3); linking surface: 32
+mechanical throw-on-use seams generated from the import map; meter on this
+branch: 81 chunks · 18 golden · 63 GAP — ordinal and final meter re-slot at
+merge against G21 (#276, in flight). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
