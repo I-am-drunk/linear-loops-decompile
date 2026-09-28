@@ -1,0 +1,71 @@
+{
+  "unit": "ui-settings-issuers/agentIssuersPageMetadata",
+  "chunk": "AgentIssuersSettingsPage",
+  "stubs": {
+    "react.Bfm_Hgom.js": {
+      "file": "stubs/react.mjs",
+      "why": "Module-eval namespace interop (`var A = e(h())`); inert namespace, member reads throw (G13/G18/G20/G22 precedent)."
+    },
+    "jsx-runtime.BH9nBM82.js": {
+      "file": "stubs/jsx-runtime.mjs",
+      "why": "Module-eval factory call (`j = _()`); the returned jsx/jsxs throw on use \u2014 no render in this case (G14/G17 seam)."
+    },
+    "suspenseObserver.Cawdgu7K.js": {
+      "file": "stubs/suspense-observer.mjs",
+      "why": "One module-eval wrap (`N = D(fn)`) followed by a displayName assignment on the result; identity-wrap satisfies both honestly (G14/G18/G20/G22 seam). Never rendered here."
+    },
+    "Issue.DRYymPCa.js": {
+      "file": "stubs/issue.mjs",
+      "why": "ha/lg/mg (org URL helper + limit registry members) read only inside the component body (the declared-GAP Component export); linking-only, every use throws. The Issue chunk itself cannot execute under the stock runner (G12 finding)."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/contextualmenuactions.mjs",
+      "why": "Eleven settings-wrapper/icon members, all component-body-only; linking-only, throw-on-use. Full chunk name pinned: the prefix is ambiguous (Bcp3eWHc/Dlg9Oa2U hash-rotated duplicates); the entry's import literal names Dlg9Oa2U."
+    },
+    "Text.gv7OudGa.js": {
+      "file": "stubs/text.mjs",
+      "why": "Component-body-only jsx element type; linking-only, throw-on-use."
+    },
+    "ActionGroups.DFZZ7QMk.js": {
+      "file": "stubs/actiongroups.mjs",
+      "why": "Component-body-only (Dt/z action-group helpers); linking-only, throw-on-use."
+    },
+    "validation.DM_YZW7p.js": {
+      "file": "stubs/validation.mjs",
+      "why": "Ut (issuer display-name formatter) called only inside the component body; linking-only, throw-on-use."
+    },
+    "Logger.qFaEBF6-.js": {
+      "file": "stubs/logger.mjs",
+      "why": "S (error message helper) called only inside the component body; linking-only, throw-on-use."
+    },
+    "useScrollIntoViewUntilStable.3V2Ha5RF.js": {
+      "file": "stubs/usescrollintoview.mjs",
+      "why": "nt hook called only inside the component body; linking-only, throw-on-use."
+    },
+    "resolvePromise.B8FauNXm.js": {
+      "file": "stubs/resolvepromise.mjs",
+      "why": "o (suspense promise resolver over the hydrate call) called only inside the component body; linking-only, throw-on-use."
+    },
+    "useStore.BpZDR8VN.js": {
+      "file": "stubs/usestore.mjs",
+      "why": "Store hook called only inside the component body; linking-only, throw-on-use."
+    },
+    "AlertDialog.Nxv6sEJD.js": {
+      "file": "stubs/alertdialog.mjs",
+      "why": "AlertDialog class + confirm enum, component-body-only; linking-only, throw-on-use (construct also throws)."
+    },
+    "ActionTrigger.CLIWDN56.js": {
+      "file": "stubs/actiontrigger.mjs",
+      "why": "Component-body-only jsx element type; linking-only, throw-on-use."
+    },
+    "WorkloadIssuerRegistry.CCSU2pyj.js": {
+      "file": "stubs/workloadissuerregistry.mjs",
+      "why": "Issuer directory registry, component-body-only; linking-only, throw-on-use."
+    }
+  },
+  "drive": {
+    "file": "agent-issuers-metadata-driver.mjs",
+    "exportMeaning": "export{N as Component, M as pageMetadata} \u2014 M is the pure metadata literal {id:'agent-issuers', title:'Agent issuers', description:<the approved-issuer/tenant copy>, sections:{configured:{id:'configured-agent-issuers', title:'Configured agent issuers'}, add:{id:'add-agent-issuers', title:'Available issuers'}}} \u2014 NO keywords member (unlike the G14-family \u00a7F shapes), NO applicable, NO scope parameter; the per-level ownKeys projections pin the absences. N is the suspenseObserver-wrapped issuers management component with displayName='AgentIssuersSettingsPage' assigned at module eval (component body out of golden scope). The driver returns {pageMetadata, ownKeys, sectionsOwnKeys, configuredOwnKeys, addOwnKeys, componentDisplayName, ownExportNames}."
+  },
+  "notes": "G25: first golden on matrix \u00a7F 'Issuers' row (AgentIssuersSettingsPage.BuFJumP7.js) \u2014 the G14 pure-literal recipe with a sections-bearing shape (two nested {id,title} groups, a shape variation worth its own pins: this is the first \u00a7F literal with nested sections but no keywords). Drive mode because the module surface is a value plus one module-eval fact (the displayName). Module-eval statements accounted: `var A = e(h())` (rolldown interop over the react stub namespace), `j = _()` (jsx factory), `M = {\u2026}` (the literal), `N = D(fn)` (suspenseObserver identity wrap), `N.displayName = \u2026` \u2014 all other imports are component-body-only and stubbed as throw-on-use bombs, so the closure is the entry chunk + rolldown runtime and corpus drift that adds a real module-eval read throws loudly."
+}

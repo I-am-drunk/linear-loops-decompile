@@ -1,0 +1,220 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "AgentIssuersSettingsPage.BuFJumP7.js",
+    "closureSize": 17,
+    "stubbed": [
+      "ActionGroups.DFZZ7QMk.js",
+      "ActionTrigger.CLIWDN56.js",
+      "AlertDialog.Nxv6sEJD.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "Logger.qFaEBF6-.js",
+      "Text.gv7OudGa.js",
+      "WorkloadIssuerRegistry.CCSU2pyj.js",
+      "jsx-runtime.BH9nBM82.js",
+      "react.Bfm_Hgom.js",
+      "resolvePromise.B8FauNXm.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "useScrollIntoViewUntilStable.3V2Ha5RF.js",
+      "useStore.BpZDR8VN.js",
+      "validation.DM_YZW7p.js"
+    ],
+    "chunkHashes": {
+      "AgentIssuersSettingsPage.BuFJumP7.js": "2abed880b3ae9ce6d1ef7e8338607b496a830ee7e5390606ca12eb30eccc40b3",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "pageMetadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "agent-issuers"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Agent issuers"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "Every subject matching an approved issuer and tenant can create an app user with access to all public teams. Apps can request read and write access. Private teams are not accessible. Removing a binding retains attribution. Adding it again does not unsuspend users."
+              }
+            },
+            {
+              "key": "sections",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "configured",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "configured-agent-issuers"
+                          }
+                        },
+                        {
+                          "key": "title",
+                          "value": {
+                            "tag": "string",
+                            "value": "Configured agent issuers"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "add",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "add-agent-issuers"
+                          }
+                        },
+                        {
+                          "key": "title",
+                          "value": {
+                            "tag": "string",
+                            "value": "Available issuers"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            },
+            {
+              "tag": "string",
+              "value": "description"
+            },
+            {
+              "tag": "string",
+              "value": "sections"
+            }
+          ]
+        }
+      },
+      {
+        "key": "sectionsOwnKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "configured"
+            },
+            {
+              "tag": "string",
+              "value": "add"
+            }
+          ]
+        }
+      },
+      {
+        "key": "configuredOwnKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            }
+          ]
+        }
+      },
+      {
+        "key": "addOwnKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            }
+          ]
+        }
+      },
+      {
+        "key": "componentDisplayName",
+        "value": {
+          "tag": "string",
+          "value": "AgentIssuersSettingsPage"
+        }
+      },
+      {
+        "key": "ownExportNames",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "Component"
+            },
+            {
+              "tag": "string",
+              "value": "pageMetadata"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
