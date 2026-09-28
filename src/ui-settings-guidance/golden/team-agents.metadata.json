@@ -1,0 +1,23 @@
+{
+  "unit": "ui-settings-guidance/teamAgentsPageMetadata",
+  "chunk": "TeamAgentsSettingsPage",
+  "stubs": {
+    "Issue.DRYymPCa.js": { "file": "stubs-g18/issue.mjs", "why": "Full chunk name pinned per the entry's import literal. The entry reads `mi` at module eval as the Docs href — pinned to the raw-source literal (`NJ = `https://linear.app/docs/agents-in-linear``, exported `NJ as mi`, hand-verified in the raw Issue chunk; the 4.7MB chunk itself reads window at module scope and cannot execute — the G7 finding). The real AgentGuidanceSettings chunk's other Issue imports are linking-only throw-on-use (G11 verbatim)." },
+    "ContextualMenuActions.Dlg9Oa2U.js": { "file": "stubs-g18/contextual-menu-actions.mjs", "why": "Full chunk name pinned (hash-rotated twin). `uP` is the Docs link component INSIDE the module-eval descriptionElement — string marker, its element stays host-tier with href/children as the byte oracle (G10/G13 discipline). All other members are component-body-only: linking-only throw-on-use." },
+    "react.Bfm_Hgom.js": { "file": "stubs-g18/react.mjs", "why": "The entry calls the react factory bare at module eval; inert namespace whose member reads throw (the G13 precedent) — the pageMetadata export must never need React." },
+    "mobxreactlite.BAMBvwfh.js": { "file": "stubs-g18/mobxreactlite.mjs", "why": "Module-eval observer wraps in both the entry and the real AgentGuidanceSettings chunk; identity is honest because no component renders in this case (G11 verbatim)." },
+    "suspenseObserver.Cawdgu7K.js": { "file": "stubs-g18/suspense-observer.mjs", "why": "Module-eval page-component wrap (`v = l(fn)`); identity, never rendered (the G14 seam)." },
+    "lib.3x4I7cm8.js": { "file": "stubs-g18/lib.mjs", "why": "Full chunk name pinned (ambiguous prefix, G11 finding). Link component read only inside the real AgentGuidanceSettings observer body; linking-only throw-on-use (G11 verbatim)." },
+    "useUser.CGqqjeJr.js": { "file": "stubs-g18/use-user.mjs", "why": "Component-body-only in the real AgentGuidanceSettings chunk; linking-only throw-on-use (G11 verbatim)." },
+    "finishSentryAuth.Cd-7zL4s.js": { "file": "stubs-g18/finish-sentry-auth.mjs", "why": "Component-body-only in the real AgentGuidanceSettings chunk; throwing proxy (G11 verbatim)." },
+    "useRouteData.DN0g9O-t.js": { "file": "stubs-g18/use-route-data.mjs", "why": "Entry component-body-only (declared-GAP exports); linking-only throw-on-use." },
+    "useActiveAgents.DsLeeQpq.js": { "file": "stubs-g18/use-active-agents.mjs", "why": "Store-reading hook, entry component-body-only; linking-only throw-on-use." },
+    "SettingsLoading.DvDELVvb.js": { "file": "stubs-g18/settings-loading.mjs", "why": "Loading-fallback component seam, entry component-body-only; linking-only marker." },
+    "ActiveAgentsSection.xKtFs3SY.js": { "file": "stubs-g18/active-agents-section.mjs", "why": "Section component seam, entry component-body-only; linking-only marker." }
+  },
+  "drive": {
+    "file": "team-agents-metadata-driver.mjs",
+    "exportMeaning": "export{y as Component, v as TeamAgentsSettingsPage, _ as pageMetadata} — `_` (pageMetadata) is a MODULE-EVAL literal: {id:'team-agents', title:'Team agents', description, descriptionElement: <Fragment>[description text, ' ', <DocsLink href={Issue.mi}>Docs</DocsLink>]</Fragment>, keywords:'ai delegate team', sections:{activeAgents:{id:'team-active-agents', title:'Active agents', keywords}, agentGuidance: AgentGuidanceSettings.n('team')}}. The jsx-runtime and the AgentGuidanceSettings factory execute REAL (the factory is the golden-backed G11 chunk — first cross-chunk provenance chain). Components y/v are render/effect-tier (suspenseObserver + useActiveAgents store reads) and stay declared GAP."
+  },
+  "notes": "G18: the 'blocked' jsx-fragment metadata recipe, proven T1-coverable. The Fragment element projects as {fragment:[children]} (declared projection); the Docs link element is host-tier via the uP string marker with href/children in the byte oracle; sections.agentGuidance is the REAL G11 factory's 'team'-branch output (verbatim strings + the applicable predicate probed on four fixtures pinning both conjuncts of `agentAppUsers.some(u => u.isActive && !!u.oauthClientId)`). Own-key order pinned for the metadata and sections objects. This recipe unblocks CodingAgentSettingsPage.lcMyXnM7.js (same fragment + sections shape)."
+}
