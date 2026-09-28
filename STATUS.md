@@ -99,7 +99,11 @@ manifest), G3 theme retrofit (claimed sess_01a0e4ca-cd60), G4 first
 rendered-component golden LANDED 2026-09-28 (src/ui-loops-icons:
 AgentAutomationEmptyStateIcon darkDefault — corpus-executed, hand-verified vs
 source, serializer-v2 bytes, TZ/locale-invariant; the pattern every rendered
-slice copies)). H3 family expansion
+slice copies) with its CLEAN REIMPLEMENTATION landed the same day (pure
+theme->host-element-tree module, byte-matches the golden through the
+tagged-v2 serializer as the declared observation driver; corpus-manifest joins
+the G2 ledger: first golden-backed chunk on the meter, 78 chunks · 1 golden ·
+77 GAP)). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
