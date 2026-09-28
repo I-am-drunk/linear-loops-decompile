@@ -1,0 +1,79 @@
+{
+  "unit": "ui-loops-template-launcher/TemplateCardPresenter",
+  "chunk": "useLoopTemplateLauncher",
+  "stubs": {
+    "Issue.DRYymPCa.js": {
+      "file": "issue-stub.mjs",
+      "why": "the model-layer chunk cannot execute (module-level browser globals, the G7/G12 finding); the driven presenter statics touch NONE of the twenty imported names, so each is a throw-on-use bomb — drift that adds a read fails loudly. Full name pinned from the entry's import literal."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "seam-stubs.mjs",
+      "why": "full chunk name pinned (hash-rotated twin Bcp3eWHc exists). Linking-only bombs; consumed by the out-of-scope q builders and launcher hook."
+    },
+    "ThemeProvider.BNrg3wTr.js": {
+      "file": "seam-stubs.mjs",
+      "why": "useTheme; hook-scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "types.7f0h45Sh.js": {
+      "file": "seam-stubs.mjs",
+      "why": "flag registry; hook-scope only. Bomb. (Also avoids the module-level browser-globals blocker.) Full name pinned from the entry's import literal."
+    },
+    "mobx.BEIB-Y2s.js": {
+      "file": "seam-stubs.mjs",
+      "why": "runInAction; used only by the out-of-scope q builders. Bomb (the real chunk executes, but bombing keeps the non-driven surface inert and the closure minimal). Full name pinned from the entry's import literal."
+    },
+    "MarkdownTransformer.DI8Fsgra.js": {
+      "file": "seam-stubs.mjs",
+      "why": "prosemirror parser; q-builder scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "Logger.qFaEBF6-.js": {
+      "file": "seam-stubs.mjs",
+      "why": "logger; launcher-hook scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "hooks.D4LfSm6u.js": {
+      "file": "seam-stubs.mjs",
+      "why": "full name pinned (twin hooks.CWG3Ngg6.js exists). Dispatch/present helpers; hook-scope only. Bombs."
+    },
+    "RefreshManager.DpVjn8XM.js": {
+      "file": "seam-stubs.mjs",
+      "why": "sync refresher; hook-scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "Toast.BT3vaG2a.js": {
+      "file": "seam-stubs.mjs",
+      "why": "toast surface; hook-scope only. Bombs. Full name pinned from the entry's import literal."
+    },
+    "AgentToolbarState.DPrj1I-A.js": {
+      "file": "seam-stubs.mjs",
+      "why": "toolbar session state; hook-scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "useUser.CGqqjeJr.js": {
+      "file": "seam-stubs.mjs",
+      "why": "store user hook; hook-scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "useFlag.D9K3DJCO.js": {
+      "file": "seam-stubs.mjs",
+      "why": "feature-flag hook; hook-scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "AgentComposeDraftTracker.Bd5C4XFQ.js": {
+      "file": "seam-stubs.mjs",
+      "why": "compose-draft tracker; hook-scope only. Bomb. Full name pinned from the entry's import literal."
+    },
+    "LoopCreationTracker.BAiVgMLN.js": {
+      "file": "seam-stubs.mjs",
+      "why": "creation tracker (G8's chunk); hook-scope only here. Bomb. Full name pinned from the entry's import literal."
+    },
+    "AutomationHelper.B0HEcOoo.js": {
+      "file": "seam-stubs.mjs",
+      "why": "draft/trigger helper; q-builder scope only. Bombs. Full name pinned from the entry's import literal."
+    },
+    "timezone.lphPF5Vd.js": {
+      "file": "seam-stubs.mjs",
+      "why": "current-timezone getter; only the out-of-scope buildSchedule uses it. Bomb. Full name pinned (twin MqLm-ocM exists; the entry imports lphPF5Vd)."
+    }
+  },
+  "drive": {
+    "file": "template-presenter-driver.mjs",
+    "exportMeaning": "export{q as n, G as r, J as t} — G (exported r) is the template-card presenter: triggerLabel (schedule cadence Hourly/Daily/Weekly + UnreachableCaseError on unknown, issue events On new issue/On triage/On issue change + throw on unknown type) and iconColor (ColorConverter.toCss('RGB', ColorConverter.fromCss(theme.color[color])) — the REAL corpus ColorConverter executes). q (exported n, draft/conversation builders) and J (exported t, the launcher hook) are out of scope behind bombs."
+  },
+  "notes": "G22: first golden on the matrix §A 'Template library + launcher' row. Pins the template card's full trigger-copy switch (all five labels + both throw paths through the REAL UnreachableCaseError) and the icon color pipeline on hex and rgb() fixtures through the real corpus color math (provenance chains to the H2/src/ui-theme goldens). Real chunks in the closure: entry, ColorConverter, UnreachableCaseError, react, jsx-runtime-free — everything else is a declared linking bomb."
+}
