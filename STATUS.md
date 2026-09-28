@@ -360,6 +360,22 @@ reimplementation byte-matching by replaying the driver fixtures; the store
 collection surface (filter/orderBy/map/concrete) is a declared driver
 fixture — the corpus collection class stays its own ledger row; meter:
 82 chunks · 26 golden · 56 GAP).
+G42 golden-backed chunk LANDED 2026-09-28
+(src/ui-settings-guidance: WorkspaceAgentsSettingsPage export pageMetadata —
+FIRST golden on the matrix §F Workspace agent settings row: the G18
+jsx-fragment recipe (descriptionElement fragment built by the REAL corpus
+jsx-runtime; DocsLink seam as a marker with href pinned from the raw Issue
+literal `NJ as mi`) with the cross-chunk provenance chain on the G11
+factory's WORKSPACE branch this time (G18 pinned team): sections has
+EXACTLY ONE member, agentGuidance = the real golden-backed factory's
+output, sectionsOwnKeys pinning the absence of an activeAgents literal; the
+applicable predicate probed on four fixtures; Component displayName pinned,
+its body (suspenseObserver + useStore/useActiveAgents + ActiveAgentsSection
+render — G41's chunk stays its own row) declared honest GAP (T2/T3); clean
+reimplementation byte-matching, composing our golden-backed factory; the
+row's evidence token `WorkspaceAgent(s)SettingsPage.*` was the #270
+hidden-denominator class, FOURTH instance — expanded to the three real
+chunk names (+3 chunks); meter: 85 chunks · 27 golden · 58 GAP).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 

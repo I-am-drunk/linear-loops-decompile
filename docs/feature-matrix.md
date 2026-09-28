@@ -90,7 +90,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 
 | Feature | Corpus evidence | Status |
 |---|---|---|
-| Workspace agent settings | `WorkspaceAgent(s)SettingsPage.*` | corpus |
+| Workspace agent settings | `WorkspaceAgentSettingsPage.{-rnxh4HW,Drs2_7Th}.js`, `WorkspaceAgentsSettingsPage.B-7Wg92g.js` | corpus |
 | Team agent settings (skills, connectors) | `TeamAgentsSettingsPage`, `TeamAgentSkillsSettingsPage`, `TeamAgentConnectorsSettingsPage` | corpus |
 | Account agents | `AccountAgentsSettingsPage.*`, `ActiveAgentsSection`, `useActiveAgents` | corpus |
 | Agent guidance | `AgentGuidanceSettings.BgeC_uVo.js` | corpus |

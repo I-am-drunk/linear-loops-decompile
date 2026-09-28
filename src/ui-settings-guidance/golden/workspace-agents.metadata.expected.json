@@ -1,0 +1,283 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "WorkspaceAgentsSettingsPage.B-7Wg92g.js",
+    "closureSize": 15,
+    "stubbed": [
+      "ActiveAgentsSection.xKtFs3SY.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "SettingsLoading.DvDELVvb.js",
+      "finishSentryAuth.Cd-7zL4s.js",
+      "lib.3x4I7cm8.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "useActiveAgents.DsLeeQpq.js",
+      "useStore.BpZDR8VN.js",
+      "useUser.CGqqjeJr.js"
+    ],
+    "chunkHashes": {
+      "WorkspaceAgentsSettingsPage.B-7Wg92g.js": "1267b528dea661700a9936c9298a48a819c8e964337d07d29d3c451e23694a70",
+      "AgentGuidanceSettings.BgeC_uVo.js": "7c8459dffdceb0a642f1ac5e0f94fd8472168d1b8e6878300df5e026a5cc670f",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "metadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "agents"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Agents"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "AI agents can work alongside you as teammates. Tackle complex tasks together or delegate entire issues end-to-end."
+              }
+            },
+            {
+              "key": "descriptionElement",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "fragment",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "AI agents can work alongside you as teammates. Tackle complex tasks together or delegate entire issues end-to-end."
+                        },
+                        {
+                          "tag": "string",
+                          "value": " "
+                        },
+                        {
+                          "tag": "object",
+                          "prototype": "object",
+                          "properties": [
+                            {
+                              "key": "element",
+                              "value": {
+                                "tag": "string",
+                                "value": "stub:ContextualMenuActions.uP(DocsLink)"
+                              }
+                            },
+                            {
+                              "key": "key",
+                              "value": {
+                                "tag": "null"
+                              }
+                            },
+                            {
+                              "key": "props",
+                              "value": {
+                                "tag": "object",
+                                "prototype": "object",
+                                "properties": [
+                                  {
+                                    "key": "href",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "https://linear.app/docs/agents-in-linear"
+                                    }
+                                  },
+                                  {
+                                    "key": "children",
+                                    "value": {
+                                      "tag": "string",
+                                      "value": "Docs"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "ai delegate installed"
+              }
+            },
+            {
+              "key": "sections",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "agentGuidance",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "id",
+                          "value": {
+                            "tag": "string",
+                            "value": "workspace-agent-guidance"
+                          }
+                        },
+                        {
+                          "key": "title",
+                          "value": {
+                            "tag": "string",
+                            "value": "Workspace guidance"
+                          }
+                        },
+                        {
+                          "key": "description",
+                          "value": {
+                            "tag": "string",
+                            "value": "An agent automatically receives the full issue context when working on an issue. You can provide additional workspace-wide guidance, though adherence is controlled by the agent integration."
+                          }
+                        },
+                        {
+                          "key": "keywords",
+                          "value": {
+                            "tag": "string",
+                            "value": "guidance instructions rules prompt"
+                          }
+                        },
+                        {
+                          "key": "applicable",
+                          "value": {
+                            "tag": "string",
+                            "value": "<function:applicable>"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            },
+            {
+              "tag": "string",
+              "value": "description"
+            },
+            {
+              "tag": "string",
+              "value": "descriptionElement"
+            },
+            {
+              "tag": "string",
+              "value": "keywords"
+            },
+            {
+              "tag": "string",
+              "value": "sections"
+            }
+          ]
+        }
+      },
+      {
+        "key": "sectionsOwnKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "agentGuidance"
+            }
+          ]
+        }
+      },
+      {
+        "key": "componentDisplayName",
+        "value": {
+          "tag": "string",
+          "value": "WorkspaceAgentsSettingsPage"
+        }
+      },
+      {
+        "key": "agentGuidanceApplicable",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "activeWithClientId",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "activeWithoutClientId",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "inactiveWithClientId",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "empty",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
