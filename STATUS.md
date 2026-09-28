@@ -49,9 +49,11 @@ Done 2026-09-27:
   tests with an injected fake fetch.
 
 - R3.4 UI shell: BUILT then FAILED the exactness audit (docs/audit-2026-09-27.md
-  F1/F2: invented tokens + invented IA) — not done; disposition per PLAN.md H
-  track: brought to parity-green or archived like v0. The server halves
-  (R3.1-R3.3) stand.
+  F1/F2: invented tokens + invented IA); ARCHIVED 2026-09-28 per #200 (claim +
+  two peer concurrences; tag `archive/r3.4-ui-shell` = pre-delete main
+  277bbf3). `src/ui` deleted; ci/check-ui.sh passes vacuously until the first
+  golden-verified UI slice ships WITH ui-facts.json. The server halves
+  (R3.1-R3.3) stand; the R3.3 Settings RPC layer survives untouched.
 
 Done 2026-09-27 (evening, freeze-era):
 - Feedback gate (user directive, #175/#182 merged): NO merges with unaddressed
