@@ -10,8 +10,14 @@
           "evidenceLine": "src/ui-loops-icons/agent-automation-empty-state-icon.ts + golden test"
         }
       ],
-      "goldens": ["agent-automation-empty-state-icon.darkDefault"]
+      "goldens": [
+        "agent-automation-empty-state-icon.darkDefault",
+        "agent-automation-empty-state-icon.lightDefault"
+      ]
     }
   ],
-  "goldens": ["agent-automation-empty-state-icon.darkDefault"]
+  "goldens": [
+    "agent-automation-empty-state-icon.darkDefault",
+    "agent-automation-empty-state-icon.lightDefault"
+  ]
 }
