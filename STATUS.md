@@ -325,6 +325,23 @@ validation incl. the allowed-return-origins check — unexported,
 unreachable from the module surface, the AiConversationCancel precedent)
 stay declared GAP pending T2/T3; clean reimplementation byte-matching;
 meter: 81 chunks · 24 golden · 57 GAP).
+G36 golden-backed chunk LANDED 2026-09-28
+(src/ui-agent-empty-state: LinearAgentEmptyStateHero export t — the FIRST
+golden on the §E Session UI row: the hook-free empty-state hero grid in
+drive mode (the G9 flatten; closure 4 chunks, 1 stub — the agent-icon seam
+as a G16 declared marker, `uB` hand-located as the chunk-local
+`function Jw(e)` with the gradient branch): the module-eval 253-cell grid
+table executes REAL and is pinned in full (23x11 layout math, sin-hash
+--peak/--peak2/--trough at offsets t/t+71/t+37, normalized --tx/--ty
+incl. the (-0).toFixed(2)==='0.00' fact on the dx=0 column, animationDelay
+0.4+dist/360, the single hidden cell at row 10/col 11), both
+shouldAnimate branches of both computed-member class tables, and both
+icon call shapes; pure Math — ambient-invariant, verified under
+TZ=Asia/Tokyo + tr_TR.UTF-8; clean reimplementation byte-matching; the
+matrix row's `LinearAgentEmptyState*` wildcard expanded to the two real
+chunk names (it parsed as ONE ref and hid the Hero from the denominator —
+the #270 matrix-gap class, third instance); meter: 82 chunks · 25 golden ·
+57 GAP).
 G34 golden-backed chunk LANDED 2026-09-28 (src/ui-settings-agents:
 useActiveAgents BOTH exports — first golden on the matrix §F Account agents
 row (the 17:49Z scouting note flagged the row's AccountAgentsSettingsPage as
@@ -342,7 +359,7 @@ hydrate-then-prefetchQuery order with its argument passed through; clean
 reimplementation byte-matching by replaying the driver fixtures; the store
 collection surface (filter/orderBy/map/concrete) is a declared driver
 fixture — the corpus collection class stays its own ledger row; meter:
-81 chunks · 25 golden · 56 GAP).
+82 chunks · 26 golden · 56 GAP).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 

@@ -1,0 +1,6 @@
+{
+  "name": "ui-agent-empty-state",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the Linear Agent empty-state hero grid, golden-verified against corpus execution (G36, matrix §E Session UI)"
+}
