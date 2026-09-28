@@ -35,9 +35,11 @@ const MIN = [
   'var ZB=class extends x{};C([O],ZB.prototype,`name`,null),ZB=C([M(`BetaThing`)],ZB);',
   // op 1
   'function q1(e){return e.query($n`query AlphaQuery($id: String!) { alpha(id: $id) { id } }`)}',
-  // an unrelated literal whose body ends in a backslash-escaped char — the
-  // desync vector for global literal pairing when beautified wraps after it
-  'const SEP=`a\\\\`;',
+  // an unrelated literal containing an escaped newline + escaped backslash —
+  // the byte-identical twin of PRETTY's SEP (layout parity demands identical
+  // template CONTENTS; the escaped newline is legal in minified output too)
+  // and the desync vector for global literal pairing (#254 review).
+  'const SEP=`a\\\n\\\\`;',
   // op 2, after the desync vector
   'function q2(e){return e.mutate($n`mutation TrickyMutation($x: Int) { tricky(x: $x) }`)}',
   // op 3
@@ -56,7 +58,7 @@ const PRETTY = [
   'var ZB = class extends x {};\n',
   'C([O], ZB.prototype, `name`, null), ZB = C([M(`BetaThing`)], ZB);\n',
   'function q1(e) {\n  return e.query($n`query AlphaQuery($id: String!) { alpha(id: $id) { id } }`)\n}\n',
-  'const SEP = `a\\\n\\\\`;\n', // pathology (b): escaped newline inside the literal
+  'const SEP = `a\\\n\\\\`;\n', // pathology (b): escaped newline inside the literal (same contents as MIN)
   'function q2(e) {\n  return e.mutate($n`\n    mutation TrickyMutation($x: Int) { tricky(x: $x) }`)\n}\n',
   'function q3(e) {\n  return e.query($n`\n    query WrappedQuery { wrapped { id } }`)\n}\n',
   'Gt(`/settings/alpha`);\nconst P = {\n  path: `/:orgKey/alpha/:alphaId`\n};\n',

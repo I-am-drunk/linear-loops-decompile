@@ -10,7 +10,7 @@
 // newline+indent INSIDE template literals (`M(`\n  AiPromptMemory`)`), which
 // silently hid 49 model registrations and 5 GraphQL ops from the fixed-layout
 // grammars — the 2026-09-26 baseline (258 ops / 87 models) undercounted the
-// real corpus (263 / 136). Names captured from template literals are
+// real corpus (376 / 136). Names captured from template literals are
 // whitespace-normalized for the same reason. pipeline/analyze.test.mjs holds
 // the invariance: identical facts from a beautified and a minified rendering
 // of the same code.
@@ -33,6 +33,10 @@ function extractGraphQL(d, f) {
   const anchor = /`\s*(query|mutation|subscription)\s+([A-Za-z]\w*)/g;
   let m;
   while ((m = anchor.exec(d))) {
+    // An ESCAPED backtick (\`) inside an enclosing literal is not a template
+    // opener; walking from it would swallow the enclosing literal's real
+    // close and fabricate an op.
+    if (m.index > 0 && d[m.index - 1] === '\\') continue;
     const [, type, name] = m;
     // Walk from the opening backtick to the matching close, skipping \x pairs.
     let i = m.index + 1, doc = null;
@@ -55,14 +59,16 @@ function addModel(d, name, varName, idx, file) {
   // the LAST `<var> = class` (possibly `<var> = <alias> = class`) before the
   // decorator call. Beautified spacing ("Zt = class") and minified spacing
   // ("Zt=class") must both match.
+  // (?<![\w$]) / (?![\w$]): identifier boundaries — for var `A`, never match
+  // inside `ZA = class` or against `AB.prototype` (#254 review).
   const ve = varName.replace(/\$/g, '\\$');
-  const classRe = new RegExp(ve + '\\s*=\\s*(?:[A-Za-z$_][\\w$]*\\s*=\\s*)?class', 'g');
+  const classRe = new RegExp('(?<![\\w$])' + ve + '(?![\\w$])\\s*=\\s*(?:[A-Za-z$_][\\w$]*\\s*=\\s*)?class', 'g');
   let classStart = -1;
   const head = d.slice(0, idx);
   for (const m of head.matchAll(classRe)) classStart = m.index;
   if (classStart === -1) return;
   const seg = d.slice(classStart, idx);
-  const re = new RegExp(ve + '\\.prototype\\s*,\\s*`\\s*([a-zA-Z0-9_]+)\\s*`', 'g');
+  const re = new RegExp('(?<![\\w$])' + ve + '\\.prototype\\s*,\\s*`\\s*([a-zA-Z0-9_]+)\\s*`', 'g');
   models[name].fields = [...new Set([...seg.matchAll(re)].map(x => x[1]))];
 }
 // ---- Routes & chunks ----
@@ -73,7 +79,7 @@ for (const f of files) {
   extractGraphQL(d, f);
   // Model-name literals are whitespace-normalized: the pre-#232 beautifier
   // could inject newline+indent inside the template literal (#241).
-  for (const m of d.matchAll(/([A-Za-z$_][\w$]*)\s*=\s*C\(\s*\[\s*M\(\s*`\s*([A-Za-z0-9]+)\s*`\s*\)\s*\]\s*,\s*\1\s*\)/g)) addModel(d, m[2], m[1], m.index, f);
+  for (const m of d.matchAll(/(?<![\w$])([A-Za-z$_][\w$]*)\s*=\s*C\(\s*\[\s*M\(\s*`\s*([A-Za-z0-9]+)\s*`\s*\)\s*\]\s*,\s*\1\s*\)/g)) addModel(d, m[2], m[1], m.index, f);
   for (const m of d.matchAll(/C\(\s*\[\s*M\(\s*`\s*([A-Za-z0-9]+)\s*`\s*\)\s*\]\s*,\s*([A-Za-z$_][\w$]*)\s*\)/g)) addModel(d, m[1], m[2], m.index, f);
   for (const m of d.matchAll(/Gt\(`([^`]+)`/g)) routes.push({ path: m[1], file: f });
   for (const m of d.matchAll(/path:\s*`(\/[^`]*)`/g)) routes.push({ path: m[1], file: f });
@@ -122,7 +128,10 @@ for (const n of names) {
 fs.writeFileSync(`${EXTRACTS}/models.md`, md);
 let gd = `# Linear Client GraphQL Operations (condensed catalog)\n\n${stamp}. ${graphqlOps.size} operations.\n\n`;
 for (const [name, op] of [...graphqlOps.entries()].sort()) {
-  const sig = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1].replace(/\s+/g, ' ').slice(0, 160);
+  const full = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1].replace(/\s+/g, ' ');
+  // Mark a cut signature as cut (#254 review): an unfinished `$var` or type
+  // name presented as a complete signature is a wrong fact, not a short one.
+  const sig = full.length > 160 ? full.slice(0, 160) + ' …[truncated]' : full;
   gd += `- **${op.type}** \`${name}\`${sig ? ' `(' + sig + ')`' : ''}\n`;
 }
 fs.writeFileSync(`${EXTRACTS}/graphql-ops.md`, gd);

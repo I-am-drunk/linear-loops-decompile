@@ -129,7 +129,7 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   desync on escaped newlines dropped 118 ops). Anchored grammar cross-checked
   exactly against the raw minified tree (376 = 376, 136 = 136).
   extracts/{models,graphql-ops}.md regenerated; vault analysis/*.json
-  re-baselined.
+  re-baseline PENDING (post-merge vault push, noted on #241).
 - G1 serializer v2 LANDED 2026-09-28 (#240 squashed to main `4a909fd`, closes
   #238): the golden serializer is a closed tagged JSON grammar
   (`corpus-exec-tagged-json-v2`) — every v1 collision pair (null≡undefined,

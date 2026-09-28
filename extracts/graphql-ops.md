@@ -52,7 +52,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `BulkRerunAutomation` `($input: BulkRerunAutomationInput!)`
 - **query** `CachedBillingDetails`
 - **query** `CachedBillingInvoices`
-- **query** `CachedUsageAnalytics` `( $from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatu)`
+- **query** `CachedUsageAnalytics` `( $from: DateTime! $to: DateTime! $grouping: UsageAnalyticsGrouping! $measure: UsageAnalyticsMeasure! $groupOffset: Int! $groupLimit: Int! $features: [UsageFeatu …[truncated])`
 - **query** `CachedUsageLimitRecentHighSpend` `($subjectType: UsageLimitSubjectType!)`
 - **query** `CachedUsageLimitSpend` `($subjectType: UsageLimitSubjectType!, $fallbackPeriod: UsageLimitPeriod!)`
 - **query** `CachedUsageSourceBreakdown` `($range: UsageSummaryRange!, $cursor: String)`
@@ -78,7 +78,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `ConnectTeamSlackChannel` `($code: String!, $teamId: String!, $redirectUri: String!)`
 - **query** `ContributorRunsQuery` `($input: AiConversationRootReferencesInput!)`
 - **mutation** `CreateCsvExportReport` `($includePrivateTeamIds: [String!], $includeRestrictedTeamIds: [String!])`
-- **mutation** `CreateOrganizationFromOnboarding` `($name: String!, $urlKey: String!, $domainAccess: Boolean, $timezone: String, $utm: String, $utmFirstTouch: String, $companyRole: String, $companySize: String, $)`
+- **mutation** `CreateOrganizationFromOnboarding` `($name: String!, $urlKey: String!, $domainAccess: Boolean, $timezone: String, $utm: String, $utmFirstTouch: String, $companyRole: String, $companySize: String, $ …[truncated])`
 - **query** `CustomViewHasSubscribers` `($id: String!)`
 - **query** `CustomViewSuggestions` `($input: JSONObject!, $modelName: String)`
 - **query** `CustomerAttributesSyncProgressQuery`
@@ -182,7 +182,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `IntegrationJiraCustomOAuthUpdate` `($input: JiraCustomOAuthUpdateInput!)`
 - **query** `IntegrationJiraProjectStatuses` `($integrationId: String!, $projectId: String!)`
 - **mutation** `IntegrationJiraUpdate` `($input: JiraUpdateInput!)`
-- **mutation** `IntegrationMcpServerConnect` `( $serverUrl: String! $teamId: String $workflowDefinitionId: String $workflowDefinitionDraftId: String $mcpServerDefinitionId: String $customHeaders: [McpServerC)`
+- **mutation** `IntegrationMcpServerConnect` `( $serverUrl: String! $teamId: String $workflowDefinitionId: String $workflowDefinitionDraftId: String $mcpServerDefinitionId: String $customHeaders: [McpServerC …[truncated])`
 - **mutation** `IntegrationMcpServerPersonalConnect` `( $serverUrl: String! $mcpServerDefinitionId: String $customHeaders: [McpServerCustomHeaderInput!] )`
 - **mutation** `IntegrationSalesforceMetadataRefreshMutation` `($id: String!)`
 - **mutation** `IntegrationSlackCustomerChannelLink` `($code: String!, $customerId: String!, $redirectUri: String!)`
@@ -200,7 +200,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `IssueImportCreateCSVJira` `( $organizationId: String $teamId: String $teamName: String $csvUrl: String! $jiraToken: String $jiraHostname: String $jiraEmail: String )`
 - **mutation** `IssueImportCreateClubhouse` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $clubhouseToken: String! $clubhouseGroupName: String! )`
 - **mutation** `IssueImportCreateGithub` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $githubRepoIds: [Int!]! $githubLabels: [String!] )`
-- **mutation** `IssueImportCreateJira` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $jiraEmail: String! $jiraHostname: String! $jiraProject: String! $jiraToken: String! $jql: Stri)`
+- **mutation** `IssueImportCreateJira` `( $teamId: String $teamName: String $includeClosedIssues: Boolean $jiraEmail: String! $jiraHostname: String! $jiraProject: String! $jiraToken: String! $jql: Stri …[truncated])`
 - **mutation** `IssueImportCreateLinearV2` `($linearSourceOrganizationId: String!)`
 - **mutation** `IssueImportDelete` `($issueImportId: String!)`
 - **query** `IssueImportJqlCheckQuery` `( $jiraHostname: String! $jiraEmail: String! $jiraToken: String! $jiraProject: String! $jql: String! )`
@@ -290,7 +290,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `PullRequestStackTitle` `($input: PullRequestStackTitleInput!)`
 - **mutation** `PullRequestSuggestIssue` `($id: String!)`
 - **query** `PushSubscriptionTest` `($strategy: SendStrategy)`
-- **mutation** `ReactionCreate` `( $id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pu)`
+- **mutation** `ReactionCreate` `( $id: String $emoji: String! $commentId: String $projectUpdateId: String $initiativeUpdateId: String $issueId: String $postId: String $pullRequestId: String $pu …[truncated])`
 - **mutation** `ReactionDelete` `($id: String!)`
 - **mutation** `ReconnectMcpIntegration` `( $integrationId: String! $customHeaders: [McpServerCustomHeaderInput!] )`
 - **mutation** `RegisterOAuthState` `($state: String!)`
@@ -303,7 +303,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **query** `RetrieveDeepSearchCandidates` `($query: String!, $retrieverType: String!, $options: DeepSearchOptionsInput)`
 - **mutation** `SamlTokenUserAccountAuth` `($email: String!, $token: String!, $timezone: String!)`
 - **query** `SearchAll` `( $term: String! $first: Int $modelNames: [String!] $includeArchived: Boolean $boosts: SearchAllBoosts )`
-- **query** `SearchAllByFilter` `( $includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $init)`
+- **query** `SearchAllByFilter` `( $includeArchived: Boolean $orderBy: PaginationOrderBy $first: Int $issueFilter: IssueFilter $projectFilter: ProjectFilter $documentFilter: DocumentFilter $init …[truncated])`
 - **query** `SearchCombined` `( $term: String! $includeArchived: Boolean $filter: JSONObject $type: SearchResultType $orderBy: PaginationOrderBy $useSearchAgent: Boolean )`
 - **query** `SearchCustomViewsByFilter` `( $includeArchived: Boolean $filter: CustomViewFilter $orderBy: PaginationOrderBy $first: Int )`
 - **query** `SearchDashboardsByFilter` `( $includeArchived: Boolean $filter: DashboardFilter $orderBy: PaginationOrderBy $first: Int )`
@@ -337,7 +337,7 @@ Source: production web client bundle, desktop v1.32.4 (2026-09-27). Factual inte
 - **mutation** `UsageAutoTopupUpdate` `($input: UsageAutoTopupUpdateInput!)`
 - **query** `UsageCredit`
 - **mutation** `UsageCreditTopupSessionCreate` `($quantity: Int!, $tosAccepted: Boolean!)`
-- **query** `UsageFilteredHistory` `( $range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinition)`
+- **query** `UsageFilteredHistory` `( $range: UsageSummaryRange! $cursor: String $from: DateTime $to: DateTime $userIds: [String!] $teamIds: [String!] $features: [UsageFeature!] $workflowDefinition …[truncated])`
 - **mutation** `UsageLimitGroupPeriodUpdate` `($input: UsageLimitGroupPeriodUpdateInput!)`
 - **mutation** `UsageLimitResetScheduleUpdate` `($input: UsageLimitResetScheduleInput!)`
 - **query** `UsageSessionCostBreakdowns` `( $sessions: [UsageSessionCostBreakdownInput!]! $periodStart: DateTime! $periodEnd: DateTime! )`
