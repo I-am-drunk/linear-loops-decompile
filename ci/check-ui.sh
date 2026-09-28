@@ -9,6 +9,9 @@
 
 set -euo pipefail
 
+echo "=== tools/corpus-exec (node --test; the golden runner, G1) ==="
+node --experimental-strip-types --test tools/corpus-exec/corpus-exec.test.ts
+
 if ! command -v cargo >/dev/null 2>&1; then
   if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
     echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
