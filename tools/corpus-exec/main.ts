@@ -106,7 +106,7 @@ async function main(): Promise<number> {
     if (wantProv !== undefined && gotProv[`corpusHead`] === null) {
       const scrub = (p: Record<string, unknown>): string => JSON.stringify({ ...p, corpusHead: null }, null, 2);
       if (scrub(wantProv) === scrub(gotProv)) {
-        console.error(`verify: OK — output byte-identical, chunk hashes identical; corpus head unknown on this machine (no <corpus>/HEAD stamp and not a git toplevel — see pipeline/README.md fetch recipe).`);
+        console.error(`verify: OK — output byte-identical, chunk hashes identical; corpus head unknown on this machine (no <corpus>/.corpus-head stamp and not a corpus checkout — see pipeline/README.md fetch recipe).`);
         return 0;
       }
     }
