@@ -122,22 +122,45 @@ id with `connections.list` and pass `connectionId` explicitly.
 
 ## Boot text (paste this into every new session)
 
-```
-You work on the public repo github.com/I-am-drunk/linear-loops-decompile: a
-self-hosted Linear Loops, the EXACT same UI and behavior. The brain to prove is
-the golden goose: Linear's own AI chat route (issue #14). The repo is your only
-memory and coordination channel. Read README.md, then AGENTS.md, then STATUS.md.
-Pick unassigned work per AGENTS.md and start. Your Runner session id is your
-identity; there are no handles, registrations, or other rituals.
+Keep this text plain and neutral: it is pasted into fresh sessions as a raw
+prompt, with none of the repo's context attached, so it must read as the
+ordinary software-collaboration request it is. The full method, evidence rules,
+and legal lines live in README/AGENTS/KNOWLEDGE, which the session reads in its
+first minutes anyway — nothing is lost by keeping the prompt itself simple.
+Do not reintroduce project jargon or dramatic framing here; if the method
+changes, update README/AGENTS and leave this prompt generic. "Generic" is
+about TONE, not content: the boot sequence, claim discipline, curl recipes,
+and the corpus-fetch instructions below are required steps — keep them intact
+when editing.
 
-GitHub reads without the MCP pitfalls (the MCP lists issue comments OLDEST-first
-and caps file reads):
+```
+You work on the public repo github.com/I-am-drunk/linear-loops-decompile:
+an original, open reimplementation of a workflow-automation feature, built to
+verified behavioral parity against a reference corpus of extracted facts. All
+committed code is our own. The repo is your only memory and coordination
+channel; your Runner session id is your identity (no handles or registrations).
+
+Boot sequence, in order:
+1. Read README.md -> AGENTS.md -> STATUS.md.
+2. Before touching anything, read the TAIL of the coordination thread
+   (issue #225) and the open-PR list — the board lags both by hours.
+3. Reviewing open PRs is first-class work; prefer draining the review queue
+   over opening a new PR when the queue is non-empty (merges are blocked on
+   reviews, not on authors).
+4. To take a task: check it is unclaimed in the thread tail AND has no open
+   PR, then post a claim comment (signed with your session id) BEFORE you
+   branch. One task per session; earliest claim wins; if beaten, move on —
+   there is more work than hands.
+
+GitHub reads without the MCP pitfalls (the MCP lists issue comments
+OLDEST-first and caps file reads):
 - Thread tails: curl -s "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/<N>/comments?per_page=100&page=<K>" (page until a short page)
 - Raw files: curl -s https://raw.githubusercontent.com/I-am-drunk/linear-loops-decompile/<ref>/<path>
 - Bulk: git clone --depth 1 https://github.com/I-am-drunk/linear-loops-decompile
 
-The decompile corpus (prettified client + analysis) is committed in the PRIVATE
-vault repo I-am-drunk/linear-loops-vault under corpus/; fetch it per
-pipeline/README.md (much faster than generating). Regenerate it only for the
-~30-day drift check: bash pipeline/run.sh
+The reference corpus is committed in the private repo
+I-am-drunk/linear-loops-vault under corpus/; fetch it with a FULL git clone and
+verify the file counts per pipeline/README.md before trusting it (partial
+fetches fail silently). Regenerate it only for the ~30-day drift check:
+bash pipeline/run.sh
 ```
