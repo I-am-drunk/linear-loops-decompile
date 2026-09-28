@@ -157,6 +157,43 @@ test(`#237 review: per-entry goldens scope the claim — chunk B without its own
   assert.ok(lmp.every((r) => r.cls === `golden`));
 });
 
+test(`#237 blocking-review repro 4: a multi-entry manifest may NOT inherit the package-level goldens — unscoped entries are a consistency error and stay GAP`, () => {
+  const root = fixtureRepo({
+    matrix: `## D. Chat substrate\n\n| Feature | Corpus evidence | Status |\n|---|---|---|\n| Input | \`AgentInput.ekPPAiwd.js\` | corpus |\n| Panel | \`AgentPanel.Xxxx.js\` | corpus |\n`,
+    manifest: {
+      source: `test`,
+      reimplements: [{ chunkPrefix: `AgentInput` }, { chunkPrefix: `AgentPanel` }],
+      goldens: [`case`],
+    },
+    goldenFiles: [`case.json`],
+  });
+  const ledger = buildLedger(root);
+  // One committed golden must not silently credit both chunks.
+  assert.equal(ledger.golden, 0);
+  assert.equal(ledger.gap, 2);
+  assert.ok(ledger.errors.some((e) => e.includes(`must carry its own "goldens"`)));
+});
+
+test(`multi-entry manifest with per-entry goldens: each chunk is backed only by its own resolvable cases`, () => {
+  const root = fixtureRepo({
+    matrix: `## D. Chat substrate\n\n| Feature | Corpus evidence | Status |\n|---|---|---|\n| Input | \`AgentInput.ekPPAiwd.js\` | corpus |\n| Panel | \`AgentPanel.Xxxx.js\` | corpus |\n`,
+    manifest: {
+      source: `test`,
+      reimplements: [
+        { chunkPrefix: `AgentInput`, goldens: [`input-case`] },
+        { chunkPrefix: `AgentPanel`, goldens: [`panel-case`] },
+      ],
+      goldens: [`input-case`],
+    },
+    goldenFiles: [`input-case.json`],
+  });
+  const ledger = buildLedger(root);
+  // input-case.json is committed -> AgentInput golden; panel-case is dangling -> GAP + error.
+  assert.equal(ledger.golden, 1);
+  assert.equal(ledger.gap, 1);
+  assert.ok(ledger.errors.some((e) => e.includes(`panel-case`)));
+});
+
 test(`#237 review: improvements carry explicit chunk identity; bare strings are a consistency error`, () => {
   const good = buildLedger(
     fixtureRepo({

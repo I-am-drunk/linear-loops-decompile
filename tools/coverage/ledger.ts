@@ -161,6 +161,18 @@ export function loadManifests(srcDir: string): { pkg: string; manifest: CorpusMa
       }
       reimplements.push(e);
     }
+    // A multi-chunk manifest MUST scope goldens per entry: the package-level
+    // list as a default claim for every entry lets one golden silently credit
+    // chunks it never executed — exactly the overstatement the ledger exists
+    // to prevent (#237 blocking review, repro 4). Single-entry packages keep
+    // the package-level list (there is only one chunk it can claim).
+    if (reimplements.length > 1) {
+      for (const e of reimplements) {
+        if (e.goldens === undefined) {
+          errors.push(`${mPath}: reimplements["${e.chunkPrefix}"] must carry its own "goldens" — a multi-chunk manifest may not inherit the package-level list (one golden must never silently credit another chunk)`);
+        }
+      }
+    }
     const improvements: { chunkPrefix: string; ref: string }[] = [];
     for (const imp of Array.isArray(r.improvements) ? r.improvements : []) {
       if (imp === null || typeof imp !== `object` || typeof (imp as { chunkPrefix?: unknown }).chunkPrefix !== `string` || typeof (imp as { ref?: unknown }).ref !== `string`) {
@@ -203,10 +215,12 @@ export function buildLedger(repoRoot: string): Ledger {
       for (const m of manifests) {
         const hit = m.manifest.reimplements.find((r) => refCovers(r.chunkPrefix, chunk));
         if (hit === undefined) continue;
-        // The cases backing THIS chunk: per-entry goldens when scoped, else
-        // the package list. All ids were resolution-checked in loadManifests;
-        // any dangling id in the relevant set voids the claim.
-        const caseIds = hit.goldens ?? m.manifest.goldens;
+        // The cases backing THIS chunk: per-entry goldens when scoped, else —
+        // for a SINGLE-entry manifest only — the package list. A multi-entry
+        // manifest without per-entry scoping already raised a consistency
+        // error in loadManifests; here it backs nothing, so the chunk stays
+        // GAP instead of being silently credited (#237 review, repro 4).
+        const caseIds = hit.goldens ?? (m.manifest.reimplements.length > 1 ? [] : m.manifest.goldens);
         const backed = caseIds.length > 0 && caseIds.every((id) => m.goldenFiles.includes(`${id}.json`));
         if (backed) {
           cls = `golden`;
@@ -234,7 +248,7 @@ export function buildLedger(repoRoot: string): Ledger {
     for (const r of Array.isArray(m.manifest.reimplements) ? m.manifest.reimplements : []) {
       if (typeof r.chunkPrefix !== `string` || r.chunkPrefix === ``) continue;
       if (!allMatrixChunks.some((c) => refCovers(r.chunkPrefix, c))) {
-        const caseIds = r.goldens ?? m.manifest.goldens;
+        const caseIds = r.goldens ?? (m.manifest.reimplements.length > 1 ? [] : m.manifest.goldens);
         const goldenBacked = caseIds.length > 0 && caseIds.every((id) => m.goldenFiles.includes(`${id}.json`));
         offMatrix.push({ pkg: m.pkg, chunkPrefix: r.chunkPrefix, goldenBacked });
       }
