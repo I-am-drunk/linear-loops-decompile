@@ -281,8 +281,8 @@ unlike the §F shapes), the alias identity against the loaded target (the
 G21 pattern), and the entry's export-name surface; the suspense-observer
 credit-metering Component stays declared GAP (T2/T3); linking surface: 32
 mechanical throw-on-use seams generated from the import map; meter on this
-branch: 81 chunks · 18 golden · 63 GAP — ordinal and final meter re-slot at
-merge against G21 (#276, in flight). H3 family expansion
+branch: 81 chunks · 19 golden · 62 GAP — ordinal re-slots at merge against
+G21 (#276, in flight). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
