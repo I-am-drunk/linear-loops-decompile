@@ -1,0 +1,39 @@
+{
+  "unit": "ui-settings-guidance/agentGuidanceSettingsMetadata",
+  "chunk": "AgentGuidanceSettings",
+  "stubs": {
+    "Issue": {
+      "file": "stubs/issue.mjs",
+      "why": "Sv/da/dh/vv (permission enums + routing helpers) are read only inside the observer component body, which this case never executes; linking-only, throw-on-use."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/contextual-menu-actions.mjs",
+      "why": "$P/hs/ms (settings-section wrapper, prompt-rules accessor + editor) are component-body-only; linking-only, throw-on-use. Full name pinned: the corpus holds two hash-rotated ContextualMenuActions builds (Bcp3eWHc, Dlg9Oa2U); the entry imports Dlg9Oa2U."
+    },
+    "jsx-runtime": {
+      "file": "stubs/jsx-runtime.mjs",
+      "why": "the chunk calls the jsx factory at MODULE EVAL (`var f = s()`), so the stub returns an object whose jsx/jsxs throw on use — no render happens in this case."
+    },
+    "lib.3x4I7cm8.js": {
+      "file": "stubs/lib.mjs",
+      "why": "n (Link) appears only in the team-branch descriptionElement inside the component body; linking-only, throw-on-use. Full name pinned: two hash-rotated lib builds exist (3x4I7cm8, DHnrUM56); the entry imports 3x4I7cm8."
+    },
+    "mobxreactlite": {
+      "file": "stubs/mobxreactlite.mjs",
+      "why": "the chunk wraps its component at MODULE EVAL (`m = l(function …)`), so the stub must be callable then; identity-wrap is honest because the wrapped component is never rendered here."
+    },
+    "useUser": {
+      "file": "stubs/use-user.mjs",
+      "why": "component-body-only hook; linking-only, throw-on-use."
+    },
+    "finishSentryAuth": {
+      "file": "stubs/finish-sentry-auth.mjs",
+      "why": "c (permission-message formatter) is component-body-only; throwing proxy keeps accidental use loud."
+    }
+  },
+  "drive": {
+    "file": "agent-guidance-metadata-driver.mjs",
+    "exportMeaning": "export{p as n} \u2014 p is the settings-metadata factory: scope === `team` gives {id:`team-agent-guidance`, title:`Additional guidance`, description, keywords:`team guidance instructions rules prompt`, applicable}; any other scope gives {id:`workspace-agent-guidance`, title:`Workspace guidance`, description, keywords:`guidance instructions rules prompt`, applicable}. applicable({organization}) = organization.agentAppUsers.some(u => u.isActive && !!u.oauthClientId). The driver projects both branches plus the predicate on five organization shapes (the function member has no injective serialization, so projection is the driver's declared job)."
+  },
+  "notes": "G11: first \u00a7F (Settings) golden-backed chunk (matrix \u00a7F 'Agent guidance' row, AgentGuidanceSettings.BgeC_uVo.js). Subject: export n, the pure metadata factory \u2014 ids, user-facing titles, the full guidance description copy, search keywords, and the applicability predicate over organization.agentAppUsers. Drive mode (G6 pattern): the metadata carries a function member (applicable), which the tagged-v2 serializer rightly refuses, so the driver projects it against five org fixtures spanning the some(isActive && !!oauthClientId) condition; ownKeys pins the metadata object's own-key surface so a corpus refresh adding/removing fields cannot pass silently. The observer component (export t) is a separate slice: it needs the T3 store-fixture recipe (useUser + permission ladder) and stays GAP until then \u2014 its seven import seams are linking-only throw-on-use stubs here, so any accidental execution fails the draft loudly rather than pinning invented behavior."
+}

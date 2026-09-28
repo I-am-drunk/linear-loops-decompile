@@ -173,7 +173,12 @@ harness→icon identity mapping, and the nine settings description strings;
 clean reimplementation byte-matching through the declared serializer-v2
 driver, 7/7 tests; out of scope and still honest GAP regions: isAvailable,
 the non-ZDR description branch, the observer component; meter:
-78 chunks · 8 golden · 70 GAP). H3 family expansion
+78 chunks · 8 golden · 70 GAP). G11 tenth golden-backed chunk LANDED 2026-09-28 (src/ui-settings-guidance:
+AgentGuidanceSettings export n — the FIRST §F Settings golden: drive-mode
+projection of the settings-metadata factory, both scope branches + the
+strict-equality discriminator + the applicable predicate over five declared
+org fixtures; the observer component export t stays GAP pending the T3
+store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

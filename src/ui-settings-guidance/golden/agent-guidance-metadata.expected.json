@@ -1,0 +1,263 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c5ae1ba77dfc3cf18e8b0a411ad08a4a5d5cede8",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "AgentGuidanceSettings.BgeC_uVo.js",
+    "closureSize": 8,
+    "stubbed": [
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "finishSentryAuth.Cd-7zL4s.js",
+      "jsx-runtime.BH9nBM82.js",
+      "lib.3x4I7cm8.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "useUser.CGqqjeJr.js"
+    ],
+    "chunkHashes": {
+      "AgentGuidanceSettings.BgeC_uVo.js": "7c8459dffdceb0a642f1ac5e0f94fd8472168d1b8e6878300df5e026a5cc670f"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "team",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "team-agent-guidance"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Additional guidance"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "When working on an issue, an agent automatically receives the full issue context and any added workspace guidance. You can also provide team-level guidance, though adherence is controlled by the agent integration."
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "team guidance instructions rules prompt"
+              }
+            },
+            {
+              "key": "ownKeys",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "id"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "title"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "description"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "keywords"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "applicable"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "applicable",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "noAgents",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "activeWithClient",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "activeWithoutClient",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "inactiveWithClient",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "mixedSecondQualifies",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "workspace",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "workspace-agent-guidance"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Workspace guidance"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "An agent automatically receives the full issue context when working on an issue. You can provide additional workspace-wide guidance, though adherence is controlled by the agent integration."
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "guidance instructions rules prompt"
+              }
+            },
+            {
+              "key": "ownKeys",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "id"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "title"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "description"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "keywords"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "applicable"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "applicable",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "noAgents",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "activeWithClient",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "activeWithoutClient",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "inactiveWithClient",
+                    "value": {
+                      "tag": "boolean",
+                      "value": false
+                    }
+                  },
+                  {
+                    "key": "mixedSecondQualifies",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "nonTeamStringTakesWorkspaceBranch",
+        "value": {
+          "tag": "string",
+          "value": "workspace-agent-guidance"
+        }
+      },
+      {
+        "key": "undefinedTakesWorkspaceBranch",
+        "value": {
+          "tag": "string",
+          "value": "workspace-agent-guidance"
+        }
+      }
+    ]
+  }
+}
