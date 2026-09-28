@@ -178,7 +178,18 @@ AgentGuidanceSettings export n — the FIRST §F Settings golden: drive-mode
 projection of the settings-metadata factory, both scope branches + the
 strict-equality discriminator + the applicable predicate over five declared
 org fixtures; the observer component export t stays GAP pending the T3
-store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). H3 family expansion
+store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). G13 eleventh
+golden-backed chunk LANDED 2026-09-28 (src/ui-loops-owner-select:
+AutomationOwnerSelect export t, matrix §A Owner select — drive mode through
+the render-prop seam (the tooltip's render prop invoked with a pinned
+content marker): both appearance branches (property default / inline) + the
+disabled-configure action branch (disabledReason via the AutomationHelper
+seam pinned from its hand-verified raw source — its 50KB closure reads
+window at module scope, the G7 finding); component seams as declared string
+markers; the restore-history hook export n stays honest GAP pending a
+T2/effect tier (dialog side effects + async draft IO); clean
+reimplementation byte-matching; meter: 78 chunks · 10 golden · 68 GAP).
+H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
