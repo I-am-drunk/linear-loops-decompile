@@ -610,3 +610,35 @@ fn theme_values_from_goldens_and_value_canary() {
 
     let _ = std::fs::remove_dir_all(&tmp);
 }
+
+#[test]
+fn extract_emits_primitives_from_unambiguous_signals() {
+    // issue #213 slice 1: role:`dialog` → dialog; export{…pageMetadata} → page;
+    // no signal → no fact (never guessed).
+    let tmp = std::env::temp_dir().join(format!("parity-test-prim-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let reference = extract(&tmp);
+    let text = std::fs::read_to_string(&reference).unwrap();
+    // Assert each primitive on its NAMED surface (#229 review): a swapped
+    // assignment would still satisfy two global contains checks.
+    let dialog_at = text.find("\"AutomationNewDialog\"").expect("dialog surface present");
+    let dialog_end = text[dialog_at..].find("\n  ]").map_or(text.len(), |e| dialog_at + e);
+    assert!(
+        text[dialog_at..dialog_end].contains(r#""primitive": "dialog""#),
+        "AutomationNewDialog carries the dialog primitive: {}", &text[dialog_at..dialog_end]
+    );
+    let page_at = text.find("\"AutomationRunsPage\"").expect("page surface present");
+    let page_end = text[page_at..].find("\n  ]").map_or(text.len(), |e| page_at + e);
+    assert!(
+        text[page_at..page_end].contains(r#""primitive": "page""#),
+        "AutomationRunsPage carries the page primitive: {}", &text[page_at..page_end]
+    );
+    // ThemeProvider (theme.tokens) has neither signal → no primitive fact.
+    let theme_at = text.find("\"theme.tokens\"").expect("theme surface present");
+    assert!(
+        !text[theme_at..].contains("primitive"),
+        "no primitive guessed for a signal-less surface: {}", &text[theme_at..]
+    );
+    let _ = std::fs::remove_dir_all(&tmp);
+}

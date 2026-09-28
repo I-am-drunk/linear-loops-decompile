@@ -142,7 +142,7 @@ fn cmd_extract(args: &[String]) -> ExitCode {
     match extract::run(&o.corpus, &o.matrix, &o.out, canaries.as_deref(), goldens.as_deref()) {
         Ok(stats) => {
             println!(
-                "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains · {} state alternates → {}",
+                "extract: {} surfaces · {} chunks · {} routes · {} copy · {} edges · {} tokens · {} order chains · {} state alternates · {} primitives → {}",
                 stats.surfaces,
                 stats.chunks_read,
                 stats.routes,
@@ -151,6 +151,7 @@ fn cmd_extract(args: &[String]) -> ExitCode {
                 stats.tokens,
                 stats.order,
                 stats.states,
+                stats.primitives,
                 o.out.display()
             );
             match stats.theme_values {

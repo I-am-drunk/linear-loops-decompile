@@ -24,8 +24,8 @@ const PLACEHOLDER = `<!doctype html><html><head><meta charset="utf-8"><title>loo
 display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}
 main{max-width:34rem}code{background:#ffffff14;padding:2px 6px;border-radius:4px}</style></head>
 <body><main><h1>loops-server is running</h1>
-<p>The UI is not built yet (it lands in the R3.4 slice). Build it with
-<code>npm run build</code> in <code>src/ui</code>, then restart.</p></main></body></html>`;
+<p>No UI build is present. The R3.4 shell was archived (tag <code>archive/r3.4-ui-shell</code>,
+issue #200); the next UI ships golden-verified per SPECS/ui-parity.md.</p></main></body></html>`;
 
 export interface HttpOptions {
   staticDir?: string;

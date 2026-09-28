@@ -49,9 +49,11 @@ Done 2026-09-27:
   tests with an injected fake fetch.
 
 - R3.4 UI shell: BUILT then FAILED the exactness audit (docs/audit-2026-09-27.md
-  F1/F2: invented tokens + invented IA) — not done; disposition per PLAN.md H
-  track: brought to parity-green or archived like v0. The server halves
-  (R3.1-R3.3) stand.
+  F1/F2: invented tokens + invented IA); ARCHIVED 2026-09-28 per #200 (claim +
+  two peer concurrences; tag `archive/r3.4-ui-shell` = pre-delete main
+  277bbf3). `src/ui` deleted; ci/check-ui.sh passes vacuously until the first
+  golden-verified UI slice ships WITH ui-facts.json. The server halves
+  (R3.1-R3.3) stand; the R3.3 Settings RPC layer survives untouched.
 
 Done 2026-09-27 (evening, freeze-era):
 - Feedback gate (user directive, #175/#182 merged): NO merges with unaddressed
@@ -85,11 +87,40 @@ corrected. Grammar-extracted set-compare (routes/copy/…/states) DEMOTES to
 drift-canary tier; the ACCEPTANCE bar is now hand-verified golden tests
 computed by executing the corpus code (#215 pattern, generalized). Plan-of-
 record: #220 (G0 spec claimed by sess_01a0e4cb-0cdc-7797-b503-a67080b81c96;
-G1 corpus-exec, G2 golden leg + coverage ledger, G3 theme retrofit, G4 first
-rendered-component golden are OPEN — claim on #220). H3 family expansion
+G1 corpus-exec LANDED 2026-09-28 (#230+#233+#234 squashed to main `78a9f69`:
+run/verify + invoke/render modes, RAW `corpus/client` as the executable
+authority with source-flavor provenance, injective serializer — Date/undefined/
+key preserved, non-plain objects a loud typed error; 27/27 incl. the raw-tree
+corpus smoke, six reviewer verifications), G2 coverage ledger LANDED 2026-09-28
+(#237: tools/coverage — matrix x corpus-manifests x goldens ->
+golden|improvement|GAP per surface + off-matrix table; corpus-free `coverage
+check` wired as a never-vacuous ci/check-ui.sh leg; ui-theme reference
+manifest), G3 theme retrofit (claimed sess_01a0e4ca-cd60), G4 first
+rendered-component golden LANDED 2026-09-28 (src/ui-loops-icons:
+AgentAutomationEmptyStateIcon darkDefault — corpus-executed, hand-verified vs
+source, serializer-v2 bytes, TZ/locale-invariant; the pattern every rendered
+slice copies) with its CLEAN REIMPLEMENTATION landed the same day (pure
+theme->host-element-tree module, byte-matches the golden through the
+tagged-v2 serializer as the declared observation driver; corpus-manifest joins
+the G2 ledger: first golden-backed chunk on the meter, 78 chunks · 1 golden ·
+77 GAP)). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
+- #231 pipeline execution-integrity guard LANDED 2026-09-28 (#232 + #239
+  fix-forward squashed to main `6b5854c`, closes #231): prettify output is
+  gated on parse + FULL token-stream signature vs raw (subsumes the template
+  check; zero false positives measured on all 1,541 prettifiable chunks);
+  cached raw fallbacks are byte-verified pre-UTF-8-decode. Real-corpus rebuild:
+  1,541 prettified + 9 byte-exact raw fallbacks, 0 failures, --check
+  1,550/1,550. Follow-up: #241 (Tier-2 extract-drift contract for analyze.mjs
+  — the 9 raw fallbacks move ops/models counts; carved out of the #232 review).
+- G1 serializer v2 LANDED 2026-09-28 (#240 squashed to main `4a909fd`, closes
+  #238): the golden serializer is a closed tagged JSON grammar
+  (`corpus-exec-tagged-json-v2`) — every v1 collision pair (null≡undefined,
+  0≡-0, Date≡string, sparse holes, …) now yields distinct bytes; loud,
+  path-naming refusal outside the grammar; own-key order preserved. G2 goldens
+  build on v2 bytes.
 - H1 follow-ups: #177 closed (routes.json union + `?` params landed via
   #171/#189/#181). declaredIn route tagging LANDED (#208
   closed; #211 merged — 43 routeMeta entries, roles verified); extract
@@ -104,9 +135,11 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   1.32.4), `value:` canaries pin the wiring + theme drift.
 - H3 matrix-§A fact extraction (plan-of-record now issue #213; #207 closed
   as duplicate): H3.1 order family SHIPPED via #212 (two corpus-proven
-  grammars, 2 chains on 1.32.4); states family in PR #217 (ternary-alternate
-  grammar, 45 alt facts on 1.32.4, states canaries); primitive claimed on
-  #213; behavior open.
+  grammars, 2 chains on 1.32.4); states family SHIPPED via #217
+  (ternary-alternate grammar, states canaries); primitive family SHIPPED via
+  #229 (pageMetadata-export/role:dialog signals, 8 primitives on 1.32.4 —
+  drift-canary tier per the #220 pivot); behavior/bindings/icons ON HOLD per
+  the pivot.
 - H4 DONE (issue #185, closed): docs-site digests complete to the 26-page
   sitemap bar (#184/#190/#197 merged); citation hard rule + docs drift-check
   leg + reviewer two-source checklist merged (#196); agent-signals +
@@ -114,6 +147,16 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
 - R5.1 dataplane PR #155: the blocking 400/RATELIMITED finding and the
   markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
   merged into it; server 26/26). Stays open per the #157 freeze.
+
+Product contract clarification (2026-09-28, owner directive): the rebuild is an
+original **Loops-only** product. The sidebar contains Loops, only the Loops-required
+views (such as Runs/Templates as built), and our Settings—not Linear tracker navigation
+or Linear Settings. The connected account's PAT/OAuth is the documented data-plane
+connection for reads/write-back. The golden goose is a separately managed user-session
+bridge to normal Linear chat and remains the primary brain; external inference is
+fallback-only. This changes scope wording and architecture, not the EXACT UI/behavior
+bar for the Loops surfaces or the public-code legal line. Binding detail:
+`SPECS/product-contract.md`; boot-level rule: `AGENTS.md`.
 
 Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
 trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by

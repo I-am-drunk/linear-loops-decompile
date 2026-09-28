@@ -1,0 +1,9 @@
+{
+  "name": "corpus-exec",
+  "private": true,
+  "type": "module",
+  "description": "G1 golden runner: execute a corpus chunk offline and record its outputs (SPECS/ui-parity.md golden tier)",
+  "scripts": {
+    "test": "node --experimental-strip-types --test corpus-exec.test.ts"
+  }
+}

@@ -36,9 +36,10 @@ failed the exactness audit — see the H track below; the server halves stand).
   node:sqlite store + health).
 - R3.3 settings vertical (server): `settings.*` RPCs + `dataplane.probe`.
   Write-only secrets; probes never hit the network in tests.
-- R3.4 UI shell: `src/ui` skeleton (sidebar, routes, theme tokens from
-  `docs/ui-reference.md`, empty states) with the Settings page wired to the
-  R3.3 RPCs.
+- R3.4 UI shell: `src/ui` skeleton for the deliberately narrow product: sidebar
+  contains only Loops, Loops-required views (Runs/Templates as needed), and our
+  Settings; it does not recreate Linear tracker navigation or Linear Settings. Theme
+  tokens come from `docs/ui-reference.md`; our Settings page wires to R3.3 RPCs.
 
 ## H: the harness era (inserted 2026-09-27 — the freeze's exit path)
 
@@ -91,7 +92,10 @@ on `SPECS/loops.md` as corrected by #167/#173.
   prompt).
 - R4.3 template library + new-loop prefill.
 
-## R5: dataplane slices (Linear as the data plane)
+## R5: public-API dataplane slices (Linear as the connected account's data plane)
+
+A Linear PAT/OAuth credential serves only documented reads and write-back. It is not
+an AI credential and cannot call the client chat route.
 
 - R5.1 GraphQL client + rate budget (promote the R3.3 probe).
 - R5.2 reads (issues, projects, teams, labels, states) with fixtures.
@@ -108,9 +112,12 @@ on `SPECS/loops.md` as corrected by #167/#173.
 
 - Trace `AiConversationSendMessage` call sites in the corpus (streaming shape,
   auth context), reading only, anytime.
-- Live probe with the user's Linear credentials (user-guided).
-- If proven: goose brain adapter behind the same Brain interface as the external
-  harnesses.
+- Live probe with the user's interactive Linear session (user-guided). Keep that
+  session bridge separate from the public-API connection.
+- If proven: make the normal Linear chat route the primary brain adapter. External
+  inference remains an explicit fallback, not the product thesis.
+- Scope guard: build Loops only. The app shell exposes only Loops, Loops-required
+  views, and our Settings; no generic Linear navigation or copied Linear Settings.
 
 ## R8: matrix burn-down
 

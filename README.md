@@ -1,31 +1,40 @@
 # linear-loops-decompile
 
-Self-hosted Linear Loops: the EXACT same Linear Loops UI and behavior, taken out of
-Linear and run on your own server with your own Linear account. Not a lookalike, not
-a feature-by-feature approximation: the same product, verified against the decompiled
-app itself.
+Self-hosted **Linear Loops only**: the exact Linear Loops UI and behavior, rebuilt as
+original code and run on your own server with your own Linear account. This is not a
+full Linear clone, a lookalike, or a feature-by-feature approximation. The product
+surface is Loops plus the views Loops requires, and our own Settings; every shipped
+surface is verified against the decompiled app itself. The non-negotiable scope and
+credential boundary are defined in `SPECS/product-contract.md`.
 
 ## The brain: the golden goose first
 
-Linear's loop chat and its normal AI chat are the same substrate, but loops are
+Linear's loop chat and normal AI chat are the same substrate, but Loops is
 credit-metered. The golden goose (issue #14) is the normal AI chat route the
-first-party app itself uses: we trace it out of the decompiled app and drive it with
-your own Linear account, so loops get the Linear-grade brain without loop credits.
-Proving that route is the main event of this project.
+first-party app uses. Our server drives that route with the user's own Linear session
+so self-hosted loops use Linear-grade chat instead of the Loops-metered wrapper.
+Proving and integrating that route is the main event.
 
-Until the goose is proven, the server also accepts external inference harnesses
-(OpenRouter, LiteLLM, vLLM, Ollama) so loops can run end to end on a brain you own.
-These are the fallback, not the goal.
+This is distinct from Linear's public API: a PAT or OAuth token connects the account
+for Loops data and write-back; it cannot call the chat route. A user-session bridge is
+the separately managed credential for the goose. External inference harnesses
+(OpenRouter, LiteLLM, vLLM, Ollama) are supported only as a fallback so a loop remains
+runnable when the chat bridge is unavailable; they are not the intended brain.
 
 The public Agent Sessions API is a separate, credit-bearing surface for external
 agents. We use it for presenter and write-back integration only, never as the brain.
 
 ## How it works
 
-Open our web page (served by our server), connect Linear and an inference path in
-Settings, write a loop (trigger plus prompt), publish. Our engine fires it on
-schedule or on Linear events, the run streams to the UI exactly as in Linear, and
-output writes back to Linear through its API.
+Open our Loops web page (served by our server), connect a Linear account in our
+Settings, then connect the chat-session bridge (or explicitly choose a fallback
+inference harness). The sidebar deliberately contains only **Loops**, the Loops
+views required to create and inspect them (for example Runs and Templates), and
+**Settings**. It does not reproduce Linear's tracker navigation or Linear's Settings.
+
+Write a loop (trigger plus prompt), publish it, and our engine fires it on schedule or
+on Linear events. Runs stream in the Loops UI exactly as in Linear; reads and
+write-back use the connected account's public Linear API.
 
 ## Method (why this rebuild is different)
 
@@ -41,8 +50,8 @@ decompile:
    `KNOWLEDGE.md` and `extracts/`.
 3. `docs/feature-matrix.md` enumerates every Loops feature from that evidence.
    The matrix is the acceptance bar.
-4. UI and behavior are implemented to match the corpus exactly, and every row of
-   the matrix is checked against it.
+4. UI and behavior in the deliberately narrow Loops product are implemented to match
+   the corpus exactly, and every applicable row of the matrix is checked against it.
 
 ## Status
 
@@ -58,7 +67,7 @@ preserved at tag `archive/v0-swarm-era`. Roadmap: `PLAN.md`. Board: `STATUS.md`.
 | `PLAN.md` | milestones |
 | `STATUS.md` | the board: what is done, what is now, what is next |
 | `KNOWLEDGE.md` | decompile-derived facts about Loops internals |
-| `SPECS/` | product specs written from that knowledge |
+| `SPECS/` | product specs written from that knowledge; start with `product-contract.md` for scope |
 | `extracts/` | vendored public facts (Linear's MIT schema/SDK digest) plus corpus extracts |
 | `pipeline/` | the decompile harness; its `corpus/` dir is local only, gitignored |
 | `docs/` | feature matrix and deep dives |

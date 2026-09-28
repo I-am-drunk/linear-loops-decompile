@@ -1,0 +1,18 @@
+{
+ "unit": "ui-loops-icons/AgentAutomationEmptyStateIcon",
+ "chunk": "AgentAutomationEmptyStateIcon",
+ "stubs": {
+  "ThemeProvider": {
+   "file": "theme-stub-light.mjs",
+   "why": "useTheme needs a React context provider tree; the stub returns the three color tokens this SVG reads, pinned to the H2 corpus-executed lightDefault golden (hand-verified). Everything else in the closure (jsx-runtime) is real corpus code."
+  }
+ },
+ "notes": "G4 follow-up: the lightDefault sibling of the darkDefault case \u2014 the case PAIR pins both first-party default themes, so a theme-coupling regression in either direction goes red.",
+ "invoke": {
+  "export": "t",
+  "exportMeaning": "export{r as t} \u2014 r() is the empty-state SVG function component (matrix \u00a7A 'Empty states' row). With the theme stub the component is hook-free (the stubbed useTheme returns a plain object), so plain invocation observes the returned host-element tree; the injective serializer records it.",
+  "args": [
+   {}
+  ]
+ }
+}

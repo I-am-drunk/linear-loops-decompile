@@ -1,0 +1,23 @@
+{
+  "source": "G4 (#243 golden + this reimplementation slice): src/ui-loops-icons reimplements the loops empty-state icon chunk. Evidence: AgentAutomationEmptyStateIcon.BW9M5hMw.js (matrix \u00a7A 'Empty states' row), executed from the RAW tree with the ThemeProvider useTheme stub pinned to the H2 darkDefault golden (src/ui-theme/golden/golden-derived-retina0.json). The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "AgentAutomationEmptyStateIcon",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{r as t} \u2014 r() is the empty-state SVG function component (120x81 viewBox, 3 paths, labelMuted/labelBase/labelFaint fills); reimplemented as AgentAutomationEmptyStateIcon(theme)",
+          "evidenceLine": "src/ui-loops-icons/agent-automation-empty-state-icon.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "agent-automation-empty-state-icon.darkDefault",
+        "agent-automation-empty-state-icon.lightDefault"
+      ]
+    }
+  ],
+  "goldens": [
+    "agent-automation-empty-state-icon.darkDefault",
+    "agent-automation-empty-state-icon.lightDefault"
+  ]
+}
