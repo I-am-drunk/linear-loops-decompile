@@ -188,8 +188,16 @@ seam pinned from its hand-verified raw source — its 50KB closure reads
 window at module scope, the G7 finding); component seams as declared string
 markers; the restore-history hook export n stays honest GAP pending a
 T2/effect tier (dialog side effects + async draft IO); clean
-reimplementation byte-matching; meter: 78 chunks · 10 golden · 68 GAP).
-H3 family expansion
+reimplementation byte-matching; meter: 78 chunks · 10 golden · 68 GAP). G14 twelfth golden-backed chunk LANDED 2026-09-28
+(TeamAgentSkillsSettingsPage, matrix §F Team agent settings — second §F
+golden, confirming the G11 scouting that §F settings pages share the
+metadata shape: drive-mode verbatim projection of the pure pageMetadata
+literal (no scope param, no applicable member — both pinned) + the Component
+export's module-eval displayName; six declared stubs incl. the
+suspenseObserver module-eval wrapper (a new seam in the pattern library);
+reimplementation joins src/ui-settings-guidance with per-chunk goldens; the
+route component body stays honest GAP; meter: 78 chunks · 11 golden ·
+67 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
