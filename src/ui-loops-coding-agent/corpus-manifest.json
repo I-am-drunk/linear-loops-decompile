@@ -1,5 +1,5 @@
 {
-  "source": "G12 (#225 claim, this slice): src/ui-loops-coding-agent reimplements the coding-agent settings/repo helper statics. Evidence: CodingAgentModelSelect.USYHzowP.js (matrix \u00a7E 'Coding harness' row), executed from the RAW tree in drive mode with five declared stubs (Issue model-layer enums pinned verbatim + throw-on-unpinned, render-only boundary components throw-if-rendered). The golden pins: repo hostName/fullName/label incl. the github.com-vs-other-host branch; sandboxSizes and their vCPU\u00b7memory copy; harnesses order; the nine settings description strings; per-harness label() incl. passthrough; autoPreference() incl. the Unhandled-harness throw message; the harness\u2192icon identity mapping; modelDescription's default branch. Out of scope (unpinned, still GAP-honest): isAvailable, the non-ZDR description branch, icon render output, the observer Select component.",
+  "source": "G12 (#225 claim, this slice): src/ui-loops-coding-agent reimplements the coding-agent settings/repo helper statics. Evidence: CodingAgentModelSelect.USYHzowP.js (matrix \u00a7E 'Coding harness' row), executed from the RAW tree in drive mode with five declared stubs (Issue model-layer enums pinned verbatim + throw-on-unpinned, render-only boundary components throw-if-rendered). The golden pins: repo hostName/fullName/label incl. the github.com-vs-other-host branch; sandboxSizes and their vCPU\u00b7memory copy; harnesses order; the nine settings description strings; per-harness label() incl. passthrough; autoPreference() incl. the Unhandled-harness throw message; the harness\u2192icon identity mapping; modelDescription's default branch. Out of scope (unpinned, still GAP-honest): isAvailable, the non-ZDR description branch, icon render output, the observer Select component. G20 addendum: the package also reimplements CodingAgentSettingsPage.lcMyXnM7.js export r (the coding-sessions settings metadata) via the G18 jsx-fragment recipe \u2014 a three-chunk cross-provenance chain (the golden-backed CodingAgentModelSelect statics and the real CommitSigningWorkspaceSetting execute inside the golden; the reimplementation composes from our golden-backed helpers).",
   "reimplements": [
     {
       "chunkPrefix": "CodingAgentModelSelect",
@@ -18,9 +18,33 @@
       "goldens": [
         "coding-agent-model-select.statics"
       ]
+    },
+    {
+      "chunkPrefix": "CodingAgentSettingsPage.lcMyXnM7.js",
+      "exports": [
+        {
+          "minified": "r",
+          "meaning": "export{Q as r} \u2014 the coding-sessions settings metadata: a module-eval literal composing this package's golden-backed CodingAgentModelSelect statics (descriptions.agent/model), the CommitSigningWorkspaceSetting metadata (verbatim 4-key literal), its own item/section literals, a descriptionElement JSX fragment (DocsLink href = raw Issue literal wJ as Ci), and three applicable closures (regionPinning flag-gated, loopsRepositoryAccess two-feature conjunction asking agentAutomations FIRST, environments codingSessions). Reimplemented as codingAgentSettingsMetadata(docsLinkSeam, featureFlags).",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-settings-metadata.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{ke as n} \u2014 the suspense-observer settings page component (store reads, hooks, credits IO). NOT covered: T2/T3 tier, declared GAP.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        },
+        {
+          "minified": "t",
+          "meaning": "export{$ as t} \u2014 the inner suspense-observer settings content component. NOT covered: T2/T3 tier, declared GAP.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        }
+      ],
+      "goldens": [
+        "coding-agent-settings-metadata"
+      ]
     }
   ],
   "goldens": [
-    "coding-agent-model-select.statics"
+    "coding-agent-model-select.statics",
+    "coding-agent-settings-metadata"
   ]
 }

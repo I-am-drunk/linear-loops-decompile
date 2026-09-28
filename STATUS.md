@@ -223,7 +223,20 @@ reimplementation joins src/ui-settings-guidance; route component body honest
 GAP; scouting note: TeamAgentsSettingsPage is NOT this recipe (metadata
 embeds a descriptionElement JSX fragment + a sections map calling the G11
 factory at module eval — needs a jsx-capturing stub or T2, stays GAP);
-meter: 79 chunks · 14 golden · 65 GAP). H3 family expansion
+meter: 79 chunks · 14 golden · 65 GAP). G20 golden-backed chunk LANDED
+2026-09-28 (CodingAgentSettingsPage.lcMyXnM7.js export r — the coding-sessions
+settings metadata, matrix §F Coding agent settings: the G18 jsx-fragment
+recipe on the harder sibling, a THREE-chunk cross-provenance chain (the
+golden-backed G12 CodingAgentModelSelect statics and the real
+CommitSigningWorkspaceSetting execute inside the golden; the reimplementation
+composes from our golden-backed helpers); Fragment via the declared
+projection, DocsLink href pinned from the raw Issue literal (wJ as Ci); the
+three applicable closures probed (flag seam scripted both ways + flag-key
+identity, the two-feature conjunction pinned incl. agentAutomations-first
+ask order, environments granted/denied); observer components declared GAP
+(T2/T3); meter on this branch: 79 chunks · 15 golden · 64 GAP — the ordinal
+and final meter re-slot at merge against whatever lands first (G18 #273 is
+in flight). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
