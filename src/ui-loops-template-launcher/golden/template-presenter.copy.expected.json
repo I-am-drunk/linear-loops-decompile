@@ -1,0 +1,186 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "useLoopTemplateLauncher.O9-_gagH.js",
+    "closureSize": 22,
+    "stubbed": [
+      "AgentComposeDraftTracker.Bd5C4XFQ.js",
+      "AgentToolbarState.DPrj1I-A.js",
+      "AutomationHelper.B0HEcOoo.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "Logger.qFaEBF6-.js",
+      "LoopCreationTracker.BAiVgMLN.js",
+      "MarkdownTransformer.DI8Fsgra.js",
+      "RefreshManager.DpVjn8XM.js",
+      "ThemeProvider.BNrg3wTr.js",
+      "Toast.BT3vaG2a.js",
+      "hooks.D4LfSm6u.js",
+      "mobx.BEIB-Y2s.js",
+      "timezone.lphPF5Vd.js",
+      "types.7f0h45Sh.js",
+      "useFlag.D9K3DJCO.js",
+      "useUser.CGqqjeJr.js"
+    ],
+    "chunkHashes": {
+      "useLoopTemplateLauncher.O9-_gagH.js": "b3625a3cd204bd56934d316065d677d226d796f1f0840264221d664e65866512",
+      "ColorConverter.CVwFbLBP.js": "b08766ccc0d0bcaf964009b562a143c9bc75ac10bdbc82ade7f19bbddb841dd0",
+      "react.Bfm_Hgom.js": "1e0e89abb243deb629f8fb7e94d2221d5c87ee86f2baf505bffe17fed85eddec",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "triggerLabel",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "scheduleHourly",
+              "value": {
+                "tag": "string",
+                "value": "Hourly"
+              }
+            },
+            {
+              "key": "scheduleDaily",
+              "value": {
+                "tag": "string",
+                "value": "Daily"
+              }
+            },
+            {
+              "key": "scheduleWeekly",
+              "value": {
+                "tag": "string",
+                "value": "Weekly"
+              }
+            },
+            {
+              "key": "scheduleUnknownCadenceThrows",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "name",
+                    "value": {
+                      "tag": "string",
+                      "value": "Error"
+                    }
+                  },
+                  {
+                    "key": "message",
+                    "value": {
+                      "tag": "string",
+                      "value": "Unreachable case: fortnightly"
+                    }
+                  },
+                  {
+                    "key": "isError",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "issueCreated",
+              "value": {
+                "tag": "string",
+                "value": "On new issue"
+              }
+            },
+            {
+              "key": "issueTriage",
+              "value": {
+                "tag": "string",
+                "value": "On triage"
+              }
+            },
+            {
+              "key": "issueOtherEvent",
+              "value": {
+                "tag": "string",
+                "value": "On issue change"
+              }
+            },
+            {
+              "key": "unknownTypeThrows",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "name",
+                    "value": {
+                      "tag": "string",
+                      "value": "Error"
+                    }
+                  },
+                  {
+                    "key": "message",
+                    "value": {
+                      "tag": "string",
+                      "value": "Unreachable case: [object Object]"
+                    }
+                  },
+                  {
+                    "key": "isError",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "iconColor",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "fromHex",
+              "value": {
+                "tag": "string",
+                "value": "#6770c4"
+              }
+            },
+            {
+              "key": "fromLch",
+              "value": {
+                "tag": "string",
+                "value": "#d74b4c"
+              }
+            },
+            {
+              "key": "unparseableFallsBackToBlack",
+              "value": {
+                "tag": "string",
+                "value": "#000000"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
