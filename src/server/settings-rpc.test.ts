@@ -118,3 +118,23 @@ test("testInference probes the default harness; dataplane.probe reports rate bud
     client.close(); await server.close(); await rm(dir, { recursive: true, force: true });
   }
 });
+
+test("inference credentials stay bound to their destination and provider", async () => {
+  const { server, client, dir } = await boot();
+  try {
+    for (const edit of [{ baseUrl: "https://other.example/v1" }, { provider: "anthropic" }]) {
+      await client.call("settings.setInference", {
+        name: "bound", input: { provider: "openrouter", baseUrl: "https://original.example/v1", apiKey: "old-secret" },
+      });
+      await client.call("settings.setInference", { name: "bound", input: { model: "changed" } });
+      assert.equal((await client.call<{ ok: boolean }>("settings.testInference", { name: "bound" })).ok, true);
+      await client.call("settings.setInference", { name: "bound", input: edit });
+      assert.ok(!server.store.getSetting("inference.harnesses")!.includes("old-secret"));
+      await assert.rejects(client.call("settings.testInference", { name: "bound" }), /no apiKey/);
+      await client.call("settings.setInference", { name: "bound", input: { ...edit, apiKey: "replacement" } });
+      assert.equal((await client.call<{ ok: boolean }>("settings.testInference", { name: "bound" })).ok, true);
+    }
+  } finally {
+    client.close(); await server.close(); await rm(dir, { recursive: true, force: true });
+  }
+});

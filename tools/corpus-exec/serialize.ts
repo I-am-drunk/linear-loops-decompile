@@ -195,3 +195,33 @@ export function serialize(value: unknown, path = `$`, seen?: Set<object>): Tagge
 export function stringify(value: unknown): string {
   return `${JSON.stringify(serialize(value), null, 2)}\n`;
 }
+
+/** Decode the closed data grammar across the process boundary; never evaluate code. */
+export function deserialize(input: unknown): unknown {
+  const value = input as Tagged;
+  switch (value.tag) {
+    case "null": return null;
+    case "undefined": return undefined;
+    case "boolean": case "string": return value.value;
+    case "number": return Number(value.value);
+    case "bigint": return BigInt(value.value);
+    case "date": return new Date(value.value);
+    case "array": {
+      const out = new Array(value.values.length);
+      value.values.forEach((v, i) => { if (v.tag !== "hole") out[i] = deserialize(v); });
+      return out;
+    }
+    case "object": {
+      const out = Object.create(value.prototype === "null" ? null : Object.prototype);
+      for (const p of value.properties) {
+        Object.defineProperty(out, p.key, { value: deserialize(p.value), enumerable: true, writable: true, configurable: true });
+      }
+      return out;
+    }
+    case "element": return {
+      $$typeof: Symbol.for("react.transitional.element"), type: value.type,
+      key: deserialize(value.key), props: deserialize(value.props),
+    };
+    default: throw new Error("invalid serialized corpus output");
+  }
+}

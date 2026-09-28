@@ -11,9 +11,23 @@
 //!   component import edges, and theme-token usage.
 
 use crate::model::{FactFile, RouteMeta, Surface};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 use std::fs;
+use std::io::Read;
 use std::path::Path;
+
+const MAX_CHUNK_BYTES: u64 = 16 * 1024 * 1024;
+
+fn read_chunk(path: &Path) -> Result<String, String> {
+    let file = fs::File::open(path).map_err(|e| format!("read {}: {}", path.display(), e))?;
+    let mut bytes = Vec::new();
+    file.take(MAX_CHUNK_BYTES + 1).read_to_end(&mut bytes)
+        .map_err(|e| format!("read {}: {}", path.display(), e))?;
+    if bytes.len() as u64 > MAX_CHUNK_BYTES {
+        return Err(format!("chunk exceeds 16 MiB limit: {}", path.display()));
+    }
+    String::from_utf8(bytes).map_err(|e| format!("read {}: {}", path.display(), e))
+}
 
 pub struct ExtractStats {
     pub surfaces: usize,
@@ -100,8 +114,7 @@ pub fn run(
             if !name.ends_with(".js") {
                 continue;
             }
-            let text = fs::read_to_string(entry.path())
-                .map_err(|e| format!("read {}: {}", entry.path().display(), e))?;
+            let text = read_chunk(&entry.path())?;
             let is_table = is_route_table_chunk(&name);
             for route in extract_route_literals(&text) {
                 if is_loops_route(&route) {
@@ -163,8 +176,7 @@ pub fn run(
             }
             matched_any = true;
             stats.chunks_read += 1;
-            let text = fs::read_to_string(entry.path())
-                .map_err(|e| format!("read {}: {}", entry.path().display(), e))?;
+            let text = read_chunk(&entry.path())?;
             surface.copy.extend(extract_copy(&text));
             surface.states.extend(extract_state_alternates(&text));
             surface.structure.extend(extract_edges(&text));
@@ -858,6 +870,7 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
 
     // grammar 1: `orderingKey: `k`` in source order
     let mut cols: Vec<String> = Vec::new();
+    let mut seen_cols = HashSet::new();
     let mut rest = text;
     while let Some(idx) = rest.find("orderingKey: `") {
         // skip identifier-suffixed lookalikes (e.g. activeOrderingKey) by
@@ -874,7 +887,7 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
         if pre_ok
             && !key.is_empty()
             && key.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
-            && !cols.contains(&key.to_string())
+            && seen_cols.insert(key)
         {
             cols.push(key.to_string());
         }
@@ -886,6 +899,7 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
     // grammar 2: `key: `k`,` immediately followed by `name: `Label`` —
     // one options-array literal, names in source order
     let mut names: Vec<String> = Vec::new();
+    let mut seen_names = HashSet::new();
     let mut rest = text;
     while let Some(idx) = rest.find("key: `") {
         let pre_ok = idx == 0
@@ -906,7 +920,7 @@ fn extract_order(text: &str) -> Vec<Vec<String>> {
         let Some(t) = t.strip_prefix("name: `") else { continue };
         let Some(nend) = t.find('`') else { break };
         let name = &t[..nend];
-        if !name.is_empty() && !name.contains("${") && !names.contains(&name.to_string()) {
+        if !name.is_empty() && !name.contains("${") && seen_names.insert(name) {
             names.push(name.to_string());
         }
     }
@@ -1040,4 +1054,32 @@ fn extract_tokens(text: &str) -> Vec<String> {
         rest = &rest[idx + 9..];
     }
     out
+}
+
+#[cfg(test)]
+mod security_tests {
+    use super::*;
+
+    #[test]
+    fn distinct_order_keys_preserve_order_and_deduplicate_at_scale() {
+        let text = (0..20_000).map(|i| format!("orderingKey: `k{i}`, orderingKey: `k{i}`,\n"))
+            .collect::<String>();
+        let chains = extract_order(&text);
+        assert_eq!(chains.len(), 1);
+        assert_eq!(chains[0].len(), 20_000);
+        assert_eq!(chains[0][0], "k0");
+        assert_eq!(chains[0][19_999], "k19999");
+        let names = extract_order("key: `a`, name: `Alpha`, key: `b`, name: `Beta`, key: `a`, name: `Alpha`");
+        assert_eq!(names, vec![vec!["Alpha", "Beta"]]);
+    }
+
+    #[test]
+    fn oversized_chunk_is_rejected_before_extraction() {
+        let path = std::env::temp_dir().join(format!("parity-large-chunk-{}", std::process::id()));
+        let file = fs::File::create(&path).unwrap();
+        file.set_len(MAX_CHUNK_BYTES + 1).unwrap();
+        let result = read_chunk(&path);
+        fs::remove_file(&path).unwrap();
+        assert!(result.unwrap_err().contains("exceeds 16 MiB"));
+    }
 }

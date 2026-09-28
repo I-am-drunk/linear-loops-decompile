@@ -49,60 +49,99 @@ type FrameHandler = {
  * Incremental frame decoder bound to one socket. Feed it chunks; it emits
  * whole text messages (reassembling fragments) and answers pings itself.
  */
+export const PRE_AUTH_MESSAGE_BYTES = 4096;
+export const MAX_MESSAGE_BYTES = 1024 * 1024;
+
 export class FrameDecoder {
-  private buf: Buffer = Buffer.alloc(0);
+  private header = Buffer.alloc(14);
+  private headerUsed = 0;
+  private headerNeeded = 2;
+  private payload: Buffer | null = null;
+  private payloadUsed = 0;
   private fragments: Buffer[] = [];
+  private fragmentBytes = 0;
+  private fragmented = false;
+  private closed = false;
   private socket: Socket;
   private handler: FrameHandler;
-  constructor(socket: Socket, handler: FrameHandler) {
+  private limit: () => number;
+
+  constructor(socket: Socket, handler: FrameHandler, limit: () => number = () => MAX_MESSAGE_BYTES) {
     this.socket = socket;
     this.handler = handler;
+    this.limit = limit;
+  }
+
+  private close(): void {
+    this.closed = true;
+    this.payload = null;
+    this.fragments = [];
+    this.socket.write(encodeClose());
+    this.handler.onClose();
   }
 
   feed(chunk: Buffer): void {
-    this.buf = Buffer.concat([this.buf, chunk]);
-    for (;;) {
-      const frame = this.tryParse();
-      if (!frame) return;
-      const { fin, opcode, payload } = frame;
+    let offset = 0;
+    while (!this.closed && offset < chunk.length) {
+      if (this.payload === null) {
+        const count = Math.min(this.headerNeeded - this.headerUsed, chunk.length - offset);
+        chunk.copy(this.header, this.headerUsed, offset, offset + count);
+        this.headerUsed += count;
+        offset += count;
+        if (this.headerUsed < this.headerNeeded) return;
+        if (this.headerNeeded === 2) {
+          const size = this.header[1] & 0x7f;
+          this.headerNeeded = 2 + (size === 126 ? 2 : size === 127 ? 8 : 0) + 4;
+          // Client frames MUST be masked; extensions/binary frames are unsupported.
+          if ((this.header[0] & 0x70) || !(this.header[1] & 0x80)) { this.close(); return; }
+          continue;
+        }
+        const opcode = this.header[0] & 0x0f;
+        const fin = (this.header[0] & 0x80) !== 0;
+        const size = this.header[1] & 0x7f;
+        const length = size === 126 ? BigInt(this.header.readUInt16BE(2))
+          : size === 127 ? this.header.readBigUInt64BE(2) : BigInt(size);
+        const control = opcode >= 8;
+        if (![0, 1, 8, 9, 10].includes(opcode)
+            || (control && (!fin || length > 125n))
+            || (!control && ((opcode === 0) !== this.fragmented))
+            || length > BigInt(this.limit())
+            || (!control && BigInt(this.fragmentBytes) + length > BigInt(this.limit()))
+            || (!control && this.fragments.length >= 1024)) {
+          this.close(); return;
+        }
+        // Allocate once only after checking the declared size. Each incoming byte
+        // is copied once, regardless of how many TCP chunks carry the frame.
+        this.payload = Buffer.alloc(Number(length));
+        this.payloadUsed = 0;
+      }
+      const payload = this.payload;
+      const count = Math.min(payload.length - this.payloadUsed, chunk.length - offset);
+      const maskOffset = this.headerNeeded - 4;
+      for (let i = 0; i < count; i++) {
+        payload[this.payloadUsed + i] = chunk[offset + i] ^ this.header[maskOffset + (this.payloadUsed + i) % 4];
+      }
+      this.payloadUsed += count;
+      offset += count;
+      if (this.payloadUsed !== payload.length) return;
+      const opcode = this.header[0] & 0x0f;
+      const fin = (this.header[0] & 0x80) !== 0;
+      this.payload = null;
+      this.headerUsed = 0;
+      this.headerNeeded = 2;
+      if (opcode === OPCODES.close) { this.close(); return; }
       if (opcode === OPCODES.ping) { this.socket.write(encodePong(payload)); continue; }
       if (opcode === OPCODES.pong) continue;
-      if (opcode === OPCODES.close) { this.socket.write(encodeClose()); this.handler.onClose(); continue; }
-      if (opcode === 0x0 || opcode === OPCODES.text) {
-        this.fragments.push(payload);
-        if (fin) {
-          this.handler.onText(Buffer.concat(this.fragments).toString("utf8"));
-          this.fragments = [];
-        }
+      this.fragments.push(payload);
+      this.fragmentBytes += payload.length;
+      this.fragmented = !fin;
+      if (fin) {
+        const text = Buffer.concat(this.fragments, this.fragmentBytes).toString("utf8");
+        this.fragments = [];
+        this.fragmentBytes = 0;
+        this.handler.onText(text);
+        if (this.socket.destroyed) this.closed = true;
       }
     }
-  }
-
-  private tryParse(): { fin: boolean; opcode: number; payload: Buffer } | null {
-    const b = this.buf;
-    if (b.length < 2) return null;
-    const fin = (b[0] & 0x80) !== 0;
-    const opcode = b[0] & 0x0f;
-    const masked = (b[1] & 0x80) !== 0;
-    let len = b[1] & 0x7f;
-    let off = 2;
-    if (len === 126) {
-      if (b.length < 4) return null;
-      len = b.readUInt16BE(2); off = 4;
-    } else if (len === 127) {
-      if (b.length < 10) return null;
-      len = Number(b.readBigUInt64BE(2)); off = 10;
-    }
-    const maskLen = masked ? 4 : 0;
-    if (b.length < off + maskLen + len) return null;
-    let payload = b.subarray(off + maskLen, off + maskLen + len);
-    if (masked) {
-      const mask = b.subarray(off, off + 4);
-      const un = Buffer.alloc(len);
-      for (let i = 0; i < len; i++) un[i] = payload[i] ^ mask[i % 4];
-      payload = un;
-    }
-    this.buf = b.subarray(off + maskLen + len);
-    return { fin, opcode, payload };
   }
 }

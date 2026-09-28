@@ -114,6 +114,10 @@ export function createSettingsHandlers(store: Store, fetchImpl: FetchImpl = fetc
         createdAt: existing?.createdAt ?? new Date().toISOString(),
         apiKey: input.apiKey ?? existing?.apiKey,
       };
+      // A write-only credential belongs to the destination that received it.
+      if (existing && (next.baseUrl !== existing.baseUrl || next.provider !== existing.provider)) {
+        next.apiKey = input.apiKey;
+      }
       if (!next.baseUrl) throw new RpcError("invalid_params", "baseUrl required");
       const rest = list.filter((h) => h.name !== p.name);
       if (next.isDefault) for (const h of rest) h.isDefault = false;

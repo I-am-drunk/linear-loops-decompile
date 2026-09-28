@@ -21,7 +21,10 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 
+import { authorizedSource } from './source-policy.mjs';
+
 const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+if (!authorizedSource(event.comment)) throw new Error('unauthorized /land author');
 const comment = event.comment?.body ?? '';
 const issueNumber = event.issue?.number;
 const repo = process.env.GITHUB_REPOSITORY;
@@ -95,13 +98,13 @@ for (const n of fromIssues) {
   } catch {
     fail(`could not read issue #${n}`);
   }
-  absorb(issue.body, `#${n} body`);
+  absorb(authorizedSource(issue) ? issue.body : null, `#${n} body`);
   let page = 1;
   for (;;) {
     const pageItems = JSON.parse(
       gh(['api', `repos/${repo}/issues/${n}/comments?per_page=100&page=${page}`])
     );
-    for (const c of pageItems) absorb(c.body, `#${n} comment ${c.id}`);
+    for (const c of pageItems) absorb(authorizedSource(c) ? c.body : null, `#${n} comment ${c.id}`);
     if (pageItems.length < 100) break;
     page++;
   }

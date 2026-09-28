@@ -14,10 +14,11 @@
  * lands in provenance, and ambiguity is a loud error, never a silent pick.
  */
 
+import { parse, type Node } from "acorn";
 import { createHash } from "node:crypto";
-import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 
 /** A stub is inline `source` (tiny one-liners) or a sibling `file` of real,
  * reviewable ESM (#225 red-team R2-3); exactly one, plus the mandatory why. */
@@ -36,12 +37,49 @@ export type Closure = {
   dir: string;
 };
 
-// `from "./x"` (static), `import "./x"` (side-effect), `import("./x")` (dynamic).
-const IMPORT_RE = /(?:from\s*|import\s*\(?\s*)"\.\/([^"]+)"/g;
+function safeName(name: string): string {
+  if (!/^[A-Za-z0-9_-][A-Za-z0-9_.-]*$/.test(name) || name.includes("..")) {
+    throw new Error(`unsafe dependency basename: ${name}`);
+  }
+  return name;
+}
 
+function destination(dir: string, name: string): string {
+  const path = resolve(dir, safeName(name));
+  if (dirname(path) !== resolve(dir)) throw new Error(`dependency escapes sandbox: ${name}`);
+  return path;
+}
+
+/** Read declared sibling files only, including realpath containment (symlinks). */
+export function readCaseFile(caseDir: string, file: string): string {
+  const root = realpathSync(caseDir);
+  const path = realpathSync(resolve(root, file));
+  if (!path.startsWith(root + sep)) throw new Error(`case file escapes its directory: ${file}`);
+  return readFileSync(path, "utf8");
+}
+
+// Parse actual ESM, ignoring comments and strings; computed dynamic imports
+// cannot be enumerated and are refused. Builtins/bare/absolute imports are not
+// dependencies of captured browser chunks and must never enter the closure.
 function importsOf(text: string): string[] {
   const out: string[] = [];
-  for (const m of text.matchAll(IMPORT_RE)) out.push(m[1]);
+  const root = parse(text, { ecmaVersion: "latest", sourceType: "module" });
+  const stack: Node[] = [root];
+  while (stack.length) {
+    const node = stack.pop()! as Node & { source?: { type: string; value?: unknown } };
+    if (["ImportDeclaration", "ExportNamedDeclaration", "ExportAllDeclaration", "ImportExpression"].includes(node.type) && node.source) {
+      const source = node.source;
+      if (source.type !== "Literal" || typeof source.value !== "string" || !source.value.startsWith("./")) {
+        throw new Error("dependency must be a literal relative corpus basename");
+      }
+      out.push(safeName(source.value.slice(2)));
+    }
+    for (const value of Object.values(node)) {
+      if (Array.isArray(value)) {
+        for (const child of value) if (child && typeof child.type === "string") stack.push(child);
+      } else if (value && typeof value === "object" && "type" in value) stack.push(value as Node);
+    }
+  }
   return out;
 }
 
@@ -51,7 +89,8 @@ function importsOf(text: string): string[] {
  * candidates — resolution is never a silent pick.
  */
 export function resolveChunk(chunksDir: string, ref: string): string {
-  const names = readdirSync(chunksDir);
+  safeName(ref);
+  const names = readdirSync(chunksDir).filter((n) => /^[A-Za-z0-9_-][A-Za-z0-9_.-]*$/.test(n) && !n.includes(".."));
   if (names.includes(ref)) return ref;
   const matches = names.filter((n) => n.startsWith(`${ref}.`)).sort();
   if (matches.length === 1) return matches[0];
@@ -66,6 +105,7 @@ export function resolveChunk(chunksDir: string, ref: string): string {
 function resolveStubKeys(chunksDir: string, stubs: Record<string, Stub>): Map<string, Stub> {
   const out = new Map<string, Stub>();
   for (const [ref, stub] of Object.entries(stubs)) {
+    safeName(ref);
     let resolved = ref;
     try {
       resolved = resolveChunk(chunksDir, ref);
@@ -86,7 +126,7 @@ function stubSource(caseDir: string, name: string, stub: Stub): string {
   const has = [stub.source !== undefined, stub.file !== undefined].filter(Boolean).length;
   if (has !== 1) throw new Error(`stub "${name}" needs exactly one of "source" (inline one-liner) or "file" (sibling ESM)`);
   if (stub.source !== undefined) return stub.source;
-  return readFileSync(join(caseDir, stub.file as string), `utf8`);
+  return readCaseFile(caseDir, stub.file as string);
 }
 
 /**
@@ -99,38 +139,45 @@ export function buildSandbox(chunksDir: string, caseDir: string, entryRef: strin
   const entry = resolveChunk(chunksDir, entryRef);
   const stubMap = resolveStubKeys(chunksDir, stubs);
   const dir = mkdtempSync(join(tmpdir(), `corpus-exec-`));
-  mkdirSync(dir, { recursive: true });
-  const seen = new Set<string>();
-  const hashes: Record<string, string> = {};
-  const stubbed: string[] = [];
-  const stack = [entry];
-  while (stack.length > 0) {
-    const name = stack.pop() as string;
-    if (seen.has(name)) continue;
-    seen.add(name);
-    const stub = stubMap.get(name);
-    if (stub !== undefined) {
-      stubbed.push(name);
-      const source = stubSource(caseDir, name, stub);
-      writeFileSync(join(dir, name), source);
-      // stubs may import other chunks too (rare but legal)
-      stack.push(...importsOf(source));
-      continue;
+  try {
+    const seen = new Set<string>();
+    const hashes: Record<string, string> = {};
+    const stubbed: string[] = [];
+    const stack = [entry];
+    while (stack.length > 0) {
+      const name = safeName(stack.pop() as string);
+      if (seen.has(name)) continue;
+      seen.add(name);
+      const stub = stubMap.get(name);
+      if (stub !== undefined) {
+        stubbed.push(name);
+        const source = stubSource(caseDir, name, stub);
+        writeFileSync(destination(dir, name), source, { flag: "wx" });
+        // stubs may import other chunks too (rare but legal)
+        stack.push(...importsOf(source));
+        continue;
+      }
+      const src = destination(chunksDir, name);
+      let text: string;
+      try {
+        const real = realpathSync(src);
+        if (dirname(real) !== realpathSync(chunksDir)) throw new Error(`corpus file escapes directory: ${name}`);
+        text = readFileSync(real, `utf8`);
+      } catch (e) {
+        if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+        throw new Error(`chunk not found in corpus: ${name} (partial corpus? full-clone the vault — pipeline/README.md)`);
+      }
+      hashes[name] = createHash(`sha256`).update(text).digest(`hex`);
+      writeFileSync(destination(dir, name), text, { flag: "wx" });
+      stack.push(...importsOf(text));
     }
-    const src = join(chunksDir, name);
-    let text: string;
-    try {
-      text = readFileSync(src, `utf8`);
-    } catch {
-      throw new Error(`chunk not found in corpus: ${name} (partial corpus? full-clone the vault — pipeline/README.md)`);
-    }
-    hashes[name] = createHash(`sha256`).update(text).digest(`hex`);
-    copyFileSync(src, join(dir, name));
-    stack.push(...importsOf(text));
+    const chunks = [...seen].sort();
+    stubbed.sort();
+    return { entry, chunks, stubbed, hashes, dir };
+  } catch (e) {
+    rmSync(dir, { recursive: true, force: true });
+    throw e;
   }
-  const chunks = [...seen].sort();
-  stubbed.sort();
-  return { entry, chunks, stubbed, hashes, dir };
 }
 
 /** Closure size WITHOUT building anything — the feasibility probe. */
@@ -145,7 +192,7 @@ export function closureSize(chunksDir: string, entryRef: string, stubs: Record<s
   const seen = new Set<string>();
   const stack = [entry];
   while (stack.length > 0) {
-    const name = stack.pop() as string;
+    const name = safeName(stack.pop() as string);
     if (seen.has(name)) continue;
     seen.add(name);
     if (stubNames.has(name)) continue;

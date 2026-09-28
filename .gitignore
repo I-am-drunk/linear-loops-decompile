@@ -17,3 +17,6 @@ parity-report.md
 
 # Rust build output
 tools/parity/target/
+
+# Pin the parser used to inspect untrusted corpus dependencies.
+!tools/corpus-exec/package-lock.json

@@ -25,7 +25,13 @@ export class RpcClient {
 
   static connect(url: string, token: string, timeoutMs = 10_000): Promise<RpcClient> {
     return new Promise((resolve, reject) => {
-      const ws = new WebSocket(url);
+      const endpoint = new URL(url);
+      const loopback = endpoint.hostname === "127.0.0.1" || endpoint.hostname === "[::1]";
+      if (endpoint.protocol !== "wss:" && !(endpoint.protocol === "ws:" && loopback)) {
+        reject(new Error("remote RPC connections require wss:// (TLS)"));
+        return;
+      }
+      const ws = new WebSocket(endpoint);
       const client = new RpcClient(ws);
       const timer = setTimeout(() => { ws.close(); reject(new Error("auth timeout")); }, timeoutMs);
       ws.onopen = () => {

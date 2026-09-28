@@ -27,6 +27,12 @@ byte-match the corpus-executed expected files (icons 5/5, viewtype 2/2 in
 The progress meter
 is the coverage ledger's golden count, not merged-PR volume.**
 
+Security hardening (2026-09-28): the eight findings in the agent export are
+addressed across RPC transport, credential storage, landing-source authorization,
+and corpus execution/extraction. Operational prerequisites and the finding-to-fix
+map are in `docs/security-hardening.md`; Linux Bubblewrap and Node >=24 are now
+required to execute corpus cases. Synthetic regression coverage runs in the gates.
+
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
   #124/#129/#131/#133 closed unmerged (branches kept); coordination docs moved to

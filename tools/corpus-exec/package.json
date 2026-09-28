@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "description": "G1 golden runner: execute a corpus chunk offline and record its outputs (SPECS/ui-parity.md golden tier)",
+  "dependencies": { "acorn": "8.15.0" },
   "scripts": {
-    "test": "node --experimental-strip-types --test corpus-exec.test.ts"
+    "test": "node --experimental-strip-types --test *.test.ts"
   }
 }

@@ -14,8 +14,10 @@
 
 set -euo pipefail
 
+(cd tools/corpus-exec && npm ci --no-audit --no-fund)
+
 echo "=== tools/corpus-exec (node --test; the golden runner, G1) ==="
-node --experimental-strip-types --test tools/corpus-exec/corpus-exec.test.ts
+node --experimental-strip-types --test tools/corpus-exec/*.test.ts
 
 echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G2) ==="
 node --experimental-strip-types --test tools/coverage/coverage.test.ts

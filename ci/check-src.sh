@@ -94,4 +94,5 @@ done
 if [ "$found" = 0 ]; then
   echo "No src/* packages with tsconfig.json found — nothing to check (vacuous pass)."
 fi
+node --test .github/swarm/*.test.mjs
 echo "ci/check-src.sh: OK"

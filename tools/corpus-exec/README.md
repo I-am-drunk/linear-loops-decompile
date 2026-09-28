@@ -108,3 +108,13 @@ fixture chunks under `fixtures/` (a miniature fake corpus) with no vault
 needed. With a real corpus present, the corpus smoke re-derives one H2 theme
 value and compares it against `src/ui-theme/golden/`; without one it skips
 with a pointer.
+
+## Execution security and prerequisites
+
+Captured code runs in a separate Linux Bubblewrap process. Use Node >=24, install
+`bwrap` with user namespaces enabled, and run `npm ci` in this directory before
+using the tool. No in-process fallback is available. The worker cannot read host
+credentials, write host files, launch subprocesses or use the host network.
+Driver files are copied individually; inline helpers or use `sandbox.load()`.
+See [security boundaries](../../docs/security-hardening.md) for limits and migration
+notes. The dependency scanner uses Acorn to distinguish real imports from comments.

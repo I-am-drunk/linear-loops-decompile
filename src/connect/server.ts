@@ -7,7 +7,7 @@
 
 import type { Server, IncomingMessage } from "node:http";
 import type { Socket } from "node:net";
-import { acceptKey, encodeClose, encodeText, FrameDecoder } from "./frames.ts";
+import { acceptKey, encodeClose, encodeText, FrameDecoder, PRE_AUTH_MESSAGE_BYTES, MAX_MESSAGE_BYTES } from "./frames.ts";
 import { err, isRequest, ok } from "./jsonrpc.ts";
 
 export interface ConnContext {
@@ -38,7 +38,7 @@ export interface WsOptions {
 
 export function attachWs(server: Server, opts: WsOptions): void {
   const path = opts.path ?? "/ws";
-  server.on("upgrade", (req: IncomingMessage, socket: Socket) => {
+  server.on("upgrade", (req: IncomingMessage, socket: Socket, head: Buffer) => {
     const url = new URL(req.url ?? "/", "http://localhost");
     const key = req.headers["sec-websocket-key"];
     if (url.pathname !== path || typeof key !== "string") {
@@ -94,10 +94,11 @@ export function attachWs(server: Server, opts: WsOptions): void {
             conn.send(err(msg.id, code, message));
           });
       },
-    });
+    }, () => ctx ? MAX_MESSAGE_BYTES : PRE_AUTH_MESSAGE_BYTES);
 
     socket.on("data", (chunk) => decoder.feed(chunk));
     socket.on("error", () => { clearTimeout(authTimer); socket.destroy(); });
     socket.on("close", () => clearTimeout(authTimer));
+    if (head.length) decoder.feed(head);
   });
 }
