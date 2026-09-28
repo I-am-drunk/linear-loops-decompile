@@ -35,21 +35,24 @@ Loops, Loops-required views (Runs/Templates as they are built), and our Settings
                                                    LiteLLM/vLLM/Ollama | Anthropic
 ```
 
-## Repo layout (created by the swarm)
+## Repo layout (target; milestone tags match the component diagram)
 
 ```
 src/
-  model/       (R2)  domain types + zod schemas
-  dataplane/   (R3)  Linear API client
-  engine/      (R4)  scheduler + triggers + queue
-  runtime/     (R5)  runs + turns + activities
-  inference/   (R6)  harness settings + adapters
-  connect/     (R9)  T3 transport (server+client)
-  server/          http+ws server, static serving, settings store, audit log
-  ui/          (R7/R8) React app: shell + loops features + settings
+  model/            domain types
+  connect/    (R3)  T3 transport (server+client; landed)
+  server/     (R3)  http+ws server, static serving, settings store, audit log (landed)
+  ui-theme/   (H2)  exact generateTheme reimplementation (landed, golden-backed)
+  ui-loops-icons/   golden-backed Loops icon reimplementations (G4)
+  engine/     (R4)  scheduler + triggers + queue
+  dataplane/  (R5)  documented Linear public-API client (PAT/OAuth)
+  runtime/    (R6)  runs + turns + parts streaming, Brain interface
+  linear-chat/(R7)  golden-goose user-session chat bridge (primary brain)
+  inference/  (R6)  fallback harness settings + adapters
+  ui/         (R4+) React app: Loops shell + loops features + our Settings
 ```
 
-## Settings model (the two connects the user asked for)
+## Settings model (the three connection roles)
 
 1. **Connect Linear account (public API)** — PAT (paste → verify via `viewer` query →
    store write-only) or OAuth (device-flow placeholder). This connection derives orgs,
