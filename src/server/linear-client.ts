@@ -285,11 +285,23 @@ export class LinearClient {
       const errors = body?.errors ?? [];
       if (errors.some((e) => e.extensions?.code === "RATELIMITED")) {
         this.markExhausted(token);
-        const reset = this.lastBudget.requestsReset;
+        // Use this response's headers: another query may update lastBudget
+        // while its JSON body is being read. Only exhausted windows delay a
+        // retry; when several are exhausted, wait for the latest known reset.
+        const b = parseRateLimit(res.headers);
+        const windows = [
+          [b.requestsRemaining, b.requestsReset],
+          [b.complexityRemaining, b.complexityReset],
+          [b.endpointRequestsRemaining, b.endpointRequestsReset],
+        ].filter(([remaining]) => remaining === 0);
+        // Match markExhausted's conservative request-window fallback when
+        // the response does not identify which budget was exhausted.
+        const resets = windows.length ? windows.map(([, reset]) => reset) : [b.requestsReset];
         const now = this.opts.now();
+        const futureResets = resets.filter((reset): reset is number => reset !== undefined && reset > now);
         throw new LinearClientError("rate_limited", "Linear: RATELIMITED", {
           status: res.ok ? undefined : res.status,
-          retryAfterMs: reset !== undefined && reset > now ? reset - now : undefined,
+          retryAfterMs: futureResets.length ? Math.max(...futureResets) - now : undefined,
           rateLimit: this.budget(),
         });
       }
