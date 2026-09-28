@@ -279,7 +279,7 @@ golden-backed): the shim executes as entry over the REAL G20 target chunk,
 the golden pins the alias map (public export names + which target export
 each surfaces) and its metadata/probes regions byte-match the G20 golden's;
 component aliases stay GAP with their targets; reimplementation re-exports
-our golden-backed builder; meter: 81 chunks · 18 golden · 63 GAP).
+our golden-backed builder; meter: 81 chunks · 19 golden · 62 GAP).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
