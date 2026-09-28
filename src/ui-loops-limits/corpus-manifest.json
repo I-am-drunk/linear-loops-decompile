@@ -1,0 +1,22 @@
+{
+  "source": "G22 (#225 claim 16:19Z): src/ui-loops-limits reimplements the loop spend-limits page metadata. Evidence: LoopLimitsPage.BrXlWYB3.js export pageMetadata (matrix §C 'Credit metering surface' row) — a pure alias (`Z=V`) of UsageSubpageMetadata.DzyygjFb.js export t, which executes REAL in the golden (zero-import pure-value chunk). The golden pins the literal verbatim (own-key order; no description member), the alias identity against the loaded target module (the G21 pattern), and the entry's public export-name surface. The Component export (suspense-observer credit-metering page) is declared GAP pending T2/T3. The clean module mirrors the corpus alias structure and byte-matches through the tagged-v2 serializer.",
+  "reimplements": [
+    {
+      "chunkPrefix": "LoopLimitsPage",
+      "exports": [
+        {
+          "minified": "pageMetadata",
+          "meaning": "export{Z as pageMetadata} — Z=V, the UsageSubpageMetadata loop-spend-limits literal {id:'loop-spend-limits', title:'Usage', keywords}. Reimplemented as loopLimitsPageMetadata (an alias of loopSpendLimitsMetadata, mirroring the corpus).",
+          "evidenceLine": "src/ui-loops-limits/loop-limits-metadata.ts + golden test"
+        },
+        {
+          "minified": "Component",
+          "meaning": "export{Q as Component} — the suspense-observer credit-metering page (hydrate effects, usageLimitSpendQuery, filter/table/column state, toasts). NOT covered: render/effect-tier, declared GAP pending T2/T3.",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        }
+      ],
+      "goldens": ["loop-limits.metadata"]
+    }
+  ],
+  "goldens": ["loop-limits.metadata"]
+}

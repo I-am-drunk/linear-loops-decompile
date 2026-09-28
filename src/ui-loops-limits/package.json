@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-limits",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the loop spend-limits page metadata, golden-verified against corpus execution (G22, matrix §C credit metering)"
+}
