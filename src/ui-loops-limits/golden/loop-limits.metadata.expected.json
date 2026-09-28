@@ -1,0 +1,144 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "LoopLimitsPage.BrXlWYB3.js",
+    "closureSize": 39,
+    "stubbed": [
+      "Avatar.DGwSs61a.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "DecorativeIcon.DUPAyWLO.js",
+      "Decorators.Du6V7UQY.js",
+      "FeatureFlagIcon.DOHP4b1a.js",
+      "Flex.BS495mgi.js",
+      "FuzzyDatePicker.9NVhnGgX.js",
+      "Issue.DRYymPCa.js",
+      "Link.B583WaeA.js",
+      "ListCell.Cs-m0hHw.js",
+      "Logger.qFaEBF6-.js",
+      "SettingsList.BezKBffa.js",
+      "SettingsListProvider.CV4gTQOh.js",
+      "Text.gv7OudGa.js",
+      "Toast.BT3vaG2a.js",
+      "UsageHistoryCells.CH1c0TOd.js",
+      "UsageLimitLabels.B0UCSYIQ.js",
+      "UsageTeamDisplay.CWgjPYW9.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "nodes.DrSymAVM.js",
+      "react.Bfm_Hgom.js",
+      "resolvePromise.B8FauNXm.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "types.7f0h45Sh.js",
+      "usageLimitSpendQuery.U-MPSaPj.js",
+      "useComputed.Vpsf1omy.js",
+      "useFlag.D9K3DJCO.js",
+      "useScreenSize.BOSsj2U3.js",
+      "useStore.BpZDR8VN.js",
+      "useStoredState.IyBPpDeR.js",
+      "useUsageLimitGroupPeriod.6-QJ10ya.js",
+      "useUsageLimitTableFilter.DeovAaha.js",
+      "useUsageVisibilityRefresh.BwqEubJb.js",
+      "useUser.CGqqjeJr.js",
+      "useViewFilters.6E3JTpzV.js"
+    ],
+    "chunkHashes": {
+      "LoopLimitsPage.BrXlWYB3.js": "aa0e75c1c460dd49ac12a4c002f3111977614daa873890bc8192c839721705ea",
+      "UsageSubpageMetadata.DzyygjFb.js": "270f27aba85bfe5e5f040986186042fabcd21070771d557f3bd484c7423f60e4",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "pageMetadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "loop-spend-limits"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Usage"
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "ai usage spend limits caps budget cost billing loops agent automation custom"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            },
+            {
+              "tag": "string",
+              "value": "keywords"
+            }
+          ]
+        }
+      },
+      {
+        "key": "aliasIdentity",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "pageMetadataIsUsageSubpageT",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownExportNames",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "Component"
+            },
+            {
+              "tag": "string",
+              "value": "pageMetadata"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "unit": "ui-loops-limits/loopLimitsPageMetadata",
+  "chunk": "LoopLimitsPage.BrXlWYB3.js",
+  "stubs": {
+    "react.Bfm_Hgom.js": {
+      "file": "stubs/react.mjs",
+      "why": "Module-eval namespace interop; inert namespace, member reads throw (G13/G18/G20 precedent)."
+    },
+    "mobxreactlite.BAMBvwfh.js": {
+      "file": "stubs/mobxreactlite.mjs",
+      "why": "Five module-eval observer wraps; identity, never rendered (G11 verbatim)."
+    },
+    "suspenseObserver.Cawdgu7K.js": {
+      "file": "stubs/suspense-observer.mjs",
+      "why": "One module-eval page-component wrap; identity, never rendered (G14/G18/G20 seam)."
+    },
+    "Avatar.DGwSs61a.js": {
+      "file": "stubs/avatar.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Issue.DRYymPCa.js": {
+      "file": "stubs/issue.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/contextualmenuactions.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "nodes.DrSymAVM.js": {
+      "file": "stubs/nodes.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Text.gv7OudGa.js": {
+      "file": "stubs/text.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "FeatureFlagIcon.DOHP4b1a.js": {
+      "file": "stubs/featureflagicon.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "types.7f0h45Sh.js": {
+      "file": "stubs/types.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Decorators.Du6V7UQY.js": {
+      "file": "stubs/decorators.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "UsageLimitLabels.B0UCSYIQ.js": {
+      "file": "stubs/usagelimitlabels.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Logger.qFaEBF6-.js": {
+      "file": "stubs/logger.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Flex.BS495mgi.js": {
+      "file": "stubs/flex.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "DecorativeIcon.DUPAyWLO.js": {
+      "file": "stubs/decorativeicon.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "resolvePromise.B8FauNXm.js": {
+      "file": "stubs/resolvepromise.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useStore.BpZDR8VN.js": {
+      "file": "stubs/usestore.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Toast.BT3vaG2a.js": {
+      "file": "stubs/toast.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useComputed.Vpsf1omy.js": {
+      "file": "stubs/usecomputed.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useScreenSize.BOSsj2U3.js": {
+      "file": "stubs/usescreensize.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useUser.CGqqjeJr.js": {
+      "file": "stubs/useuser.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "Link.B583WaeA.js": {
+      "file": "stubs/link.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useFlag.D9K3DJCO.js": {
+      "file": "stubs/useflag.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useStoredState.IyBPpDeR.js": {
+      "file": "stubs/usestoredstate.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useViewFilters.6E3JTpzV.js": {
+      "file": "stubs/useviewfilters.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "ListCell.Cs-m0hHw.js": {
+      "file": "stubs/listcell.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "SettingsList.BezKBffa.js": {
+      "file": "stubs/settingslist.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "SettingsListProvider.CV4gTQOh.js": {
+      "file": "stubs/settingslistprovider.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "usageLimitSpendQuery.U-MPSaPj.js": {
+      "file": "stubs/usagelimitspendquery.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useUsageVisibilityRefresh.BwqEubJb.js": {
+      "file": "stubs/useusagevisibilityrefresh.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useUsageLimitTableFilter.DeovAaha.js": {
+      "file": "stubs/useusagelimittablefilter.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "useUsageLimitGroupPeriod.6-QJ10ya.js": {
+      "file": "stubs/useusagelimitgroupperiod.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "UsageHistoryCells.CH1c0TOd.js": {
+      "file": "stubs/usagehistorycells.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "UsageTeamDisplay.CWgjPYW9.js": {
+      "file": "stubs/usageteamdisplay.mjs",
+      "why": "Component/hook-body-only (the declared-GAP Component export); linking-only, every use throws."
+    },
+    "FuzzyDatePicker.9NVhnGgX.js": {
+      "file": "stubs/fuzzy-date-picker.mjs",
+      "why": "Bare side-effect import in the entry; empty module (the real chunk is a date-picker UI bundle)."
+    }
+  },
+  "drive": {
+    "file": "loop-limits-metadata-driver.mjs",
+    "exportMeaning": "export{Q as Component, Z as pageMetadata} \u2014 Z is a pure alias (`Z=V`) of UsageSubpageMetadata.DzyygjFb.js export t: the loop-spend-limits metadata literal {id:'loop-spend-limits', title:'Usage', keywords:'ai usage spend limits caps budget cost billing loops agent automation custom'}. The metadata chunk (zero imports) executes REAL; the driver pins the literal verbatim + the alias identity against the loaded target (G21 pattern) + the entry's public export-name surface. Q is the suspense-observer credit-metering page (hydration effects, usageLimitSpendQuery, filter/table state) \u2014 declared GAP pending T2/T3."
+  },
+  "notes": "G22: first golden on matrix \u00a7C (Credit metering surface row). The pattern datum: a page chunk whose metadata export is a pure alias of a pure-value sibling \u2014 the golden costs one driver + a mechanical linking-stub surface (32 seams generated from the import map, every use throwing). jsx-runtime executes real (module-eval factory call `J=d()`); the entry's own module-eval work (column-config factory q, sx tables, label arrays) is untouched module-local state the driver never reads."
+}
