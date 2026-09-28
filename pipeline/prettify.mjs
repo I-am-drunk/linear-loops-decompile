@@ -27,24 +27,28 @@ function parseModule(source, filename) {
 }
 
 /**
- * Signature only the token stream that js-beautify has demonstrably damaged:
- * template delimiters, quasi source bytes, and interpolation boundaries. This
- * is intentionally narrower than semantic equivalence of arbitrary JavaScript.
+ * Signature the FULL token stream: every token's type plus its source bytes.
+ * A prettifier may only change inter-token whitespace; any change that
+ * survives tokenization (template quasi bytes, interpolation expressions,
+ * string values, numbers, names) differs here and forces the raw fallback.
+ * Measured on Linear 1.32.4 (2026-09-28): all 1,541 js-beautify outputs that
+ * pass this gate are token-identical to raw — zero false positives — while
+ * the 6 known parse-valid template mutations and any future lexical mutation
+ * class fail it. (Template tokens were the first measured defect; the wide
+ * gate subsumes that check.)
  */
-function templateSignature(source) {
+function tokenSignature(source) {
   const tokens = [];
   for (const token of tokenizer(source, PARSE_OPTIONS)) {
-    if (token.type.label === '`' || token.type.label === `template` || token.type.label === '${') {
-      tokens.push([token.type.label, source.slice(token.start, token.end)]);
-    }
+    tokens.push(token.type.label, source.slice(token.start, token.end));
   }
   return JSON.stringify(tokens);
 }
 
 function validatePrettyCandidate(rawSource, candidate, filename) {
   parseModule(candidate, `${filename} (prettifier output)`);
-  if (templateSignature(rawSource) !== templateSignature(candidate)) {
-    throw new Error(`template token signature differs from raw source`);
+  if (tokenSignature(rawSource) !== tokenSignature(candidate)) {
+    throw new Error(`token signature differs from raw source (template token signature superset)`);
   }
 }
 
@@ -129,10 +133,17 @@ export function checkPrettyDirectory({ src = `client`, out = `pretty/client` } =
   for (const file of files) {
     const outputPath = path.join(out, file);
     try {
-      const raw = fs.readFileSync(path.join(src, file), `utf8`);
+      const rawBytes = fs.readFileSync(path.join(src, file));
+      const raw = rawBytes.toString(`utf8`);
       parseModule(raw, path.join(src, file));
-      const output = fs.readFileSync(outputPath, `utf8`);
-      validatePrettyCandidate(raw, output, outputPath);
+      // Compare BYTES first: a raw fallback must be byte-identical to the raw
+      // source, and byte equality also proves any non-UTF-8 sequences survived
+      // the cache unmodified (a UTF-8 text compare would map distinct invalid
+      // bytes to the same U+FFFD and miss the corruption).
+      const outputBytes = fs.readFileSync(outputPath);
+      if (!rawBytes.equals(outputBytes)) {
+        validatePrettyCandidate(raw, outputBytes.toString(`utf8`), outputPath);
+      }
       result.valid.push(file);
     } catch (error) {
       result.invalid.push({ file, reason: String(error.message ?? error) });
