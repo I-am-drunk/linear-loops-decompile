@@ -113,7 +113,16 @@ golden-backed chunk LANDED 2026-09-28 (LoopViewType, matrix §A loop view
 types: zero-import pure-value chunk, first real DRIVE-mode golden — the
 driver projects the module surface: enum + label map + validator probes;
 with G4 invoke and G5 render this completes a worked example of all three
-case modes; meter: 78 chunks · 3 golden · 75 GAP). H3 family expansion
+case modes; meter: 78 chunks · 3 golden · 75 GAP). G11 fourth golden-backed
+chunk LANDED 2026-09-28 (AgentGuidanceSettings, matrix §F Agent guidance —
+the FIRST golden outside §A: drive-mode projection of the settings-metadata
+factory export (both scope objects' copy verbatim + the
+applicable-over-agentAppUsers predicate probed on six fixtures + the
+non-'team' fall-through), all seven import seams stubbed fail-loud, clean
+reimplementation in src/ui-settings-meta byte-matched through the declared
+driver; the mobx component export is declared out of T1 scope in the
+manifest (1-of-2 export denominator); meter: 78 chunks · 4 golden · 74 GAP).
+H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

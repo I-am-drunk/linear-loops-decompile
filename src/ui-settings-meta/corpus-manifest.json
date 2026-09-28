@@ -1,0 +1,22 @@
+{
+  "source": "G11 (#225 claim, sess_01a0e807-73d8-75d1-927c-042f52ddd64e): src/ui-settings-meta reimplements the agent-guidance settings-metadata factory. Evidence: AgentGuidanceSettings.BgeC_uVo.js (matrix \u00a7F 'Agent guidance' row), executed from the RAW tree via a drive-mode driver with all seven import seams stubbed fail-loud (the factory reads none of them; the closure is the entry chunk alone). The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver). The chunk's component export `t` renders composite children (out of T1 scope) \u2014 the ledger's export denominator below records 1 of 2 exports covered.",
+  "reimplements": [
+    {
+      "chunkPrefix": "AgentGuidanceSettings",
+      "exports": [
+        {
+          "minified": "n",
+          "meaning": "export{p as n} \u2014 p(scope) is the settings-metadata factory: scope === 'team' ? {id:'team-agent-guidance', title:'Additional guidance', \u2026} : {id:'workspace-agent-guidance', title:'Workspace guidance', \u2026}, each with an applicable predicate over organization.agentAppUsers (some(u => u.isActive && !!u.oauthClientId)); reimplemented as agentGuidanceSettingsMetadata",
+          "evidenceLine": "src/ui-settings-meta/agent-guidance-settings-metadata.ts + golden test"
+        },
+        {
+          "minified": "t",
+          "meaning": "export{m as t} \u2014 the mobx-wrapped settings page component; renders composite children ($P/ms from ContextualMenuActions, useUser store reads) \u2014 NOT T1-coverable, stays GAP until the T2 renderer; deliberately not reimplemented in this slice",
+          "evidenceLine": "out of golden scope \u2014 see corpus-manifest source note"
+        }
+      ],
+      "goldens": ["agent-guidance-settings.metadata"]
+    }
+  ],
+  "goldens": ["agent-guidance-settings.metadata"]
+}

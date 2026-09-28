@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-meta",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementations of Settings-surface metadata chunks, golden-verified against corpus execution (G11, matrix §F agent guidance)"
+}

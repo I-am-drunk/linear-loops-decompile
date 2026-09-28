@@ -1,0 +1,39 @@
+{
+  "unit": "ui-settings-meta/agentGuidanceSettingsMetadata",
+  "chunk": "AgentGuidanceSettings",
+  "stubs": {
+    "Issue.DRYymPCa.js": {
+      "file": "stubs/issue.mjs",
+      "why": "Sv/da/dh/vv (permission enums + org URL helper) are read only inside the out-of-scope component export `t`; fail-loud bombs so drift that makes the metadata factory touch them throws."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/contextual-menu-actions.mjs",
+      "why": "$P/hs/ms are element types + a rules reader used only inside the out-of-scope component. Full chunk name pinned: the `ContextualMenuActions` prefix is ambiguous in this corpus (Bcp3eWHc/Dlg9Oa2U hash-rotated duplicates); the entry chunk's import literal names Dlg9Oa2U. Fail-loud bombs."
+    },
+    "jsx-runtime.BH9nBM82.js": {
+      "file": "stubs/jsx-runtime.mjs",
+      "why": "the chunk runs `var f = s()` at module level, so the export must be callable during import; the returned jsx/jsxs runtime is used only inside out-of-scope component bodies and is a fail-loud bomb."
+    },
+    "lib.3x4I7cm8.js": {
+      "file": "stubs/lib.mjs",
+      "why": "`n` (Link) appears only as an element type inside the out-of-scope descriptionElement. Full chunk name pinned: the `lib` prefix is ambiguous (3x4I7cm8/DHnrUM56); the entry chunk's import literal names 3x4I7cm8. Fail-loud bomb."
+    },
+    "mobxreactlite.BAMBvwfh.js": {
+      "file": "stubs/mobxreactlite.mjs",
+      "why": "the chunk runs `m = l(component)` at module level; `l` (observer) must accept and return the component for the export map to build. Identity wrapper; the component is never invoked by this golden."
+    },
+    "useUser.CGqqjeJr.js": {
+      "file": "stubs/use-user.mjs",
+      "why": "called only inside the out-of-scope component export; fail-loud."
+    },
+    "finishSentryAuth.Cd-7zL4s.js": {
+      "file": "stubs/finish-sentry-auth.mjs",
+      "why": "`c` (permission-message formatter) is read only inside the out-of-scope component export; fail-loud."
+    }
+  },
+  "notes": "G11: first golden on a matrix \u00a7F Settings surface (Agent guidance row, AgentGuidanceSettings.BgeC_uVo.js). The observed export `n` (chunk-local `p`) is a pure metadata factory: scope === 'team' ? team metadata : workspace metadata, each carrying id/title/description/keywords copy verbatim plus an `applicable` predicate over organization.agentAppUsers (`some(u => u.isActive && !!u.oauthClientId)`). Drive mode on the G6 pattern because the surface is two objects with a function-valued member: the driver projects the data keys verbatim (own-key order preserved) and probes `applicable` on six fixture combinations pinning both conjuncts and the `some` semantics (active+clientId the only true; inactive, null clientId, empty-string clientId — the !! coercion, empty list, and a mixed list where one user qualifies). The scope conditional's fall-through (any non-'team' value \u2192 workspace metadata) is pinned by id. The chunk's other export `t` (mobx component) renders composite children — not T1-coverable, declared out of scope in corpus-manifest.json. All seven import seams are stubbed fail-loud: the factory reads none of them, so the closure is the entry chunk alone and any corpus drift that adds a real read throws. No theme/ambient DOF: pure string/boolean values, one case.",
+  "drive": {
+    "file": "agent-guidance-driver.mjs",
+    "exportMeaning": "export{p as n, m as t} \u2014 p (exported as n) is the settings-metadata factory ((scope) => metadata objects with id 'team-agent-guidance'/'workspace-agent-guidance'); m (exported as t) is the mobx-wrapped settings page component, out of golden scope. The driver returns {team: {data, applicable-probes}, workspace: {data, applicable-probes}, nonTeamScopeFallsThroughToWorkspaceId}."
+  }
+}
