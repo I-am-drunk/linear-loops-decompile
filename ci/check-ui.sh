@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 # ci/check-ui.sh — the UI parity gate (SPECS/ui-parity.md).
 #
-# 1. cargo test the parity tool itself.
-# 2. When the corpus (pipeline/corpus, via the vault) AND our UI facts
-#    (src/ui/ui-facts.json) are both present: extract the reference and run
-#    the check. Without either: vacuous pass with a notice (mirrors
-#    ci/check-src.sh's no-src stance; the corpus is local-only by design).
+# Corpus-free legs (run on EVERY invocation — a green gate always attests
+# something, #225 D3):
+#   1. tools/corpus-exec node tests (the golden runner, G1).
+#   2. tools/coverage node tests + `coverage check` (the ledger joins
+#      matrix x corpus-manifests x goldens; consistency errors are red, G2).
+# Corpus/toolchain-gated legs (labeled skips, never silent):
+#   3. cargo test the parity tool itself.
+#   4. When the corpus (pipeline/corpus, via the vault) AND our UI facts
+#      (src/ui/ui-facts.json) are both present: extract the reference and run
+#      the check.
 
 set -euo pipefail
 
 echo "=== tools/corpus-exec (node --test; the golden runner, G1) ==="
 node --experimental-strip-types --test tools/corpus-exec/corpus-exec.test.ts
+
+echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G2) ==="
+node --experimental-strip-types --test tools/coverage/coverage.test.ts
+node --experimental-strip-types tools/coverage/main.ts check --repo .
 
 if ! command -v cargo >/dev/null 2>&1; then
   if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
