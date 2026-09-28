@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-elicitation-wire",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the elicitation-responses mutation caller, golden-verified against corpus execution (G15, matrix §D Elicitations wire)"
+}

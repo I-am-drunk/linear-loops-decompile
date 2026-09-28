@@ -1,0 +1,286 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "aiConversationSendElicitationResponsesMutation.CEPAjw5J.js",
+    "closureSize": 4,
+    "stubbed": [
+      "Issue.DRYymPCa.js",
+      "types.7f0h45Sh.js"
+    ],
+    "chunkHashes": {
+      "aiConversationSendElicitationResponsesMutation.CEPAjw5J.js": "2eb2a6af08cfb8b7d298a6c31488cb0c3d5c15a4b0202cf001acd460b095fec3",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "mutateReturnPassedThrough",
+        "value": {
+          "tag": "string",
+          "value": "sentinel"
+        }
+      },
+      {
+        "key": "calls",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "document",
+                  "value": {
+                    "tag": "string",
+                    "value": "\n    mutation AiConversationSendElicitationResponses($input: AiConversationSendElicitationResponsesInput!) {\n      aiConversationSendElicitationResponses(input: $input) {\n        success\n        lastSyncId\n        aiConversation {\n          id\n        }\n        userTurn {\n          id\n        }\n        assistantTurn {\n          id\n        }\n      }\n    }\n  "
+                  }
+                },
+                {
+                  "key": "variables",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "input",
+                        "value": {
+                          "tag": "object",
+                          "prototype": "object",
+                          "properties": [
+                            {
+                              "key": "conversationId",
+                              "value": {
+                                "tag": "string",
+                                "value": "conv-1"
+                              }
+                            },
+                            {
+                              "key": "extraTopLevel",
+                              "value": {
+                                "tag": "string",
+                                "value": "kept"
+                              }
+                            },
+                            {
+                              "key": "responses",
+                              "value": {
+                                "tag": "array",
+                                "values": [
+                                  {
+                                    "tag": "object",
+                                    "prototype": "object",
+                                    "properties": [
+                                      {
+                                        "key": "elicitationId",
+                                        "value": {
+                                          "tag": "string",
+                                          "value": "el-1"
+                                        }
+                                      },
+                                      {
+                                        "key": "data",
+                                        "value": {
+                                          "tag": "object",
+                                          "prototype": "object",
+                                          "properties": [
+                                            {
+                                              "key": "multipleChoice",
+                                              "value": {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "selectedOptionIndex",
+                                                    "value": {
+                                                      "tag": "number",
+                                                      "value": "2"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "object",
+                                    "prototype": "object",
+                                    "properties": [
+                                      {
+                                        "key": "elicitationId",
+                                        "value": {
+                                          "tag": "string",
+                                          "value": "el-2"
+                                        }
+                                      },
+                                      {
+                                        "key": "data",
+                                        "value": {
+                                          "tag": "object",
+                                          "prototype": "object",
+                                          "properties": [
+                                            {
+                                              "key": "confirmation",
+                                              "value": {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "confirmed",
+                                                    "value": {
+                                                      "tag": "boolean",
+                                                      "value": true
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "object",
+                                    "prototype": "object",
+                                    "properties": [
+                                      {
+                                        "key": "elicitationId",
+                                        "value": {
+                                          "tag": "string",
+                                          "value": "el-3"
+                                        }
+                                      },
+                                      {
+                                        "key": "data",
+                                        "value": {
+                                          "tag": "object",
+                                          "prototype": "object",
+                                          "properties": [
+                                            {
+                                              "key": "entitySelection",
+                                              "value": {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "selectedEntityIds",
+                                                    "value": {
+                                                      "tag": "array",
+                                                      "values": [
+                                                        {
+                                                          "tag": "string",
+                                                          "value": "ent-a"
+                                                        },
+                                                        {
+                                                          "tag": "string",
+                                                          "value": "ent-b"
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "object",
+                                    "prototype": "object",
+                                    "properties": [
+                                      {
+                                        "key": "elicitationId",
+                                        "value": {
+                                          "tag": "string",
+                                          "value": "el-4"
+                                        }
+                                      },
+                                      {
+                                        "key": "data",
+                                        "value": {
+                                          "tag": "object",
+                                          "prototype": "object",
+                                          "properties": [
+                                            {
+                                              "key": "mcpServerConnection",
+                                              "value": {
+                                                "tag": "object",
+                                                "prototype": "object",
+                                                "properties": [
+                                                  {
+                                                    "key": "integrationId",
+                                                    "value": {
+                                                      "tag": "string",
+                                                      "value": "int-9"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "unknownKind",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "name",
+              "value": {
+                "tag": "string",
+                "value": "Error"
+              }
+            },
+            {
+              "key": "message",
+              "value": {
+                "tag": "string",
+                "value": "Unreachable case: [object Object]"
+              }
+            },
+            {
+              "key": "isError",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

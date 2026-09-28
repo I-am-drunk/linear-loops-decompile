@@ -197,13 +197,23 @@ export's module-eval displayName; six declared stubs incl. the
 suspenseObserver module-eval wrapper (a new seam in the pattern library);
 reimplementation joins src/ui-settings-guidance with per-chunk goldens; the
 route component body stays honest GAP; meter: 78 chunks · 11 golden ·
-67 GAP). G16 thirteenth
+67 GAP). G15 thirteenth
+golden-backed chunk LANDED 2026-09-28 (src/ui-loops-elicitation-wire:
+aiConversationSendElicitationResponsesMutation — the FIRST golden on the §D
+chat-substrate WIRE layer (Elicitations row, issue #14 adjacency): drive-mode
+with a recording fake client; pins the full mutation document bytes, all four
+kind branches incl. the hardcoded confirmed:true quirk, per-response
+{elicitationId,data} narrowing vs top-level input passthrough, and the REAL
+UnreachableCaseError default; enum + gql-tag stubs pinned verbatim from raw
+source, throw-on-unpinned; matrix Elicitations row gains the caller chunk as
+evidence per the ledger's fix direction; meter: 79 chunks · 12 golden ·
+67 GAP). G16 fourteenth
 golden-backed chunk LANDED 2026-09-28 (src/ui-agent-chat-banner:
 useHydrateAgentConversations export n — the 'Editing message' banner, third
 §D golden (Conversation list/hydration row): the G9 hook-free flatten with
 the edit-icon seam as a declared marker; exports r/t (editing-state hook,
 hydrate effect) stay declared GAP regions behind linking-only throwing
-stubs; clean reimplementation byte-matching; meter: 78 chunks · 12 golden ·
+stubs; clean reimplementation byte-matching; meter: 79 chunks · 13 golden ·
 66 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
