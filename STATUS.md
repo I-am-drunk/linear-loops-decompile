@@ -3,10 +3,20 @@
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: R3 (skeleton). FREEZE (2026-09-27, user directive issue #157): no new
-UI/server feature code until the audit (docs/audit-2026-09-27.md) is digested
-and the CLI parity harness is planned. Safe work: audits, corpus extraction,
-docs corrections, the generateTheme reimplementation, harness planning.**
+**Phase: FREEZE — EXIT PROPOSED (2026-09-28), awaiting the owner's word on
+issue #157. The freeze is a user directive, so no PR can lift it; this banner
+records that every PLAN.md exit condition now verifiably holds on main
+(audited in #225 and reproduced by three sessions on PR #256): (1) #171
+parity check in ci/check-ui.sh incl. the theme-VALUES drift family (#224);
+(2) #168 ui-theme goldens 13/13; (3) G1 corpus-exec + G2 coverage ledger
+landed, corpus-free leg never vacuous; (4) a surface rebuilt end-to-end
+golden-green — src/ui-loops-icons, golden-backed on the ledger; (5) R3.4
+archived (tag `archive/r3.4-ui-shell`). Until the owner acks: the freeze-safe
+work list stands (audits, corpus extraction, docs, goldens, harness). After
+the ack: R4.1 (corrected PascalCase trigger model) becomes claimable, and
+EVERY feature slice is per-row golden-gated (SPECS/ui-parity.md Tier 1) and
+scope-checked against SPECS/product-contract.md. The progress meter is the
+coverage ledger's golden count, not merged-PR volume.**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
@@ -178,16 +188,24 @@ fallback-only. This changes scope wording and architecture, not the EXACT UI/beh
 bar for the Loops surfaces or the public-code legal line. Binding detail:
 `SPECS/product-contract.md`; boot-level rule: `AGENTS.md`.
 
-Later: freeze exit per PLAN.md H track -> R4.1 redo (corrected PascalCase
-trigger model) -> R4/R5/R6 slices -> matrix rows to exact parity, each gated by
-`parity check`.
+Next (once the owner acks the exit on #157, per the banner): R4.1 redo
+(corrected PascalCase trigger model) -> R4/R5/R6 slices -> matrix rows to
+exact parity. Every feature slice ships with its corpus-executed golden(s)
+and moves the ledger, answers the four product-contract questions in its PR,
+and is gated by `parity check` (Tier-2 drift) + `coverage check` (Tier-1
+goldens). #155 (R5.1 dataplane) unfreezes with the rest: its two blocking
+findings are fixed on-branch — it needs a re-slice review against the merged
+docs-site rate-limit facts, not a rewrite.
 
-(Contradiction fixed 2026-09-27: this section previously offered R4.1 as
-unassigned work while the freeze banner above forbade feature code.)
+More goldens are always claimable now (freeze-safe): the ledger names every
+GAP chunk; the G4/G5 pattern (case file + hand-verified golden + per-entry
+manifest + reimplementation) is the template.
 
 Standing work, always valid: review open PRs (AGENTS.md); UI parity bar (issue
-#20); golden-goose next steps after the trace (issue #14): E1 live experiment +
-minimal sync-reader slice when R6 lands.
+#20); golden-goose next steps after the trace (issue #14): **E1 live
+experiment — the one user-gated item; claimed 2026-09-27 22:08Z, no result
+posted since, so the stale-claim rule applies: any session with the user
+present may reclaim it on #14** + minimal sync-reader slice when R6 lands.
 
 Infra note: GitHub Actions is billing-locked; the gate runs locally:
 `bash ci/check-src.sh`.
