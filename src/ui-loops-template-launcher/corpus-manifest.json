@@ -1,0 +1,21 @@
+{
+  "source": "G22 (#225 claim, this slice): src/ui-loops-template-launcher reimplements the template-card presenter statics. Evidence: useLoopTemplateLauncher.O9-_gagH.js export r (matrix \u00a7A 'Template library + launcher' row), executed from the RAW tree in drive mode; real chunks in the closure are the entry, ColorConverter (the corpus color math \u2014 provenance chains to the H2/src/ui-theme goldens), UnreachableCaseError, and react/rolldown; the other seventeen import seams are declared throw-on-use linking bombs (the driven statics touch none of them). The golden pins the full trigger-copy switch (Hourly/Daily/Weekly + On new issue/On triage/On issue change + both UnreachableCaseError throw paths) and the icon-color pipeline (toCss('RGB', fromCss(theme.color[color]))) on hex and lch() fixtures plus the fromCss [0,0,0] fallback for an out-of-grammar format. Exports n (draft/conversation builders \u2014 model writes, mobx actions) and t (the launcher hook \u2014 useState/useRef/Toast) are NOT covered (T2/store tier) and stay honest GAP regions.",
+  "reimplements": [
+    {
+      "chunkPrefix": "useLoopTemplateLauncher",
+      "exports": [
+        {
+          "minified": "r",
+          "meaning": "export{G as r} \u2014 the template-card presenter statics: triggerLabel (schedule cadence + issue-event copy, UnreachableCaseError defaults) and iconColor (RGB round-trip through the corpus color math); reimplemented as TemplateCardPresenter, composing our golden-backed src/ui-theme fromCss/toCss. Exports n/t of the same chunk are NOT covered (builder/hook tier).",
+          "evidenceLine": "src/ui-loops-template-launcher/template-card-presenter.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "template-presenter.copy"
+      ]
+    }
+  ],
+  "goldens": [
+    "template-presenter.copy"
+  ]
+}

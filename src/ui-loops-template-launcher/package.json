@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-template-launcher",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the loop-template card presenter statics, golden-verified against corpus execution (G22, matrix §A Template library + launcher)"
+}

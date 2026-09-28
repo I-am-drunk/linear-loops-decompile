@@ -260,7 +260,19 @@ three applicable closures probed (flag seam scripted both ways + flag-key
 identity, the two-feature conjunction pinned incl. agentAutomations-first
 ask order, environments granted/denied); observer components declared GAP
 (T2/T3); meter: 81 chunks · 17 golden ·
-64 GAP). H3 family expansion
+64 GAP). G22 nineteenth golden-backed chunk LANDED 2026-09-28
+(src/ui-loops-template-launcher: useLoopTemplateLauncher export r — first
+golden on the §A Template library + launcher row: the template-card
+presenter statics in drive mode; pins the full trigger-copy switch
+(Hourly/Daily/Weekly + On new issue/On triage/On issue change + both
+UnreachableCaseError throw paths executing REAL) and the icon-color pipeline
+(toCss RGB ∘ fromCss on hex + lch() fixtures, plus the fromCss [0,0,0]
+fallback for out-of-grammar formats — real corpus ColorConverter executes,
+provenance chains to the H2 goldens; the reimplementation composes our
+golden-backed src/ui-theme color math); seventeen linking seams as declared
+throw-on-use bombs (the G20 wide-linking pattern); exports n/t (builders,
+launcher hook) honest GAP pending T2/store tiers; meter: 81 chunks ·
+18 golden · 63 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
