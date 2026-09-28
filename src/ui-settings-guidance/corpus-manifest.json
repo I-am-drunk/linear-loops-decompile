@@ -1,5 +1,5 @@
 {
-  "source": "G11 (#225 claim 2026-09-28 13:03Z): src/ui-settings-guidance reimplements the agent-guidance settings-metadata factory. Evidence: AgentGuidanceSettings.BgeC_uVo.js (matrix \u00a7F 'Agent guidance' row), executed from the RAW tree via a drive-mode driver (the metadata carries a function member, so the driver projects the applicable predicate against five declared org fixtures spanning its condition; all seven import seams are linking-only throw-on-use stubs). The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver). The chunk's OTHER export (t, the mobx-observer settings component) is NOT covered: it needs the T3 store-fixture tier and remains a gap. G14 (#225 claim 2026-09-28 13:5xZ, sess_01a0e807-73d8-75d1-927c-042f52ddd64e): the package also reimplements the team-agent-skills page metadata. Evidence: TeamAgentSkillsSettingsPage.C2EeluTr.js (matrix \u00a7F 'Team agent settings' row), executed from the RAW tree via a drive-mode driver projecting the pure module-level pageMetadata literal verbatim plus the Component export's module-eval displayName; six declared stubs (three module-eval wrappers return values \u2014 jsx-runtime factory, suspenseObserver, mobx \u2014 the rest throw-on-use). The route component body (export Component) is NOT covered: composite render, out of T1 scope.",
+  "source": "G11 (#225 claim 2026-09-28 13:03Z): src/ui-settings-guidance reimplements the agent-guidance settings-metadata factory. Evidence: AgentGuidanceSettings.BgeC_uVo.js (matrix \u00a7F 'Agent guidance' row), executed from the RAW tree via a drive-mode driver (the metadata carries a function member, so the driver projects the applicable predicate against five declared org fixtures spanning its condition; all seven import seams are linking-only throw-on-use stubs). The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver). The chunk's OTHER export (t, the mobx-observer settings component) is NOT covered: it needs the T3 store-fixture tier and remains a gap. G14 (#225 claim 2026-09-28 13:5xZ, sess_01a0e807-73d8-75d1-927c-042f52ddd64e): the package also reimplements the team-agent-skills page metadata. Evidence: TeamAgentSkillsSettingsPage.C2EeluTr.js (matrix \u00a7F 'Team agent settings' row), executed from the RAW tree via a drive-mode driver projecting the pure module-level pageMetadata literal verbatim plus the Component export's module-eval displayName; six declared stubs (three module-eval wrappers return values \u2014 jsx-runtime factory, suspenseObserver, mobx \u2014 the rest throw-on-use). The route component body (export Component) is NOT covered: composite render, out of T1 scope. G18 addendum: the package also reimplements TeamAgentsSettingsPage pageMetadata \u2014 the first jsx-fragment metadata golden (declared fragment projection + DocsLink seam marker) and the first cross-chunk provenance chain (the real G11 factory executes inside the golden; our reimplementation calls our own golden-backed factory). This recipe unblocks CodingAgentSettingsPage.lcMyXnM7.js.",
   "reimplements": [
     {
       "chunkPrefix": "AgentGuidanceSettings",
@@ -10,7 +10,9 @@
           "evidenceLine": "src/ui-settings-guidance/agent-guidance-metadata.ts + golden test"
         }
       ],
-      "goldens": ["agent-guidance-metadata"]
+      "goldens": [
+        "agent-guidance-metadata"
+      ]
     },
     {
       "chunkPrefix": "TeamAgentSkillsSettingsPage",
@@ -26,8 +28,37 @@
           "evidenceLine": "displayName pinned in the golden; body out of scope \u2014 see source note"
         }
       ],
-      "goldens": ["team-agent-skills.metadata"]
+      "goldens": [
+        "team-agent-skills.metadata"
+      ]
+    },
+    {
+      "chunkPrefix": "TeamAgentsSettingsPage",
+      "exports": [
+        {
+          "minified": "pageMetadata",
+          "meaning": "export{_ as pageMetadata} \u2014 the team-agents settings page metadata: a module-eval literal with a descriptionElement JSX fragment (description text + ' ' + DocsLink(href=Issue.mi)) and a sections map whose agentGuidance member is the OUTPUT of the golden-backed AgentGuidanceSettings factory called with 'team' (cross-chunk provenance chain \u2014 the real factory executes in the golden). Reimplemented as teamAgentsPageMetadata(docsLinkSeam), calling our golden-backed agentGuidanceSettingsMetadata('team').",
+          "evidenceLine": "src/ui-settings-guidance/team-agents-metadata.ts + golden test"
+        },
+        {
+          "minified": "Component",
+          "meaning": "export{y as Component} \u2014 the suspense-observer route page component (useRouteData + useActiveAgents store reads). NOT covered: render/effect-tier, stays GAP pending T2 (the G11 denominator precedent).",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        },
+        {
+          "minified": "TeamAgentsSettingsPage",
+          "meaning": "export{v as TeamAgentsSettingsPage} \u2014 the inner suspense-observer page component (useActiveAgents store reads, ActiveAgentsSection/AgentGuidanceSettings component rendering). NOT covered: render/effect-tier, stays GAP pending T2.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        }
+      ],
+      "goldens": [
+        "team-agents.metadata"
+      ]
     }
   ],
-  "goldens": ["agent-guidance-metadata", "team-agent-skills.metadata"]
+  "goldens": [
+    "agent-guidance-metadata",
+    "team-agent-skills.metadata",
+    "team-agents.metadata"
+  ]
 }
