@@ -244,6 +244,51 @@ test("429 backfills a missing endpoint reset from Retry-After and gates the next
   assert.equal(calls, 1);
 });
 
+for (const reset of [undefined, 1_000_000, 1_060_000]) {
+  test(`429 Retry-After gates exhausted complexity with reset ${reset ?? "missing"}`, async () => {
+    let now = 1_000_000;
+    let calls = 0;
+    const headers: Record<string, string> = {
+      ...HEADERS,
+      "x-ratelimit-complexity-remaining": "0",
+      "retry-after": "30",
+    };
+    if (reset === undefined) delete headers["x-ratelimit-complexity-reset"];
+    else headers["x-ratelimit-complexity-reset"] = String(reset);
+    const client = new LinearClient({
+      getToken: () => "t",
+      now: () => now,
+      fetchImpl: (async () => {
+        calls += 1;
+        return calls === 1
+          ? new Response("Too Many Requests", { status: 429, headers })
+          : jsonResponse({ data: { ok: true } });
+      }) as typeof fetch,
+    });
+    await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.status, 429);
+      assert.equal(e.retryAfterMs, 30_000);
+      return true;
+    });
+    const expectedReset = reset !== undefined && reset > now ? reset : now + 30_000;
+    now = expectedReset - 1;
+    await assert.rejects(client.query("query { viewer { id } }"), (e: LinearClientError) => {
+      assert.equal(e.kind, "rate_limited");
+      assert.equal(e.status, undefined); // refused before fetch
+      assert.match(e.message, /complexity/);
+      assert.equal(e.retryAfterMs, 1);
+      return true;
+    });
+    assert.equal(calls, 1);
+    assert.equal(client.budget().requestsRemaining, 2499);
+    assert.equal(client.budget().requestsReset, 3_600_000);
+    now = expectedReset;
+    assert.deepEqual(await client.query("query { viewer { id } }"), { ok: true });
+    assert.equal(calls, 2);
+  });
+}
+
 test("RATELIMITED beats partial data and marks the header-exhausted window", async () => {
   const fakeFetch = (async () =>
     jsonResponse(

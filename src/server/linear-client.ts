@@ -185,6 +185,13 @@ export class LinearClient {
     if (firedWithToken !== this.opts.getToken()) return;
     const b = this.lastBudget;
     const now = this.opts.now();
+    // As with endpoint exhaustion, Retry-After supplies a usable gate reset
+    // when a complexity-limited 429 omits it or reports an expired window.
+    if (b.complexityRemaining === 0 &&
+        (b.complexityReset === undefined || b.complexityReset <= now) &&
+        retryAfterMs !== undefined) {
+      b.complexityReset = now + retryAfterMs;
+    }
     if (b.endpointRequestsRemaining === 0 &&
         (b.endpointRequestsReset === undefined || b.endpointRequestsReset <= now) &&
         retryAfterMs !== undefined) {
