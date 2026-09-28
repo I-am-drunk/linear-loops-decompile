@@ -13,7 +13,11 @@ export const t = new Proxy(
   { areReviewsEnabledForUser: (user) => user.settings.showReviewsInbox },
   {
     get(target, key) {
-      if (key in target || typeof key === `symbol`) return target[key];
+      // OWN keys only: `key in target` would also answer inherited members
+      // (toString, constructor, …) from Object.prototype instead of throwing
+      // (CodeRabbit finding on #264). Symbols stay permitted: the runtime
+      // probes Symbol.toPrimitive/toStringTag during logging and comparison.
+      if (Object.prototype.hasOwnProperty.call(target, key) || typeof key === `symbol`) return target[key];
       throw new Error(`G7 stub: unpinned PullRequestsFeatureHelper member read: ${String(key)} — verify it against the raw helper source and extend the stub`);
     },
   },
