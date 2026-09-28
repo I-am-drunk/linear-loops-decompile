@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-agents",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the account-agents settings hooks, golden-verified against corpus execution (G34, matrix \u00a7F Account agents)"
+}

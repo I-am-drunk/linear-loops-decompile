@@ -325,6 +325,24 @@ validation incl. the allowed-return-origins check — unexported,
 unreachable from the module surface, the AiConversationCancel precedent)
 stay declared GAP pending T2/T3; clean reimplementation byte-matching;
 meter: 81 chunks · 24 golden · 57 GAP).
+G34 golden-backed chunk LANDED 2026-09-28 (src/ui-settings-agents:
+useActiveAgents BOTH exports — first golden on the matrix §F Account agents
+row (the 17:49Z scouting note flagged the row's AccountAgentsSettingsPage as
+a SettingsCatalog trap; this hook chunk is clean drive-mode material):
+drive mode with five declared recording stubs (useStore fixture install,
+resolvePromise.a recorded + thunk run synchronously, ContextualMenuActions.jR
+suspense-query recorder — full chunk name pinned against the hash-rotated
+twin, Issue.ni argument-identity bomb, react useMemo recorder); pins both
+filter conjuncts + orderBy('name'), the queryKey literal + comma join over
+concrete ids, queryFn argument identity (store.graphQLClient + the ids
+array), resetKey === organization.id with a zero-arg hydrate thunk, the
+useMemo [data] deps identity, the id-keyed reduce preserving element
+identity, the hook's return-key surface, and the prefetch's
+hydrate-then-prefetchQuery order with its argument passed through; clean
+reimplementation byte-matching by replaying the driver fixtures; the store
+collection surface (filter/orderBy/map/concrete) is a declared driver
+fixture — the corpus collection class stays its own ledger row; meter:
+81 chunks · 25 golden · 56 GAP).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 

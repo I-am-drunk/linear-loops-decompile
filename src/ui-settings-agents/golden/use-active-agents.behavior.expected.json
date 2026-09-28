@@ -1,0 +1,503 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "useActiveAgents.DsLeeQpq.js",
+    "closureSize": 7,
+    "stubbed": [
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Issue.DRYymPCa.js",
+      "react.Bfm_Hgom.js",
+      "resolvePromise.B8FauNXm.js",
+      "useStore.BpZDR8VN.js"
+    ],
+    "chunkHashes": {
+      "useActiveAgents.DsLeeQpq.js": "3823c10b52ddc24b07c3886c487caf47673348e8a73e38785fb85640958c8e7f",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "hookProbe",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "resolvePromise",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "calls",
+                    "value": {
+                      "tag": "number",
+                      "value": "1"
+                    }
+                  },
+                  {
+                    "key": "resetKeyIsOrgId",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "optsKeys",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "resetKey"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "thunkHydrated",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "calls",
+                          "value": {
+                            "tag": "number",
+                            "value": "1"
+                          }
+                        },
+                        {
+                          "key": "args",
+                          "value": {
+                            "tag": "array",
+                            "values": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "query",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "descriptors",
+                    "value": {
+                      "tag": "number",
+                      "value": "1"
+                    }
+                  },
+                  {
+                    "key": "queryKey",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "agentApplicationsInfo"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "oc-zeta,oc-alpha"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "descriptorKeys",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "queryKey"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "queryFn"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "queryFnResult",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:Issue.ni(agentApplicationsInfo)"
+                    }
+                  },
+                  {
+                    "key": "issueCall",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "calls",
+                          "value": {
+                            "tag": "number",
+                            "value": "1"
+                          }
+                        },
+                        {
+                          "key": "clientIsStoreGraphQLClient",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "ids",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "string",
+                                "value": "oc-zeta"
+                              },
+                              {
+                                "tag": "string",
+                                "value": "oc-alpha"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "useMemo",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "calls",
+                    "value": {
+                      "tag": "number",
+                      "value": "1"
+                    }
+                  },
+                  {
+                    "key": "depsLength",
+                    "value": {
+                      "tag": "number",
+                      "value": "1"
+                    }
+                  },
+                  {
+                    "key": "depsIsQueryData",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "returnKeys",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "activeAgentUsers"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "oauthAppById"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "activeAgentUsers",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "orderedBy",
+                    "value": {
+                      "tag": "string",
+                      "value": "name"
+                    }
+                  },
+                  {
+                    "key": "items",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "object",
+                          "prototype": "object",
+                          "properties": [
+                            {
+                              "key": "id",
+                              "value": {
+                                "tag": "string",
+                                "value": "au-1"
+                              }
+                            },
+                            {
+                              "key": "name",
+                              "value": {
+                                "tag": "string",
+                                "value": "Zeta Agent"
+                              }
+                            },
+                            {
+                              "key": "isActive",
+                              "value": {
+                                "tag": "boolean",
+                                "value": true
+                              }
+                            },
+                            {
+                              "key": "oauthClientId",
+                              "value": {
+                                "tag": "string",
+                                "value": "oc-zeta"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "object",
+                          "prototype": "object",
+                          "properties": [
+                            {
+                              "key": "id",
+                              "value": {
+                                "tag": "string",
+                                "value": "au-4"
+                              }
+                            },
+                            {
+                              "key": "name",
+                              "value": {
+                                "tag": "string",
+                                "value": "Alpha Agent"
+                              }
+                            },
+                            {
+                              "key": "isActive",
+                              "value": {
+                                "tag": "boolean",
+                                "value": true
+                              }
+                            },
+                            {
+                              "key": "oauthClientId",
+                              "value": {
+                                "tag": "string",
+                                "value": "oc-alpha"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "oauthAppById",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "keys",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "oc-zeta"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "oc-alpha"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "zetaIsSameObject",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "alphaIsSameObject",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "prefetchProbe",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "order",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "hydrate"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "prefetchQuery"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "hydrate",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "calls",
+                    "value": {
+                      "tag": "number",
+                      "value": "1"
+                    }
+                  },
+                  {
+                    "key": "argIsTeamsArg",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "argCount",
+                    "value": {
+                      "tag": "number",
+                      "value": "1"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "descriptor",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "queryKey",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "agentApplicationsInfo"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "oc-zeta,oc-alpha"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "descriptorKeys",
+                    "value": {
+                      "tag": "array",
+                      "values": [
+                        {
+                          "tag": "string",
+                          "value": "queryKey"
+                        },
+                        {
+                          "tag": "string",
+                          "value": "queryFn"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "queryFnResult",
+                    "value": {
+                      "tag": "string",
+                      "value": "stub:Issue.ni(agentApplicationsInfo)"
+                    }
+                  },
+                  {
+                    "key": "issueCall",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "clientIsStoreGraphQLClient",
+                          "value": {
+                            "tag": "boolean",
+                            "value": true
+                          }
+                        },
+                        {
+                          "key": "ids",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "string",
+                                "value": "oc-zeta"
+                              },
+                              {
+                                "tag": "string",
+                                "value": "oc-alpha"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
