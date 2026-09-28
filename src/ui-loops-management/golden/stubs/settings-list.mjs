@@ -7,7 +7,7 @@
 // (De) is component-body-only and throws on any use.
 export const t = new Proxy({ GROUP_HEIGHT: 32, ROW_HEIGHT: 44 }, {
   get(target, k) {
-    if (k in target) return target[k];
+    if (Object.hasOwn(target, k)) return target[k];
     throw new Error(`G23 stub: SettingsList.t.${String(k)} read — extend the stub from the raw source`);
   },
 });
