@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "TeamAgentSkillsSettingsPage.C2EeluTr.js",
+    "closureSize": 7,
+    "stubbed": [
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "SkillsList.DMPqCUWU.js",
+      "jsx-runtime.BH9nBM82.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "useRouteData.DN0g9O-t.js"
+    ],
+    "chunkHashes": {
+      "TeamAgentSkillsSettingsPage.C2EeluTr.js": "95a4b50ab121a4ba2e722f9c4a38d7d5633c12e6003ba6c69c0e7690ec037eb2"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "pageMetadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "team-agent-skills"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Agent skills"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "Add reusable instructions team members can use with Linear Agent"
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "agent skills shared prompt linear agent"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "componentDisplayName",
+        "value": {
+          "tag": "string",
+          "value": "TeamAgentSkillsSettingsPage"
+        }
+      }
+    ]
+  }
+}

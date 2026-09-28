@@ -178,7 +178,26 @@ AgentGuidanceSettings export n — the FIRST §F Settings golden: drive-mode
 projection of the settings-metadata factory, both scope branches + the
 strict-equality discriminator + the applicable predicate over five declared
 org fixtures; the observer component export t stays GAP pending the T3
-store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). G15 eleventh
+store-fixture tier; meter: 78 chunks · 9 golden · 69 GAP). G13 eleventh
+golden-backed chunk LANDED 2026-09-28 (src/ui-loops-owner-select:
+AutomationOwnerSelect export t, matrix §A Owner select — drive mode through
+the render-prop seam (the tooltip's render prop invoked with a pinned
+content marker): both appearance branches (property default / inline) + the
+disabled-configure action branch (disabledReason via the AutomationHelper
+seam pinned from its hand-verified raw source — its 50KB closure reads
+window at module scope, the G7 finding); component seams as declared string
+markers; the restore-history hook export n stays honest GAP pending a
+T2/effect tier (dialog side effects + async draft IO); clean
+reimplementation byte-matching; meter: 78 chunks · 10 golden · 68 GAP). G14 twelfth golden-backed chunk LANDED 2026-09-28
+(TeamAgentSkillsSettingsPage, matrix §F Team agent settings — second §F
+golden, confirming the G11 scouting that §F settings pages share the
+metadata shape: drive-mode verbatim projection of the pure pageMetadata
+literal (no scope param, no applicable member — both pinned) + the Component
+export's module-eval displayName; six declared stubs incl. the
+suspenseObserver module-eval wrapper (a new seam in the pattern library);
+reimplementation joins src/ui-settings-guidance with per-chunk goldens; the
+route component body stays honest GAP; meter: 78 chunks · 11 golden ·
+67 GAP). G15 thirteenth
 golden-backed chunk LANDED 2026-09-28 (src/ui-loops-elicitation-wire:
 aiConversationSendElicitationResponsesMutation — the FIRST golden on the §D
 chat-substrate WIRE layer (Elicitations row, issue #14 adjacency): drive-mode
@@ -187,8 +206,8 @@ kind branches incl. the hardcoded confirmed:true quirk, per-response
 {elicitationId,data} narrowing vs top-level input passthrough, and the REAL
 UnreachableCaseError default; enum + gql-tag stubs pinned verbatim from raw
 source, throw-on-unpinned; matrix Elicitations row gains the caller chunk as
-evidence per the ledger's fix direction; meter: 79 chunks · 10 golden ·
-69 GAP). H3 family expansion
+evidence per the ledger's fix direction; meter: 79 chunks · 12 golden ·
+67 GAP). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):

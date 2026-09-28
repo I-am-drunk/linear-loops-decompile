@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-owner-select",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the automation owner-select component, golden-verified against corpus execution (G13, matrix \u00a7A owner select)"
+}
