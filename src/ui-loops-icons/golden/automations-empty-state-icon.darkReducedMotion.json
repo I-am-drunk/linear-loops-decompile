@@ -1,0 +1,20 @@
+{
+  "unit": "ui-loops-icons/AutomationsEmptyStateIcon",
+  "chunk": "AutomationsEmptyStateIcon",
+  "stubs": {
+    "ThemeProvider": {
+      "file": "theme-stub.mjs",
+      "why": "useTheme needs a React context provider tree; the stub returns the three color tokens this SVG's static branch reads (labelBase/labelMuted/labelFaint), pinned to the H2 corpus-executed darkDefault golden \u2014 the SAME hand-verified stub file the merged #243/#253 goldens use (provenance chains across goldens)."
+    },
+    "useReducedMotion": {
+      "source": "export const t = () => true;",
+      "why": "media-query hook (matchMedia via useSyncExternalStore); pinned to TRUE = the user prefers reduced motion. With isAnimated:true in props, the corpus guard `isAnimated && !useReducedMotion()` must OVERRIDE the animation request back to the static tree \u2014 the accessibility behavior this case exists to pin. The merged darkDefault case never exercises the guard (isAnimated:false makes the stub value dead)."
+    }
+  },
+  "notes": "Reduced-motion override case (matrix \u00a7A 'Empty states' row, AutomationsEmptyStateIcon.CWP-Klc2.js): isAnimated=true but prefers-reduced-motion wins; the output must equal the darkDefault static tree byte-for-byte (the golden test asserts that equality against the darkDefault expected file). Third case on the chunk; completes the static-branch input space (both guard operands now pinned on both sides that yield the static tree).",
+  "render": {
+    "export": "AutomationsEmptyStateIconShouldBeLazyLoaded",
+    "exportMeaning": "export{s as AutomationsEmptyStateIconShouldBeLazyLoaded} \u2014 s(props) is the automations empty-state SVG function component; `isAnimated && !useReducedMotion()` is false when reduced motion is preferred, so the static tree renders despite isAnimated:true.",
+    "props": { "isAnimated": true }
+  }
+}

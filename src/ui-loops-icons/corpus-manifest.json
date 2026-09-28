@@ -26,7 +26,8 @@
       ],
       "goldens": [
         "automations-empty-state-icon.darkDefault",
-        "automations-empty-state-icon.lightDefault"
+        "automations-empty-state-icon.lightDefault",
+        "automations-empty-state-icon.darkReducedMotion"
       ]
     }
   ],
