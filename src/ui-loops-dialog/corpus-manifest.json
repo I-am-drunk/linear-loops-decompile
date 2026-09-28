@@ -1,0 +1,23 @@
+{
+  "source": "G10 (#225 claim 12:50Z, sess_01a0e807-610c-709d-a508-afe8613a68c3): src/ui-loops-dialog reimplements the new-loop dialog chunk. Evidence: AutomationNewDialog.Wu-wKkiY.js (matrix \u00a7A 'New-loop dialog + button' row), executed from the RAW tree with five declared seam stubs \u2014 ThemeProvider useTheme pinned to the H2 ELEVATED derived-theme goldens (src/ui-theme/golden/golden-derived-retina0.json .darkDefault/.lightDefault .derived.elevated \u2014 the first golden exercising the derived-theme seam), Modal/IconButton/CloseIcon/LoopTemplateLibrary pinned as string markers (each is its own ledger row). Invoke-tier: with useTheme stubbed the component is hook-free (the merged G4 finding). The golden PAIR pins both branches of the corpus's `useTheme().baseTheme ?? theme` derivation: darkDefault has no baseTheme (fallback branch), lightDefault carries elevatedTheme ONLY on baseTheme. The clean module byte-matches both goldens through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "AutomationNewDialog",
+      "exports": [
+        {
+          "minified": "AutomationNewDialog",
+          "meaning": "export{c as AutomationNewDialog} \u2014 c(props) is the new-loop modal dialog function component: Modal(isOpen:true, onRequestClose, zIndex:'default') > ThemeProvider((baseTheme ?? theme).elevatedTheme()) > div[role=dialog, aria-modal, aria-label 'Create a new loop', 11-class sx string] > [IconButton(aria-label 'Close modal dialog', closeButton sx table, CloseIcon child), div > LoopTemplateLibrary(parent, variant:'modal')]; reimplemented as AutomationNewDialog(theme, components, props)",
+          "evidenceLine": "src/ui-loops-dialog/automation-new-dialog.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "automation-new-dialog.darkDefault",
+        "automation-new-dialog.lightDefault"
+      ]
+    }
+  ],
+  "goldens": [
+    "automation-new-dialog.darkDefault",
+    "automation-new-dialog.lightDefault"
+  ]
+}
