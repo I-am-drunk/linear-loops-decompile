@@ -3,6 +3,7 @@ import { afterEach, test } from 'node:test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { checkPrettyDirectory, prettifyDirectory } from './prettify.mjs';
 
 const roots = [];
@@ -59,7 +60,7 @@ test(`falls back when a parse-valid candidate changes a template interpolation`,
   assert.equal(result.prettified.length, 0);
   assert.equal(result.rawFallback.length, 1);
   assert.match(result.rawFallback[0].reason, /template token signature/);
-  const module = await import(new URL(`file://${path.join(out, `template.js`)}`).href);
+  const module = await import(pathToFileURL(path.join(out, `template.js`)).href);
   assert.equal(module.text, `value=7`);
 });
 
@@ -172,4 +173,49 @@ test(`fails instead of retaining an output when raw source is invalid`, () => {
 
   assert.equal(result.failed.length, 1);
   assert.equal(fs.existsSync(path.join(out, `invalid-raw.js`)), false);
+});
+
+test(`cached check verifies a raw fallback as bytes, catching non-UTF-8 corruption`, () => {
+  const { src, out } = fixture();
+  // A raw source with an invalid UTF-8 byte still parses as decoded text
+  // (U+FFFD lands inside a string literal), mirroring the real captured corpus.
+  const rawBytes = Buffer.concat([
+    Buffer.from('export const blob = `'),
+    Buffer.from([0x80]),
+    Buffer.from('`;\n'),
+  ]);
+  fs.writeFileSync(path.join(src, `bytes.js`), rawBytes);
+  fs.mkdirSync(out, { recursive: true });
+
+  // Byte-identical cached fallback: valid.
+  fs.writeFileSync(path.join(out, `bytes.js`), rawBytes);
+  let result = checkPrettyDirectory({ src, out });
+  assert.equal(result.invalid.length, 0);
+
+  // A parse-valid mutation of the template content must be rejected: the
+  // cached file no longer byte-matches raw, so it is held to the prettified
+  // bar (parse + template signature) and the changed quasi fails it.
+  fs.writeFileSync(path.join(out, `bytes.js`), Buffer.from('export const blob = `X`;\n'));
+  result = checkPrettyDirectory({ src, out });
+  assert.equal(result.invalid.length, 1);
+  assert.match(result.invalid[0].reason, /template token signature/);
+});
+
+test(`build rejects a parse-valid NON-template lexical mutation (wide token gate)`, () => {
+  const { src, out } = fixture();
+  fs.writeFileSync(path.join(src, `ident.js`), `export const value = compute(1);\nfunction compute(n) { return n + 1 }\n`);
+  const result = prettifyDirectory({
+    src,
+    out,
+    // Parse-valid, template-free mutation: a renamed identifier. The old
+    // template-only signature passed this; the full token signature must not.
+    beautify: () => `export const value = compute(2);\nfunction compute(n) { return n + 1 }\n`,
+  });
+  assert.equal(result.failed.length, 0);
+  assert.equal(result.rawFallback.length, 1);
+  assert.match(result.rawFallback[0].reason, /token signature/);
+  assert.equal(
+    fs.readFileSync(path.join(out, `ident.js`), `utf8`),
+    fs.readFileSync(path.join(src, `ident.js`), `utf8`),
+  );
 });
