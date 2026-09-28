@@ -50,6 +50,9 @@ Done 2026-09-27:
   Header semantics verified against Linear's official docs (KNOWLEDGE §6);
   9 client tests + 1 RPC test, all fake-fetch. (Pulled ahead of R4: R4.1's
   page waited on the R3.4 shell; this slice is server-only, was unblocked.)
+  Follow-up: RATELIMITED retry delays use the response's exhausted windows,
+  including endpoint/complexity resets, with seven regression cases and a
+  delayed-body credential-swap check.
 
 Now:
 - R4.1 loops domain slice: server half claimed by sess_01a0e392-f0c2-7545-
