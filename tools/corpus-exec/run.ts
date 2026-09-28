@@ -10,7 +10,7 @@ import { readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
-import { serialize, stringify } from "./serialize.ts";
+import { SERIALIZER_VERSION, serialize, stringify } from "./serialize.ts";
 
 export type CaseFile = {
   unit: string;
@@ -47,6 +47,7 @@ export type CaseFile = {
 export type RunResult = {
   provenance: {
     tool: string;
+    serializer: string;
     corpusHead: string | null;
     entry: string;
     closureSize: number;
@@ -95,7 +96,7 @@ function makeDispatcher(contextValue: unknown): Record<string, unknown> {
   return {
     useContext: () => contextValue,
     useState: (init: unknown) => [typeof init === `function` ? (init as () => unknown)() : init, () => undefined],
-    useReducer: (_r: unknown, init: unknown) => [init, () => undefined],
+    useReducer: (_r: unknown, init: unknown, initFn?: unknown) => [typeof initFn === `function` ? (initFn as (a: unknown) => unknown)(init) : init, () => undefined],
     useMemo: (f: () => unknown) => f(),
     useCallback: (f: unknown) => f,
     useRef: (v: unknown) => ({ current: v }),
@@ -140,8 +141,16 @@ async function runInSandbox(corpusDir: string, caseDir: string, closure: Closure
     const sandboxApi = {
       entry: mod,
       load: async (ref: string): Promise<unknown> => {
-        const name = closure.chunks.includes(ref) ? ref : closure.chunks.find((n) => n.startsWith(`${ref}.`));
-        if (name === undefined) throw new Error(`driver load("${ref}"): not in the sandbox closure`);
+        let name = ref;
+        if (!closure.chunks.includes(ref)) {
+          // Prefix resolution mirrors entry/stub resolution: exactly one
+          // match or a loud error — first-sorted-match silently loads the
+          // wrong chunk on real collisions like time.{DmD2zwKn,Dn7wnS7i}.
+          const matches = closure.chunks.filter((n) => n.startsWith(`${ref}.`));
+          if (matches.length === 0) throw new Error(`driver load("${ref}"): not in the sandbox closure`);
+          if (matches.length > 1) throw new Error(`driver load("${ref}") is ambiguous in this closure: ${matches.join(`, `)} — pin the full name`);
+          name = matches[0];
+        }
         return import(pathToFileURL(join(closure.dir, name)).href);
       },
     };
@@ -214,6 +223,7 @@ async function runInSandbox(corpusDir: string, caseDir: string, closure: Closure
   return {
     provenance: {
       tool: `corpus-exec/g1`,
+      serializer: SERIALIZER_VERSION,
       corpusHead: gitHead(corpusDir),
       entry: closure.entry, // resolved full name (case may declare a prefix)
       closureSize: closure.chunks.length,

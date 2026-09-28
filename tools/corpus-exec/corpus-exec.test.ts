@@ -6,7 +6,8 @@
  */
 
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -75,6 +76,53 @@ test(`composite element children serialize as named boundaries, never silently r
   assert.deepEqual(serialize(el), { $composite: `Inner` });
 });
 
+test(`injectivity: distinct Dates are distinct bytes; invalid Date is loud`, () => {
+  assert.equal(serialize(new Date(`2026-01-13T15:00:00Z`)), `$date:2026-01-13T15:00:00.000Z`);
+  assert.notEqual(stringify(new Date(`2026-01-13T15:00:00Z`)), stringify(new Date(`2026-01-14T05:00:00Z`)));
+  assert.notEqual(stringify(new Date(0)), stringify({}));
+  assert.throws(() => serialize(new Date(`nope`)), /invalid Date at \$/);
+});
+
+test(`injectivity: non-plain objects refuse loudly, naming constructor and path`, () => {
+  assert.throws(() => serialize({ deep: { v: new Map([[`a`, 1]]) } }), /unserializable Map at \$\.deep\.v/);
+  assert.throws(() => serialize(new Set([1])), /unserializable Set at \$/);
+  assert.throws(() => serialize(/x/), /unserializable RegExp at \$/);
+  assert.throws(() => serialize(new Error(`e`)), /unserializable Error at \$/);
+  assert.throws(() => serialize(new Uint8Array(2)), /unserializable Uint8Array at \$/);
+  class Instance { }
+  assert.throws(() => serialize(new Instance()), /unserializable Instance at \$/);
+  // a null-prototype object is plain data, not an instance
+  const np = Object.create(null) as Record<string, unknown>;
+  np.k = 1;
+  assert.deepEqual(serialize(np), { k: 1 });
+});
+
+test(`injectivity: undefined and null differ inside containers`, () => {
+  assert.notEqual(stringify({ a: undefined }), stringify({ a: null }));
+  assert.notEqual(stringify([undefined]), stringify([null]));
+});
+
+test(`cycles are a loud path-naming error; shared non-cyclic references are legal`, () => {
+  const cyc: Record<string, unknown> = {};
+  cyc.self = cyc;
+  assert.throws(() => serialize(cyc), /cycle at \$\.self/);
+  const shared = { x: 1 };
+  assert.deepEqual(serialize({ a: shared, b: shared }), { a: { x: 1 }, b: { x: 1 } });
+});
+
+test(`element key is a serialized fact: key-swapped lists differ`, () => {
+  const li = (key: string, text: string): unknown => ({ $$typeof: Symbol.for(`react.fake`), type: `li`, key, props: { children: text } });
+  const ul = (children: unknown[]): unknown => ({ $$typeof: Symbol.for(`react.fake`), type: `ul`, key: null, props: { children } });
+  const a = stringify(ul([li(`k1`, `first`), li(`k2`, `second`)]));
+  const b = stringify(ul([li(`k2`, `first`), li(`k1`, `second`)]));
+  assert.notEqual(a, b);
+  const one = serialize(li(`k1`, `x`)) as { key?: string };
+  assert.equal(one.key, `k1`);
+  // keyless element emits no key field (byte-stable with old keyless goldens)
+  const bare = serialize(ul([])) as Record<string, unknown>;
+  assert.equal(`key` in bare, false);
+});
+
 // --- run: invoke mode ---------------------------------------------------------
 
 test(`invoke mode executes the corpus function on case args`, async () => {
@@ -102,6 +150,17 @@ test(`a wrong export name fails naming the real exports`, async () => {
 });
 
 // --- run: render mode ----------------------------------------------------------
+
+test(`useReducer lazy init (3-arg) computes the real initial state, never a silent fake`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/reducer`,
+    chunk: `reducer.HHHH.js`,
+    render: { export: `t`, exportMeaning: `Panel (useReducer lazy-init)`, props: { seed: 21 } },
+  };
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  const tree = serialize(result.output) as { children: string };
+  assert.equal(tree.children, `42`); // initFn(seed) ran; the old dispatcher returned the raw seed
+});
 
 test(`render mode executes a component under the micro-dispatcher with the case context`, async () => {
   const c: CaseFile = {
@@ -149,13 +208,43 @@ test(`render mode with the other stub branch flips exactly the stub-derived valu
 
 test(`chunk references resolve by basename prefix; ambiguity is loud`, async () => {
   const c: CaseFile = {
-    unit: `fixture/add`,
-    chunk: `math`, // prefix — survives hash rotation (#225 red-team R2-1)
-    invoke: { export: `n`, exportMeaning: `add`, args: [1, 1] },
+    unit: `fixture/pair`,
+    chunk: `pair`, // prefix — survives hash rotation (#225 red-team R2-1)
+    invoke: { export: `p`, exportMeaning: `both math variants`, args: [1, 1] },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  assert.equal(result.provenance.entry, `math.AAAA.js`); // resolved full name in provenance
+  assert.equal(result.provenance.entry, `pair.GGGG.js`); // resolved full name in provenance
   assert.throws(() => resolveChunk(fixtureChunks, `nope`), /chunk not found in corpus: nope/);
+  // math.{AAAA,ZZZZ} is the fixture hash-rotation collision: prefix must be loud
+  assert.throws(() => resolveChunk(fixtureChunks, `math`), /ambiguous/);
+});
+
+test(`an ambiguous STUB key propagates, never silently drops the substitution`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/ambiguous-stub`,
+    chunk: `math.AAAA.js`,
+    stubs: { math: { source: `export const n = () => 0;`, why: `ambiguity repro` } },
+    invoke: { export: `n`, exportMeaning: `add`, args: [1, 1] },
+  };
+  await assert.rejects(runCase(fixtureCorpus, join(here, `fixtures`), c, noLog), /ambiguous/);
+  // the fallback survives for a genuinely ABSENT chunk (shadow-stub)
+  const shadow: CaseFile = {
+    unit: `fixture/shadow-stub`,
+    chunk: `math.AAAA.js`,
+    stubs: { "ghost.XXXX.js": { source: `export const g = 1;`, why: `absent-chunk shadow` } },
+    invoke: { export: `n`, exportMeaning: `add`, args: [1, 1] },
+  };
+  const ok = await runCase(fixtureCorpus, join(here, `fixtures`), shadow, noLog);
+  assert.deepEqual(serialize(ok.output), { parts: [1, 1], sum: 4 });
+});
+
+test(`driver load() rejects an ambiguous prefix instead of first-match`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/load-ambiguous`,
+    chunk: `pair.GGGG.js`, // closure carries math.{AAAA,ZZZZ} — the collision
+    drive: { file: `drivers/load-ambiguous.mjs`, exportMeaning: `ambiguous load repro` },
+  };
+  await assert.rejects(runCase(fixtureCorpus, join(here, `fixtures`), c, noLog), /load\("math"\) is ambiguous/);
 });
 
 test(`drive mode runs a hand-written driver for multi-step setups`, async () => {
@@ -221,4 +310,25 @@ test(`corpus smoke: re-derive a generateTheme shell value against the H2 goldens
   assert.equal(theme.color[`labelBase`], want[`darkDefault`].color[`labelBase`]);
   assert.equal(theme.color[`bgSub`], want[`darkDefault`].color[`bgSub`]);
   assert.equal(theme.hash, (want[`darkDefault`] as unknown as { hash: string }).hash);
+});
+
+// --- CLI verify exit contract ------------------------------------------------
+
+test(`verify against a malformed golden is MISMATCH exit 1, never a crash exit 2`, () => {
+  const mainPath = join(here, `main.ts`);
+  const casePath = join(here, `fixtures`, `ok-case.json`);
+  const badGolden = join(here, `fixtures`, `bad-golden.tmp.json`);
+  for (const bad of [`null`, `[1,2]`, `"just a string"`]) {
+    writeFileSync(badGolden, bad);
+    try {
+      execFileSync(process.execPath, [`--experimental-strip-types`, mainPath, `verify`, casePath, `--corpus`, fixtureCorpus, `--expected`, badGolden], { stdio: `pipe` });
+      assert.fail(`verify must not exit 0 against golden ${bad}`);
+    } catch (e) {
+      const err = e as { status?: number; stderr?: Buffer };
+      assert.equal(err.status, 1, `golden ${bad}: want exit 1, got ${err.status}: ${err.stderr?.toString()}`);
+      assert.match(err.stderr?.toString() ?? ``, /MISMATCH/);
+    } finally {
+      rmSync(badGolden, { force: true });
+    }
+  }
 });

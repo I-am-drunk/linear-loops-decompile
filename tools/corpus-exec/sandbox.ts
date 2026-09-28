@@ -69,8 +69,13 @@ function resolveStubKeys(chunksDir: string, stubs: Record<string, Stub>): Map<st
     let resolved = ref;
     try {
       resolved = resolveChunk(chunksDir, ref);
-    } catch {
-      // keep the literal ref: the stub can shadow a chunk missing from the corpus
+    } catch (e) {
+      // The literal-ref fallback exists ONLY for a genuinely absent chunk (a
+      // stub may shadow a chunk the corpus lacks). An AMBIGUOUS ref must
+      // propagate: swallowing it kept the unresolved prefix as the key, no
+      // chunk matched it, and the declared substitution vanished silently —
+      // the case then ran an UNSTUBBED world it did not declare (#230 review).
+      if (e instanceof Error && e.message.includes(`ambiguous`)) throw e;
     }
     out.set(resolved, stub);
   }

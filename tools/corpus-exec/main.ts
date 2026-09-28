@@ -91,6 +91,10 @@ async function main(): Promise<number> {
     console.error(`verify: MISMATCH — committed golden at ${expectedPath} is not valid JSON; a corrupt golden is a red, review it.`);
     return 1;
   }
+  if (wantParsed === null || typeof wantParsed !== `object`) {
+    console.error(`verify: MISMATCH — committed golden at ${expectedPath} is not a golden object (got ${wantParsed === null ? `null` : typeof wantParsed}); a corrupt golden is a red, review it.`);
+    return 1;
+  }
   const outputMatches = stringify(result.output) === `${JSON.stringify(wantParsed.output, null, 2)}\n`;
   if (outputMatches) {
     console.error(`verify: OUTPUT matches but provenance differs (corpus refresh or stub change) — re-record deliberately, in a reviewed PR.`);
