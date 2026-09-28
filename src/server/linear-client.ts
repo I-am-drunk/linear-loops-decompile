@@ -195,15 +195,18 @@ export class LinearClient {
         retryAfterMs !== undefined) {
       b.endpointRequestsReset = now + retryAfterMs;
     }
-    // Endpoint/complexity exhaustion: the headers already tell the gate the
-    // truth; do not touch the request window.
-    if (b.complexityRemaining === 0 || b.endpointRequestsRemaining === 0) return;
-    b.requestsRemaining = 0;
+    // Only ambiguous limit responses force the request window to zero.
+    // A request window already exhausted alongside endpoint/complexity limits
+    // still needs its own Retry-After backfill below.
+    if (b.complexityRemaining !== 0 && b.endpointRequestsRemaining !== 0) {
+      b.requestsRemaining = 0;
+    }
     // The gate only fires on remaining===0 AND reset>now. A limit response
     // without informative budget headers (429 + Retry-After only) would zero
     // remaining but leave reset unset — an open gate. Backfill the reset from
     // Retry-After when the headers gave none (CodeRabbit #155, final thread).
-    if ((b.requestsReset === undefined || b.requestsReset <= now) && retryAfterMs !== undefined) {
+    if (b.requestsRemaining === 0 &&
+        (b.requestsReset === undefined || b.requestsReset <= now) && retryAfterMs !== undefined) {
       b.requestsReset = now + retryAfterMs;
     }
   }
