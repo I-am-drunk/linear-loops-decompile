@@ -21,6 +21,26 @@ echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G
 node --experimental-strip-types --test tools/coverage/coverage.test.ts
 node --experimental-strip-types tools/coverage/main.ts check --repo .
 
+# Corpus-gated, toolchain-free leg: golden re-execution needs only node + the
+# corpus, so it runs BEFORE the cargo gate (a reviewer with the vault corpus
+# but no Rust still re-executes every committed golden case).
+if [ -d pipeline/corpus ]; then
+  echo "=== corpus-exec verify: every committed golden case re-executes byte-identically (#257 review) ==="
+  # Without this leg a guard regression in the CORPUS-side behavior a case pins
+  # (e.g. the reduced-motion override) stays invisible: the package tests only
+  # compare committed bytes to committed bytes. A corpus-exec case is a
+  # src/*/golden/*.json with a sibling *.expected.json (H2 theme VECTOR files
+  # have no expected sibling and are re-derived by the corpus-exec suite's own
+  # smoke instead).
+  find src -path '*/golden/*.json' ! -name '*.expected.json' -print0 | while IFS= read -r -d '' case_file; do
+    [ -f "${case_file%.json}.expected.json" ] || continue
+    echo "--- verify: $case_file"
+    node --experimental-strip-types tools/corpus-exec/main.ts verify "$case_file" --corpus pipeline/corpus
+  done
+else
+  echo "check-ui: no local corpus (pipeline/corpus) — skipping golden re-verification (labeled skip)."
+fi
+
 if ! command -v cargo >/dev/null 2>&1; then
   if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
     echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
@@ -37,19 +57,6 @@ if [ ! -d pipeline/corpus/pretty/client ]; then
   echo "check-ui: no local corpus (pipeline/corpus) — skipping golden re-verification and extract/check. Vacuous pass."
   exit 0
 fi
-
-echo "=== corpus-exec verify: every committed golden case re-executes byte-identically (#257 review) ==="
-# Without this leg a guard regression in the CORPUS-side behavior a case pins
-# (e.g. the reduced-motion override) stays invisible: the package tests only
-# compare committed bytes to committed bytes. A corpus-exec case is a
-# src/*/golden/*.json with a sibling *.expected.json (H2 theme VECTOR files
-# have no expected sibling and are re-derived by the corpus-exec suite's own
-# smoke instead).
-find src -path '*/golden/*.json' ! -name '*.expected.json' -print0 | while IFS= read -r -d '' case_file; do
-  [ -f "${case_file%.json}.expected.json" ] || continue
-  echo "--- verify: $case_file"
-  node --experimental-strip-types tools/corpus-exec/main.ts verify "$case_file" --corpus pipeline/corpus
-done
 echo "=== parity extract (corpus → reference; canaries enforced) ==="
 cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
