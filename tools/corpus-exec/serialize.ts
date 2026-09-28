@@ -19,6 +19,13 @@
  * Rejected values include functions, symbols, accessors, symbols/non-enumerable
  * or nonstandard descriptors, non-plain instances, cycles, and composite React
  * elements. A driver must explicitly project such a value to supported data.
+ *
+ * Deliberate observation boundary (peer review, PR #240): a host element's
+ * `_store`/`_debugInfo`/`_debugStack`/`_debugTask` React dev-bookkeeping slots
+ * are allowed to EXIST but their contents are never observed — elements
+ * differing only there serialize byte-identically. That is by design: dev
+ * bookkeeping is not corpus-observable behavior, and refusing a non-empty
+ * `_store` would reject every dev-build element.
  */
 
 /** Bump on every encoding change: old goldens must be deliberately re-recorded. */
