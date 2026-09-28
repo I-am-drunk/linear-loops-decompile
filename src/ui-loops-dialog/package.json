@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-dialog",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the new-loop dialog chunk, golden-verified against corpus execution (G10, matrix §A new-loop dialog + button)"
+}

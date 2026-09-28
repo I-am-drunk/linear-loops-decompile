@@ -138,7 +138,15 @@ chunk LANDED 2026-09-28 (src/ui-loops-elicitation: AgentElicitationResponseQueue
 drive-mode flatten of a hook-free composite closure (corpus Flex/Text executed,
 0 stubs, 11 chunks), three parametrizations pinning both label branches +
 the static class/var chain; clean reimplementation byte-matching; meter:
-78 chunks · 4 golden · 74 GAP, G7/G8 in flight by peers). H3 family expansion
+78 chunks · 4 golden · 74 GAP). G10 sixth golden-backed chunk LANDED
+2026-09-28 (src/ui-loops-dialog: AutomationNewDialog, matrix §A new-loop
+dialog + button — first golden through the DERIVED-theme seam:
+`(useTheme().baseTheme ?? theme).elevatedTheme()` pinned from the H2 elevated
+goldens, both derivation branches covered by the darkDefault/lightDefault
+pair; five declared component-seam stubs (Modal/ThemeProvider/IconButton/
+CloseIcon/LoopTemplateLibrary — each stays its own ledger row); invoke-tier
+per the G4 finding; clean reimplementation byte-matches through the tagged-v2
+driver; meter: 78 chunks · 5 golden · 73 GAP; G7/G8 in flight by peers). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
