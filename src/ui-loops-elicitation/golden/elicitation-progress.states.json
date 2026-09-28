@@ -1,0 +1,10 @@
+{
+  "unit": "ui-loops-elicitation/ElicitationProgress",
+  "chunk": "AgentElicitationResponseQueue",
+  "stubs": {},
+  "drive": {
+    "file": "elicitation-progress-driver.mjs",
+    "exportMeaning": "export{i as t} — i(props) is the elicitation-progress status line (Flex > div[aria-live=polite] > Text) rendered in the agent chat while elicitation questions are being answered: `${answeredCount} of ${elicitationCount} answered`, or `Submitting answers…` while isSubmitting. The chunk's only export. The driver flattens the hook-free composite tree by executing the corpus Flex/Text components (see driver header)."
+  },
+  "notes": "G9: first golden-backed chunk outside matrix §A — §D chat substrate, Elicitations row (issue #14 adjacency). Three prop parametrizations pin both text branches (the template `${i} of ${o} answered` incl. a zero case, and the isSubmitting branch) plus the full static sx/class/var chain: no theme stub is needed because Text resolves color through ThemeProvider's static CSS-var map (labelFaint -> var(--sx-1eapsa9)), not through useTheme."
+}
