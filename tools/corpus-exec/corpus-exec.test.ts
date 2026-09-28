@@ -82,67 +82,93 @@ test(`closureSize probes without building`, () => {
 
 // --- serialize ---------------------------------------------------------------
 
-test(`serialization is deterministic and sorts keys`, () => {
-  const a = stringify({ b: 2, a: [1, { d: 4, c: 3 }] });
-  const b = stringify({ a: [1, { c: 3, d: 4 }], b: 2 });
-  assert.equal(a, b);
+test(`serialization is deterministic for one value and preserves observable own-key order`, () => {
+  const value = { b: 2, a: [1, { d: 4, c: 3 }] };
+  assert.equal(stringify(value), stringify(value));
+  const reverse = { a: [1, { c: 3, d: 4 }], b: 2 };
+  assert.notEqual(stringify(value), stringify(reverse));
 });
 
 test(`functions outside elements are a loud error`, () => {
   assert.throws(() => serialize({ cb: () => 1 }), /unserializable function at \$\.cb/);
 });
 
-test(`composite element children serialize as named boundaries, never silently render`, () => {
+test(`expected bytes keep an inspectable envelope and tag only observed output`, async () => {
+  const c: CaseFile = {
+    unit: `fixture/add`,
+    chunk: `math.AAAA.js`,
+    invoke: { export: `n`, exportMeaning: `add`, args: [2, 3] },
+  };
+  const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
+  const golden = JSON.parse(expectedBytes(result)) as { provenance: { entry: string }; output: { tag: string } };
+  assert.equal(golden.provenance.entry, `math.AAAA.js`);
+  assert.equal(golden.output.tag, `object`);
+});
+
+test(`composite elements refuse loudly: T1 must not invent a composite boundary`, () => {
   const Comp = function Inner(): null { return null; };
-  const el = { $$typeof: Symbol.for(`react.fake`), type: Comp, props: {} };
-  assert.deepEqual(serialize(el), { $composite: `Inner` });
+  const el = { $$typeof: Symbol.for(`react.transitional.element`), type: Comp, key: null, props: {} };
+  assert.throws(() => serialize(el), /unserializable composite React element at \$.*T2 renderer/);
+  assert.throws(
+    () => serialize({ $$typeof: Symbol.for(`react.transitional.element`), type: `div`, props: {} }),
+    /malformed React element.*requires own data type, key, and props/,
+  );
 });
 
-test(`injectivity: distinct Dates are distinct bytes; invalid Date is loud`, () => {
-  assert.equal(serialize(new Date(`2026-01-13T15:00:00Z`)), `$date:2026-01-13T15:00:00.000Z`);
-  assert.notEqual(stringify(new Date(`2026-01-13T15:00:00Z`)), stringify(new Date(`2026-01-14T05:00:00Z`)));
-  assert.notEqual(stringify(new Date(0)), stringify({}));
+test(`tagged grammar distinguishes every formerly-colliding primitive class`, () => {
+  const collisions: Array<[string, unknown, unknown]> = [
+    [`null / undefined`, null, undefined],
+    [`zero / negative zero`, 0, -0],
+    [`date / matching string`, new Date(`2026-01-13T15:00:00Z`), `$date:2026-01-13T15:00:00.000Z`],
+    [`NaN / matching string`, NaN, `$number:NaN`],
+    [`bigint / matching string`, 7n, `$bigint:7`],
+    [`undefined property / matching string property`, { a: undefined }, { a: `$undefined` }],
+    [`sparse hole / explicit undefined`, [, 1], [undefined, 1]],
+    [`object prototype / null prototype`, { a: 1 }, Object.assign(Object.create(null), { a: 1 })],
+    [`own-key insertion order`, { first: 1, second: 2 }, { second: 2, first: 1 }],
+  ];
+  for (const [name, left, right] of collisions) {
+    assert.notEqual(stringify(left), stringify(right), name);
+  }
+  assert.deepEqual(serialize(new Date(`2026-01-13T15:00:00Z`)), { tag: `date`, value: `2026-01-13T15:00:00.000Z` });
   assert.throws(() => serialize(new Date(`nope`)), /invalid Date at \$/);
+  const decorated = new Date(`2026-01-13T15:00:00Z`) as Date & { x?: number };
+  decorated.x = 1;
+  assert.throws(() => serialize(decorated), /unserializable decorated Date/);
 });
 
-test(`injectivity: non-plain objects refuse loudly, naming constructor and path`, () => {
+test(`unsupported descriptor and reference classes fail loudly rather than collapsing`, () => {
   assert.throws(() => serialize({ deep: { v: new Map([[`a`, 1]]) } }), /unserializable Map at \$\.deep\.v/);
   assert.throws(() => serialize(new Set([1])), /unserializable Set at \$/);
   assert.throws(() => serialize(/x/), /unserializable RegExp at \$/);
   assert.throws(() => serialize(new Error(`e`)), /unserializable Error at \$/);
   assert.throws(() => serialize(new Uint8Array(2)), /unserializable Uint8Array at \$/);
-  class Instance { }
-  assert.throws(() => serialize(new Instance()), /unserializable Instance at \$/);
-  // a null-prototype object is plain data, not an instance
-  const np = Object.create(null) as Record<string, unknown>;
-  np.k = 1;
-  assert.deepEqual(serialize(np), { k: 1 });
+  assert.throws(() => serialize({ f: () => undefined }), /unserializable function at \$.f/);
+  const accessor = {} as { value?: number };
+  Object.defineProperty(accessor, `value`, { enumerable: true, configurable: true, get: () => 1 });
+  assert.throws(() => serialize(accessor), /accessors are not a stable golden value/);
+  assert.throws(() => serialize({ [Symbol(`s`)]: 1 }), /unserializable symbol property/);
+  const hidden = { visible: 1 } as { visible: number; hidden?: number };
+  Object.defineProperty(hidden, `hidden`, { enumerable: false, writable: true, configurable: true, value: 2 });
+  assert.throws(() => serialize(hidden), /nonstandard property descriptors/);
+  const withRef = { $$typeof: Symbol.for(`react.transitional.element`), type: `div`, key: null, ref: () => undefined, props: {} };
+  assert.throws(() => serialize(withRef), /unserializable React ref/);
 });
 
-test(`injectivity: undefined and null differ inside containers`, () => {
-  assert.notEqual(stringify({ a: undefined }), stringify({ a: null }));
-  assert.notEqual(stringify([undefined]), stringify([null]));
-});
-
-test(`cycles are a loud path-naming error; shared non-cyclic references are legal`, () => {
+test(`cycles name their path; shared non-cyclic references remain values`, () => {
   const cyc: Record<string, unknown> = {};
   cyc.self = cyc;
-  assert.throws(() => serialize(cyc), /cycle at \$\.self/);
+  assert.throws(() => serialize(cyc), /cycle at \$.self/);
   const shared = { x: 1 };
-  assert.deepEqual(serialize({ a: shared, b: shared }), { a: { x: 1 }, b: { x: 1 } });
+  assert.equal(stringify({ a: shared, b: shared }), stringify({ a: { x: 1 }, b: { x: 1 } }));
 });
 
-test(`element key is a serialized fact: key-swapped lists differ`, () => {
-  const li = (key: string, text: string): unknown => ({ $$typeof: Symbol.for(`react.fake`), type: `li`, key, props: { children: text } });
-  const ul = (children: unknown[]): unknown => ({ $$typeof: Symbol.for(`react.fake`), type: `ul`, key: null, props: { children } });
-  const a = stringify(ul([li(`k1`, `first`), li(`k2`, `second`)]));
-  const b = stringify(ul([li(`k2`, `first`), li(`k1`, `second`)]));
-  assert.notEqual(a, b);
-  const one = serialize(li(`k1`, `x`)) as { key?: string };
-  assert.equal(one.key, `k1`);
-  // keyless element emits no key field (byte-stable with old keyless goldens)
-  const bare = serialize(ul([])) as Record<string, unknown>;
-  assert.equal(`key` in bare, false);
+test(`element key is a typed serialized fact: key-swapped lists differ`, () => {
+  const li = (key: string, text: string): unknown => ({ $$typeof: Symbol.for(`react.transitional.element`), type: `li`, key, props: { children: text } });
+  const ul = (children: unknown[]): unknown => ({ $$typeof: Symbol.for(`react.transitional.element`), type: `ul`, key: null, props: { children } });
+  assert.notEqual(stringify(ul([li(`k1`, `first`), li(`k2`, `second`)])), stringify(ul([li(`k2`, `first`), li(`k1`, `second`)])));
+  const one = serialize(li(`k1`, `x`)) as { key: unknown };
+  assert.deepEqual(one.key, { tag: `string`, value: `k1` });
 });
 
 // --- run: invoke mode ---------------------------------------------------------
@@ -154,7 +180,7 @@ test(`invoke mode executes the corpus function on case args`, async () => {
     invoke: { export: `n`, exportMeaning: `add (math.AAAA.js: export { add as n })`, args: [2, 3] },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  assert.deepEqual(serialize(result.output), { parts: [2, 3], sum: 10 });
+  assert.deepEqual(result.output, { parts: [2, 3], sum: 10 });
   assert.equal(result.provenance.entry, `math.AAAA.js`);
   assert.equal(result.provenance.closureSize, 2);
   // byte-stable across runs
@@ -180,8 +206,8 @@ test(`useReducer lazy init (3-arg) computes the real initial state, never a sile
     render: { export: `t`, exportMeaning: `Panel (useReducer lazy-init)`, props: { seed: 21 } },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  const tree = serialize(result.output) as { children: string };
-  assert.equal(tree.children, `42`); // initFn(seed) ran; the old dispatcher returned the raw seed
+  const tree = result.output as { props: { children: string } };
+  assert.equal(tree.props.children, `42`); // initFn(seed) ran; the old dispatcher returned the raw seed
 });
 
 test(`render mode executes a component under the micro-dispatcher with the case context`, async () => {
@@ -197,17 +223,12 @@ test(`render mode executes a component under the micro-dispatcher with the case 
     },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  assert.deepEqual(serialize(result.output), {
-    $element: true,
-    type: `div`,
-    props: { className: `standard` },
-    children: {
-      $element: true,
-      type: `span`,
-      props: { style: { color: `#111` } },
-      children: `My loop`,
-    },
-  });
+  const tree = result.output as { type: string; props: { className: string; children: { type: string; props: { style: { color: string }; children: string } } } };
+  assert.equal(tree.type, `div`);
+  assert.equal(tree.props.className, `standard`);
+  assert.equal(tree.props.children.type, `span`);
+  assert.equal(tree.props.children.props.style.color, `#111`);
+  assert.equal(tree.props.children.props.children, `My loop`);
 });
 
 test(`render mode with the other stub branch flips exactly the stub-derived value`, async () => {
@@ -223,9 +244,9 @@ test(`render mode with the other stub branch flips exactly the stub-derived valu
     },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  const tree = serialize(result.output) as { props: { className: string }; children: { children: string } };
+  const tree = result.output as { props: { className: string; children: { props: { children: string } } } };
   assert.equal(tree.props.className, `retina`);
-  assert.equal(tree.children.children, `Untitled`); // the ?? fallback on missing props.name
+  assert.equal(tree.props.children.props.children, `Untitled`); // the ?? fallback on missing props.name
 });
 
 test(`chunk references resolve by basename prefix; ambiguity is loud`, async () => {
@@ -257,7 +278,7 @@ test(`an ambiguous STUB key propagates, never silently drops the substitution`, 
     invoke: { export: `n`, exportMeaning: `add`, args: [1, 1] },
   };
   const ok = await runCase(fixtureCorpus, join(here, `fixtures`), shadow, noLog);
-  assert.deepEqual(serialize(ok.output), { parts: [1, 1], sum: 4 });
+  assert.deepEqual(ok.output, { parts: [1, 1], sum: 4 });
 });
 
 test(`driver load() rejects an ambiguous prefix instead of first-match`, async () => {
@@ -276,7 +297,7 @@ test(`drive mode runs a hand-written driver for multi-step setups`, async () => 
     drive: { file: `drivers/twice.mjs`, exportMeaning: `chained add: second call consumes the first's sum` },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  assert.deepEqual(serialize(result.output), {
+  assert.deepEqual(result.output, {
     first: { parts: [1, 2], sum: 6 },
     second: { parts: [6, 4], sum: 20 },
   });
@@ -290,7 +311,7 @@ test(`stubs can live in sibling files (reviewable ESM, not escaped strings)`, as
     render: { export: `t`, exportMeaning: `Widget`, props: {}, context: { value: { color: { labelBase: `#111` } }, why: `theme` } },
   };
   const result = await runCase(fixtureCorpus, join(here, `fixtures`), c, noLog);
-  const tree = serialize(result.output) as { props: { className: string } };
+  const tree = result.output as { props: { className: string } };
   assert.equal(tree.props.className, `retina`);
 });
 

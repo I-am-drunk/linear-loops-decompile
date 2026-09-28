@@ -10,7 +10,7 @@ import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSandbox, type Closure, type Stub } from "./sandbox.ts";
-import { SERIALIZER_VERSION, serialize, stringify } from "./serialize.ts";
+import { SERIALIZER_VERSION, serialize, stringify, type Tagged } from "./serialize.ts";
 
 export type CaseFile = {
   unit: string;
@@ -63,7 +63,10 @@ export type RunResult = {
     stubbed: string[];
     chunkHashes: Record<string, string>;
   };
+  /** Raw runtime value retained only for test-side inspection/driver use. */
   output: unknown;
+  /** Single observed tagged serialization used for both draft and verify. */
+  serializedOutput: Tagged;
 };
 
 export function loadCase(path: string): CaseFile {
@@ -239,8 +242,7 @@ async function runInSandbox(corpusDir: string, caseDir: string, source: CorpusSo
   }
 
   // Serialize now so an unserializable output fails inside the run, loudly.
-  const _ = serialize(output);
-  void _;
+  const serializedOutput = serialize(output);
 
   return {
     provenance: {
@@ -254,10 +256,15 @@ async function runInSandbox(corpusDir: string, caseDir: string, source: CorpusSo
       chunkHashes: closure.hashes,
     },
     output,
+    serializedOutput,
   };
 }
 
-/** The bytes written to <case>.expected.json. */
+/**
+ * The bytes written to <case>.expected.json. Provenance is ordinary metadata;
+ * only the observed output uses the closed tagged grammar. Keeping this
+ * envelope untagged lets verify inspect its fields when reporting a mismatch.
+ */
 export function expectedBytes(result: RunResult): string {
-  return stringify({ provenance: result.provenance, output: result.output });
+  return `${JSON.stringify({ provenance: result.provenance, output: result.serializedOutput }, null, 2)}\n`;
 }

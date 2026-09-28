@@ -82,14 +82,20 @@ missing corpus, missing chunk, sandbox failure).
 
 ## What it emits
 
-`<case>.expected.json`: `{ provenance, output }` where output is the
-deterministically-serialized result (sorted-key JSON; React elements as
-`{ type, props, children }` trees) and provenance records the corpus git
-HEAD, entry + closure chunk hashes, the stub list, and closure size. The
-sandbox closure is printed BEFORE execution (with its size) so the author
-can judge feasibility and pick stub cut points from data — a page-scale
-closure (hundreds of chunks) means "stub deeper or split the unit", not
-"execute the world".
+`<case>.expected.json`: `{ provenance, output }`. Provenance is ordinary,
+reviewable JSON (corpus git HEAD, entry + closure chunk hashes, stubs, closure
+size). `output` is a recursively **tagged** value grammar: every accepted
+JavaScript type is explicit (`null`, `undefined`, number including `-0`/NaN,
+string, bigint, Date, sparse-array hole, plain object, host React element).
+This is intentionally not ordinary JSON projection: a string such as
+`"$date:…"` cannot masquerade as a Date. Values that have no injective,
+reviewable representation—functions/symbols, accessors or nonstandard own
+properties, instances, cycles, and composite React elements—fail loudly with
+a path; drivers must project them explicitly or the unit waits for the T2
+renderer. The sandbox closure is printed BEFORE execution (with its size) so
+the author can judge feasibility and pick stub cut points from data — a
+page-scale closure (hundreds of chunks) means "stub deeper or split the unit",
+not "execute the world".
 
 Committed goldens are computed values (facts) — the same legal category as
 `extracts/` and `src/ui-theme/golden/` (#215 precedent). The corpus itself
