@@ -87,6 +87,36 @@
               }
             },
             {
+              "key": "aliasIdentity",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "pageMetadataIsTargetR",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "componentIsTargetN",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  },
+                  {
+                    "key": "contentIsTargetT",
+                    "value": {
+                      "tag": "boolean",
+                      "value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
               "key": "componentExportsPresent",
               "value": {
                 "tag": "object",

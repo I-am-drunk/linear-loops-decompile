@@ -39,10 +39,19 @@ const project = (node) => {
   return out;
 };
 
-export default async ({ entry }) => {
+export default async ({ entry, load }) => {
   const metadata = entry.pageMetadata;
+  // Identity pins against the target module: a swap of the two component
+  // aliases (both `function`) would otherwise pass on names+types alone
+  // (CodeRabbit finding on #276).
+  const target = await load(`CodingAgentSettingsPage.lcMyXnM7.js`);
   const aliasSurface = {
     ownExportNames: Object.keys(entry).sort(),
+    aliasIdentity: {
+      pageMetadataIsTargetR: entry.pageMetadata === target.r,
+      componentIsTargetN: entry.Component === target.n,
+      contentIsTargetT: entry.CodingAgentSettingsContent === target.t,
+    },
     componentExportsPresent: {
       Component: typeof entry.Component,
       CodingAgentSettingsContent: typeof entry.CodingAgentSettingsContent,
