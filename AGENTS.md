@@ -62,6 +62,26 @@ patterns every later slice copies: give them extra care while change is cheap.
 Keep code small: zero runtime deps, strict TS, boring patterns. If a slice feels
 big, it is two slices. The sequence lives in `PLAN.md`.
 
+## Product scope (non-negotiable)
+
+Read `SPECS/product-contract.md` before proposing or implementing a product slice.
+We build an original, self-hosted **Loops-only** product—not Linear generally.
+The sidebar is Loops, only the Loops-required views, and our Settings; do not build
+tracker navigation or copy Linear Settings. Exactness is still required for every
+scoped Loops surface.
+
+Keep the credential boundaries explicit:
+
+- Linear PAT/OAuth = documented public-API data plane for reads/events/audited
+  write-back, never the AI brain.
+- User-session chat bridge = the golden-goose primary brain, separate from public
+  API credentials.
+- External inference = fallback only.
+
+A slice must identify the Loop-operator job it enables, its corpus/docs authority,
+and its golden proof. If it is not necessary to create, configure, run, inspect, or
+write back a Loop—or to configure our server—it is out of scope.
+
 ## Hard rules (load bearing)
 
 - This repo is PUBLIC. Never commit Linear proprietary material: no app bundles,
