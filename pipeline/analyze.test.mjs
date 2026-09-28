@@ -111,6 +111,19 @@ test('signature text is layout-invariant across pretty and raw renderings', () =
   assert.match(min, /\(\$id: String!, \$refs: \[ID!\]\)/);
 });
 
+test('signature normalization never rewrites a quoted default value', () => {
+  // #254 CodeRabbit thread: `= "a , b"` is a VALUE — collapsing whitespace or
+  // dropping spaces around punctuation INSIDE it fabricates a different fact.
+  // Only the syntax between string literals may be normalized.
+  const MIN_Q = 'function s1(e){return e.query($n`query SigQuery($sep: String = "a , b", $pad: String = "two  spaces") { sig { id } }`)}';
+  const PRETTY_Q = 'function s1(e) {\n  return e.query($n`query SigQuery($sep: String = "a , b" , $pad: String = "two  spaces") { sig { id } }`)\n}\n';
+  const min = runAnalyzeMd(MIN_Q);
+  const pretty = runAnalyzeMd(PRETTY_Q);
+  assert.equal(pretty, min);
+  assert.match(min, /"a , b"/); // the value's spaces survive
+  assert.match(min, /"two  spaces"/); // repeated spaces inside a value survive
+});
+
 // Like runAnalyze but returns the SigQuery line of the generated
 // extracts/graphql-ops.md (the human-facing signature bytes the review is
 // about), not the JSON facts.

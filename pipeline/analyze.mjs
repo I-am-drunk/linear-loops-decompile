@@ -132,10 +132,17 @@ for (const [name, op] of [...graphqlOps.entries()].sort()) {
   // drop the layout-only spaces a beautifier inserts around GraphQL
   // punctuation (`String !` / `[ ID ! ]` / `$a , $b`) so the same op yields
   // identical signature bytes from the pretty and raw trees.
-  const full = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1]
-    .replace(/\s+/g, ' ')
-    .replace(/\s+([!,:)\]])/g, '$1')
-    .replace(/([([])\s+/g, '$1')
+  // Quote-aware (#254 CodeRabbit): a quoted default (`= "a , b"`) is a VALUE
+  // — normalizing inside it would fabricate a different fact. Split the text
+  // on string literals and normalize only the syntax segments between them.
+  const rawSig = (op.doc.match(/\(([^)]*)\)/) || [, ''])[1];
+  const full = rawSig
+    .split(/("(?:\\.|[^"\\])*")/)
+    .map((seg, i) => i % 2 === 1 ? seg : seg
+      .replace(/\s+/g, ' ')
+      .replace(/\s+([!,:)\]])/g, '$1')
+      .replace(/([([])\s+/g, '$1'))
+    .join('')
     .trim();
   // Mark a cut signature as cut (#254 review): an unfinished `$var` or type
   // name presented as a complete signature is a wrong fact, not a short one.
