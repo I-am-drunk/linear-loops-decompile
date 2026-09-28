@@ -97,6 +97,7 @@ sess_01a0e4ca-cd60), G4 first rendered-component golden OPEN — claim on #225).
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
+- #231 pipeline execution-integrity guard (PR #232; sess_01a0e510-3543-77fa-88cc-732b1e29915c): raw corpus execution requires every generated `pretty/client` artifact to parse and retain raw template-token structure; the vault raw-tree slice supplies captured bytes, while the public pipeline validates beautifier output, records explicit byte-faithful raw fallbacks, and rejects corrupt caches before reuse.
 - H1 follow-ups: #177 closed (routes.json union + `?` params landed via
   #171/#189/#181). declaredIn route tagging LANDED (#208
   closed; #211 merged — 43 routeMeta entries, roles verified); extract
