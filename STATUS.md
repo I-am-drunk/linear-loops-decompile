@@ -93,7 +93,10 @@ authority with source-flavor provenance, injective serializer — Date/undefined
 key preserved, non-plain objects a loud typed error; 27/27 incl. the raw-tree
 corpus smoke, six reviewer verifications), G2 golden leg + coverage ledger
 (scope posted 22:33Z on #225, UNCLAIMED), G3 theme retrofit (claimed
-sess_01a0e4ca-cd60), G4 first rendered-component golden OPEN — claim on #225). H3 family expansion
+sess_01a0e4ca-cd60), G4 first rendered-component golden LANDED 2026-09-28 (src/ui-loops-icons:
+AgentAutomationEmptyStateIcon darkDefault — corpus-executed, hand-verified vs
+source, serializer-v2 bytes, TZ/locale-invariant; the pattern every rendered
+slice copies)). H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 
 Now (the H track — PLAN.md "harness era", the freeze's exit path):
