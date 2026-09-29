@@ -1,0 +1,15 @@
+{
+  "unit": "notif-copy/notif-copy",
+  "chunk": "Issue.DRYymPCa.js",
+  "stubs": {
+    "config.aM1_XCHx.js": {
+      "file": "config-bootstrap-stub.mjs",
+      "why": "the injected-config proxy chunk, replaced by a proxy of benign values PLUS the module-scope environment bootstrap first-party's boot chunk html.CjyPLfH8.js performs (browser-global no-op shapes and the app's Array/String/Set prototype extensions). Same seam, same file as the merged TYPE-LATTICE golden (src/loops-type-lattice) — the one stub that makes the model-layer chunk executable; the driven copy builders are pure over their arguments (yee additionally reads the wall clock through the REAL spacetime chunk — see the driver's determinism note) and read none of the stubbed config. Full name pinned from the entry's import literal (hash-rotated twin config.Uz-QjVze.js exists)."
+    }
+  },
+  "drive": {
+    "file": "notif-copy-driver.mjs",
+    "exportMeaning": "export{yee as ub, bee as db, xee as fb} (Issue.DRYymPCa.js export map) — ub is the failure copy builder (pretty L9848: five-reason vocabulary, single-positive-reason collapse, tz-sensitive 'N times today' day-bucketing via spacetime, includeTrailingPeriod option); db is the run-response builder (L9871: awaitingApproval fork with || fallback); fb is the user-message builder (L9876: ?? fallback)."
+  },
+  "notes": "NOTIF-COPY (#225 claim 2026-09-29 20:38:02Z; research = the settled 14:41:10Z + 14:42:39Z notification legs): pins all five single-reason failure messages byte-exact (incl. the U+2019 apostrophe in the untrustedSource/skillUnavailable copy), the single-positive-reason collapse (mixed and zero-valued buckets go BARE), the 'N times today'/'N times' suffix fork on the day-bucket test, the includeTrailingPeriod composition, and the || (response) vs ?? (user-message) empty-string fallback asymmetry. Wall-clock determinism: fixtures pin the BRANCH, not the clock — live 'today' legs compute bucketDate at drive time (output bytes are run-date-independent); the stale leg uses a fixed past date; see the #295 determinism input posted with the claim. Executes the model-layer chunk via the TYPE-LATTICE config-bootstrap seam; every other chunk in the closure, including spacetime and the timezone data, executes REAL."
+}
