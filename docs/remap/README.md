@@ -78,6 +78,9 @@ Settings/Teams/Workspace subset enumerated in `sections/`.
 
 ## Files
 
+- `research-digest.md` — ALL 46 #295 research inputs consolidated: settled
+  findings, per-plane maps, owner-decision status, process rules (owner
+  request 2026-09-29 17:16Z). Read it before re-deriving anything.
 - `sections/` — one file per shard (the row tables). Created by the shard-taker
   in their own PR; the shard map below is the claim queue.
 - `owner-decisions.md` — the batched list awaiting the owner (single file, so
