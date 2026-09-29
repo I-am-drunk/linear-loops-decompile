@@ -446,11 +446,14 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   sitemap bar (#184/#190/#197 merged); citation hard rule + docs drift-check
   leg + reviewer two-source checklist merged (#196); agent-signals +
   best-practices prose digests merged (#201).
-- R5.1 dataplane PR #155: the blocking 400/RATELIMITED finding and the
-  markExhausted/Retry-After gate bug are fixed on its branch (#202/#204
-  merged into it; server 26/26). STAYS HELD: the owner's 03:29Z grant
-  (#256) covers careful harness-verified exact-UI work only and does not
-  mention the dataplane — #155 needs explicit owner scope before merge.
+- R5.1 dataplane LANDED 2026-09-29 (#155 squashed to main `ddc478b`):
+  `src/server/linear-client.ts` GraphQL client + header-driven rate budget;
+  the blocking 400/RATELIMITED finding and the markExhausted/Retry-After
+  gate bug fixed on-branch (#202/#204); 9/9 review threads resolved, gate
+  green fresh-clone at `97dfce4`, legal clean. The pre-#295 hold was judged
+  moot at merge: the #295 directive + merged #296 spine make the public-API
+  data plane the projection's substrate (merge evidence on the PR,
+  2026-09-29 13:04Z). R5.2/R5.3 (domain reads/writes) unblocked.
 
 Product contract clarification (2026-09-28, owner directive): the rebuild is an
 original **Loops-only** product. The sidebar contains Loops, only the Loops-required
@@ -476,10 +479,11 @@ slice still answers the four product-contract questions and is gated by
 `parity check` + `coverage check`. Owner decisions are batched in
 `docs/remap/owner-decisions.md` (10 entries, of which #8 settled-by-code) —
 implementation of consuming
-rows waits; research never does. Shard queue: docs/remap/shards.md (no fixed count — it grows with research legs). #155 (R5.1 dataplane) stays HELD pending
-explicit owner scope; note the widened scope makes it MORE central (the
-public-API data plane feeds the team/workspace projection), so surfacing it
-for an owner decision is part of the remap.
+rows waits; research never does. Shard queue: docs/remap/shards.md (no fixed count — it grows with research
+legs; R-A landed 2026-09-29, main `eb79b36` — the 29-route spine section).
+R5.1 dataplane is MERGED (#155, main `ddc478b`); R5.2/R5.3 domain
+reads/writes are the next dataplane slices and feed the team/workspace
+projection (R-PROJ).
 
 More goldens are always claimable (the 40% track): the ledger names every
 GAP chunk; the G4/G5/G6 patterns (case file + hand-verified golden +
