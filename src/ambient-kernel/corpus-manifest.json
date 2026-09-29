@@ -1,0 +1,17 @@
+{
+  "source": "AMBIENT-KERNEL (#225 claim 2026-09-29): src/ambient-kernel reimplements the installer half of the app's ambient prototype-extension standard library from the boot chunk html.CjyPLfH8.js (pretty L54-167): f = Array distinct/concrete/groupBy/orderBy/sortBy/at?/toReversed?/count; h = Promise raceFind?/withResolvers?; g = String capitalize/deCapitalize/toQuestion; l = Object.hasOwn?; _ = Set isEqualTo/difference?; v/y = Symbol dispose/asyncDispose? (? = install-if-missing polyfill; the rest install unconditionally with the core.PJIFv7xf.js `ot` descriptor shape: non-enumerable/writable/configurable). The b() installer's t() call (core.PJIFv7xf.js fe: the Date family + String.prototype.toLocalDate) is the separate DATE-KERNEL slice; this golden asserts only that its install site ran. orderBy/sortBy first-party delegate to the bundled lodash orderBy/sortBy; our clean reimplementation (compareAscending semantics, iteratee shorthand, stability) is pinned against the real bundled code by the golden's value-laden cases (mixed undefined/null/NaN ordering, multi-key desc, tie stability). Golden executed from the RAW tree by importing the boot chunk for its installer side effect and sweeping the installed methods; the clean module byte-matches through the tagged-v2 serializer.",
+  "reimplements": [
+    {
+      "chunkPrefix": "html",
+      "exports": [
+        {
+          "minified": "(module body)",
+          "meaning": "html.CjyPLfH8.js has no exports — its module body calls b() = f(), t(), h(), g(), l(), _(), v() (pretty L165-167), installing the ambient kernel on the live globals. Reimplemented as installAmbient() (minus t(), which is DATE-KERNEL's module) plus pure receiver-first exports: distinct, concrete, groupBy, sortByValue, orderByValues, count, at, toReversed, capitalize, deCapitalize, toQuestion, setIsEqualTo, setDifference, raceFind, withResolvers",
+          "evidenceLine": "src/ambient-kernel/ambient-kernel.ts + golden test"
+        }
+      ],
+      "goldens": ["ambient-kernel.sweep"]
+    }
+  ],
+  "goldens": ["ambient-kernel.sweep"]
+}

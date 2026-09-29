@@ -484,7 +484,11 @@ legs; R-A landed 2026-09-29, main `eb79b36` — the 29-route spine section;
 TYPE-LATTICE landed 2026-09-29 — the six-value WorkflowDefinition type
 dispositions + the resolveTypeForTrigger conversion kernel golden-backed in
 `src/loops-type-lattice`, the first golden executing the model-layer chunk
-`Issue.DRYymPCa.js` directly via the config-bootstrap seam).
+`Issue.DRYymPCa.js` directly via the config-bootstrap seam;
+AMBIENT-KERNEL landed 2026-09-29 — the installer half of the ambient
+prototype-extension standard library golden-backed in `src/ambient-kernel`
+by executing the REAL boot-chunk installer from `html.CjyPLfH8.js`; with
+DATE-KERNEL (claimed, in flight) it completes the A1-gating B2 boot row).
 R5.1 dataplane is MERGED (#155, main `ddc478b`); R5.2/R5.3 domain
 reads/writes are the next dataplane slices and feed the team/workspace
 projection (R-PROJ).

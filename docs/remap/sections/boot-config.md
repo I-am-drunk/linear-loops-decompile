@@ -93,7 +93,7 @@ definition site: the 00:54:08Z `sortByUserSortOrder` kernel, the memories
 
 | Row | Disposition | Golden-req | Notes |
 |---|---|---|---|
-| prototype-extension module (all of the above, one module) | KEEP-EXACT | **yes (b)** — pure, zero-dep, value-laden forks (`distinct`'s 15-element split, `toQuestion`'s regex, `groupBy`'s sorted-key path, `raceFind`'s all-settle-undefined contract). G7-lineage drive-mode material, executable today | Ships in the FIRST A1 batch, before the primitive tier. Ambient-seam class for R-SEAM: imported by nobody, assumed by everybody — invisible to an import census |
+| prototype-extension module (all of the above, one module) | KEEP-EXACT | **yes (b)** — pure, zero-dep, value-laden forks (`distinct`'s 15-element split, `toQuestion`'s regex, `groupBy`'s sorted-key path, `raceFind`'s all-settle-undefined contract). G7-lineage drive-mode material, executable today | Ships in the FIRST A1 batch, before the primitive tier. Ambient-seam class for R-SEAM: imported by nobody, assumed by everybody — invisible to an import census. **LANDED (installer half): `src/ambient-kernel`** — golden executes the REAL boot-chunk installer and byte-pins the value-laden forks incl. `distinct`'s NaN divergence between branches and the bundled-lodash `orderBy`/`sortBy` mixed-value ordering; the Date half (`fe`) is DATE-KERNEL (claimed #225 2026-09-29 20:16Z). When both land, #301's `config-bootstrap-stub.mjs` should shrink to config-proxy-only + import these modules (drift-risk note from the #300 review) |
 
 ## 3. The config seam (two chunks, one contract)
 

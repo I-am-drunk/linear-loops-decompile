@@ -1,0 +1,6 @@
+{
+  "name": "ambient-kernel",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the app's prototype-extension ambient standard library (html.CjyPLfH8.js installer half: Array/String/Set/Promise/Object/Symbol), golden-verified against corpus execution (AMBIENT-KERNEL claim, #225 2026-09-29; the Date half is the separate DATE-KERNEL slice)"
+}

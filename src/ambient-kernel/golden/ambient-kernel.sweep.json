@@ -1,0 +1,19 @@
+{
+  "unit": "ambient-kernel/ambient-kernel",
+  "chunk": "html.CjyPLfH8.js",
+  "stubs": {
+    "config.aM1_XCHx.js": {
+      "file": "config-globals-stub.mjs",
+      "why": "the injected-config proxy chunk (6 lines real), replaced by the same export contract PLUS inert browser-global shapes (window/self/document/MutationObserver/localStorage) installed at module scope. The entry html.CjyPLfH8.js is itself the boot chunk: its modulepreload IIFE and installer tail touch document/window before anything else can polyfill them, and ESM depth-first order runs this stub (static position 3) before config.Uz-QjVze (4, reads window.CLIENT_ENV) and the entry body. Unlike the #301 config-bootstrap stub this one installs NO prototype extensions — installing them is exactly the behavior under test, done by the REAL installer functions in the entry. Full name pinned from the entry's import literal (hash-rotated twin config.Uz-QjVze.js exists and runs REAL)."
+    },
+    "preload-helper.HclGiUj8.js": {
+      "file": "preload-helper-stub.mjs",
+      "why": "the boot chunk's final statement preloads and dynamically imports the whole application (entry.BGeHYrTB.js + 96 mapped assets) through this helper; that app boot is outside this unit's ground and cannot execute in the sandbox (URL resolution against the baked prod ASSET_URL). The installer b() and config injection o(s) run in earlier positions of the same statement list, so the swept behavior is fully installed before the stubbed call. Export contract preserved (t = the preload function, returns a resolved promise)."
+    }
+  },
+  "drive": {
+    "file": "ambient-kernel-driver.mjs",
+    "exportMeaning": "html.CjyPLfH8.js exports nothing — importing it runs its module body, which calls the installer b() (pretty L165: f(), t(), h(), g(), l(), _(), v()) and installs the ambient prototype extensions: f=Array distinct/concrete/groupBy/orderBy/sortBy/at?/toReversed?/count (L65–99), h=Promise raceFind?/withResolvers? (L129–131), g=String capitalize/deCapitalize/toQuestion (L133–142), l=Object.hasOwn? (L54–61), _=Set isEqualTo/difference? (L144–150), v=Symbol dispose/asyncDispose? (L152–163); ?=install-if-missing. The driver sweeps the INSTALLED methods over fixed fixtures. t() (core.PJIFv7xf.js fe — the Date family) is DATE-KERNEL's ground; only its install site is asserted here."
+  },
+  "notes": "AMBIENT-KERNEL (#225 claim 2026-09-29): pins the value-laden forks of the ambient standard library by executing the real boot-chunk installer: distinct's <=15 indexOf-filter vs >15 Set fork including the observable NaN divergence (indexOf never finds NaN, so the small path DROPS every NaN; the Set path keeps exactly one) and both sides of the 15/16 boundary; groupBy's insertion-order Map + sorted-key path; sortBy/orderBy iteratee shorthand, multi-key desc, lodash mixed-value ordering (NaN < null < undefined at the end, stability on ties); count's index predicate; toQuestion's single-trailing-punctuation strip + existing-? guard; raceFind's first-match/default-truthy/all-settled-undefined/empty/rejection contract; Set isEqualTo/difference; capitalize/deCapitalize incl. empty string. at/toReversed run NATIVE on modern Node (the corpus installs them only if missing) — the cases pin the app-visible behavior, per the #300 review note. Everything except the config proxy chunk executes REAL."
+}
