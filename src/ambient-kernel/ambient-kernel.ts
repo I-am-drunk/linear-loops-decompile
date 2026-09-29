@@ -85,7 +85,10 @@ export type Iteratee<T> = ((value: T) => unknown) | string;
 function toIterateeFn<T>(iteratee: Iteratee<T>): (value: T) => unknown {
   if (typeof iteratee === `function`) return iteratee;
   const key = iteratee;
-  return (value: T) => (value as Record<string, unknown>)[key];
+  // lodash property() contract: a nullish member yields undefined, never a
+  // TypeError (golden case sortByNullishMembers pins the real bundled code).
+  return (value: T) =>
+    value === null || value === undefined ? undefined : (value as Record<string, unknown>)[key];
 }
 
 /** `Array.prototype.distinct` (boot chunk `f`): ≤15 elements uses the
@@ -128,10 +131,12 @@ export function groupBy<T>(
   return groups;
 }
 
-/** `Array.prototype.sortBy(iteratee)` — bundled-lodash sortBy: stable
- * ascending by iteratee value under compareAscending. */
-export function sortByValue<T>(array: readonly T[], iteratee: Iteratee<T>): T[] {
-  return orderByValues(array, [iteratee], []);
+/** `Array.prototype.sortBy(iteratee | iteratees[])` — bundled-lodash sortBy:
+ * stable ascending by iteratee value(s) under compareAscending. lodash also
+ * accepts an ARRAY of iteratees (golden case sortByArrayOfIteratees pins the
+ * real bundled multi-key behavior). */
+export function sortByValue<T>(array: readonly T[], iteratee: Iteratee<T> | readonly Iteratee<T>[]): T[] {
+  return orderByValues(array, iteratee, []);
 }
 
 /** `Array.prototype.orderBy(iteratees, orders)` — bundled-lodash orderBy:
@@ -297,7 +302,7 @@ export function installAmbient(): void {
   define(arrayProto, `orderBy`, function (this: unknown[], iteratees: Iteratee<unknown> | Iteratee<unknown>[], orders?: string | string[]) {
     return orderByValues(this, iteratees, orders);
   });
-  define(arrayProto, `sortBy`, function (this: unknown[], iteratee: Iteratee<unknown>) {
+  define(arrayProto, `sortBy`, function (this: unknown[], iteratee: Iteratee<unknown> | Iteratee<unknown>[]) {
     return sortByValue(this, iteratee);
   });
   if (!Array.prototype.at) {

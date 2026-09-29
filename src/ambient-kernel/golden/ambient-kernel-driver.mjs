@@ -96,6 +96,16 @@ export default async ({ entry }) => {
       multiDesc: names(people.orderBy([`v`, `w`], [`asc`, `desc`])),
       descFirst: names(people.orderBy([`v`], [`desc`])),
     },
+    // CodeRabbit threads on PR #305 — pin the REAL bundled-lodash contract:
+    // sortBy also accepts an ARRAY of iteratees, and nullish members yield
+    // undefined criteria instead of throwing.
+    sortByArrayOfIteratees: [
+      { team: `b`, name: `y` },
+      { team: `a`, name: `z` },
+      { team: `b`, name: `x` },
+      { team: `a`, name: `w` },
+    ].sortBy([`team`, `name`]).map((p) => `${p.team}:${p.name}`),
+    sortByNullishMembers: [{ v: 2 }, null, { v: 1 }, undefined].sortBy(`v`).map((p) => (p === null ? `null` : p === undefined ? `undefined` : p.v)),
     count: [1, 2, 3, 4, 5].count((v, i) => v % 2 === 1 && i < 4),
     at: { native: [10, 20, 30].at(-1), out: [10, 20, 30].at(5), trunc: [10, 20, 30].at(1.9) },
     toReversed: [1, 2, 3].toReversed(),

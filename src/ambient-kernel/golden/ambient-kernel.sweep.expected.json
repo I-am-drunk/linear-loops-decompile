@@ -675,6 +675,54 @@
         }
       },
       {
+        "key": "sortByArrayOfIteratees",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "a:w"
+            },
+            {
+              "tag": "string",
+              "value": "a:z"
+            },
+            {
+              "tag": "string",
+              "value": "b:x"
+            },
+            {
+              "tag": "string",
+              "value": "b:y"
+            }
+          ]
+        }
+      },
+      {
+        "key": "sortByNullishMembers",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "number",
+              "value": "1"
+            },
+            {
+              "tag": "number",
+              "value": "2"
+            },
+            {
+              "tag": "string",
+              "value": "null"
+            },
+            {
+              "tag": "string",
+              "value": "undefined"
+            }
+          ]
+        }
+      },
+      {
         "key": "count",
         "value": {
           "tag": "number",

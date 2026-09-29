@@ -118,6 +118,18 @@ test(`clean module byte-matches the corpus-executed golden (full sweep)`, async 
       multiDesc: names(orderByValues(people, [`v`, `w`], [`asc`, `desc`])),
       descFirst: names(orderByValues(people, [`v`], [`desc`])),
     },
+    sortByArrayOfIteratees: sortByValue(
+      [
+        { team: `b`, name: `y` },
+        { team: `a`, name: `z` },
+        { team: `b`, name: `x` },
+        { team: `a`, name: `w` },
+      ],
+      [`team`, `name`],
+    ).map((p) => `${p.team}:${p.name}`),
+    sortByNullishMembers: sortByValue([{ v: 2 }, null, { v: 1 }, undefined], `v`).map((p) =>
+      p === null ? `null` : p === undefined ? `undefined` : p.v,
+    ),
     count: count([1, 2, 3, 4, 5], (v, i) => v % 2 === 1 && i < 4),
     at: { native: at([10, 20, 30], -1), out: at([10, 20, 30], 5), trunc: at([10, 20, 30], 1.9) },
     toReversed: toReversed([1, 2, 3]),
