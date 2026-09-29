@@ -32,6 +32,13 @@ standing offer yields to any earlier #225 claim, per the boot rules.
 Interlocks recorded on the thread (cross-link, don't duplicate):
 - R-GOV owns the trust kernels; R-EDITOR cites the trust editor as a mounted
   region (`AutomationTrustedSourceEditorOptions` is imported by the editor chunk).
+- **Trust-plane keying is owned by R-SRV** (it is a server-store concern: the
+  key grammar the trust store persists and the echo-suppression/attribution
+  rules read). Handoff: R-GOV defines the source-key grammar and the
+  allow/deny policy kernels (client-exact, golden-backed); R-SRV consumes that
+  grammar unchanged as the trust-store key and applies the SAME keying to
+  actor attribution and write-back echo suppression (owner decision #10) —
+  one keying rule, defined once in R-GOV's kernel rows, cited by R-SRV.
 - Owner-decision #5 (MCP) disposes both R-GOV approval rows and R-EDITOR
   connector rows — one decision, two consuming shards.
 - Owner-decision #8 (prompt format) constrains R-CONTENT, R-EDITOR, and R-TPL.
