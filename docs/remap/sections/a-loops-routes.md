@@ -22,8 +22,9 @@ for p in sorted(uniq): print(p, '|', ', '.join(sorted(uniq[p])))
 PY
 ```
 
-47 route entries → **29 unique paths, mounted by exactly 10 chunks** (the
-README's evidence list). The registration KIND was then read at each site in
+47 route entries → **29 unique paths, whose evidence spans exactly 10 chunks**
+(the README's list; 27 paths have router registrations, 2 exist only in the
+entity-URL pattern registry — see §4). The registration KIND was then read at each site in
 `Root.DfW4FHnP.js` (the router chunk): `V(...)`/`W(...)` = a mounted view
 (lazy page import), `H(...)` = a redirect, and two paths exist ONLY in the
 entity-URL pattern registry in `Issue.DRYymPCa.js` (~25739) — they are link
@@ -114,7 +115,8 @@ building a page for them would be inventing surface (the R3.4 failure class).
 
 - 15 views: 1 golden-lineage list shell, 5 AutomationPage mounts (one page
   chunk, four entry modes — the A-track builds ONE page component), 2 runs
-  mounts, 1 memories page, 4 settings-hosted pages, 2 team-settings-hosted.
+  mounts, 1 memories page, 3 settings-hosted pages, 1 TeamHomePage team-list
+  route, 2 team-settings-hosted.
 - 10 redirects: one table-driven golden family.
 - 2 notification deep-links: owner decision #2, recommend resolve-and-strip.
 - 2 pattern-registry entries: link-grammar data for R-CONTENT.
