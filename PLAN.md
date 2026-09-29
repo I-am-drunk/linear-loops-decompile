@@ -78,6 +78,37 @@ golden manifests with the golden leg green (the pattern every later slice
 copies — `ui-facts.json` alone no longer suffices); the R3.4 shell either
 brought to golden-green or archived like v0.
 
+## A: the assembly track (owner directive 2026-09-28, issue #295 — the 60%)
+
+The product becomes visible and usable: a runnable UI composing golden-backed
+modules plus corpus-informed non-golden slices (~80% of UI work needs no
+golden), served by src/server. Scope is the widened product-contract scope:
+Loops + Settings + workspace context + team-select. The disposition ledger
+(`docs/remap/`) is the row source; its transcription rule + seam rule are the
+anti-R3.4 bar for the non-golden 80%.
+
+Sequencing is fan-in-ordered, bottom-up (measured on the corpus import graph;
+docs/remap/README.md Findings 2 and the 00:49Z/00:56Z closure work):
+
+- A1 foundation kit: the ~46-chunk primitive tier (Flex/Text/Icon/Button/
+  Tooltip/Input…) that absorbs ~half the closure's import edges; the router
+  over the 29 loops routes (roots GENERATED from routes.json).
+- A2 node-render tier: the document node/markdown render pipeline — shared
+  spine of the loop editor AND the runs transcript (settled Finding 2; NOT
+  deferrable as "editor, later"). Includes the readonly renderer.
+- A3 store seam: `src/ui-store` (projected model layer: public-API intake +
+  our loop/run store) + the run-event stream over R3.1 transport; the ~34-chunk
+  seam contract is the closed list where owner-licensed changes live.
+- A4 composition tier -> A5 route shells (list, detail/editor frame, runs,
+  memories, settings pages), each transcribed with cited chunk evidence.
+- Monster chunks (ContextualMenuActions, Issue) are consumed through schedule
+  facades with tool-emitted demanded-export lists (tools/remap-graph), never
+  reimplemented whole.
+
+The 40% harness track runs in parallel: goldens concentrate on the
+golden-required rows (engine-semantics kernels, policy/ordering lattices,
+transcoder, degraded states), plus T2 render / T3 store corpus-exec tiers.
+
 ## R4: loops domain slices (post-freeze; trigger model CORRECTED)
 
 Trigger entities are PascalCase model values (`Issue`, `Project`, `Document`,
