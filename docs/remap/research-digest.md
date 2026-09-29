@@ -97,7 +97,10 @@ These carry 2×+ independent-clone provenance and are load-bearing everywhere:
   10 redirects + 2 notification deep-links + 2 pattern-registry entries).
 - **Dispositions:** `KEEP-EXACT` / `ADAPT` (exact algorithm + exact degraded
   states over a DECLARED reduced data source) / `ASSEMBLY` (corpus-informed
-  non-golden — the ~80%) / `OUT` (explicit row, never silence) / `NEW`.
+  non-golden — the ~80%) / `OUT` (explicit row, never silence) / `NEW`
+  (governing definition: the column-vocabulary table in
+  `docs/remap/README.md` — that file is the source of truth for these
+  values; this line only restates it).
 - **Golden-required test (a)–(d)** (23:37:21Z): (a) wire op ∨ (b) value-laden
   algorithm/copy ∨ (c) reachable degraded state ∨ (d) theme/layout math.
 - **Data plane:** `OURS` / `PUB-READ` / `PUB-WRITE` / `WEBHOOK` / `POLL` /
@@ -348,7 +351,11 @@ Getting the file answered is the highest-leverage owner action.**
   hand count on the thread diverged (routes, sx-classes, config keys).
 - **Full vault clone + count check before trusting corpus numbers** (three
   counts: chunks.json = pretty/client = raw client). Stamp `.corpus-head`.
-- **Feedback gate** unchanged: no merges with unaddressed threads.
+  (Governing recipe: `pipeline/README.md` §fetch — the stamp line and the
+  equal-counts check live there.)
+- **Feedback gate** unchanged: no merges with unaddressed threads
+  (governing text: `AGENTS.md` §The loop, item 4 — user directive
+  2026-09-27).
 
 ## 6. Where the effort goes NOW (post-17:16Z owner message)
 
