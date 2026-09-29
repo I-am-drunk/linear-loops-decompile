@@ -87,3 +87,15 @@ Constrains R-CONTENT, R-EDITOR, R-TPL (template instantiation emits doc JSON).
 uploaded files. First-party uploads to Linear storage; ours would need a NEW
 server row (upload endpoint + storage + the URL shape PM nodes serialize), or
 the feature is OUT initially.
+
+## 10. Write-back credential mode
+
+Which credential the engine writes back with (02:31Z write-back identity leg,
+docs-cited): under PAT the webhook payload `actor` is the owner's User —
+our own write-backs echo into our intake unfilterably (self-triggering-loop
+failure mode; needs a write-ledger heuristic, OBSERVED/UNVERIFIED class).
+Under OAuth `actor=app` the echo is an exact documented filter — but
+`actor=app` cannot hold `admin` scope, so webhook registration needs a
+separate admin credential. Options: (a) PAT-only + write ledger; (b) OAuth
+actor=app + separate admin credential for webhook registration;
+(c) configurable. Consumers: R-SRV intake/echo rows, trust-plane keying.

@@ -443,8 +443,9 @@ golden-required (engine semantics in AutomationHelper, policy/ordering
 kernels, transcoder, degraded states), plus corpus-exec T2/T3 tiers. Every
 slice still answers the four product-contract questions and is gated by
 `parity check` + `coverage check`. Owner decisions are batched in
-`docs/remap/owner-decisions.md` (9 entries) — implementation of consuming
-rows waits; research never does. #155 (R5.1 dataplane) stays HELD pending
+`docs/remap/owner-decisions.md` (10 entries, of which #8 settled-by-code) —
+implementation of consuming
+rows waits; research never does. Shard queue: docs/remap/shards.md (no fixed count — it grows with research legs). #155 (R5.1 dataplane) stays HELD pending
 explicit owner scope; note the widened scope makes it MORE central (the
 public-API data plane feeds the team/workspace projection), so surfacing it
 for an owner decision is part of the remap.
