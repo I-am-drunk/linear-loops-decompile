@@ -59,6 +59,29 @@ Boot order read top-to-bottom in `html.CjyPLfH8.js`, then `entry.BGeHYrTB.js`:
   without a pass; rejects on first rejection. `withResolvers` (polyfill).
 - `Object.hasOwn` polyfill; `Symbol.dispose`/`Symbol.asyncDispose` defined as
   `Symbol('@linear/Symbol.dispose')` etc.
+- **The date half (the 16:40Z review's find, settled 2×): `b()`'s second call
+  `t()` is `core.PJIFv7xf.js`'s `fe` export** (html imports `$ as t`; core
+  exports `fe as $`; `fe` = core L297–344 — html.CjyPLfH8 is the ONLY chunk
+  in all 1,550 importing `$`, so this is boot-only installation, invisible to
+  a consumer-side census). `fe` installs **`Date.prototype` (11 methods)**:
+  `beginningOfWeek`, `nextWeekDay`, `midnight`, `nearestMidnight` (no-tz fork
+  = `offsetByHours(12).midnight()`), `offsetByDays`, `offsetByBusinessDays`,
+  `offsetByHours`, `offsetBySeconds`, `toUTCDate`, `daysTo`, `toTimelessDate`
+  (`YYYY-MM-DD`, padStart) — each with a spacetime-backed tz branch (zone
+  arg) vs plain-Date branch: two genuinely different date arithmetics per
+  method — plus **`String.prototype.toLocalDate`**: UTC-field reconstruction;
+  tz branch via spacetime; and the invalid-date self-recursion
+  (`this.substring(0, this.length - 1).toLocalDate()`, stripping trailing
+  chars until the string parses; empty → `new Date`). Demand (pretty tree):
+  `toLocalDate` ~200 uses / ~25 files; `toTimelessDate` ~100 / ~15.
+  **Interlock for R-SCHED (SCHED-1): the schedule kernel's recurrence math
+  executes ON these ambient methods (`toTimelessDate` 5× / `midnight` 2× /
+  `toLocalDate` 3× inside the kernel region, and the 12:46Z picker's weekday
+  seed is `e.toLocalDate('UTC').getUTCDay()`) — ship the date kernel with or
+  before SCHED-1's goldens, or they run against different date semantics and
+  pass/fail silently wrong.** Value facts its golden must pin:
+  `offsetByDays` ≠ `offsetByHours(24)` across DST boundaries (setDate vs
+  epoch-ms), and the `toLocalDate` recursion's exact strip order.
 
 Why load-bearing: **transcribed chunks call these as if they were the
 language.** Measured consumer counts (pretty tree): `Issue.DRYymPCa.js`
@@ -78,14 +101,24 @@ definition site: the 00:54:08Z `sortByUserSortOrder` kernel, the memories
   Uninjected read throws
   `` `Config has not been injected. Call injectConfig() during client initialization.` ``.
   **50 importer chunks.**
-- `config.Uz-QjVze.js` (11.1 KB): the **90-key CONFIG table** over
-  `window.CLIENT_ENV` with a 75-key baked production fallback (`VITE_*`
-  literals: client-api/sync/uploads/static URLs, every OAuth client id, Sentry
-  DSN/tunnel, PostHog keys, Stripe, Turnstile, VAPID…). **85 importer
-  chunks.** Accessor semantics are pinned facts: `n(key)` = required (missing
-  ⇒ `console.error("Environment variable ${key} is not defined")` + `''`),
-  `r(key)` = optional (missing ⇒ `undefined`). Plus `window.__RELEASE_INFO`
-  (BUILD_REVISION/DEPLOYED_AT/SHORT_SHA/PR_NUMBER) and `PREVIEW_PR_NUMBER`'s
+- `config.Uz-QjVze.js` (11.1 KB): the CONFIG table over
+  `window.CLIENT_ENV` — **82 accessor keys: 64 required `n()` / 18 optional
+  `r()`** (measured mechanically, regex `[nr](\`KEY\`)` deduped; the
+  optional set is {ASSET_URL, CACHE_BUST, COUNTRY_CODE,
+  DEBUG_LOG_EXPAND_BATCH_LOAD, DEBUG_LOG_NETWORK_DATA, DEV_BRANCH,
+  ENABLE_CRASH_REPORTING, IS_PRODUCTION_RUNTIME, LINCTL_CONTROL_PLANE_URL,
+  OAUTH_CLIENT_URL, POSTHOG_SESSION_REPLAY_WRITE_KEY, PREVIEW_BUILD,
+  PREVIEW_BUILD_REVISION, PREVIEW_FEATURE_FLAGS, PREVIEW_PR_NUMBER,
+  SENTRY_DIST, SENTRY_DSN, SENTRY_TUNNEL}), plus non-accessor derived
+  properties (`__RELEASE_INFO`: BUILD_REVISION/DEPLOYED_AT/SHORT_SHA/
+  PR_NUMBER, FLAG_CLIENT, CLIENT_HOSTNAME, IS_*_BUILD…) — "~90 keys" is
+  reachable only by counting those too. Baked production fallback: **74
+  distinct `VITE_*` literals** (client-api/sync/uploads/static URLs, every
+  OAuth client id, Sentry DSN/tunnel, PostHog keys, Stripe, Turnstile,
+  VAPID…). **85 importer chunks.** Accessor semantics are pinned facts:
+  `n(key)` = required (missing ⇒
+  `console.error("Environment variable ${key} is not defined")` + `''`),
+  `r(key)` = optional (missing ⇒ `undefined`). Plus `PREVIEW_PR_NUMBER`'s
   host-regex fallback (`/pr-(\d+)/`).
 
 Consumer census (regex `X.KEY` over the pretty tree — candidate ceiling):
@@ -106,7 +139,7 @@ ThemeProvider-injection finding (#295 14:38Z).
 | Row | Disposition | Golden-req | Data plane |
 |---|---|---|---|
 | throwing-proxy + `injectConfig` contract | KEEP-EXACT | yes (b),(c) — the throw copy is a reachable degraded state | N-A |
-| 90-key table + `n`/`r` accessor fork + `__RELEASE_INFO` block | KEEP-EXACT (transcription-rule DATA: key names + accessor kind per key) | yes (b) — one golden pins the key surface and the n/r fork | N-A |
+| 82-accessor-key table (64 `n()` / 18 `r()`) + `__RELEASE_INFO` derived block | KEEP-EXACT (transcription-rule DATA: key names + accessor kind per key) | yes (b) — one golden pins the key surface and the n/r fork | N-A |
 | the VALUES our deployment injects | NEW — "CLIENT_ENV injection endpoint" server row (our analog of first-party's index.html script). R-SRV adjacency | no (spec-ratified) | OURS |
 | required-key coverage leg | NEW (tools/coverage): the set of `n()`-accessed keys demanded by the widened-scope closure is GENERATED, never hand-listed (00:56Z rule) — a deploy missing one fails loudly in CI, not silently at `console.error` | — | N-A |
 
