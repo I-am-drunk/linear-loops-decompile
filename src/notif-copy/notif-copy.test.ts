@@ -27,13 +27,18 @@ const golden = JSON.parse(
 
 const bytes = (v: unknown): string => JSON.stringify(v, null, 2);
 
-const todayIn = (timeZone: string): string =>
-  new Intl.DateTimeFormat(`en-CA`, {
+const todayIn = (timeZone: string): string => {
+  // Assembled from formatToParts, mirroring the module and the driver
+  // (PR #304 review thread).
+  const parts = new Intl.DateTimeFormat(`en-CA`, {
     timeZone,
     year: `numeric`,
     month: `2-digit`,
     day: `2-digit`,
-  }).format(new Date());
+  }).formatToParts(new Date());
+  const part = (type: string): string => parts.find((p) => p.type === type)?.value ?? ``;
+  return `${part(`year`)}-${part(`month`)}-${part(`day`)}`;
+};
 
 test(`golden serializer version matches the one this test projects with`, () => {
   assert.equal(golden.provenance.serializer, SERIALIZER_VERSION);

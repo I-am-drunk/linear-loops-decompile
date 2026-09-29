@@ -21,9 +21,13 @@
 // The live leg uses UTC (no tz-database drift between Intl and the corpus's
 // bundled spacetime) plus one named zone (America/Chicago) documenting that
 // the two databases agree on "today".
-const todayIn = (timeZone) =>
-  new Intl.DateTimeFormat(`en-CA`, { timeZone, year: `numeric`, month: `2-digit`, day: `2-digit` })
-    .format(new Date);
+const todayIn = (timeZone) => {
+  // Assembled from formatToParts — the rendered en-CA pattern is not
+  // spec-guaranteed to be yyyy-MM-dd (PR #304 review thread).
+  const parts = new Intl.DateTimeFormat(`en-CA`, { timeZone, year: `numeric`, month: `2-digit`, day: `2-digit` }).formatToParts(new Date());
+  const part = (type) => parts.find((p) => p.type === type)?.value ?? ``;
+  return `${part(`year`)}-${part(`month`)}-${part(`day`)}`;
+};
 
 export default async ({ entry }) => {
   const failureCopy = entry.ub;

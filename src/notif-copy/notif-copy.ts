@@ -57,13 +57,19 @@ export interface AgentAutomationRunLike {
  * the same IANA database. Behavioral equivalence is pinned by the golden's
  * live legs (UTC + America/Chicago), which execute the corpus's real
  * spacetime against a bucketDate computed through THIS formatter. */
-const todayIn = (timeZone: string): string =>
-  new Intl.DateTimeFormat(`en-CA`, {
+const todayIn = (timeZone: string): string => {
+  // Assemble yyyy-MM-dd explicitly from formatToParts — a locale's rendered
+  // pattern is not spec-guaranteed (CodeRabbit thread on PR #304); the parts
+  // are (ECMA-402 table 15).
+  const parts = new Intl.DateTimeFormat(`en-CA`, {
     timeZone,
     year: `numeric`,
     month: `2-digit`,
     day: `2-digit`,
-  }).format(new Date());
+  }).formatToParts(new Date());
+  const part = (type: string): string => parts.find((p) => p.type === type)?.value ?? ``;
+  return `${part(`year`)}-${part(`month`)}-${part(`day`)}`;
+};
 
 /**
  * Failure copy (`yee`, L9848): "Loop failed to run[ N times[ today]]
