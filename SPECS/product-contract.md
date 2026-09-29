@@ -10,17 +10,34 @@ we deliberately ship: its UI, behavior, values, and run semantics must be
 verified against the corpus through the golden-test process. Exactness does not
 expand the product into Linear's tracker, global navigation, or Linear Settings.
 
-The product must be useful as a standalone loop operator:
+The product must be useful as a standalone loop operator, **used in parallel to
+Linear** (owner directive 2026-09-28, issue #295): the owner keeps using
+first-party Linear normally — inbox, notifications, tracker — and opens OUR
+self-hosted app when they want Loops, where every Loops feature works exactly
+as in Linear, through Linear's public API wherever a public surface exists.
 
 1. connect the user's Linear account;
 2. create, publish, enable, inspect, and run Loops;
-3. choose the Linear entities a Loop operates on;
+3. choose the Linear entities a Loop operates on — including **selecting the
+   team** a loop is configured against, within a **workspace context**;
 4. review streamed runs and audited write-back; and
 5. configure the self-hosted server.
 
 That is the entire scope test. Build a view or capability only when it is needed
 for one of those five jobs and evidence shows it is part of the corresponding
 Linear Loops experience.
+
+Scope widening under job 3 (issue #295): **Workspaces** and **Teams** are in
+scope in ADAPTED form — not full workspace/team administration, but the
+workspace notion Loops operates within and the ability to SELECT a team for a
+loop (team eligibility, boundary/scope policy, default-team resolution — the
+corpus kernels are enumerated in `docs/remap/`). Some team-related behavior
+deliberately differs from first-party because we carry only what Loops needs;
+each such delta is declared in the remap ledger as an ADAPT row (exact client
+algorithm + exact degraded-state rendering over a declared reduced data
+source). **Settings** is a first-class build target (our server's settings,
+plus the Loops-hosted settings surfaces the corpus places under
+`/settings/...`).
 
 ## What appears in our app
 
@@ -83,14 +100,20 @@ last two are incomplete, it is research or documentation work, not feature code.
 
 ## Current implementation constraint
 
-The H-track freeze is still active. This contract corrects product scope and
-connection vocabulary; it does not authorize speculative UI or server feature
-work. The freeze exits only through the golden-harness conditions in `PLAN.md`.
+The freeze exited 2026-09-28 (PR #256 ack), and the #295 directive set the
+effort split at 60% UI assembly / 40% harness with ~80% of UI work non-golden.
+Non-golden is not un-evidenced: assembly slices follow the remap ledger's
+transcription rule (corpus-transcribed structure and copy, cited per chunk)
+and seam rule (owner-licensed changes only in seam implementations on the
+closed seam list). Goldens remain required for the rows the ledger marks
+golden-required. E1 (the live golden-goose experiment) remains ON HOLD.
 
 ## Related authorities
 
 - `README.md` — short product statement and operator-facing explanation.
 - `PLAN.md` — implementation sequence and freeze exit.
+- `docs/remap/` — the #295 disposition ledger: every feature of the widened
+  scope with disposition, data plane, golden requirement, and owner decisions.
 - `SPECS/target-architecture.md` — component/data/credential architecture.
 - `docs/golden-goose-chat-route.md` — corpus-derived chat-route facts and E1
   unknowns; facts there take precedence over product shorthand here.

@@ -3,29 +3,31 @@
 Updated in the same PR as the work it describes. If this file and an issue
 disagree, the issue is fresher; fix this file.
 
-**Phase: HARNESS-FIRST REBUILD (freeze exited 2026-09-28 — owner ack on
-PR #256, 03:29Z): "i approve using our harness to verify slowly and carefully
-seeing if we can actually do the exact ui implementation properly this time,
-still putting 70 percent of our effort into improving the harness." Effect:
-(a) exact-UI implementation slices may proceed SLOWLY AND CAREFULLY, each one
-golden-gated through the harness (SPECS/ui-parity.md Tier 1) and scope-checked
-against SPECS/product-contract.md — one thin slice at a time, corpus-executed
-golden first, reimplementation second; (b) ~70% of collective effort stays on
-improving the harness itself (corpus-exec modes, coverage ledger, serializer,
-parity families, pipeline integrity); (c) E1 (the live golden-goose chat
-experiment) is explicitly NOT started — owner's words, same comment: "we are
-not going to start E1 yet." The exit conditions that earned this were audited
-in #225 and reproduced by three sessions on PR #256: (1) #171 parity check in
-ci/check-ui.sh incl. the theme-VALUES drift family (#224); (2) #168 ui-theme
-goldens 13/13; (3) G1 corpus-exec + G2 coverage ledger landed, corpus-free leg
-never vacuous; (4) surfaces rebuilt end-to-end golden-green —
-src/ui-loops-icons and src/ui-loops-viewtype each carry a hand-verified
-`corpus-manifest.json` whose golden claims resolve, their golden tests
-byte-match the corpus-executed expected files (icons 5/5, viewtype 2/2 in
-`ci/check-src.sh`), and the `coverage check` leg in `ci/check-ui.sh` is green
-(3 golden · 75 GAP at exit); (5) R3.4 archived (tag `archive/r3.4-ui-shell`).
-The progress meter
-is the coverage ledger's golden count, not merged-PR volume.**
+**Phase: ASSEMBLY ERA — 60% UI / 40% harness (owner directive 2026-09-28,
+issue #295; supersedes the 70/30 terms of the PR #256 freeze-exit ack).**
+Effect:
+(a) **60% of collective effort goes to BUILDING the UI** — a runnable
+assembly track (`docs/remap/` + PLAN.md A-track) composing golden-backed
+modules plus corpus-informed non-golden slices, served by src/server;
+**~80% of shipped UI work does NOT need to be golden-backed** — the
+transcription rule + seam rule in the remap ledger are the anti-R3.4 bar for
+that 80% (corpus-transcribed structure/copy cited per chunk, owner-licensed
+changes only in seam implementations on the closed seam list);
+(b) ~40% stays on the harness (T2 render / T3 store tiers, corpus-exec modes,
+coverage ledger) with goldens concentrated on the exactness-critical core:
+wire ops, theme/tokens, trigger/schedule/policy semantics, value-laden
+algorithms and degraded states per the remap ledger's golden-required test;
+(c) **scope widens beyond the Loops page** (SPECS/product-contract.md):
+Settings first-class, Workspaces adapted (the context Loops needs), Teams
+adapted (team-SELECT only) — the product runs in parallel to Linear, every
+loop feature through the public API where a public surface exists
+(`docs/remap/README.md` records the settled data-plane findings);
+(d) E1 (the live golden-goose chat experiment) remains explicitly NOT started;
+PAT/OAuth remains the data plane.
+The freeze-exit audit trail (PR #256, conditions 1–5) is preserved in the
+2026-09-28 Done section below. The progress meter is the coverage ledger's
+golden count PLUS the remap ledger's disposition coverage — not merged-PR
+volume.**
 
 Done 2026-09-27:
 - Archive: all swarm-era code preserved at tag `archive/v0-swarm-era`; PRs
@@ -429,20 +431,25 @@ fallback-only. This changes scope wording and architecture, not the EXACT UI/beh
 bar for the Loops surfaces or the public-code legal line. Binding detail:
 `SPECS/product-contract.md`; boot-level rule: `AGENTS.md`.
 
-Next (per the owner ack, banner above): the harness track keeps ~70% of
-effort (more goldens on GAP chunks, corpus-exec T2/T3 render+store tiers,
-serializer/ledger/pipeline hardening). The remaining ~30%: careful exact-UI
-slices — R4.1 redo (corrected PascalCase trigger model) -> R4/R5/R6 slices ->
-matrix rows to exact parity. Every feature slice ships with its
-corpus-executed golden(s) and moves the ledger, answers the four
-product-contract questions in its PR, and is gated by `parity check` (Tier-2
-drift) + `coverage check` (Tier-1 goldens). #155 (R5.1 dataplane) stays
-HELD pending explicit owner scope (the 03:29Z grant names exact-UI work
-only); its two blocking findings are fixed on-branch, so once the owner
-approves the dataplane scope it needs a re-slice review against the merged
-docs-site rate-limit facts, not a rewrite.
+Next (per the #295 directive, banner above — supersedes the 70/30 wording):
+**60% assembly track** (PLAN.md A-track): claim a remap shard
+(`docs/remap/shards.md`), land its ledger rows, then assembly slices in
+fan-in order — foundation kit -> node-render tier (shared spine of editor AND
+runs transcript, Finding 2) -> composition tier -> route shells — each
+transcribed per the ledger's transcription+seam rules and citing its chunk
+evidence; non-golden is fine for ~80% of it. **40% harness track**: goldens
+preferentially on the exactness-critical kernels the ledger marks
+golden-required (engine semantics in AutomationHelper, policy/ordering
+kernels, transcoder, degraded states), plus corpus-exec T2/T3 tiers. Every
+slice still answers the four product-contract questions and is gated by
+`parity check` + `coverage check`. Owner decisions are batched in
+`docs/remap/owner-decisions.md` (9 entries) — implementation of consuming
+rows waits; research never does. #155 (R5.1 dataplane) stays HELD pending
+explicit owner scope; note the widened scope makes it MORE central (the
+public-API data plane feeds the team/workspace projection), so surfacing it
+for an owner decision is part of the remap.
 
-More goldens are always claimable (the 70% track): the ledger names every
+More goldens are always claimable (the 40% track): the ledger names every
 GAP chunk; the G4/G5/G6 patterns (case file + hand-verified golden +
 per-entry manifest + reimplementation; invoke/render/drive modes all have
 merged worked examples) are the template.
