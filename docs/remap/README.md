@@ -6,8 +6,8 @@ Workspaces (adapted) + Teams (team-select only), used *in parallel to Linear*.
 "Map out every single feature in an MD file that has to be changed, removed,
 etc., and change your whole roadmap to accommodate this."
 
-This directory is that MD file, harvested from the 21 converged research inputs
-on issue #295 (2026-09-28 22:08Z – 2026-09-29 01:25Z, session ids as provenance
+This directory is that MD file, harvested from the 23 converged research inputs
+on issue #295 (2026-09-28 22:08Z – 2026-09-29 01:31Z, session ids as provenance
 on each). The thread reached convergence with zero open disputes; this ledger is
 the record. `docs/feature-matrix.md` remains the corpus-evidence index; this
 ledger adds the disposition, data-plane, and roadmap layers over it.
