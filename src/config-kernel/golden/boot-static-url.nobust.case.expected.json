@@ -1,0 +1,210 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "html.CjyPLfH8.js",
+    "closureSize": 23,
+    "stubbed": [
+      "config.aM1_XCHx.js"
+    ],
+    "chunkHashes": {
+      "html.CjyPLfH8.js": "ef7428f84484fc1801e020d28578a96c35a12ec8e030a13531aabba98bc032fa",
+      "preload-helper.HclGiUj8.js": "93f50f1fb43b747a24bc36df128769012f485b894199b4b8267577a1153b22d7",
+      "config.Uz-QjVze.js": "3e1839b2a07993bebd77e5f6ce3ae1e0171d3aee45677632c77b857d74c5d880",
+      "Features.CzCTqIRs.js": "a32fef8a17d269c909a775b6ebed0287ca41daae12c07a76080a05713ff581a3",
+      "UsageFeature.DxHbtH5P.js": "fe7b87bf4ff9a770b4a6fd8c3dfcdb5a989a3fff750733e8ada1d743ae00669d",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87",
+      "upperFirst.DgY9DTaO.js": "ea0eb762edfdaacc4fbe728e4aff26e2a78923c594f8553b41e8b4f5e0dbfd8e",
+      "isObject.EOlKTQ6h.js": "515e9ff25010d64d706dd346b5561f53441d03cfe9e5eee815a835df258c3fcf",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "clamp.DdkIgtRO.js": "2736825b64b0c8f83f6a9882df6ae639d5fbd852426831d05b6f7f9c108dd527",
+      "toNumber.ClFirwKk.js": "bd5cb08334c62158a30c6170d8aeedfe36ca569333f4540a26f39eae54f54567",
+      "_trimmedEndIndex.vh2QLOq1.js": "5b6d203637c690c7fc8eed144c01b9f0add6ae4f2f5082f2dfbaaf6dabe04967",
+      "core.PJIFv7xf.js": "bd97b09eba124aa1278b5fdcca1e2ffcfda85be955c89d633fca4c1633a659bc",
+      "addDays.BDe0ZOzk.js": "4b29ac3b519ea2b166dd8ead2dc2dd1d4defe9db9f7c2c7de827d7d32632322c",
+      "differenceInCalendarDays.DT1l52ZM.js": "56eb426f325e8d0c4c6fe47d7c902d739dbf6612cab62b2e85f7078bb37cafab",
+      "spacetime.fdO416V8.js": "3d4b1982c76800b1f440405b59f3366cca2e69f451d2e8d3d471cad6edb107da",
+      "_MapCache.CVQ4sTCO.js": "188fcf9e5f6285a92a78263c4db317daac8abfd91ee1c09bb4e5dc26ca1d038c",
+      "_Map.CIlVSj4D.js": "575c85aba8efc1108a51f8dab12ebf61c8c95c42da404893433d5f343cead037",
+      "_defineProperty.Buzs8hds.js": "c48997174ad02b822f6429d62492b4ac07030777379f6b213d43602db0611c0b",
+      "memoize.BJqL8nwN.js": "e2fbc2035aba0fa6a979d976b78dcc5871243257f4da8707536c47306eade11b",
+      "_getTag.BslU1FX9.js": "be2bbecc28be053b3d4d5d2fb1c8c75e6ed875d7519e23e11d6b40f16f0cad9c",
+      "_baseIsEqual.DOUcxQCB.js": "0ac00b67bcdde945892223ccdec601ff43d49dd179c087289eebc029af64a4c3"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "toStaticUrl",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "plain",
+              "value": {
+                "tag": "string",
+                "value": "https://assets.example.test/client/assets/entry.X.js"
+              }
+            },
+            {
+              "key": "nested",
+              "value": {
+                "tag": "string",
+                "value": "https://assets.example.test/client/assets/deep/chunk.Y.js"
+              }
+            },
+            {
+              "key": "empty",
+              "value": {
+                "tag": "string",
+                "value": "https://assets.example.test/client/"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "injectedIsTheTableExport",
+        "value": {
+          "tag": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "injectedKeyCount",
+        "value": {
+          "tag": "number",
+          "value": "90"
+        }
+      },
+      {
+        "key": "injectedSamples",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "CLIENT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://loops.example.test"
+              }
+            },
+            {
+              "key": "CLIENT_HOSTNAME",
+              "value": {
+                "tag": "string",
+                "value": "loops.example.test"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "prototypeInstallProbes",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "distinctSmall",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "number",
+                    "value": "1"
+                  },
+                  {
+                    "tag": "number",
+                    "value": "2"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "distinctLarge",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "number",
+                    "value": "0"
+                  },
+                  {
+                    "tag": "number",
+                    "value": "1"
+                  },
+                  {
+                    "tag": "number",
+                    "value": "2"
+                  },
+                  {
+                    "tag": "number",
+                    "value": "3"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "toQuestion",
+              "value": {
+                "tag": "string",
+                "value": "Run it?"
+              }
+            },
+            {
+              "key": "toQuestionAlready",
+              "value": {
+                "tag": "string",
+                "value": "Run it?"
+              }
+            },
+            {
+              "key": "setIsEqualTo",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "raceFindAllSettleUndefined",
+              "value": {
+                "tag": "undefined"
+              }
+            },
+            {
+              "key": "hasOwn",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "disposeDescription",
+              "value": {
+                "tag": "string",
+                "value": "nodejs.dispose"
+              }
+            },
+            {
+              "key": "offsetBySecondsIso",
+              "value": {
+                "tag": "string",
+                "value": "2026-01-05T03:05:35.000Z"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
