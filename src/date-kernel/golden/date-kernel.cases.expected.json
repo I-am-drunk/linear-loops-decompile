@@ -294,10 +294,10 @@
               }
             },
             {
-              "key": "offsetAtBoundOk",
+              "key": "offsetAtBoundExact",
               "value": {
                 "tag": "string",
-                "value": "object"
+                "value": "+040357-07-12T14:00:00.000Z"
               }
             }
           ]

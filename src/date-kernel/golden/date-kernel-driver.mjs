@@ -108,7 +108,9 @@ export default async ({ entry }) => {
       emptyWorkDaysThrow: throwMessage(() => friday.offsetByBusinessDays(1, [])),
       outOfRangeWorkDayThrow: throwMessage(() => friday.offsetByBusinessDays(1, [7])),
       offsetOutOfBoundsThrow: throwMessage(() => friday.offsetByBusinessDays(10000001, monFri)),
-      offsetAtBoundOk: typeof friday.offsetByBusinessDays.call(friday, 0, monFri), // bound check is strict >
+      // Bound check is strict >: the permitted maximum itself must succeed
+      // (whole-week skip makes it cheap: ~2e6 weeks in one setDate call).
+      offsetAtBoundExact: iso(friday.offsetByBusinessDays(10000000, monFri)),
     };
 
     // String#toLocalDate: parse → local midnight of the parsed UTC calendar

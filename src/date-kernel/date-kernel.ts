@@ -159,6 +159,12 @@ export function toTimelessDate(date: Date): string {
  * L380–397): validate, skip whole weeks, then day-walk counting only
  * workdays. `workDays` are JS `getDay()` numbers (0 = Sunday). */
 export function offsetByBusinessDays(date: Date, offset: number, workDays: number[]): Date {
+  // Corpus-exact validation (L381): `NaN` workday entries and an Invalid
+  // Date input pass this check in the corpus too (NaN comparisons are
+  // false), and the corpus then walks forever / propagates NaN identically.
+  // Reproduced as-is per the exactness bar — tightening the guard here
+  // would diverge from first-party behavior (PR #303 review thread,
+  // declined with this cite). Callers pass zod-validated day lists.
   if (workDays.length === 0 || workDays.length > 7 || workDays.some((d) => d < 0 || d > 6)) {
     throw Error(INVALID_WORK_DAYS_MESSAGE);
   }
@@ -183,11 +189,19 @@ export function offsetByBusinessDays(date: Date, offset: number, workDays: numbe
  * now); on success reconstruct a LOCAL date from the parsed UTC fields
  * (local midnight of the UTC calendar day). */
 export function toLocalDate(text: string): Date {
-  const parsed = new Date(text);
-  if (parsed.toString() === `Invalid Date`) {
-    return text.length === 0 ? new Date() : toLocalDate(text.substring(0, text.length - 1));
+  // The corpus implements the strip as self-recursion; a loop preserves the
+  // pinned one-char-per-step strip order without letting input length
+  // consume call-stack depth (CodeRabbit thread on PR #303 — the recursion
+  // depth limit is an engine parameter, not a corpus value).
+  let remaining = text;
+  for (;;) {
+    const parsed = new Date(remaining);
+    if (parsed.toString() !== `Invalid Date`) {
+      return new Date(parsed.getUTCFullYear(), parsed.getUTCMonth(), parsed.getUTCDate());
+    }
+    if (remaining.length === 0) return new Date();
+    remaining = remaining.substring(0, remaining.length - 1);
   }
-  return new Date(parsed.getUTCFullYear(), parsed.getUTCMonth(), parsed.getUTCDate());
 }
 
 /* ------------------------------------------------------------------ *
@@ -230,16 +244,25 @@ function define(target: object, name: string, value: unknown): void {
  * (see the module header's scope declaration).
  */
 export function installDateKernel(): void {
-  define(Date.prototype, `midnight`, function (this: Date) {
+  const rejectZone = (method: string, zone: unknown): void => {
+    if (zone !== undefined) {
+      throw Error(`date-kernel: Date#${method} timezone branch not implemented in this slice (got ${String(zone)}) — see src/date-kernel/date-kernel.ts scope declaration`);
+    }
+  };
+  define(Date.prototype, `midnight`, function (this: Date, zone?: unknown) {
+    rejectZone(`midnight`, zone);
     return midnight(this);
   });
-  define(Date.prototype, `nearestMidnight`, function (this: Date) {
+  define(Date.prototype, `nearestMidnight`, function (this: Date, zone?: unknown) {
+    rejectZone(`nearestMidnight`, zone);
     return nearestMidnight(this);
   });
-  define(Date.prototype, `offsetByDays`, function (this: Date, days: number) {
+  define(Date.prototype, `offsetByDays`, function (this: Date, days: number, zone?: unknown) {
+    rejectZone(`offsetByDays`, zone);
     return offsetByDays(this, days);
   });
-  define(Date.prototype, `offsetByBusinessDays`, function (this: Date, offset: number, workDays: number[]) {
+  define(Date.prototype, `offsetByBusinessDays`, function (this: Date, offset: number, workDays: number[], zone?: unknown) {
+    rejectZone(`offsetByBusinessDays`, zone);
     return offsetByBusinessDays(this, offset, workDays);
   });
   define(Date.prototype, `offsetByHours`, function (this: Date, hours: number) {
@@ -257,7 +280,13 @@ export function installDateKernel(): void {
   define(Date.prototype, `toTimelessDate`, function (this: Date) {
     return toTimelessDate(this);
   });
-  define(String.prototype, `toLocalDate`, function (this: string) {
+  define(String.prototype, `toLocalDate`, function (this: string, zone?: unknown) {
+    // The tz branch is declared out of this slice (module header). A caller
+    // passing a zone (e.g. the picker's `toLocalDate('UTC')`) must fail
+    // loudly instead of silently receiving plain-branch arithmetic.
+    if (zone !== undefined) {
+      throw Error(`date-kernel: String#toLocalDate timezone branch not implemented in this slice (got ${String(zone)}) — see src/date-kernel/date-kernel.ts scope declaration`);
+    }
     return toLocalDate(String(this));
   });
 }

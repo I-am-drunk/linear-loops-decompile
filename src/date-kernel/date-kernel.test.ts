@@ -76,3 +76,14 @@ test(`install descriptor shape matches the corpus's D helper (non-enumerable, wr
   assert.equal(Object.getOwnPropertyDescriptor(Date.prototype, `beginningOfWeek`), undefined);
   assert.equal(Object.getOwnPropertyDescriptor(Date.prototype, `nextWeekDay`), undefined);
 });
+
+test(`a timezone argument is rejected loudly, never silently given plain-branch arithmetic`, () => {
+  installDateKernel();
+  const d = new Date(2026, 3, 9, 14, 45);
+  assert.throws(() => (d.midnight as (z?: unknown) => Date).call(d, `UTC`), /timezone branch not implemented/);
+  assert.throws(() => (d.offsetByDays as (n: number, z?: unknown) => Date).call(d, 1, `UTC`), /timezone branch not implemented/);
+  assert.throws(
+    () => (`2026-04-09`.toLocalDate as (z?: unknown) => Date).call(`2026-04-09`, `UTC`),
+    /timezone branch not implemented/,
+  );
+});
