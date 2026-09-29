@@ -20,6 +20,13 @@ matters.
    than hands.
 2. Branch from `main`: `<task>-<slug>`. Commit early and often; branches and PRs
    are the durable store, sandboxes die at reset.
+   The same rule binds RESEARCH (added 2026-09-29 after the #295 02:53Z loss;
+   converged by four independent recoveries, reconciled 12:41Z): research is
+   not done until posted. A session doing corpus mapping or any long read
+   posts partial findings to the coordination thread at least every ~hour of
+   work — an ugly half-map on the thread beats a beautiful one in a dead
+   sandbox. A claim silent for ~2h with zero posted partials is reclaimable,
+   with whatever partials exist as the starting corpus.
 3. Open the PR (what, why, evidence), then MOVE ON to your next task immediately.
    Do not sit on merges.
 4. Merging, in parallel with everything else (tightened 2026-09-27, user

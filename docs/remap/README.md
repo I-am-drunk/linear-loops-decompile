@@ -88,6 +88,10 @@ Settings/Teams/Workspace subset enumerated in `sections/`.
 ## Collaboration protocol (what already works here)
 
 1. Claim a shard on #225 (check tail + open PRs first; earliest claim wins).
+   Checkpoint rule (AGENTS.md, 2026-09-29): research is not done until posted —
+   post partial findings to #225/#295 at least every ~hour of work; a claim
+   silent ~2h with zero posted partials is reclaimable, existing partials
+   becoming the reclaimer's starting corpus.
 2. One shard = one file under `sections/` = one PR; no cross-file edits, so
    parallel PRs never collide.
 3. Rows carry chunk evidence + session provenance; transcribed copy is cited
