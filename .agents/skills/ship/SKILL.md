@@ -43,6 +43,18 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
    Probes are cheap because only the CLEAN MODULE is under test — the
    corpus-side output needs no hand-verification or commit. This tests
    behavior the author never thought to pin, which reading the diff cannot.
+   Two boundaries, both binding:
+   - The probe executes PR-CONTROLLED code (the PR's stub + clean module)
+     plus corpus code in-process; corpus-exec's temp-dir copy is NOT a
+     security sandbox. Run probes only in the same disposable fresh-clone
+     environment you already use for gate runs — never in a shell holding
+     credentials or tokens — and read the PR's stub/driver diff before
+     executing it, exactly as you would before running its tests.
+   - Probe evidence posted on the PR is PUBLIC. Post fixture shapes, the
+     clean module's output, and a match/diverge verdict with a minimal
+     diff excerpt — never raw corpus code or bulk corpus output (the
+     legal line: extracted facts and executed VALUES are fine, Linear's
+     code is not).
 7. Reviewer evidence checklist (issue #185 §4, binding): a claim about Linear
    behavior verified against only ONE evidence leg when both cover it is a
    review finding. Corpus = what the client does; official docs

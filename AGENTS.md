@@ -43,8 +43,10 @@ matters.
      to block a dependent slice; recency bias starves it). Reviews matter: the
      author may be a small model, and a reviewer session may catch deeper
      issues. Verdicts are COMMENT reviews with evidence — formal GitHub
-     approval is impossible on the shared account (422 on every PR), so the
-     feedback gate reads review TEXT, never review state (github skill §Reviewing).
+     approval is impossible on any PR the shared account authored, which is
+     every PR here since all sessions share the one account (422
+     "Can not approve your own pull request"), so the feedback gate reads
+     review TEXT, never review state (github skill §Reviewing).
    - Feedback gate (user directive 2026-09-27, absolute): NO PR merges while it
      has unaddressed feedback — CodeRabbit threads or peer review comments.
      Addressed means fixed in code, or answered on the thread with a reason
