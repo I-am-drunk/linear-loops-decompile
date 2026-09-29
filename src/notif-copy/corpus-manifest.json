@@ -1,0 +1,27 @@
+{
+  "source": "NOTIF-COPY (#225 claim 2026-09-29 20:38:02Z; research = the settled 14:41:10Z + 14:42:39Z #295 notification legs, reconciled 14:45:25Z): src/notif-copy reimplements the three loop-notification copy-builder kernels. Evidence: Issue.DRYymPCa.js exports ub (yee, pretty L9848 — failure copy: five-reason vocabulary, single-positive-reason collapse, tz-sensitive 'N times today' day-bucketing through spacetime, includeTrailingPeriod option), db (bee, L9871 — run-response copy: awaitingApproval fork, || fallback so an empty-string message falls through), fb (xee, L9876 — user-message copy: ?? fallback preserving empty strings), executed from the RAW tree in drive mode over a 17-case failure grid + 6-case response grid + 4-case user-message grid. Wall-clock determinism: fixtures pin the BRANCH, not the clock — the live 'today' legs compute bucketDate at drive time (en-CA Intl = yyyy-MM-dd), the stale leg uses a fixed past date, so the recorded output bytes are run-date-independent. One stub at config.aM1_XCHx.js (the TYPE-LATTICE config-bootstrap seam, unchanged); spacetime and the timezone data execute REAL. The clean module byte-matches the committed golden through the tagged-v2 serializer.",
+  "reimplements": [
+    {
+      "chunkPrefix": "Issue",
+      "exports": [
+        {
+          "minified": "ub",
+          "meaning": "failure copy builder (local yee, L9848): 'Loop failed to run[ N times[ today]][ because <reason>][.]' — reasoned tail only for exactly one positive reason; count suffix only for failureCount > 1; 'today' = bucketDate equals current date in bucketTimezone (missing fields count as today). Reimplemented as buildFailureCopy",
+          "evidenceLine": "src/notif-copy/notif-copy.ts + golden test"
+        },
+        {
+          "minified": "db",
+          "meaning": "run-response copy builder (local bee, L9871): message || (awaitingApproval ? approval default : response default) — empty strings fall through. Reimplemented as buildResponseCopy",
+          "evidenceLine": "src/notif-copy/notif-copy.ts + golden test"
+        },
+        {
+          "minified": "fb",
+          "meaning": "user-message copy builder (local xee, L9876): message ?? default — empty strings preserved (the asymmetry vs db). Reimplemented as buildUserMessageCopy",
+          "evidenceLine": "src/notif-copy/notif-copy.ts + golden test"
+        }
+      ],
+      "goldens": ["notif-copy.grid"]
+    }
+  ],
+  "goldens": ["notif-copy.grid"]
+}

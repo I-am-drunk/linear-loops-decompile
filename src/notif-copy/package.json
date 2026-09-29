@@ -1,0 +1,6 @@
+{
+  "name": "notif-copy",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the three loop-notification copy-builder kernels (failure copy with the five-reason vocabulary, single-positive-reason collapse, and tz-sensitive day-bucketed count suffix; run-response copy with the awaitingApproval || fallback; user-message copy with the ?? fallback), golden-verified against corpus execution (NOTIF-COPY claim, #225 2026-09-29 20:38:02Z)"
+}
