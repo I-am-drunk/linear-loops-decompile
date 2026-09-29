@@ -21,6 +21,9 @@ echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G
 node --experimental-strip-types --test tools/coverage/coverage.test.ts
 node --experimental-strip-types tools/coverage/main.ts check --repo .
 
+echo "=== tools/remap-graph (node --test; synthetic fixture, corpus-free — #295 assembly sizing) ==="
+node --experimental-strip-types --test tools/remap-graph/remap-graph.test.ts
+
 if ! command -v cargo >/dev/null 2>&1; then
   if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
     echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2

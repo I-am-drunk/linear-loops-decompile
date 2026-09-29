@@ -384,6 +384,16 @@ Now (the H track — PLAN.md "harness era", the freeze's exit path):
   re-baselined 2026-09-28 (vault `c44f2cf`): analyze.mjs from main `8674ab6`
   on the complete corpus reproduces 376 ops / 136 models (all with fields) /
   490 unique routes; regenerated extracts byte-match main's committed copies.
+- remap-graph tool (issue #295 assembly sizing, 2026-09-29): `tools/remap-graph`
+  measures the widened-scope import closure from the raw corpus and emits the
+  generated `extracts/assembly-graph.{md,json}` (closure 571 chunks/14.0 MB;
+  assembly set minus the two monster chunks 525/7.4 MB, app-named surface
+  327/5.5 MB; fan-in build-order table; monster demanded-export lists —
+  ContextualMenuActions 506/2,325, Issue 639/1,316 — the R-FACADE surface).
+  Corpus-free fixture tests run in ci/check-ui.sh; regenerate with the other
+  extracts on corpus drift. NOTE: the #295 remap/roadmap doc spine (banner
+  rewrite, contract widening, ledger) is separately claimed on #225
+  (22:17:36Z, sess_01a0ea12-56c2) and not part of this slice.
 - G1 serializer v2 LANDED 2026-09-28 (#240 squashed to main `4a909fd`, closes
   #238): the golden serializer is a closed tagged JSON grammar
   (`corpus-exec-tagged-json-v2`) — every v1 collision pair (null≡undefined,

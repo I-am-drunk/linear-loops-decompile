@@ -1,0 +1,19 @@
+{
+  "rationale": "The #295 widened scope's route-component chunks: the 9 loops/settings/session page chunks the admin directive puts in the product (Loops pages incl. memories + limits, the loops settings-chrome pages, the agent-session page). One hash variant per component: the raw 1.32.4 tree ships each route chunk once per hash; where two variants exist (e.g. LoopsManagementPage) the one referenced from routes.json's mounting chunks is used. Monsters = the two multi-MB shared chunks every Linear page imports; #295 R-FACADE treats them as demanded-export facades, never as reimplementation targets.",
+  "roots": [
+    "AutomationsPage.CRjHv_XJ.js",
+    "AutomationPage.FVNODuJW.js",
+    "AutomationRunsPage.CwJzxL5C.js",
+    "ScratchpadMemoriesPage.CVgbHpr0.js",
+    "LoopsManagementPage.BAhf8Ti3.js",
+    "LoopLimitsPage.BrXlWYB3.js",
+    "TeamAutomationSettingsPage.kFQqkao4.js",
+    "WorkflowAgentAutomationSettingsPage._wV8723k.js",
+    "AgentSessionPage.D4DhwkML.js"
+  ],
+  "monsters": [
+    "ContextualMenuActions.Dlg9Oa2U.js",
+    "Issue.DRYymPCa.js"
+  ],
+  "fanInTop": 40
+}

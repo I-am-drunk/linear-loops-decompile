@@ -1,0 +1,9 @@
+{
+  "name": "remap-graph",
+  "private": true,
+  "type": "module",
+  "description": "#295 assembly-track sizing: import closure, fan-in build order, and monster demanded-export lists over the raw corpus -> extracts/assembly-graph.{md,json}",
+  "scripts": {
+    "test": "node --experimental-strip-types --test remap-graph.test.ts"
+  }
+}

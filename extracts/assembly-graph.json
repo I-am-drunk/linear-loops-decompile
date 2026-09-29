@@ -1,0 +1,5086 @@
+{
+  "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+  "fanInTop": 40,
+  "chunkCount": 1550,
+  "totalBytes": 29224733,
+  "roots": [
+    "AutomationsPage.CRjHv_XJ.js",
+    "AutomationPage.FVNODuJW.js",
+    "AutomationRunsPage.CwJzxL5C.js",
+    "ScratchpadMemoriesPage.CVgbHpr0.js",
+    "LoopsManagementPage.BAhf8Ti3.js",
+    "LoopLimitsPage.BrXlWYB3.js",
+    "TeamAutomationSettingsPage.kFQqkao4.js",
+    "WorkflowAgentAutomationSettingsPage._wV8723k.js",
+    "AgentSessionPage.D4DhwkML.js"
+  ],
+  "missingRoots": [],
+  "fullClosure": {
+    "chunks": 571,
+    "bytes": 14031113
+  },
+  "monsters": [
+    {
+      "name": "ContextualMenuActions.Dlg9Oa2U.js",
+      "bytes": 4716413
+    },
+    {
+      "name": "Issue.DRYymPCa.js",
+      "bytes": 1703471
+    }
+  ],
+  "monsterOnly": {
+    "chunks": 44,
+    "bytes": 243832
+  },
+  "assembly": {
+    "chunks": 525,
+    "bytes": 7367397,
+    "files": [
+      "ActionContextMenuType.CeI1knfw.js",
+      "ActionGroups.DFZZ7QMk.js",
+      "ActionMenuBackdrop.BlquRXQM.js",
+      "ActionTrigger.CLIWDN56.js",
+      "ActivityFilterBlocks.Cv1VErjr.js",
+      "AddFilterButton.Dmpbz0GW.js",
+      "AgentActivityCommitBadge.AaOoSe4-.js",
+      "AgentAutomationConversation.CJ-vqVie.js",
+      "AgentAutomationEmptyStateIcon.BW9M5hMw.js",
+      "AgentAutomationIcon.CFuF2och.js",
+      "AgentComposeDraftTracker.Bd5C4XFQ.js",
+      "AgentConversationItems.DoHFAP_d.js",
+      "AgentElicitationResponseQueue.BM8OrYyq.js",
+      "AgentHelper.CjXdMzFb.js",
+      "AgentInput.ekPPAiwd.js",
+      "AgentPageContentWrapper.B8ic33We.js",
+      "AgentPanel.NPHX6bEo.js",
+      "AgentPanelEditor.GbATeTfN.js",
+      "AgentPanelItem.qs7AavHY.js",
+      "AgentSessionActivities.B9yu6arN.js",
+      "AgentSessionExternalUrlsButton.Bs4eIfvh.js",
+      "AgentSessionHelper.DjDBF77L.js",
+      "AgentSessionPage.D4DhwkML.js",
+      "AgentToolbarActions.CbOLDSqu.js",
+      "AgentToolbarState.DPrj1I-A.js",
+      "AiConversationContextHelper.C_bh7SNM.js",
+      "AiConversationPendingMessagesList.DPu-Cg9t.js",
+      "AiFeedbackControls.B5ln1bIT.js",
+      "AiFilterContext.CEv79uVX.js",
+      "AlertDialog.Nxv6sEJD.js",
+      "AnimatePresence.CtBZ-ACJ.js",
+      "AnimatedArrowUpDownIcon.CPwqq4IU.js",
+      "AnimatedPopoverContainer.CAL-26u6.js",
+      "AppStatusBadge.DHAyzHvP.js",
+      "ApplicationStoreContext.h3MXkx6l.js",
+      "ArrayPool.CW_oYlKc.js",
+      "ArrowNavigation.ChsYBion.js",
+      "AskLinearAboutSelectedModelsAction.Ck4zhau_.js",
+      "AutoResizingContainer.BRLg-Ivx.js",
+      "AutomationBlockingSourceHelper.V_OvF8wq.js",
+      "AutomationHelper.B0HEcOoo.js",
+      "AutomationHistoryDialog.DYWJ3DgX.js",
+      "AutomationNewButton.DnfgotrN.js",
+      "AutomationOwnerSelect.Cl2Nhq6T.js",
+      "AutomationPage.FVNODuJW.js",
+      "AutomationRunsPage.CwJzxL5C.js",
+      "AutomationTrustedSourceDisplay.B2IjptQA.js",
+      "AutomationTrustedSourceEditorOptions.CsWy7F2e.js",
+      "AutomationsList.wnFzBYvh.js",
+      "AutomationsPage.CRjHv_XJ.js",
+      "Avatar.C9xkUBJK.js",
+      "Avatar.DGwSs61a.js",
+      "Button.DD4dEZh7.js",
+      "ChartHelpers.ClmWuurh.js",
+      "ChartHover.YpvV-OaK.js",
+      "ChartTooltip.Dv6Hh59s.js",
+      "CheckIcon.B8gsNEK3.js",
+      "CheckMarkIcon.C4WcuMDI.js",
+      "ChevronDownIcon.8ldiEKW3.js",
+      "ChevronIcon.B2rXUqFj.js",
+      "ChevronLeftIcon.BpnLcTIR.js",
+      "ChevronRightIcon.QOMB98cV.js",
+      "ClientStorage.2mwQyaxr.js",
+      "ClipboardHelper.BwmZsAdW.js",
+      "CloseIcon.CKEypAHi.js",
+      "CodeBlockIcon.D5GzJ9CR.js",
+      "CodeIntelligenceIcon.Bz1Eg5Ck.js",
+      "CodeSelectionContextHelper.Iw8YtXjv.js",
+      "CodeSelectionLine.DxrbMLav.js",
+      "CollabEditing.DdzdL3h2.js",
+      "CollaborativeEditor.CIEy9Muw.js",
+      "CollapseArrowIcon.DhjELGK2.js",
+      "CollapseChevronIcon.CPLWWYGl.js",
+      "CollapseChevronIconLarge.D9sfINWS.js",
+      "CollapseListGroupButton.CUimnkG3.js",
+      "CollapsedSelectedItemsCount.CfNucNuC.js",
+      "Collapsible.DFBuriLY.js",
+      "CollapsibleSection.DCAWniu1.js",
+      "ColorBadge.yzaVBngp.js",
+      "ColorConverter.CVwFbLBP.js",
+      "ColumnHeaders.DLhMXmku.js",
+      "CommandIcon.D_KEobby.js",
+      "CommentConstants.stylex.B1eG8kzo.js",
+      "ComponentLoader.D7a-VVZr.js",
+      "ContentHeader.DfbCNPlt.js",
+      "ContentIcon.-neA-w7l.js",
+      "ContentViewHeaderBreadcrumb.tUXZoIJZ.js",
+      "ContentViewHeaderBreadcrumbChevron.CH30sqr7.js",
+      "ContentViewHeaderBreadcrumbLink.BFElNX0J.js",
+      "ContentViewHeaderContextualMenu.MkJrcimz.js",
+      "ContentViewHeaderFilterButton.CkyP3XII.js",
+      "ContentViewHeaderFilterPanel.C0PbWZVx.js",
+      "ContentViewHeaderInlineSearch.BaWvQNzy.js",
+      "ContentViewHeaderSearch.BKW3UenD.js",
+      "ContentViewHeaderTitle.BdI-2dtK.js",
+      "ContentViewSubheader.DJG5j2hR.js",
+      "CorruptedRuntimeAssetHandler.B8sxTnl4.js",
+      "CreatedIcon.D9G7DRXR.js",
+      "CreatorIcon.DCApCoGQ.js",
+      "CurrentUserIcon.i7R3q6OF.js",
+      "CustomerDefaultLogoIcon.CDRE4V6x.js",
+      "CustomerLogo.DT6bl279.js",
+      "CustomerLogoPile.DndKzFZh.js",
+      "CustomerStatusIcon.BJItzt7c.js",
+      "DashboardIcon.CvwsT8ND.js",
+      "DecorativeIcon.DUPAyWLO.js",
+      "Decorators.Du6V7UQY.js",
+      "DelayedMount.Dyu1OW5h.js",
+      "DesktopWindowStateProvider.BD8WuUZB.js",
+      "DiffLowlightSyntaxHighlighter.6s5PcLx8.js",
+      "DiffModificationDetector.CvjVc3nq.js",
+      "DiffUtils.C9PmCZ-u.js",
+      "DiffView.stylex.D4juWQ9H.js",
+      "DistributionChart.DsOT6UNr.js",
+      "DivButton.B-QxeD0V.js",
+      "DividerWithLabel.B-bcYFLE.js",
+      "DocumentAgentChangesState.grXcbzgo.js",
+      "DocumentContentEditorState.BBozmCJr.js",
+      "DownloadIcon.Dv3ijpoq.js",
+      "DraftHelper.DpwuMSIm.js",
+      "EditorFileUploadManager.YTj9uXRp.js",
+      "Electron.dhyFDmX-.js",
+      "Electron2.BRSMfaTu.js",
+      "Elevated.DXimr88w.js",
+      "ElevatedPanel.Cu2Y-tG-.js",
+      "EmbeddedGridContext.BMLFxvJv.js",
+      "EmojiHelper.5bmECx6H.js",
+      "ErrorBoundary.Biei1WuN.js",
+      "ErrorBoundary.XEF-HLks.js",
+      "ExpandChevronIconLarge.Bmylc3BM.js",
+      "ExternalLink.xR7jCAep.js",
+      "EyeStrikethroughIcon.BGV9hd-Q.js",
+      "FastIssueDraftCreateState.BxmAh4lC.js",
+      "FeatureFlagIcon.DOHP4b1a.js",
+      "Features.CzCTqIRs.js",
+      "FileTreeIcon.BesTUf3x.js",
+      "FileUploadPlugin.lwfDcatI.js",
+      "FilterBlockHelper.D1VAkopg.js",
+      "FilterBlockStyles.BPSPHYHd.js",
+      "FilterIcon.B4s9iGSQ.js",
+      "FilterTriggerButton.tFll_T6G.js",
+      "Flex.BS495mgi.js",
+      "FocusTrap.BPqeE0vr.js",
+      "FontSize.CW_lo4Iu.js",
+      "Form.D0HBDYj2.js",
+      "FuzzyDatePicker.9NVhnGgX.js",
+      "GitRequestIcon.DOzJukBs.js",
+      "GraphHelpers.DNZMKe0T.js",
+      "GridLoaderIcon.Bo_lyuLI.js",
+      "GridLoaderProgressIcon.BsiiRozg.js",
+      "GroupedList.CDsqj6qY.js",
+      "HeaderIconTitle.Bsi5lSed.js",
+      "HiddenIndicator.iL6w2SFp.js",
+      "HistoryEntryComponents.jcKfad-R.js",
+      "HorizontalRule.BqAElrTM.js",
+      "Icon.DpisucLQ.js",
+      "IconButton.B46fVFUo.js",
+      "InPageFind.Dt6mcRht.js",
+      "IncidentCommunication.B5fpSa6l.js",
+      "InitiativeDisplayProperties.D6Xnz4bP.js",
+      "InitiativeFilterBlocks.CxQgstHS.js",
+      "InitiativeTargetDateControl.DiVBa_L_.js",
+      "InitiativesListViewOptions.Bs0H5cfj.js",
+      "InitiativesTab.CHJzgeEz.js",
+      "InlineCommentQuote.BpL5abEq.js",
+      "InlineFilter.BbbOUtAK.js",
+      "Input.CX9538jp.js",
+      "Integration.B02xjlHD.js",
+      "IssueWidget.DdTrzZA8.js",
+      "KeyboardHelper.CNQaUXE1.js",
+      "LabelIcon.DilXxMnz.js",
+      "LabelsBadges.BpInAh-f.js",
+      "LazyEditorComponent.eg71UTLG.js",
+      "LazyFastIssueEditorLoader.CId3y4gF.js",
+      "LazyFastTriageAcceptEditorLoader.Ba0SlQbO.js",
+      "LazyGraphs.CFCoT3VS.js",
+      "LightboxContentItem.D6zC07Ay.js",
+      "LightboxItem.D3lR8lQ6.js",
+      "LinearAgentCommentContent.C---p7AT.js",
+      "LinearAgentMcpSettings.8HfTvzal.js",
+      "LinearAgentMessages.BuUfncdI.js",
+      "LinearLogo.CbdUrRSi.js",
+      "LinearLogo.Dvi7du4Q.js",
+      "LinearLogoBordered.DYBgo7g5.js",
+      "Link.B583WaeA.js",
+      "LinkIcon.DbCNCIi7.js",
+      "ListCell.Cs-m0hHw.js",
+      "ListCheckbox.CMJn-B3f.js",
+      "ListColumns.Dn1S5OeL.js",
+      "ListGroupDividerCell.rBxmEGG9.js",
+      "Loading.CssOT0hq.js",
+      "LoadingDoneHelper.DxcZh5nm.js",
+      "LocalDraft.BtSkcFi4.js",
+      "Locale.BJE_q3Oj.js",
+      "Logger.-35cWKHt.js",
+      "Logger.qFaEBF6-.js",
+      "LogicListItem.zKP_4iQJ.js",
+      "LoopCreationTracker.BAiVgMLN.js",
+      "LoopLimitsPage.BrXlWYB3.js",
+      "LoopTemplateLibrary.C__UMpNm.js",
+      "LoopViewType.BzPUaBkC.js",
+      "LoopsManagementPage.BAhf8Ti3.js",
+      "LoopsManagementPage.CVnaEF7c.js",
+      "MainListHeaderHelperText.SGuuBqni.js",
+      "ManageAiCreditsButton.9UxqKkes.js",
+      "MarkdownTransformer.DI8Fsgra.js",
+      "MarkdownViewer.CIXsbydM.js",
+      "McpConnectorList.A-Wz50eq.js",
+      "McpOAuth.CznQ4nb0.js",
+      "MediaDimensionCache.BFJWPzKq.js",
+      "MembersIcon.D9GgEXDP.js",
+      "MentionHydrationPlugin.BDLm0Pkv.js",
+      "MenuCheckMarkIcon.B8gsNEK3.js",
+      "MenuIcon.D1H9rhSs.js",
+      "MenuOpenStateContext.B6Owxykp.js",
+      "MimeTypes.mHzDg6ZD.js",
+      "MinimizeIcon.5B_ishqv.js",
+      "ModalComponents.Cdm8qEQQ.js",
+      "ModelIcon.DQKsMCJu.js",
+      "MotionConfigContext.lp10AmFy.js",
+      "MouseHelper.41-DjiEq.js",
+      "MultiSelectActions.Dfnd2sNu.js",
+      "NewContentViewHeader.Mh1uiUI4.js",
+      "NewContentViewHeaderTitle.Cdf6kl2h.js",
+      "PageContainer.CsJ66LpL.js",
+      "PageHeaderViewOptions.FyZJ3rtG.js",
+      "PageSidebarContainer.BmnbF6Vm.js",
+      "PageSidebarSurface.B_U3b_fW.js",
+      "PartnerOfferSignup.1PREWnH-.js",
+      "PersistentPortalHost.BoeuXmG-.js",
+      "PipelineIcon.a6JzhArr.js",
+      "PlusIcon.B0xt_MlV.js",
+      "PopoverContext.CPTc3rGZ.js",
+      "PriorityIcon.CvLrEIis.js",
+      "ProjectContext.CwmS2UKn.js",
+      "ProjectFilterBlocks.GhbPbZlo.js",
+      "ProjectListComponents.ClgIH58w.js",
+      "ProjectStatusIcon.CWSLLtli.js",
+      "ProjectViewZoomControl.CIw4YcZh.js",
+      "ProjectsRelevance.Ysg9ZlNt.js",
+      "PullRequestStatusIcon.Bu4WyB8f.js",
+      "PullRequestsFeatureHelper.woc0KNxh.js",
+      "QueryClientProvider.DO-PMMc7.js",
+      "QueuedMessageList.CT33uY9-.js",
+      "RecurringIssueTemplateControls.C_WzwiQc.js",
+      "RedoIcon.Cgq3tawS.js",
+      "RefreshManager.DpVjn8XM.js",
+      "RegisterAction.BtUuUh2c.js",
+      "RegisterFilterValues.CC7sTzty.js",
+      "RegisterLoopRunUsageCostTarget.C-IK2SWk.js",
+      "RegisterModelsFromViewState.BbUdQdHf.js",
+      "RepositoryAccessList.BhRFE15X.js",
+      "ResetIcon.CgiSStFk.js",
+      "ResolvablePromise.K_XC6Vcq.js",
+      "ReviewsHelper.CFN0Kk_Y.js",
+      "RouteErrorResponse.D5MJ6KrI.js",
+      "ScratchpadMemoriesPage.CVgbHpr0.js",
+      "ScrollRestoration.C-Jm_9pJ.js",
+      "Scrollable.CL_hIs46.js",
+      "SearchInput.BlU8pnvy.js",
+      "SearchScoreHelper.Bz603FMp.js",
+      "SecurityExtensionDetector.BSBhEvBi.js",
+      "Select.CkdP5uts.js",
+      "Selected.BTt8gTtr.js",
+      "SettingsCatalog.Bseqvifa.js",
+      "SettingsIcon.DLHC3IyL.js",
+      "SettingsList.BezKBffa.js",
+      "SettingsListProvider.CV4gTQOh.js",
+      "SidebarCollapsedNavigation.DBp0DN4a.js",
+      "SidebarLeftIcon.CSUHgG80.js",
+      "Signal.DmjPTkN_.js",
+      "SimpleActionMenu.BVyCNjwU.js",
+      "SkillActions.CnOYcpvJ.js",
+      "SortIcon.C3QkzWY9.js",
+      "SoundNoneIcon.CldGzuA2.js",
+      "SpotlightGridLoader.BBlPH_3_.js",
+      "StatusIcon.Bf2OzbFa.js",
+      "SubheaderContainer.DhT9JUZj.js",
+      "SubscriberFacePile.BgwHZ1b7.js",
+      "SubscriptionsControl.BbA5QtkK.js",
+      "SuccessIcon.OJ_73lBY.js",
+      "SyntaxHighlightStyles.CqYlFYV4.js",
+      "SyntaxNodeRenderer.BZlxoise.js",
+      "Tabs.C656AF6H.js",
+      "TabsHelper.Bku0b9DF.js",
+      "TabsList.B4X8yXhy.js",
+      "TeamAutomationSettingsPage.kFQqkao4.js",
+      "TeamLabel.CTNAPaDj.js",
+      "TemplateModelIcon.OI36HNbN.js",
+      "Text.gv7OudGa.js",
+      "TextMeasurementFont.Vh_UA674.js",
+      "ThemeHelper.CeMKYPhf.js",
+      "ThemeProvider.BNrg3wTr.js",
+      "TimeoutPromise.xyLniPpj.js",
+      "Toast.BT3vaG2a.js",
+      "Toggle.CZiT7Lh6.js",
+      "ToolbarButtonsNavigation.CMxzqp3X.js",
+      "Tooltip.D36Ev20e.js",
+      "Tracing.DoHIW8jH.js",
+      "TriageRulePropertiesEdit.DlJAG90x.js",
+      "UnreachableCaseError.gONpwKHj.js",
+      "UpdatedIcon.DO1vNNH8.js",
+      "UpsellBox.DiIr0WGS.js",
+      "UsageAnalytics.BYDmMiBY.js",
+      "UsageAnalyticsState.CPnaKrkV.js",
+      "UsageFeature.DxHbtH5P.js",
+      "UsageFilterUserOptions.BfcPj68X.js",
+      "UsageHistoryCells.CH1c0TOd.js",
+      "UsageHistoryFilterState.BTKSjqL3.js",
+      "UsageLimitLabels.B0UCSYIQ.js",
+      "UsageSubpageMetadata.DzyygjFb.js",
+      "UsageTeamDisplay.CWgjPYW9.js",
+      "VideoPlayer.B-8ZaYaE.js",
+      "ViewEmptyState.Bu-U4yCn.js",
+      "ViewHeaderViewControls.BFmsZSlE.js",
+      "ViewOptions.BAb1xubN.js",
+      "ViewOptions.C6PH-C58.js",
+      "ViewOptionsGroupsContext.VNvCNLHD.js",
+      "ViewOptionsGroupsPanel.BiqrW28F.js",
+      "ViewOptionsMenu.BJqgjUqZ.js",
+      "VirtualList.BKXEiNrz.js",
+      "VisibilityHelper.BZX7bbt7.js",
+      "VisuallyHidden.SBeT84pv.js",
+      "WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js",
+      "WorkflowAgentAutomationSettingsPage._wV8723k.js",
+      "WorkspaceAiSettingsAccess.BRmUKl4I.js",
+      "XmlHelper.DmqYQLhJ.js",
+      "_Map.CIlVSj4D.js",
+      "_MapCache.CVQ4sTCO.js",
+      "_baseIsEqual.DOUcxQCB.js",
+      "_defineProperty.Buzs8hds.js",
+      "_getTag.BslU1FX9.js",
+      "_trimmedEndIndex.vh2QLOq1.js",
+      "addDays.BDe0ZOzk.js",
+      "aiConversationSendElicitationResponsesMutation.CEPAjw5J.js",
+      "animate.Cq9pc56d.js",
+      "animations.P0aPCGqJ.js",
+      "animations.stylex.H5KQnbC4.js",
+      "automationTrustedSourcesQuery.Dztz91Tf.js",
+      "band.CeEe1Y4x.js",
+      "basis.DYJSODff.js",
+      "browser.B82UtVRh.js",
+      "canOpenAgentSessionInReview.BbTwURTH.js",
+      "capitalize.BWfvr41B.js",
+      "clamp.DdkIgtRO.js",
+      "colors.Cg5Vh3br.js",
+      "config.Uz-QjVze.js",
+      "config.aM1_XCHx.js",
+      "constants.DYIjBMTX.js",
+      "core.PJIFv7xf.js",
+      "createSharedExternalStore.Bb8Ant3i.js",
+      "cubic-bezier.CnRL0UHP.js",
+      "currency.f0EU3rYF.js",
+      "customHighlights.D1p6a0jS.js",
+      "dateBlockFilterUtils.C8hdf4Bf.js",
+      "default.DMI-Tsal.js",
+      "defaultLocale.YZUHGh8n.js",
+      "desktopOAuth.Fnoz_Zqd.js",
+      "differenceInCalendarDays.DT1l52ZM.js",
+      "dom.Dr-QAC90.js",
+      "editor.C9-vrnvs.js",
+      "electronMixins.module.FjFFnSym.js",
+      "emotion-memoize.esm.CxZSxVx9.js",
+      "file.BfaDIq-J.js",
+      "finishSentryAuth.Cd-7zL4s.js",
+      "format.ni2VJc-v.js",
+      "getGroupDividerColor.B-wqx-vV.js",
+      "getViewFilters.Cv5M4Ooo.js",
+      "googleAuthUrl.DEpEE2uL.js",
+      "hash.DpuBqitv.js",
+      "hooks.CWG3Ngg6.js",
+      "hooks.D4LfSm6u.js",
+      "index.esm.CLiBoH71.js",
+      "index.module.DyyLofh6.js",
+      "init.C-OQMol4.js",
+      "initiativeBlockFilterUtils.C7uGXJRo.js",
+      "inlineCommentsState.j5wEPkcL.js",
+      "is-motion-value.BuvslIB3.js",
+      "isDesktopTabsEnabled.D6x46LOv.js",
+      "isInViewport.BGmKF9Ey.js",
+      "isObject.EOlKTQ6h.js",
+      "jsx-runtime.BH9nBM82.js",
+      "labelBlockFilterUtils.DfdxqTXa.js",
+      "labelGroupColumnLabels.BipZ4EGE.js",
+      "lib.3x4I7cm8.js",
+      "lightThemeRefresh.DyWCsE3P.js",
+      "linear.B1WkpmSB.js",
+      "lowerCase.BOQ27dWU.js",
+      "markers.stylex.CpMhYycy.js",
+      "matchPath.BaEbF362.js",
+      "memoize.BJqL8nwN.js",
+      "mergeRefs.gVHGee7d.js",
+      "mixins.stylex.BUgiQC4g.js",
+      "mobx.BEIB-Y2s.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "namedKeyMap.CNz32288.js",
+      "nice.-vROP43K.js",
+      "nodes.DrSymAVM.js",
+      "numberBlockFilterUtils.BLhmYxqx.js",
+      "numbers.CyjUJWvi.js",
+      "object_hash.B923Anbb.js",
+      "ordinal.BAxfPAgN.js",
+      "organizationStartTrialForPlanMutation.dwDfNUvV.js",
+      "pageSizes.C1gzj2LQ.js",
+      "point.vrkjXmus.js",
+      "preload-helper.HclGiUj8.js",
+      "productIntelligenceSettingsContent.B0n-oZkD.js",
+      "projectBlockFilterUtils.B0pJBUCj.js",
+      "proseMirrorNodeForModel.CLHOE5r8.js",
+      "proxy.CKtU-u9d.js",
+      "proxyImageSrc.DjrbBx1K.js",
+      "query.QaT6eqnM.js",
+      "random.D4q1i2vq.js",
+      "react-dom.yhYEAnNq.js",
+      "react.Bfm_Hgom.js",
+      "redactUrl.CCp01Q9I.js",
+      "redirects.CpELa_du.js",
+      "resolvePromise.B8FauNXm.js",
+      "resolveValueOrGetter.yDaRTFqU.js",
+      "reviewPageMode.CIpkxQ46.js",
+      "rolldown-runtime.C0FnF6B9.js",
+      "scrollContainers.Do2BLzDQ.js",
+      "selectNoneActionId.BIU1vyyB.js",
+      "skillSlashAction.CXuWRS8L.js",
+      "spacetime.fdO416V8.js",
+      "string.BrhlGPFK.js",
+      "stylex.CiFZl61Z.js",
+      "subDays.Bld4IkeA.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "symlog.BJoMG7ZJ.js",
+      "teamBlockFilterUtils.BHPxTf69.js",
+      "throttle.BQuZxQlq.js",
+      "time.Dn7wnS7i.js",
+      "timezone.lphPF5Vd.js",
+      "timezones.CNro5uti.js",
+      "toNumber.ClFirwKk.js",
+      "transform.CFV0k6rU.js",
+      "trimEnd.BndZ8NfH.js",
+      "types.7f0h45Sh.js",
+      "uniqueId.BQUoZuD_.js",
+      "upperFirst.DgY9DTaO.js",
+      "usageLimitSpendQuery.U-MPSaPj.js",
+      "usageSummaryQuery.DEjOCfET.js",
+      "use-reduced-motion.BQCE0bk5.js",
+      "use-spring.v6si08ey.js",
+      "use-transform.DAbZyXYv.js",
+      "useAgentDraft.DI041_p0.js",
+      "useAgentPanelFileDrop.CcQryCIX.js",
+      "useAgentSessionRowInfo.BAgE080r.js",
+      "useApplicationStore.CfXY1l0i.js",
+      "useAsRef.CJh9aSjD.js",
+      "useCollapsedStateSessionBased.BNlK6Qtk.js",
+      "useCommentsEdit.rx_NkuPS.js",
+      "useComponentSize.BZCvk6TA.js",
+      "useCompositeListItem.CtMl9IFp.js",
+      "useComputed.Vpsf1omy.js",
+      "useContainerSize.SyRU9uAF.js",
+      "useDelayedFlag.z3GX-gtB.js",
+      "useDisabledByFieldset.Da8RgqXz.js",
+      "useEditorRevision.BX3ZJWXm.js",
+      "useFilterValidation.BnpfA_kB.js",
+      "useFlag.D9K3DJCO.js",
+      "useGroupingMenu.D3TLCjLd.js",
+      "useHydrate.BboyxC7Q.js",
+      "useHydrateAiContext.UY-9aT1R.js",
+      "useHydrateModelsInMarkdown.BqDPY0lm.js",
+      "useInfiniteQuery.CMA0jRiw.js",
+      "useInlineCommentHashNavigation.gWo3l1g8.js",
+      "useIntersectionObserver.Ca8l1SgD.js",
+      "useIsKeyPressedRef.Cu1ZujKR.js",
+      "useIsMounted.DDjEpkcy.js",
+      "useKeyPressEvent.CQJo8LW-.js",
+      "useLinearAgentItems.Ci73RDrP.js",
+      "useListRowActivation.3C51DqFk.js",
+      "useLoadIssue.Djn9pp3E.js",
+      "useLocallyDismissedIds.D1W3nmyk.js",
+      "useLoopTemplateLauncher.O9-_gagH.js",
+      "useMediaQuery.IwlAnPxD.js",
+      "useNavigationFocusKeyboardActive.CoyYt_TU.js",
+      "useNivoTheme.Dfltog3c.js",
+      "useOrderingFieldDisplay.D4wLe_IM.js",
+      "useOrderingMenu.B_SK3wjP.js",
+      "useParentModelForUpdate.B1QZYhKG.js",
+      "usePersistedCollapsedState.VawtRtVW.js",
+      "usePrevious.CsIv6FMi.js",
+      "useProjectStatusAdditionalInformation.NMyv3EmX.js",
+      "usePromise.DcmGSp67.js",
+      "useQuery.CNd_8BPl.js",
+      "useReducedMotion.Um82Hwei.js",
+      "useReducerWithEffects.BpOoiI7g.js",
+      "useRegisterToggleBinaryActionFactory.B8M3ro5z.js",
+      "useRegisterToggleSelectActionFactory.D3LB-Nvn.js",
+      "useRenderElement.LPfDJuqL.js",
+      "useRouteData.DN0g9O-t.js",
+      "useScreenSize.BOSsj2U3.js",
+      "useScrollIntoViewUntilStable.3V2Ha5RF.js",
+      "useScrollRestorationItemKey.Bo_Ytl1Y.js",
+      "useSelectModels.BV_vzlBv.js",
+      "useSendAiMessage.B5bGsmqN.js",
+      "useSharedState.D46_ZGIP.js",
+      "useSplitViewListActivation.DrTFvo56.js",
+      "useStore.BpZDR8VN.js",
+      "useStoredState.IyBPpDeR.js",
+      "useThreadReplyCollapse.DeCNoQiJ.js",
+      "useTimeoutFn.CKYDyE9d.js",
+      "useToolApprovalActions.kadZ6255.js",
+      "useTrackActiveSession.sxY2NaOx.js",
+      "useTrackRecentLoop.DJGSsw3v.js",
+      "useTrafficLightPaddingLeft.Mt2zn5EY.js",
+      "useUpdateEffect.y4oobMV2.js",
+      "useUsageLimitGroupPeriod.6-QJ10ya.js",
+      "useUsageLimitTableFilter.DeovAaha.js",
+      "useUsageVisibilityRefresh.BwqEubJb.js",
+      "useUser.CGqqjeJr.js",
+      "useUserSettings.Cf66lXtW.js",
+      "useViewFilters.6E3JTpzV.js",
+      "useViewPreferenceValue.X5APHi5R.js",
+      "useViewPreferences.DF8FtDCQ.js",
+      "useWindowSize.DM9zvJYB.js",
+      "usersBlockFilterUtils.Dj-qcEgT.js",
+      "v4.9t2fVNdP.js",
+      "validation.DM_YZW7p.js",
+      "value.BHrdYS4C.js",
+      "workspaceMcpServerConnectionsQuery.DkKAcOJs.js",
+      "yaml.Q6vMKgD7.js"
+    ]
+  },
+  "vendor": {
+    "chunks": 198,
+    "bytes": 1861539
+  },
+  "app": {
+    "chunks": 327,
+    "bytes": 5505858
+  },
+  "histogram": {
+    "under12k": 419,
+    "from12to64k": 82,
+    "over64k": 24
+  },
+  "fanIn": [
+    {
+      "chunk": "rolldown-runtime.C0FnF6B9.js",
+      "importers": 342,
+      "bytes": 1648,
+      "vendor": true
+    },
+    {
+      "chunk": "react.Bfm_Hgom.js",
+      "importers": 297,
+      "bytes": 8234,
+      "vendor": true
+    },
+    {
+      "chunk": "jsx-runtime.BH9nBM82.js",
+      "importers": 261,
+      "bytes": 793,
+      "vendor": true
+    },
+    {
+      "chunk": "mobxreactlite.BAMBvwfh.js",
+      "importers": 111,
+      "bytes": 3520,
+      "vendor": true
+    },
+    {
+      "chunk": "mixins.stylex.BUgiQC4g.js",
+      "importers": 97,
+      "bytes": 6007,
+      "vendor": true
+    },
+    {
+      "chunk": "Flex.BS495mgi.js",
+      "importers": 93,
+      "bytes": 4952,
+      "vendor": false
+    },
+    {
+      "chunk": "RefreshManager.DpVjn8XM.js",
+      "importers": 91,
+      "bytes": 614563,
+      "vendor": false
+    },
+    {
+      "chunk": "Text.gv7OudGa.js",
+      "importers": 86,
+      "bytes": 3186,
+      "vendor": false
+    },
+    {
+      "chunk": "Icon.DpisucLQ.js",
+      "importers": 85,
+      "bytes": 4112,
+      "vendor": false
+    },
+    {
+      "chunk": "ThemeProvider.BNrg3wTr.js",
+      "importers": 72,
+      "bytes": 11644,
+      "vendor": false
+    },
+    {
+      "chunk": "stylex.CiFZl61Z.js",
+      "importers": 63,
+      "bytes": 1800,
+      "vendor": true
+    },
+    {
+      "chunk": "Tooltip.D36Ev20e.js",
+      "importers": 63,
+      "bytes": 20538,
+      "vendor": false
+    },
+    {
+      "chunk": "types.7f0h45Sh.js",
+      "importers": 62,
+      "bytes": 76355,
+      "vendor": true
+    },
+    {
+      "chunk": "mobx.BEIB-Y2s.js",
+      "importers": 58,
+      "bytes": 48195,
+      "vendor": true
+    },
+    {
+      "chunk": "Avatar.DGwSs61a.js",
+      "importers": 57,
+      "bytes": 271487,
+      "vendor": false
+    },
+    {
+      "chunk": "time.Dn7wnS7i.js",
+      "importers": 57,
+      "bytes": 15326,
+      "vendor": true
+    },
+    {
+      "chunk": "Button.DD4dEZh7.js",
+      "importers": 53,
+      "bytes": 11034,
+      "vendor": false
+    },
+    {
+      "chunk": "UnreachableCaseError.gONpwKHj.js",
+      "importers": 53,
+      "bytes": 521,
+      "vendor": false
+    },
+    {
+      "chunk": "useStore.BpZDR8VN.js",
+      "importers": 53,
+      "bytes": 551,
+      "vendor": true
+    },
+    {
+      "chunk": "Logger.qFaEBF6-.js",
+      "importers": 49,
+      "bytes": 243018,
+      "vendor": false
+    },
+    {
+      "chunk": "ActionGroups.DFZZ7QMk.js",
+      "importers": 46,
+      "bytes": 22253,
+      "vendor": false
+    },
+    {
+      "chunk": "useUser.CGqqjeJr.js",
+      "importers": 46,
+      "bytes": 430,
+      "vendor": true
+    },
+    {
+      "chunk": "PullRequestsFeatureHelper.woc0KNxh.js",
+      "importers": 43,
+      "bytes": 54748,
+      "vendor": false
+    },
+    {
+      "chunk": "hooks.D4LfSm6u.js",
+      "importers": 42,
+      "bytes": 73952,
+      "vendor": true
+    },
+    {
+      "chunk": "ActionTrigger.CLIWDN56.js",
+      "importers": 41,
+      "bytes": 9876,
+      "vendor": false
+    },
+    {
+      "chunk": "browser.B82UtVRh.js",
+      "importers": 41,
+      "bytes": 3872,
+      "vendor": true
+    },
+    {
+      "chunk": "FeatureFlagIcon.DOHP4b1a.js",
+      "importers": 40,
+      "bytes": 17066,
+      "vendor": false
+    },
+    {
+      "chunk": "nodes.DrSymAVM.js",
+      "importers": 40,
+      "bytes": 261187,
+      "vendor": true
+    },
+    {
+      "chunk": "MarkdownTransformer.DI8Fsgra.js",
+      "importers": 35,
+      "bytes": 178846,
+      "vendor": false
+    },
+    {
+      "chunk": "IconButton.B46fVFUo.js",
+      "importers": 34,
+      "bytes": 1289,
+      "vendor": false
+    },
+    {
+      "chunk": "Toast.BT3vaG2a.js",
+      "importers": 33,
+      "bytes": 12193,
+      "vendor": false
+    },
+    {
+      "chunk": "useAsRef.CJh9aSjD.js",
+      "importers": 32,
+      "bytes": 544,
+      "vendor": true
+    },
+    {
+      "chunk": "useComputed.Vpsf1omy.js",
+      "importers": 32,
+      "bytes": 570,
+      "vendor": true
+    },
+    {
+      "chunk": "Link.B583WaeA.js",
+      "importers": 31,
+      "bytes": 17349,
+      "vendor": false
+    },
+    {
+      "chunk": "resolvePromise.B8FauNXm.js",
+      "importers": 31,
+      "bytes": 3077,
+      "vendor": true
+    },
+    {
+      "chunk": "useScreenSize.BOSsj2U3.js",
+      "importers": 31,
+      "bytes": 920,
+      "vendor": true
+    },
+    {
+      "chunk": "Decorators.Du6V7UQY.js",
+      "importers": 30,
+      "bytes": 148839,
+      "vendor": false
+    },
+    {
+      "chunk": "validation.DM_YZW7p.js",
+      "importers": 30,
+      "bytes": 41684,
+      "vendor": true
+    },
+    {
+      "chunk": "DecorativeIcon.DUPAyWLO.js",
+      "importers": 29,
+      "bytes": 9069,
+      "vendor": false
+    },
+    {
+      "chunk": "suspenseObserver.Cawdgu7K.js",
+      "importers": 29,
+      "bytes": 4979,
+      "vendor": true
+    },
+    {
+      "chunk": "useFlag.D9K3DJCO.js",
+      "importers": 29,
+      "bytes": 493,
+      "vendor": true
+    },
+    {
+      "chunk": "useUserSettings.Cf66lXtW.js",
+      "importers": 28,
+      "bytes": 439,
+      "vendor": true
+    },
+    {
+      "chunk": "AnimatedPopoverContainer.CAL-26u6.js",
+      "importers": 27,
+      "bytes": 77387,
+      "vendor": false
+    },
+    {
+      "chunk": "proxy.CKtU-u9d.js",
+      "importers": 27,
+      "bytes": 33114,
+      "vendor": true
+    },
+    {
+      "chunk": "ReviewsHelper.CFN0Kk_Y.js",
+      "importers": 26,
+      "bytes": 50208,
+      "vendor": false
+    },
+    {
+      "chunk": "ActionMenuBackdrop.BlquRXQM.js",
+      "importers": 25,
+      "bytes": 42205,
+      "vendor": false
+    },
+    {
+      "chunk": "RegisterAction.BtUuUh2c.js",
+      "importers": 25,
+      "bytes": 10818,
+      "vendor": false
+    },
+    {
+      "chunk": "ClientStorage.2mwQyaxr.js",
+      "importers": 23,
+      "bytes": 5933,
+      "vendor": false
+    },
+    {
+      "chunk": "preload-helper.HclGiUj8.js",
+      "importers": 23,
+      "bytes": 1568,
+      "vendor": true
+    },
+    {
+      "chunk": "TeamLabel.CTNAPaDj.js",
+      "importers": 23,
+      "bytes": 5293,
+      "vendor": false
+    },
+    {
+      "chunk": "useComponentSize.BZCvk6TA.js",
+      "importers": 22,
+      "bytes": 3624,
+      "vendor": true
+    },
+    {
+      "chunk": "AnimatePresence.CtBZ-ACJ.js",
+      "importers": 21,
+      "bytes": 4708,
+      "vendor": false
+    },
+    {
+      "chunk": "ColorConverter.CVwFbLBP.js",
+      "importers": 21,
+      "bytes": 7085,
+      "vendor": false
+    },
+    {
+      "chunk": "CloseIcon.CKEypAHi.js",
+      "importers": 20,
+      "bytes": 1174,
+      "vendor": false
+    },
+    {
+      "chunk": "Integration.B02xjlHD.js",
+      "importers": 20,
+      "bytes": 4748,
+      "vendor": false
+    },
+    {
+      "chunk": "KeyboardHelper.CNQaUXE1.js",
+      "importers": 20,
+      "bytes": 2163,
+      "vendor": false
+    },
+    {
+      "chunk": "AlertDialog.Nxv6sEJD.js",
+      "importers": 19,
+      "bytes": 3355,
+      "vendor": false
+    },
+    {
+      "chunk": "mergeRefs.gVHGee7d.js",
+      "importers": 19,
+      "bytes": 464,
+      "vendor": true
+    },
+    {
+      "chunk": "useScrollIntoViewUntilStable.3V2Ha5RF.js",
+      "importers": 18,
+      "bytes": 145983,
+      "vendor": true
+    },
+    {
+      "chunk": "FocusTrap.BPqeE0vr.js",
+      "importers": 17,
+      "bytes": 25297,
+      "vendor": false
+    },
+    {
+      "chunk": "editor.C9-vrnvs.js",
+      "importers": 16,
+      "bytes": 69695,
+      "vendor": true
+    },
+    {
+      "chunk": "initiativeBlockFilterUtils.C7uGXJRo.js",
+      "importers": 16,
+      "bytes": 28840,
+      "vendor": true
+    },
+    {
+      "chunk": "DiffModificationDetector.CvjVc3nq.js",
+      "importers": 15,
+      "bytes": 12574,
+      "vendor": false
+    },
+    {
+      "chunk": "labelBlockFilterUtils.DfdxqTXa.js",
+      "importers": 15,
+      "bytes": 17849,
+      "vendor": true
+    },
+    {
+      "chunk": "PlusIcon.B0xt_MlV.js",
+      "importers": 15,
+      "bytes": 958,
+      "vendor": false
+    },
+    {
+      "chunk": "upperFirst.DgY9DTaO.js",
+      "importers": 15,
+      "bytes": 2332,
+      "vendor": true
+    },
+    {
+      "chunk": "useReducedMotion.Um82Hwei.js",
+      "importers": 15,
+      "bytes": 482,
+      "vendor": true
+    },
+    {
+      "chunk": "config.Uz-QjVze.js",
+      "importers": 14,
+      "bytes": 10166,
+      "vendor": true
+    },
+    {
+      "chunk": "GridLoaderIcon.Bo_lyuLI.js",
+      "importers": 14,
+      "bytes": 3877,
+      "vendor": false
+    },
+    {
+      "chunk": "InitiativesTab.CHJzgeEz.js",
+      "importers": 14,
+      "bytes": 4694,
+      "vendor": false
+    },
+    {
+      "chunk": "VisuallyHidden.SBeT84pv.js",
+      "importers": 14,
+      "bytes": 787,
+      "vendor": false
+    },
+    {
+      "chunk": "Electron2.BRSMfaTu.js",
+      "importers": 13,
+      "bytes": 15328,
+      "vendor": false
+    },
+    {
+      "chunk": "SearchScoreHelper.Bz603FMp.js",
+      "importers": 13,
+      "bytes": 6498,
+      "vendor": false
+    },
+    {
+      "chunk": "currency.f0EU3rYF.js",
+      "importers": 12,
+      "bytes": 3429,
+      "vendor": true
+    },
+    {
+      "chunk": "FuzzyDatePicker.9NVhnGgX.js",
+      "importers": 12,
+      "bytes": 114579,
+      "vendor": false
+    },
+    {
+      "chunk": "markers.stylex.CpMhYycy.js",
+      "importers": 12,
+      "bytes": 856,
+      "vendor": true
+    },
+    {
+      "chunk": "Signal.DmjPTkN_.js",
+      "importers": 12,
+      "bytes": 1421,
+      "vendor": false
+    },
+    {
+      "chunk": "throttle.BQuZxQlq.js",
+      "importers": 12,
+      "bytes": 1822,
+      "vendor": true
+    },
+    {
+      "chunk": "useSharedState.D46_ZGIP.js",
+      "importers": 12,
+      "bytes": 828,
+      "vendor": true
+    },
+    {
+      "chunk": "core.PJIFv7xf.js",
+      "importers": 11,
+      "bytes": 18024,
+      "vendor": true
+    },
+    {
+      "chunk": "DesktopWindowStateProvider.BD8WuUZB.js",
+      "importers": 11,
+      "bytes": 12146,
+      "vendor": false
+    },
+    {
+      "chunk": "LabelIcon.DilXxMnz.js",
+      "importers": 11,
+      "bytes": 1948,
+      "vendor": false
+    },
+    {
+      "chunk": "react-dom.yhYEAnNq.js",
+      "importers": 11,
+      "bytes": 4258,
+      "vendor": true
+    },
+    {
+      "chunk": "ViewOptionsMenu.BJqgjUqZ.js",
+      "importers": 11,
+      "bytes": 9704,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentHelper.CjXdMzFb.js",
+      "importers": 10,
+      "bytes": 5880,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentPanelItem.qs7AavHY.js",
+      "importers": 10,
+      "bytes": 72170,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentToolbarState.DPrj1I-A.js",
+      "importers": 10,
+      "bytes": 18742,
+      "vendor": false
+    },
+    {
+      "chunk": "AiConversationContextHelper.C_bh7SNM.js",
+      "importers": 10,
+      "bytes": 30782,
+      "vendor": false
+    },
+    {
+      "chunk": "differenceInCalendarDays.DT1l52ZM.js",
+      "importers": 10,
+      "bytes": 1205,
+      "vendor": true
+    },
+    {
+      "chunk": "Input.CX9538jp.js",
+      "importers": 10,
+      "bytes": 8832,
+      "vendor": false
+    },
+    {
+      "chunk": "isObject.EOlKTQ6h.js",
+      "importers": 10,
+      "bytes": 1532,
+      "vendor": true
+    },
+    {
+      "chunk": "TabsList.B4X8yXhy.js",
+      "importers": 10,
+      "bytes": 16843,
+      "vendor": false
+    },
+    {
+      "chunk": "useKeyPressEvent.CQJo8LW-.js",
+      "importers": 10,
+      "bytes": 2419,
+      "vendor": true
+    },
+    {
+      "chunk": "AutomationHelper.B0HEcOoo.js",
+      "importers": 9,
+      "bytes": 50552,
+      "vendor": false
+    },
+    {
+      "chunk": "Elevated.DXimr88w.js",
+      "importers": 9,
+      "bytes": 971,
+      "vendor": false
+    },
+    {
+      "chunk": "isDesktopTabsEnabled.D6x46LOv.js",
+      "importers": 9,
+      "bytes": 16325,
+      "vendor": true
+    },
+    {
+      "chunk": "LinkIcon.DbCNCIi7.js",
+      "importers": 9,
+      "bytes": 1925,
+      "vendor": false
+    },
+    {
+      "chunk": "numbers.CyjUJWvi.js",
+      "importers": 9,
+      "bytes": 981,
+      "vendor": true
+    },
+    {
+      "chunk": "Select.CkdP5uts.js",
+      "importers": 9,
+      "bytes": 99539,
+      "vendor": false
+    },
+    {
+      "chunk": "useQuery.CNd_8BPl.js",
+      "importers": 9,
+      "bytes": 8640,
+      "vendor": true
+    },
+    {
+      "chunk": "usersBlockFilterUtils.Dj-qcEgT.js",
+      "importers": 9,
+      "bytes": 8068,
+      "vendor": true
+    },
+    {
+      "chunk": "value.BHrdYS4C.js",
+      "importers": 9,
+      "bytes": 4954,
+      "vendor": true
+    },
+    {
+      "chunk": "animations.P0aPCGqJ.js",
+      "importers": 8,
+      "bytes": 1736,
+      "vendor": true
+    },
+    {
+      "chunk": "ClipboardHelper.BwmZsAdW.js",
+      "importers": 8,
+      "bytes": 3920,
+      "vendor": false
+    },
+    {
+      "chunk": "DashboardIcon.CvwsT8ND.js",
+      "importers": 8,
+      "bytes": 8086,
+      "vendor": false
+    },
+    {
+      "chunk": "ExternalLink.xR7jCAep.js",
+      "importers": 8,
+      "bytes": 1258,
+      "vendor": false
+    },
+    {
+      "chunk": "MouseHelper.41-DjiEq.js",
+      "importers": 8,
+      "bytes": 4132,
+      "vendor": false
+    },
+    {
+      "chunk": "PriorityIcon.CvLrEIis.js",
+      "importers": 8,
+      "bytes": 7082,
+      "vendor": false
+    },
+    {
+      "chunk": "proxyImageSrc.DjrbBx1K.js",
+      "importers": 8,
+      "bytes": 6826,
+      "vendor": true
+    },
+    {
+      "chunk": "PullRequestStatusIcon.Bu4WyB8f.js",
+      "importers": 8,
+      "bytes": 32972,
+      "vendor": false
+    },
+    {
+      "chunk": "v4.9t2fVNdP.js",
+      "importers": 8,
+      "bytes": 1208,
+      "vendor": true
+    },
+    {
+      "chunk": "ViewOptions.C6PH-C58.js",
+      "importers": 8,
+      "bytes": 6978,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentAutomationIcon.CFuF2och.js",
+      "importers": 7,
+      "bytes": 5063,
+      "vendor": false
+    },
+    {
+      "chunk": "AiFeedbackControls.B5ln1bIT.js",
+      "importers": 7,
+      "bytes": 5188,
+      "vendor": false
+    },
+    {
+      "chunk": "ComponentLoader.D7a-VVZr.js",
+      "importers": 7,
+      "bytes": 2698,
+      "vendor": false
+    },
+    {
+      "chunk": "config.aM1_XCHx.js",
+      "importers": 7,
+      "bytes": 549,
+      "vendor": true
+    },
+    {
+      "chunk": "electronMixins.module.FjFFnSym.js",
+      "importers": 7,
+      "bytes": 497,
+      "vendor": true
+    },
+    {
+      "chunk": "Features.CzCTqIRs.js",
+      "importers": 7,
+      "bytes": 36438,
+      "vendor": false
+    },
+    {
+      "chunk": "FileUploadPlugin.lwfDcatI.js",
+      "importers": 7,
+      "bytes": 32796,
+      "vendor": false
+    },
+    {
+      "chunk": "format.ni2VJc-v.js",
+      "importers": 7,
+      "bytes": 19065,
+      "vendor": true
+    },
+    {
+      "chunk": "namedKeyMap.CNz32288.js",
+      "importers": 7,
+      "bytes": 792,
+      "vendor": true
+    },
+    {
+      "chunk": "resolveValueOrGetter.yDaRTFqU.js",
+      "importers": 7,
+      "bytes": 456,
+      "vendor": true
+    },
+    {
+      "chunk": "Toggle.CZiT7Lh6.js",
+      "importers": 7,
+      "bytes": 3900,
+      "vendor": false
+    },
+    {
+      "chunk": "useUpdateEffect.y4oobMV2.js",
+      "importers": 7,
+      "bytes": 639,
+      "vendor": true
+    },
+    {
+      "chunk": "_defineProperty.Buzs8hds.js",
+      "importers": 6,
+      "bytes": 4580,
+      "vendor": true
+    },
+    {
+      "chunk": "addDays.BDe0ZOzk.js",
+      "importers": 6,
+      "bytes": 538,
+      "vendor": true
+    },
+    {
+      "chunk": "AppStatusBadge.DHAyzHvP.js",
+      "importers": 6,
+      "bytes": 11053,
+      "vendor": false
+    },
+    {
+      "chunk": "ChartHelpers.ClmWuurh.js",
+      "importers": 6,
+      "bytes": 4775,
+      "vendor": false
+    },
+    {
+      "chunk": "CheckMarkIcon.C4WcuMDI.js",
+      "importers": 6,
+      "bytes": 1014,
+      "vendor": false
+    },
+    {
+      "chunk": "ChevronRightIcon.QOMB98cV.js",
+      "importers": 6,
+      "bytes": 969,
+      "vendor": false
+    },
+    {
+      "chunk": "clamp.DdkIgtRO.js",
+      "importers": 6,
+      "bytes": 754,
+      "vendor": true
+    },
+    {
+      "chunk": "CollapseArrowIcon.DhjELGK2.js",
+      "importers": 6,
+      "bytes": 3039,
+      "vendor": false
+    },
+    {
+      "chunk": "cubic-bezier.CnRL0UHP.js",
+      "importers": 6,
+      "bytes": 665,
+      "vendor": true
+    },
+    {
+      "chunk": "CurrentUserIcon.i7R3q6OF.js",
+      "importers": 6,
+      "bytes": 1389,
+      "vendor": false
+    },
+    {
+      "chunk": "CustomerLogo.DT6bl279.js",
+      "importers": 6,
+      "bytes": 4416,
+      "vendor": false
+    },
+    {
+      "chunk": "DivButton.B-QxeD0V.js",
+      "importers": 6,
+      "bytes": 914,
+      "vendor": false
+    },
+    {
+      "chunk": "ErrorBoundary.Biei1WuN.js",
+      "importers": 6,
+      "bytes": 11052,
+      "vendor": false
+    },
+    {
+      "chunk": "finishSentryAuth.Cd-7zL4s.js",
+      "importers": 6,
+      "bytes": 3664,
+      "vendor": true
+    },
+    {
+      "chunk": "Form.D0HBDYj2.js",
+      "importers": 6,
+      "bytes": 26245,
+      "vendor": false
+    },
+    {
+      "chunk": "index.esm.CLiBoH71.js",
+      "importers": 6,
+      "bytes": 15741,
+      "vendor": true
+    },
+    {
+      "chunk": "is-motion-value.BuvslIB3.js",
+      "importers": 6,
+      "bytes": 17526,
+      "vendor": true
+    },
+    {
+      "chunk": "Locale.BJE_q3Oj.js",
+      "importers": 6,
+      "bytes": 873,
+      "vendor": false
+    },
+    {
+      "chunk": "MotionConfigContext.lp10AmFy.js",
+      "importers": 6,
+      "bytes": 710,
+      "vendor": false
+    },
+    {
+      "chunk": "ProjectFilterBlocks.GhbPbZlo.js",
+      "importers": 6,
+      "bytes": 22144,
+      "vendor": false
+    },
+    {
+      "chunk": "ResolvablePromise.K_XC6Vcq.js",
+      "importers": 6,
+      "bytes": 458,
+      "vendor": false
+    },
+    {
+      "chunk": "spacetime.fdO416V8.js",
+      "importers": 6,
+      "bytes": 50222,
+      "vendor": true
+    },
+    {
+      "chunk": "SubscriptionsControl.BbA5QtkK.js",
+      "importers": 6,
+      "bytes": 36819,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageFeature.DxHbtH5P.js",
+      "importers": 6,
+      "bytes": 1122,
+      "vendor": false
+    },
+    {
+      "chunk": "use-transform.DAbZyXYv.js",
+      "importers": 6,
+      "bytes": 1686,
+      "vendor": true
+    },
+    {
+      "chunk": "useRouteData.DN0g9O-t.js",
+      "importers": 6,
+      "bytes": 685,
+      "vendor": true
+    },
+    {
+      "chunk": "useViewPreferenceValue.X5APHi5R.js",
+      "importers": 6,
+      "bytes": 658,
+      "vendor": true
+    },
+    {
+      "chunk": "AgentConversationItems.DoHFAP_d.js",
+      "importers": 5,
+      "bytes": 10357,
+      "vendor": false
+    },
+    {
+      "chunk": "capitalize.BWfvr41B.js",
+      "importers": 5,
+      "bytes": 567,
+      "vendor": true
+    },
+    {
+      "chunk": "ContentViewHeaderBreadcrumbChevron.CH30sqr7.js",
+      "importers": 5,
+      "bytes": 805,
+      "vendor": false
+    },
+    {
+      "chunk": "CustomerDefaultLogoIcon.CDRE4V6x.js",
+      "importers": 5,
+      "bytes": 2157,
+      "vendor": false
+    },
+    {
+      "chunk": "Electron.dhyFDmX-.js",
+      "importers": 5,
+      "bytes": 745,
+      "vendor": false
+    },
+    {
+      "chunk": "emotion-memoize.esm.CxZSxVx9.js",
+      "importers": 5,
+      "bytes": 73163,
+      "vendor": true
+    },
+    {
+      "chunk": "FilterTriggerButton.tFll_T6G.js",
+      "importers": 5,
+      "bytes": 1772,
+      "vendor": false
+    },
+    {
+      "chunk": "LoadingDoneHelper.DxcZh5nm.js",
+      "importers": 5,
+      "bytes": 1664,
+      "vendor": false
+    },
+    {
+      "chunk": "Logger.-35cWKHt.js",
+      "importers": 5,
+      "bytes": 1246,
+      "vendor": false
+    },
+    {
+      "chunk": "MediaDimensionCache.BFJWPzKq.js",
+      "importers": 5,
+      "bytes": 2698,
+      "vendor": false
+    },
+    {
+      "chunk": "MembersIcon.D9GgEXDP.js",
+      "importers": 5,
+      "bytes": 4545,
+      "vendor": false
+    },
+    {
+      "chunk": "memoize.BJqL8nwN.js",
+      "importers": 5,
+      "bytes": 812,
+      "vendor": true
+    },
+    {
+      "chunk": "MimeTypes.mHzDg6ZD.js",
+      "importers": 5,
+      "bytes": 3909,
+      "vendor": false
+    },
+    {
+      "chunk": "PipelineIcon.a6JzhArr.js",
+      "importers": 5,
+      "bytes": 1829,
+      "vendor": false
+    },
+    {
+      "chunk": "ProjectStatusIcon.CWSLLtli.js",
+      "importers": 5,
+      "bytes": 4230,
+      "vendor": false
+    },
+    {
+      "chunk": "QueryClientProvider.DO-PMMc7.js",
+      "importers": 5,
+      "bytes": 810,
+      "vendor": false
+    },
+    {
+      "chunk": "RedoIcon.Cgq3tawS.js",
+      "importers": 5,
+      "bytes": 46972,
+      "vendor": false
+    },
+    {
+      "chunk": "subDays.Bld4IkeA.js",
+      "importers": 5,
+      "bytes": 445,
+      "vendor": true
+    },
+    {
+      "chunk": "TextMeasurementFont.Vh_UA674.js",
+      "importers": 5,
+      "bytes": 24601,
+      "vendor": false
+    },
+    {
+      "chunk": "UpdatedIcon.DO1vNNH8.js",
+      "importers": 5,
+      "bytes": 1594,
+      "vendor": false
+    },
+    {
+      "chunk": "usePromise.DcmGSp67.js",
+      "importers": 5,
+      "bytes": 968,
+      "vendor": true
+    },
+    {
+      "chunk": "_getTag.BslU1FX9.js",
+      "importers": 4,
+      "bytes": 3681,
+      "vendor": true
+    },
+    {
+      "chunk": "_Map.CIlVSj4D.js",
+      "importers": 4,
+      "bytes": 1641,
+      "vendor": true
+    },
+    {
+      "chunk": "AgentToolbarActions.CbOLDSqu.js",
+      "importers": 4,
+      "bytes": 19471,
+      "vendor": false
+    },
+    {
+      "chunk": "AiFilterContext.CEv79uVX.js",
+      "importers": 4,
+      "bytes": 3701,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationHistoryDialog.DYWJ3DgX.js",
+      "importers": 4,
+      "bytes": 116324,
+      "vendor": false
+    },
+    {
+      "chunk": "automationTrustedSourcesQuery.Dztz91Tf.js",
+      "importers": 4,
+      "bytes": 1133,
+      "vendor": true
+    },
+    {
+      "chunk": "AutoResizingContainer.BRLg-Ivx.js",
+      "importers": 4,
+      "bytes": 2064,
+      "vendor": false
+    },
+    {
+      "chunk": "ChevronDownIcon.8ldiEKW3.js",
+      "importers": 4,
+      "bytes": 764,
+      "vendor": false
+    },
+    {
+      "chunk": "ChevronIcon.B2rXUqFj.js",
+      "importers": 4,
+      "bytes": 811,
+      "vendor": false
+    },
+    {
+      "chunk": "CodeSelectionLine.DxrbMLav.js",
+      "importers": 4,
+      "bytes": 1153,
+      "vendor": false
+    },
+    {
+      "chunk": "CreatedIcon.D9G7DRXR.js",
+      "importers": 4,
+      "bytes": 1347,
+      "vendor": false
+    },
+    {
+      "chunk": "CreatorIcon.DCApCoGQ.js",
+      "importers": 4,
+      "bytes": 2394,
+      "vendor": false
+    },
+    {
+      "chunk": "EditorFileUploadManager.YTj9uXRp.js",
+      "importers": 4,
+      "bytes": 9217,
+      "vendor": false
+    },
+    {
+      "chunk": "EmojiHelper.5bmECx6H.js",
+      "importers": 4,
+      "bytes": 8090,
+      "vendor": false
+    },
+    {
+      "chunk": "GitRequestIcon.DOzJukBs.js",
+      "importers": 4,
+      "bytes": 1822,
+      "vendor": false
+    },
+    {
+      "chunk": "hash.DpuBqitv.js",
+      "importers": 4,
+      "bytes": 455,
+      "vendor": true
+    },
+    {
+      "chunk": "HeaderIconTitle.Bsi5lSed.js",
+      "importers": 4,
+      "bytes": 1948,
+      "vendor": false
+    },
+    {
+      "chunk": "init.C-OQMol4.js",
+      "importers": 4,
+      "bytes": 498,
+      "vendor": true
+    },
+    {
+      "chunk": "lib.3x4I7cm8.js",
+      "importers": 4,
+      "bytes": 14947,
+      "vendor": true
+    },
+    {
+      "chunk": "LightboxItem.D3lR8lQ6.js",
+      "importers": 4,
+      "bytes": 2050,
+      "vendor": false
+    },
+    {
+      "chunk": "LinearLogo.CbdUrRSi.js",
+      "importers": 4,
+      "bytes": 1383,
+      "vendor": false
+    },
+    {
+      "chunk": "ListCell.Cs-m0hHw.js",
+      "importers": 4,
+      "bytes": 31975,
+      "vendor": false
+    },
+    {
+      "chunk": "ListCheckbox.CMJn-B3f.js",
+      "importers": 4,
+      "bytes": 2380,
+      "vendor": false
+    },
+    {
+      "chunk": "lowerCase.BOQ27dWU.js",
+      "importers": 4,
+      "bytes": 553,
+      "vendor": true
+    },
+    {
+      "chunk": "MenuOpenStateContext.B6Owxykp.js",
+      "importers": 4,
+      "bytes": 523,
+      "vendor": false
+    },
+    {
+      "chunk": "scrollContainers.Do2BLzDQ.js",
+      "importers": 4,
+      "bytes": 1154,
+      "vendor": true
+    },
+    {
+      "chunk": "SearchInput.BlU8pnvy.js",
+      "importers": 4,
+      "bytes": 3969,
+      "vendor": false
+    },
+    {
+      "chunk": "SettingsIcon.DLHC3IyL.js",
+      "importers": 4,
+      "bytes": 1670,
+      "vendor": false
+    },
+    {
+      "chunk": "ThemeHelper.CeMKYPhf.js",
+      "importers": 4,
+      "bytes": 8854,
+      "vendor": false
+    },
+    {
+      "chunk": "TimeoutPromise.xyLniPpj.js",
+      "importers": 4,
+      "bytes": 819,
+      "vendor": false
+    },
+    {
+      "chunk": "timezone.lphPF5Vd.js",
+      "importers": 4,
+      "bytes": 1935,
+      "vendor": true
+    },
+    {
+      "chunk": "timezones.CNro5uti.js",
+      "importers": 4,
+      "bytes": 30751,
+      "vendor": true
+    },
+    {
+      "chunk": "toNumber.ClFirwKk.js",
+      "importers": 4,
+      "bytes": 1012,
+      "vendor": true
+    },
+    {
+      "chunk": "trimEnd.BndZ8NfH.js",
+      "importers": 4,
+      "bytes": 1265,
+      "vendor": true
+    },
+    {
+      "chunk": "useHydrateModelsInMarkdown.BqDPY0lm.js",
+      "importers": 4,
+      "bytes": 4874,
+      "vendor": true
+    },
+    {
+      "chunk": "useLinearAgentItems.Ci73RDrP.js",
+      "importers": 4,
+      "bytes": 148795,
+      "vendor": true
+    },
+    {
+      "chunk": "useOrderingMenu.B_SK3wjP.js",
+      "importers": 4,
+      "bytes": 4828,
+      "vendor": true
+    },
+    {
+      "chunk": "useRenderElement.LPfDJuqL.js",
+      "importers": 4,
+      "bytes": 4708,
+      "vendor": true
+    },
+    {
+      "chunk": "useSendAiMessage.B5bGsmqN.js",
+      "importers": 4,
+      "bytes": 14508,
+      "vendor": true
+    },
+    {
+      "chunk": "useViewPreferences.DF8FtDCQ.js",
+      "importers": 4,
+      "bytes": 681,
+      "vendor": true
+    },
+    {
+      "chunk": "useWindowSize.DM9zvJYB.js",
+      "importers": 4,
+      "bytes": 1142,
+      "vendor": true
+    },
+    {
+      "chunk": "VideoPlayer.B-8ZaYaE.js",
+      "importers": 4,
+      "bytes": 58086,
+      "vendor": false
+    },
+    {
+      "chunk": "_baseIsEqual.DOUcxQCB.js",
+      "importers": 3,
+      "bytes": 6617,
+      "vendor": true
+    },
+    {
+      "chunk": "_MapCache.CVQ4sTCO.js",
+      "importers": 3,
+      "bytes": 3550,
+      "vendor": true
+    },
+    {
+      "chunk": "ActionContextMenuType.CeI1knfw.js",
+      "importers": 3,
+      "bytes": 520,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentActivityCommitBadge.AaOoSe4-.js",
+      "importers": 3,
+      "bytes": 7474,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentComposeDraftTracker.Bd5C4XFQ.js",
+      "importers": 3,
+      "bytes": 796,
+      "vendor": false
+    },
+    {
+      "chunk": "animate.Cq9pc56d.js",
+      "importers": 3,
+      "bytes": 7142,
+      "vendor": true
+    },
+    {
+      "chunk": "ArrayPool.CW_oYlKc.js",
+      "importers": 3,
+      "bytes": 1698,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationNewButton.DnfgotrN.js",
+      "importers": 3,
+      "bytes": 23885,
+      "vendor": false
+    },
+    {
+      "chunk": "Avatar.C9xkUBJK.js",
+      "importers": 3,
+      "bytes": 5579,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentHeader.DfbCNPlt.js",
+      "importers": 3,
+      "bytes": 2700,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderBreadcrumb.tUXZoIJZ.js",
+      "importers": 3,
+      "bytes": 16014,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderBreadcrumbLink.BFElNX0J.js",
+      "importers": 3,
+      "bytes": 1428,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderFilterButton.CkyP3XII.js",
+      "importers": 3,
+      "bytes": 4839,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderFilterPanel.C0PbWZVx.js",
+      "importers": 3,
+      "bytes": 10439,
+      "vendor": false
+    },
+    {
+      "chunk": "createSharedExternalStore.Bb8Ant3i.js",
+      "importers": 3,
+      "bytes": 653,
+      "vendor": true
+    },
+    {
+      "chunk": "CustomerLogoPile.DndKzFZh.js",
+      "importers": 3,
+      "bytes": 45476,
+      "vendor": false
+    },
+    {
+      "chunk": "ElevatedPanel.Cu2Y-tG-.js",
+      "importers": 3,
+      "bytes": 8106,
+      "vendor": false
+    },
+    {
+      "chunk": "FilterBlockStyles.BPSPHYHd.js",
+      "importers": 3,
+      "bytes": 5323,
+      "vendor": false
+    },
+    {
+      "chunk": "FilterIcon.B4s9iGSQ.js",
+      "importers": 3,
+      "bytes": 871,
+      "vendor": false
+    },
+    {
+      "chunk": "hooks.CWG3Ngg6.js",
+      "importers": 3,
+      "bytes": 1641,
+      "vendor": true
+    },
+    {
+      "chunk": "InitiativeDisplayProperties.D6Xnz4bP.js",
+      "importers": 3,
+      "bytes": 66873,
+      "vendor": false
+    },
+    {
+      "chunk": "inlineCommentsState.j5wEPkcL.js",
+      "importers": 3,
+      "bytes": 4089,
+      "vendor": true
+    },
+    {
+      "chunk": "InPageFind.Dt6mcRht.js",
+      "importers": 3,
+      "bytes": 4194,
+      "vendor": false
+    },
+    {
+      "chunk": "isInViewport.BGmKF9Ey.js",
+      "importers": 3,
+      "bytes": 824,
+      "vendor": true
+    },
+    {
+      "chunk": "LazyEditorComponent.eg71UTLG.js",
+      "importers": 3,
+      "bytes": 26722,
+      "vendor": false
+    },
+    {
+      "chunk": "LazyFastTriageAcceptEditorLoader.Ba0SlQbO.js",
+      "importers": 3,
+      "bytes": 68310,
+      "vendor": false
+    },
+    {
+      "chunk": "linear.B1WkpmSB.js",
+      "importers": 3,
+      "bytes": 5838,
+      "vendor": true
+    },
+    {
+      "chunk": "Loading.CssOT0hq.js",
+      "importers": 3,
+      "bytes": 1567,
+      "vendor": false
+    },
+    {
+      "chunk": "LoopCreationTracker.BAiVgMLN.js",
+      "importers": 3,
+      "bytes": 2277,
+      "vendor": false
+    },
+    {
+      "chunk": "MinimizeIcon.5B_ishqv.js",
+      "importers": 3,
+      "bytes": 844,
+      "vendor": false
+    },
+    {
+      "chunk": "ModelIcon.DQKsMCJu.js",
+      "importers": 3,
+      "bytes": 2998,
+      "vendor": false
+    },
+    {
+      "chunk": "query.QaT6eqnM.js",
+      "importers": 3,
+      "bytes": 15033,
+      "vendor": true
+    },
+    {
+      "chunk": "ScrollRestoration.C-Jm_9pJ.js",
+      "importers": 3,
+      "bytes": 2916,
+      "vendor": false
+    },
+    {
+      "chunk": "selectNoneActionId.BIU1vyyB.js",
+      "importers": 3,
+      "bytes": 446,
+      "vendor": true
+    },
+    {
+      "chunk": "SettingsCatalog.Bseqvifa.js",
+      "importers": 3,
+      "bytes": 39424,
+      "vendor": false
+    },
+    {
+      "chunk": "SettingsList.BezKBffa.js",
+      "importers": 3,
+      "bytes": 13863,
+      "vendor": false
+    },
+    {
+      "chunk": "skillSlashAction.CXuWRS8L.js",
+      "importers": 3,
+      "bytes": 1801,
+      "vendor": true
+    },
+    {
+      "chunk": "SuccessIcon.OJ_73lBY.js",
+      "importers": 3,
+      "bytes": 4383,
+      "vendor": false
+    },
+    {
+      "chunk": "SyntaxHighlightStyles.CqYlFYV4.js",
+      "importers": 3,
+      "bytes": 5382,
+      "vendor": false
+    },
+    {
+      "chunk": "Tabs.C656AF6H.js",
+      "importers": 3,
+      "bytes": 4377,
+      "vendor": false
+    },
+    {
+      "chunk": "teamBlockFilterUtils.BHPxTf69.js",
+      "importers": 3,
+      "bytes": 3506,
+      "vendor": true
+    },
+    {
+      "chunk": "TemplateModelIcon.OI36HNbN.js",
+      "importers": 3,
+      "bytes": 3515,
+      "vendor": false
+    },
+    {
+      "chunk": "Tracing.DoHIW8jH.js",
+      "importers": 3,
+      "bytes": 7418,
+      "vendor": false
+    },
+    {
+      "chunk": "use-reduced-motion.BQCE0bk5.js",
+      "importers": 3,
+      "bytes": 613,
+      "vendor": true
+    },
+    {
+      "chunk": "use-spring.v6si08ey.js",
+      "importers": 3,
+      "bytes": 1694,
+      "vendor": true
+    },
+    {
+      "chunk": "useApplicationStore.CfXY1l0i.js",
+      "importers": 3,
+      "bytes": 556,
+      "vendor": true
+    },
+    {
+      "chunk": "useCommentsEdit.rx_NkuPS.js",
+      "importers": 3,
+      "bytes": 1768,
+      "vendor": true
+    },
+    {
+      "chunk": "useGroupingMenu.D3TLCjLd.js",
+      "importers": 3,
+      "bytes": 2162,
+      "vendor": true
+    },
+    {
+      "chunk": "useHydrateAiContext.UY-9aT1R.js",
+      "importers": 3,
+      "bytes": 626,
+      "vendor": true
+    },
+    {
+      "chunk": "useIsKeyPressedRef.Cu1ZujKR.js",
+      "importers": 3,
+      "bytes": 21157,
+      "vendor": true
+    },
+    {
+      "chunk": "useMediaQuery.IwlAnPxD.js",
+      "importers": 3,
+      "bytes": 1045,
+      "vendor": true
+    },
+    {
+      "chunk": "useOrderingFieldDisplay.D4wLe_IM.js",
+      "importers": 3,
+      "bytes": 958,
+      "vendor": true
+    },
+    {
+      "chunk": "usePrevious.CsIv6FMi.js",
+      "importers": 3,
+      "bytes": 558,
+      "vendor": true
+    },
+    {
+      "chunk": "useRegisterToggleSelectActionFactory.D3LB-Nvn.js",
+      "importers": 3,
+      "bytes": 1068,
+      "vendor": true
+    },
+    {
+      "chunk": "useSelectModels.BV_vzlBv.js",
+      "importers": 3,
+      "bytes": 676,
+      "vendor": true
+    },
+    {
+      "chunk": "useThreadReplyCollapse.DeCNoQiJ.js",
+      "importers": 3,
+      "bytes": 8348,
+      "vendor": true
+    },
+    {
+      "chunk": "useTimeoutFn.CKYDyE9d.js",
+      "importers": 3,
+      "bytes": 954,
+      "vendor": true
+    },
+    {
+      "chunk": "useTrackRecentLoop.DJGSsw3v.js",
+      "importers": 3,
+      "bytes": 657,
+      "vendor": true
+    },
+    {
+      "chunk": "useUsageVisibilityRefresh.BwqEubJb.js",
+      "importers": 3,
+      "bytes": 1290,
+      "vendor": true
+    },
+    {
+      "chunk": "useViewFilters.6E3JTpzV.js",
+      "importers": 3,
+      "bytes": 3122,
+      "vendor": true
+    },
+    {
+      "chunk": "VirtualList.BKXEiNrz.js",
+      "importers": 3,
+      "bytes": 10891,
+      "vendor": false
+    },
+    {
+      "chunk": "WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js",
+      "importers": 3,
+      "bytes": 2743,
+      "vendor": false
+    },
+    {
+      "chunk": "WorkspaceAiSettingsAccess.BRmUKl4I.js",
+      "importers": 3,
+      "bytes": 2345,
+      "vendor": false
+    },
+    {
+      "chunk": "_trimmedEndIndex.vh2QLOq1.js",
+      "importers": 2,
+      "bytes": 531,
+      "vendor": true
+    },
+    {
+      "chunk": "ActivityFilterBlocks.Cv1VErjr.js",
+      "importers": 2,
+      "bytes": 6062,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentAutomationEmptyStateIcon.BW9M5hMw.js",
+      "importers": 2,
+      "bytes": 3906,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentInput.ekPPAiwd.js",
+      "importers": 2,
+      "bytes": 7978,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentPanelEditor.GbATeTfN.js",
+      "importers": 2,
+      "bytes": 3564,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentSessionHelper.DjDBF77L.js",
+      "importers": 2,
+      "bytes": 1091,
+      "vendor": false
+    },
+    {
+      "chunk": "aiConversationSendElicitationResponsesMutation.CEPAjw5J.js",
+      "importers": 2,
+      "bytes": 1381,
+      "vendor": true
+    },
+    {
+      "chunk": "AnimatedArrowUpDownIcon.CPwqq4IU.js",
+      "importers": 2,
+      "bytes": 1616,
+      "vendor": false
+    },
+    {
+      "chunk": "animations.stylex.H5KQnbC4.js",
+      "importers": 2,
+      "bytes": 1001,
+      "vendor": true
+    },
+    {
+      "chunk": "ApplicationStoreContext.h3MXkx6l.js",
+      "importers": 2,
+      "bytes": 535,
+      "vendor": false
+    },
+    {
+      "chunk": "AskLinearAboutSelectedModelsAction.Ck4zhau_.js",
+      "importers": 2,
+      "bytes": 2758,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationOwnerSelect.Cl2Nhq6T.js",
+      "importers": 2,
+      "bytes": 2954,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationTrustedSourceDisplay.B2IjptQA.js",
+      "importers": 2,
+      "bytes": 937,
+      "vendor": false
+    },
+    {
+      "chunk": "CheckIcon.B8gsNEK3.js",
+      "importers": 2,
+      "bytes": 962,
+      "vendor": false
+    },
+    {
+      "chunk": "CodeBlockIcon.D5GzJ9CR.js",
+      "importers": 2,
+      "bytes": 2165,
+      "vendor": false
+    },
+    {
+      "chunk": "CodeSelectionContextHelper.Iw8YtXjv.js",
+      "importers": 2,
+      "bytes": 1886,
+      "vendor": false
+    },
+    {
+      "chunk": "CollapseListGroupButton.CUimnkG3.js",
+      "importers": 2,
+      "bytes": 3839,
+      "vendor": false
+    },
+    {
+      "chunk": "ColorBadge.yzaVBngp.js",
+      "importers": 2,
+      "bytes": 1248,
+      "vendor": false
+    },
+    {
+      "chunk": "ColumnHeaders.DLhMXmku.js",
+      "importers": 2,
+      "bytes": 4828,
+      "vendor": false
+    },
+    {
+      "chunk": "CommentConstants.stylex.B1eG8kzo.js",
+      "importers": 2,
+      "bytes": 593,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderSearch.BKW3UenD.js",
+      "importers": 2,
+      "bytes": 970,
+      "vendor": false
+    },
+    {
+      "chunk": "customHighlights.D1p6a0jS.js",
+      "importers": 2,
+      "bytes": 1419,
+      "vendor": true
+    },
+    {
+      "chunk": "dateBlockFilterUtils.C8hdf4Bf.js",
+      "importers": 2,
+      "bytes": 2168,
+      "vendor": true
+    },
+    {
+      "chunk": "defaultLocale.YZUHGh8n.js",
+      "importers": 2,
+      "bytes": 4853,
+      "vendor": true
+    },
+    {
+      "chunk": "DelayedMount.Dyu1OW5h.js",
+      "importers": 2,
+      "bytes": 1013,
+      "vendor": false
+    },
+    {
+      "chunk": "DiffUtils.C9PmCZ-u.js",
+      "importers": 2,
+      "bytes": 3544,
+      "vendor": false
+    },
+    {
+      "chunk": "DocumentAgentChangesState.grXcbzgo.js",
+      "importers": 2,
+      "bytes": 1790,
+      "vendor": false
+    },
+    {
+      "chunk": "dom.Dr-QAC90.js",
+      "importers": 2,
+      "bytes": 544,
+      "vendor": true
+    },
+    {
+      "chunk": "DownloadIcon.Dv3ijpoq.js",
+      "importers": 2,
+      "bytes": 1048,
+      "vendor": false
+    },
+    {
+      "chunk": "ErrorBoundary.XEF-HLks.js",
+      "importers": 2,
+      "bytes": 393,
+      "vendor": false
+    },
+    {
+      "chunk": "EyeStrikethroughIcon.BGV9hd-Q.js",
+      "importers": 2,
+      "bytes": 1571,
+      "vendor": false
+    },
+    {
+      "chunk": "file.BfaDIq-J.js",
+      "importers": 2,
+      "bytes": 947,
+      "vendor": true
+    },
+    {
+      "chunk": "FilterBlockHelper.D1VAkopg.js",
+      "importers": 2,
+      "bytes": 10655,
+      "vendor": false
+    },
+    {
+      "chunk": "FontSize.CW_lo4Iu.js",
+      "importers": 2,
+      "bytes": 703,
+      "vendor": false
+    },
+    {
+      "chunk": "getGroupDividerColor.B-wqx-vV.js",
+      "importers": 2,
+      "bytes": 2585,
+      "vendor": true
+    },
+    {
+      "chunk": "InlineCommentQuote.BpL5abEq.js",
+      "importers": 2,
+      "bytes": 6538,
+      "vendor": false
+    },
+    {
+      "chunk": "labelGroupColumnLabels.BipZ4EGE.js",
+      "importers": 2,
+      "bytes": 1039,
+      "vendor": true
+    },
+    {
+      "chunk": "LightboxContentItem.D6zC07Ay.js",
+      "importers": 2,
+      "bytes": 7655,
+      "vendor": false
+    },
+    {
+      "chunk": "LinearAgentCommentContent.C---p7AT.js",
+      "importers": 2,
+      "bytes": 54351,
+      "vendor": false
+    },
+    {
+      "chunk": "LoopsManagementPage.CVnaEF7c.js",
+      "importers": 2,
+      "bytes": 15141,
+      "vendor": false
+    },
+    {
+      "chunk": "MentionHydrationPlugin.BDLm0Pkv.js",
+      "importers": 2,
+      "bytes": 8883,
+      "vendor": false
+    },
+    {
+      "chunk": "MenuCheckMarkIcon.B8gsNEK3.js",
+      "importers": 2,
+      "bytes": 962,
+      "vendor": false
+    },
+    {
+      "chunk": "MenuIcon.D1H9rhSs.js",
+      "importers": 2,
+      "bytes": 773,
+      "vendor": false
+    },
+    {
+      "chunk": "ModalComponents.Cdm8qEQQ.js",
+      "importers": 2,
+      "bytes": 3205,
+      "vendor": false
+    },
+    {
+      "chunk": "NewContentViewHeader.Mh1uiUI4.js",
+      "importers": 2,
+      "bytes": 69088,
+      "vendor": false
+    },
+    {
+      "chunk": "NewContentViewHeaderTitle.Cdf6kl2h.js",
+      "importers": 2,
+      "bytes": 5609,
+      "vendor": false
+    },
+    {
+      "chunk": "object_hash.B923Anbb.js",
+      "importers": 2,
+      "bytes": 34582,
+      "vendor": true
+    },
+    {
+      "chunk": "PageHeaderViewOptions.FyZJ3rtG.js",
+      "importers": 2,
+      "bytes": 2441,
+      "vendor": false
+    },
+    {
+      "chunk": "pageSizes.C1gzj2LQ.js",
+      "importers": 2,
+      "bytes": 7767,
+      "vendor": true
+    },
+    {
+      "chunk": "PersistentPortalHost.BoeuXmG-.js",
+      "importers": 2,
+      "bytes": 1174,
+      "vendor": false
+    },
+    {
+      "chunk": "PopoverContext.CPTc3rGZ.js",
+      "importers": 2,
+      "bytes": 882,
+      "vendor": false
+    },
+    {
+      "chunk": "ProjectContext.CwmS2UKn.js",
+      "importers": 2,
+      "bytes": 533,
+      "vendor": false
+    },
+    {
+      "chunk": "proseMirrorNodeForModel.CLHOE5r8.js",
+      "importers": 2,
+      "bytes": 908,
+      "vendor": true
+    },
+    {
+      "chunk": "QueuedMessageList.CT33uY9-.js",
+      "importers": 2,
+      "bytes": 4371,
+      "vendor": false
+    },
+    {
+      "chunk": "random.D4q1i2vq.js",
+      "importers": 2,
+      "bytes": 633,
+      "vendor": true
+    },
+    {
+      "chunk": "RegisterFilterValues.CC7sTzty.js",
+      "importers": 2,
+      "bytes": 22715,
+      "vendor": false
+    },
+    {
+      "chunk": "SettingsListProvider.CV4gTQOh.js",
+      "importers": 2,
+      "bytes": 5640,
+      "vendor": false
+    },
+    {
+      "chunk": "SidebarLeftIcon.CSUHgG80.js",
+      "importers": 2,
+      "bytes": 1329,
+      "vendor": false
+    },
+    {
+      "chunk": "SimpleActionMenu.BVyCNjwU.js",
+      "importers": 2,
+      "bytes": 66151,
+      "vendor": false
+    },
+    {
+      "chunk": "SortIcon.C3QkzWY9.js",
+      "importers": 2,
+      "bytes": 1727,
+      "vendor": false
+    },
+    {
+      "chunk": "StatusIcon.Bf2OzbFa.js",
+      "importers": 2,
+      "bytes": 947,
+      "vendor": false
+    },
+    {
+      "chunk": "transform.CFV0k6rU.js",
+      "importers": 2,
+      "bytes": 534,
+      "vendor": true
+    },
+    {
+      "chunk": "uniqueId.BQUoZuD_.js",
+      "importers": 2,
+      "bytes": 553,
+      "vendor": true
+    },
+    {
+      "chunk": "UsageAnalytics.BYDmMiBY.js",
+      "importers": 2,
+      "bytes": 464,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageHistoryFilterState.BTKSjqL3.js",
+      "importers": 2,
+      "bytes": 6213,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageLimitLabels.B0UCSYIQ.js",
+      "importers": 2,
+      "bytes": 6322,
+      "vendor": false
+    },
+    {
+      "chunk": "usageLimitSpendQuery.U-MPSaPj.js",
+      "importers": 2,
+      "bytes": 1468,
+      "vendor": true
+    },
+    {
+      "chunk": "UsageTeamDisplay.CWgjPYW9.js",
+      "importers": 2,
+      "bytes": 1347,
+      "vendor": false
+    },
+    {
+      "chunk": "useAgentDraft.DI041_p0.js",
+      "importers": 2,
+      "bytes": 1047,
+      "vendor": true
+    },
+    {
+      "chunk": "useAgentPanelFileDrop.CcQryCIX.js",
+      "importers": 2,
+      "bytes": 993,
+      "vendor": true
+    },
+    {
+      "chunk": "useCompositeListItem.CtMl9IFp.js",
+      "importers": 2,
+      "bytes": 13986,
+      "vendor": true
+    },
+    {
+      "chunk": "useContainerSize.SyRU9uAF.js",
+      "importers": 2,
+      "bytes": 831,
+      "vendor": true
+    },
+    {
+      "chunk": "useDelayedFlag.z3GX-gtB.js",
+      "importers": 2,
+      "bytes": 1215,
+      "vendor": true
+    },
+    {
+      "chunk": "useDisabledByFieldset.Da8RgqXz.js",
+      "importers": 2,
+      "bytes": 1218,
+      "vendor": true
+    },
+    {
+      "chunk": "useIsMounted.DDjEpkcy.js",
+      "importers": 2,
+      "bytes": 592,
+      "vendor": true
+    },
+    {
+      "chunk": "useLoadIssue.Djn9pp3E.js",
+      "importers": 2,
+      "bytes": 2458,
+      "vendor": true
+    },
+    {
+      "chunk": "useLocallyDismissedIds.D1W3nmyk.js",
+      "importers": 2,
+      "bytes": 990,
+      "vendor": true
+    },
+    {
+      "chunk": "useReducerWithEffects.BpOoiI7g.js",
+      "importers": 2,
+      "bytes": 1460,
+      "vendor": true
+    },
+    {
+      "chunk": "useRegisterToggleBinaryActionFactory.B8M3ro5z.js",
+      "importers": 2,
+      "bytes": 915,
+      "vendor": true
+    },
+    {
+      "chunk": "useScrollRestorationItemKey.Bo_Ytl1Y.js",
+      "importers": 2,
+      "bytes": 2698,
+      "vendor": true
+    },
+    {
+      "chunk": "useUsageLimitGroupPeriod.6-QJ10ya.js",
+      "importers": 2,
+      "bytes": 4782,
+      "vendor": true
+    },
+    {
+      "chunk": "ViewEmptyState.Bu-U4yCn.js",
+      "importers": 2,
+      "bytes": 3441,
+      "vendor": false
+    },
+    {
+      "chunk": "ViewHeaderViewControls.BFmsZSlE.js",
+      "importers": 2,
+      "bytes": 23378,
+      "vendor": false
+    },
+    {
+      "chunk": "ViewOptionsGroupsContext.VNvCNLHD.js",
+      "importers": 2,
+      "bytes": 869,
+      "vendor": false
+    },
+    {
+      "chunk": "VisibilityHelper.BZX7bbt7.js",
+      "importers": 2,
+      "bytes": 947,
+      "vendor": false
+    },
+    {
+      "chunk": "yaml.Q6vMKgD7.js",
+      "importers": 2,
+      "bytes": 116012,
+      "vendor": true
+    },
+    {
+      "chunk": "AddFilterButton.Dmpbz0GW.js",
+      "importers": 1,
+      "bytes": 7889,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentAutomationConversation.CJ-vqVie.js",
+      "importers": 1,
+      "bytes": 23510,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentElicitationResponseQueue.BM8OrYyq.js",
+      "importers": 1,
+      "bytes": 899,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentPageContentWrapper.B8ic33We.js",
+      "importers": 1,
+      "bytes": 3054,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentPanel.NPHX6bEo.js",
+      "importers": 1,
+      "bytes": 19579,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentSessionActivities.B9yu6arN.js",
+      "importers": 1,
+      "bytes": 64798,
+      "vendor": false
+    },
+    {
+      "chunk": "AgentSessionExternalUrlsButton.Bs4eIfvh.js",
+      "importers": 1,
+      "bytes": 1770,
+      "vendor": false
+    },
+    {
+      "chunk": "AiConversationPendingMessagesList.DPu-Cg9t.js",
+      "importers": 1,
+      "bytes": 1731,
+      "vendor": false
+    },
+    {
+      "chunk": "ArrowNavigation.ChsYBion.js",
+      "importers": 1,
+      "bytes": 1261,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationBlockingSourceHelper.V_OvF8wq.js",
+      "importers": 1,
+      "bytes": 1045,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationPage.FVNODuJW.js",
+      "importers": 1,
+      "bytes": 46330,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationRunsPage.CwJzxL5C.js",
+      "importers": 1,
+      "bytes": 45866,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationsList.wnFzBYvh.js",
+      "importers": 1,
+      "bytes": 14298,
+      "vendor": false
+    },
+    {
+      "chunk": "AutomationTrustedSourceEditorOptions.CsWy7F2e.js",
+      "importers": 1,
+      "bytes": 3682,
+      "vendor": false
+    },
+    {
+      "chunk": "band.CeEe1Y4x.js",
+      "importers": 1,
+      "bytes": 1889,
+      "vendor": true
+    },
+    {
+      "chunk": "basis.DYJSODff.js",
+      "importers": 1,
+      "bytes": 2522,
+      "vendor": true
+    },
+    {
+      "chunk": "canOpenAgentSessionInReview.BbTwURTH.js",
+      "importers": 1,
+      "bytes": 564,
+      "vendor": true
+    },
+    {
+      "chunk": "ChartHover.YpvV-OaK.js",
+      "importers": 1,
+      "bytes": 2581,
+      "vendor": false
+    },
+    {
+      "chunk": "ChartTooltip.Dv6Hh59s.js",
+      "importers": 1,
+      "bytes": 1115,
+      "vendor": false
+    },
+    {
+      "chunk": "ChevronLeftIcon.BpnLcTIR.js",
+      "importers": 1,
+      "bytes": 977,
+      "vendor": false
+    },
+    {
+      "chunk": "CodeIntelligenceIcon.Bz1Eg5Ck.js",
+      "importers": 1,
+      "bytes": 1706,
+      "vendor": false
+    },
+    {
+      "chunk": "CollabEditing.DdzdL3h2.js",
+      "importers": 1,
+      "bytes": 16998,
+      "vendor": false
+    },
+    {
+      "chunk": "CollaborativeEditor.CIEy9Muw.js",
+      "importers": 1,
+      "bytes": 36676,
+      "vendor": false
+    },
+    {
+      "chunk": "CollapseChevronIcon.CPLWWYGl.js",
+      "importers": 1,
+      "bytes": 1485,
+      "vendor": false
+    },
+    {
+      "chunk": "CollapseChevronIconLarge.D9sfINWS.js",
+      "importers": 1,
+      "bytes": 976,
+      "vendor": false
+    },
+    {
+      "chunk": "CollapsedSelectedItemsCount.CfNucNuC.js",
+      "importers": 1,
+      "bytes": 1032,
+      "vendor": false
+    },
+    {
+      "chunk": "Collapsible.DFBuriLY.js",
+      "importers": 1,
+      "bytes": 3204,
+      "vendor": false
+    },
+    {
+      "chunk": "CollapsibleSection.DCAWniu1.js",
+      "importers": 1,
+      "bytes": 19938,
+      "vendor": false
+    },
+    {
+      "chunk": "colors.Cg5Vh3br.js",
+      "importers": 1,
+      "bytes": 467,
+      "vendor": true
+    },
+    {
+      "chunk": "CommandIcon.D_KEobby.js",
+      "importers": 1,
+      "bytes": 1956,
+      "vendor": false
+    },
+    {
+      "chunk": "constants.DYIjBMTX.js",
+      "importers": 1,
+      "bytes": 4026,
+      "vendor": true
+    },
+    {
+      "chunk": "ContentIcon.-neA-w7l.js",
+      "importers": 1,
+      "bytes": 1757,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderContextualMenu.MkJrcimz.js",
+      "importers": 1,
+      "bytes": 858,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderInlineSearch.BaWvQNzy.js",
+      "importers": 1,
+      "bytes": 1271,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewHeaderTitle.BdI-2dtK.js",
+      "importers": 1,
+      "bytes": 3207,
+      "vendor": false
+    },
+    {
+      "chunk": "ContentViewSubheader.DJG5j2hR.js",
+      "importers": 1,
+      "bytes": 3250,
+      "vendor": false
+    },
+    {
+      "chunk": "CorruptedRuntimeAssetHandler.B8sxTnl4.js",
+      "importers": 1,
+      "bytes": 2357,
+      "vendor": false
+    },
+    {
+      "chunk": "CustomerStatusIcon.BJItzt7c.js",
+      "importers": 1,
+      "bytes": 2459,
+      "vendor": false
+    },
+    {
+      "chunk": "default.DMI-Tsal.js",
+      "importers": 1,
+      "bytes": 408,
+      "vendor": true
+    },
+    {
+      "chunk": "desktopOAuth.Fnoz_Zqd.js",
+      "importers": 1,
+      "bytes": 2539,
+      "vendor": true
+    },
+    {
+      "chunk": "DiffLowlightSyntaxHighlighter.6s5PcLx8.js",
+      "importers": 1,
+      "bytes": 803262,
+      "vendor": false
+    },
+    {
+      "chunk": "DiffView.stylex.D4juWQ9H.js",
+      "importers": 1,
+      "bytes": 2721,
+      "vendor": false
+    },
+    {
+      "chunk": "DistributionChart.DsOT6UNr.js",
+      "importers": 1,
+      "bytes": 48620,
+      "vendor": false
+    },
+    {
+      "chunk": "DividerWithLabel.B-bcYFLE.js",
+      "importers": 1,
+      "bytes": 1486,
+      "vendor": false
+    },
+    {
+      "chunk": "DocumentContentEditorState.BBozmCJr.js",
+      "importers": 1,
+      "bytes": 1763,
+      "vendor": false
+    },
+    {
+      "chunk": "DraftHelper.DpwuMSIm.js",
+      "importers": 1,
+      "bytes": 4113,
+      "vendor": false
+    },
+    {
+      "chunk": "EmbeddedGridContext.BMLFxvJv.js",
+      "importers": 1,
+      "bytes": 490,
+      "vendor": false
+    },
+    {
+      "chunk": "ExpandChevronIconLarge.Bmylc3BM.js",
+      "importers": 1,
+      "bytes": 948,
+      "vendor": false
+    },
+    {
+      "chunk": "FastIssueDraftCreateState.BxmAh4lC.js",
+      "importers": 1,
+      "bytes": 22091,
+      "vendor": false
+    },
+    {
+      "chunk": "FileTreeIcon.BesTUf3x.js",
+      "importers": 1,
+      "bytes": 1308,
+      "vendor": false
+    },
+    {
+      "chunk": "getViewFilters.Cv5M4Ooo.js",
+      "importers": 1,
+      "bytes": 2516,
+      "vendor": true
+    },
+    {
+      "chunk": "googleAuthUrl.DEpEE2uL.js",
+      "importers": 1,
+      "bytes": 3824,
+      "vendor": true
+    },
+    {
+      "chunk": "GraphHelpers.DNZMKe0T.js",
+      "importers": 1,
+      "bytes": 6191,
+      "vendor": false
+    },
+    {
+      "chunk": "GridLoaderProgressIcon.BsiiRozg.js",
+      "importers": 1,
+      "bytes": 1381,
+      "vendor": false
+    },
+    {
+      "chunk": "GroupedList.CDsqj6qY.js",
+      "importers": 1,
+      "bytes": 10666,
+      "vendor": false
+    },
+    {
+      "chunk": "HiddenIndicator.iL6w2SFp.js",
+      "importers": 1,
+      "bytes": 13013,
+      "vendor": false
+    },
+    {
+      "chunk": "HistoryEntryComponents.jcKfad-R.js",
+      "importers": 1,
+      "bytes": 1244,
+      "vendor": false
+    },
+    {
+      "chunk": "HorizontalRule.BqAElrTM.js",
+      "importers": 1,
+      "bytes": 1002,
+      "vendor": false
+    },
+    {
+      "chunk": "IncidentCommunication.B5fpSa6l.js",
+      "importers": 1,
+      "bytes": 28468,
+      "vendor": false
+    },
+    {
+      "chunk": "index.module.DyyLofh6.js",
+      "importers": 1,
+      "bytes": 2383,
+      "vendor": true
+    },
+    {
+      "chunk": "InitiativeFilterBlocks.CxQgstHS.js",
+      "importers": 1,
+      "bytes": 6969,
+      "vendor": false
+    },
+    {
+      "chunk": "InitiativesListViewOptions.Bs0H5cfj.js",
+      "importers": 1,
+      "bytes": 6492,
+      "vendor": false
+    },
+    {
+      "chunk": "InitiativeTargetDateControl.DiVBa_L_.js",
+      "importers": 1,
+      "bytes": 3188,
+      "vendor": false
+    },
+    {
+      "chunk": "InlineFilter.BbbOUtAK.js",
+      "importers": 1,
+      "bytes": 1653,
+      "vendor": false
+    },
+    {
+      "chunk": "IssueWidget.DdTrzZA8.js",
+      "importers": 1,
+      "bytes": 25029,
+      "vendor": false
+    },
+    {
+      "chunk": "LabelsBadges.BpInAh-f.js",
+      "importers": 1,
+      "bytes": 3781,
+      "vendor": false
+    },
+    {
+      "chunk": "LazyFastIssueEditorLoader.CId3y4gF.js",
+      "importers": 1,
+      "bytes": 22300,
+      "vendor": false
+    },
+    {
+      "chunk": "LazyGraphs.CFCoT3VS.js",
+      "importers": 1,
+      "bytes": 12288,
+      "vendor": false
+    },
+    {
+      "chunk": "lightThemeRefresh.DyWCsE3P.js",
+      "importers": 1,
+      "bytes": 970,
+      "vendor": true
+    },
+    {
+      "chunk": "LinearAgentMcpSettings.8HfTvzal.js",
+      "importers": 1,
+      "bytes": 17629,
+      "vendor": false
+    },
+    {
+      "chunk": "LinearAgentMessages.BuUfncdI.js",
+      "importers": 1,
+      "bytes": 8379,
+      "vendor": false
+    },
+    {
+      "chunk": "LinearLogo.Dvi7du4Q.js",
+      "importers": 1,
+      "bytes": 742,
+      "vendor": false
+    },
+    {
+      "chunk": "LinearLogoBordered.DYBgo7g5.js",
+      "importers": 1,
+      "bytes": 764,
+      "vendor": false
+    },
+    {
+      "chunk": "ListColumns.Dn1S5OeL.js",
+      "importers": 1,
+      "bytes": 3122,
+      "vendor": false
+    },
+    {
+      "chunk": "ListGroupDividerCell.rBxmEGG9.js",
+      "importers": 1,
+      "bytes": 6237,
+      "vendor": false
+    },
+    {
+      "chunk": "LocalDraft.BtSkcFi4.js",
+      "importers": 1,
+      "bytes": 879,
+      "vendor": false
+    },
+    {
+      "chunk": "LogicListItem.zKP_4iQJ.js",
+      "importers": 1,
+      "bytes": 3988,
+      "vendor": false
+    },
+    {
+      "chunk": "LoopTemplateLibrary.C__UMpNm.js",
+      "importers": 1,
+      "bytes": 15800,
+      "vendor": false
+    },
+    {
+      "chunk": "LoopViewType.BzPUaBkC.js",
+      "importers": 1,
+      "bytes": 513,
+      "vendor": false
+    },
+    {
+      "chunk": "MainListHeaderHelperText.SGuuBqni.js",
+      "importers": 1,
+      "bytes": 3483,
+      "vendor": false
+    },
+    {
+      "chunk": "ManageAiCreditsButton.9UxqKkes.js",
+      "importers": 1,
+      "bytes": 1071,
+      "vendor": false
+    },
+    {
+      "chunk": "MarkdownViewer.CIXsbydM.js",
+      "importers": 1,
+      "bytes": 1151,
+      "vendor": false
+    },
+    {
+      "chunk": "matchPath.BaEbF362.js",
+      "importers": 1,
+      "bytes": 1362,
+      "vendor": true
+    },
+    {
+      "chunk": "McpConnectorList.A-Wz50eq.js",
+      "importers": 1,
+      "bytes": 14522,
+      "vendor": false
+    },
+    {
+      "chunk": "McpOAuth.CznQ4nb0.js",
+      "importers": 1,
+      "bytes": 5941,
+      "vendor": false
+    },
+    {
+      "chunk": "MultiSelectActions.Dfnd2sNu.js",
+      "importers": 1,
+      "bytes": 5309,
+      "vendor": false
+    },
+    {
+      "chunk": "nice.-vROP43K.js",
+      "importers": 1,
+      "bytes": 509,
+      "vendor": true
+    },
+    {
+      "chunk": "numberBlockFilterUtils.BLhmYxqx.js",
+      "importers": 1,
+      "bytes": 1971,
+      "vendor": true
+    },
+    {
+      "chunk": "ordinal.BAxfPAgN.js",
+      "importers": 1,
+      "bytes": 1532,
+      "vendor": true
+    },
+    {
+      "chunk": "organizationStartTrialForPlanMutation.dwDfNUvV.js",
+      "importers": 1,
+      "bytes": 640,
+      "vendor": true
+    },
+    {
+      "chunk": "PageContainer.CsJ66LpL.js",
+      "importers": 1,
+      "bytes": 932,
+      "vendor": false
+    },
+    {
+      "chunk": "PageSidebarContainer.BmnbF6Vm.js",
+      "importers": 1,
+      "bytes": 7186,
+      "vendor": false
+    },
+    {
+      "chunk": "PageSidebarSurface.B_U3b_fW.js",
+      "importers": 1,
+      "bytes": 1312,
+      "vendor": false
+    },
+    {
+      "chunk": "PartnerOfferSignup.1PREWnH-.js",
+      "importers": 1,
+      "bytes": 1529,
+      "vendor": false
+    },
+    {
+      "chunk": "point.vrkjXmus.js",
+      "importers": 1,
+      "bytes": 2316,
+      "vendor": true
+    },
+    {
+      "chunk": "productIntelligenceSettingsContent.B0n-oZkD.js",
+      "importers": 1,
+      "bytes": 2667,
+      "vendor": true
+    },
+    {
+      "chunk": "projectBlockFilterUtils.B0pJBUCj.js",
+      "importers": 1,
+      "bytes": 3025,
+      "vendor": true
+    },
+    {
+      "chunk": "ProjectListComponents.ClgIH58w.js",
+      "importers": 1,
+      "bytes": 25046,
+      "vendor": false
+    },
+    {
+      "chunk": "ProjectsRelevance.Ysg9ZlNt.js",
+      "importers": 1,
+      "bytes": 1315,
+      "vendor": false
+    },
+    {
+      "chunk": "ProjectViewZoomControl.CIw4YcZh.js",
+      "importers": 1,
+      "bytes": 7597,
+      "vendor": false
+    },
+    {
+      "chunk": "RecurringIssueTemplateControls.C_WzwiQc.js",
+      "importers": 1,
+      "bytes": 6220,
+      "vendor": false
+    },
+    {
+      "chunk": "redactUrl.CCp01Q9I.js",
+      "importers": 1,
+      "bytes": 2106,
+      "vendor": true
+    },
+    {
+      "chunk": "redirects.CpELa_du.js",
+      "importers": 1,
+      "bytes": 19216,
+      "vendor": true
+    },
+    {
+      "chunk": "RegisterLoopRunUsageCostTarget.C-IK2SWk.js",
+      "importers": 1,
+      "bytes": 901,
+      "vendor": false
+    },
+    {
+      "chunk": "RegisterModelsFromViewState.BbUdQdHf.js",
+      "importers": 1,
+      "bytes": 1075,
+      "vendor": false
+    },
+    {
+      "chunk": "RepositoryAccessList.BhRFE15X.js",
+      "importers": 1,
+      "bytes": 6048,
+      "vendor": false
+    },
+    {
+      "chunk": "ResetIcon.CgiSStFk.js",
+      "importers": 1,
+      "bytes": 1610,
+      "vendor": false
+    },
+    {
+      "chunk": "reviewPageMode.CIpkxQ46.js",
+      "importers": 1,
+      "bytes": 971,
+      "vendor": true
+    },
+    {
+      "chunk": "RouteErrorResponse.D5MJ6KrI.js",
+      "importers": 1,
+      "bytes": 1977,
+      "vendor": false
+    },
+    {
+      "chunk": "Scrollable.CL_hIs46.js",
+      "importers": 1,
+      "bytes": 1373,
+      "vendor": false
+    },
+    {
+      "chunk": "SecurityExtensionDetector.BSBhEvBi.js",
+      "importers": 1,
+      "bytes": 2206,
+      "vendor": false
+    },
+    {
+      "chunk": "Selected.BTt8gTtr.js",
+      "importers": 1,
+      "bytes": 696,
+      "vendor": false
+    },
+    {
+      "chunk": "SidebarCollapsedNavigation.DBp0DN4a.js",
+      "importers": 1,
+      "bytes": 3722,
+      "vendor": false
+    },
+    {
+      "chunk": "SkillActions.CnOYcpvJ.js",
+      "importers": 1,
+      "bytes": 6044,
+      "vendor": false
+    },
+    {
+      "chunk": "SoundNoneIcon.CldGzuA2.js",
+      "importers": 1,
+      "bytes": 2002,
+      "vendor": false
+    },
+    {
+      "chunk": "SpotlightGridLoader.BBlPH_3_.js",
+      "importers": 1,
+      "bytes": 1871,
+      "vendor": false
+    },
+    {
+      "chunk": "string.BrhlGPFK.js",
+      "importers": 1,
+      "bytes": 9331,
+      "vendor": true
+    },
+    {
+      "chunk": "SubheaderContainer.DhT9JUZj.js",
+      "importers": 1,
+      "bytes": 1003,
+      "vendor": false
+    },
+    {
+      "chunk": "SubscriberFacePile.BgwHZ1b7.js",
+      "importers": 1,
+      "bytes": 1400,
+      "vendor": false
+    },
+    {
+      "chunk": "symlog.BJoMG7ZJ.js",
+      "importers": 1,
+      "bytes": 2484,
+      "vendor": true
+    },
+    {
+      "chunk": "SyntaxNodeRenderer.BZlxoise.js",
+      "importers": 1,
+      "bytes": 1207,
+      "vendor": false
+    },
+    {
+      "chunk": "TabsHelper.Bku0b9DF.js",
+      "importers": 1,
+      "bytes": 2068,
+      "vendor": false
+    },
+    {
+      "chunk": "ToolbarButtonsNavigation.CMxzqp3X.js",
+      "importers": 1,
+      "bytes": 1383,
+      "vendor": false
+    },
+    {
+      "chunk": "TriageRulePropertiesEdit.DlJAG90x.js",
+      "importers": 1,
+      "bytes": 12325,
+      "vendor": false
+    },
+    {
+      "chunk": "UpsellBox.DiIr0WGS.js",
+      "importers": 1,
+      "bytes": 3350,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageAnalyticsState.CPnaKrkV.js",
+      "importers": 1,
+      "bytes": 2994,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageFilterUserOptions.BfcPj68X.js",
+      "importers": 1,
+      "bytes": 4268,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageHistoryCells.CH1c0TOd.js",
+      "importers": 1,
+      "bytes": 9138,
+      "vendor": false
+    },
+    {
+      "chunk": "UsageSubpageMetadata.DzyygjFb.js",
+      "importers": 1,
+      "bytes": 1119,
+      "vendor": false
+    },
+    {
+      "chunk": "usageSummaryQuery.DEjOCfET.js",
+      "importers": 1,
+      "bytes": 1320,
+      "vendor": true
+    },
+    {
+      "chunk": "useAgentSessionRowInfo.BAgE080r.js",
+      "importers": 1,
+      "bytes": 24425,
+      "vendor": true
+    },
+    {
+      "chunk": "useCollapsedStateSessionBased.BNlK6Qtk.js",
+      "importers": 1,
+      "bytes": 1196,
+      "vendor": true
+    },
+    {
+      "chunk": "useEditorRevision.BX3ZJWXm.js",
+      "importers": 1,
+      "bytes": 737,
+      "vendor": true
+    },
+    {
+      "chunk": "useFilterValidation.BnpfA_kB.js",
+      "importers": 1,
+      "bytes": 1224,
+      "vendor": true
+    },
+    {
+      "chunk": "useHydrate.BboyxC7Q.js",
+      "importers": 1,
+      "bytes": 591,
+      "vendor": true
+    },
+    {
+      "chunk": "useInfiniteQuery.CMA0jRiw.js",
+      "importers": 1,
+      "bytes": 1509,
+      "vendor": true
+    },
+    {
+      "chunk": "useInlineCommentHashNavigation.gWo3l1g8.js",
+      "importers": 1,
+      "bytes": 19566,
+      "vendor": true
+    },
+    {
+      "chunk": "useIntersectionObserver.Ca8l1SgD.js",
+      "importers": 1,
+      "bytes": 2880,
+      "vendor": true
+    },
+    {
+      "chunk": "useListRowActivation.3C51DqFk.js",
+      "importers": 1,
+      "bytes": 1698,
+      "vendor": true
+    },
+    {
+      "chunk": "useLoopTemplateLauncher.O9-_gagH.js",
+      "importers": 1,
+      "bytes": 7232,
+      "vendor": true
+    },
+    {
+      "chunk": "useNavigationFocusKeyboardActive.CoyYt_TU.js",
+      "importers": 1,
+      "bytes": 736,
+      "vendor": true
+    },
+    {
+      "chunk": "useNivoTheme.Dfltog3c.js",
+      "importers": 1,
+      "bytes": 939,
+      "vendor": true
+    },
+    {
+      "chunk": "useParentModelForUpdate.B1QZYhKG.js",
+      "importers": 1,
+      "bytes": 732,
+      "vendor": true
+    },
+    {
+      "chunk": "usePersistedCollapsedState.VawtRtVW.js",
+      "importers": 1,
+      "bytes": 969,
+      "vendor": true
+    },
+    {
+      "chunk": "useProjectStatusAdditionalInformation.NMyv3EmX.js",
+      "importers": 1,
+      "bytes": 1468,
+      "vendor": true
+    },
+    {
+      "chunk": "useSplitViewListActivation.DrTFvo56.js",
+      "importers": 1,
+      "bytes": 1606,
+      "vendor": true
+    },
+    {
+      "chunk": "useStoredState.IyBPpDeR.js",
+      "importers": 1,
+      "bytes": 1404,
+      "vendor": true
+    },
+    {
+      "chunk": "useToolApprovalActions.kadZ6255.js",
+      "importers": 1,
+      "bytes": 3291,
+      "vendor": true
+    },
+    {
+      "chunk": "useTrackActiveSession.sxY2NaOx.js",
+      "importers": 1,
+      "bytes": 841,
+      "vendor": true
+    },
+    {
+      "chunk": "useTrafficLightPaddingLeft.Mt2zn5EY.js",
+      "importers": 1,
+      "bytes": 611,
+      "vendor": true
+    },
+    {
+      "chunk": "useUsageLimitTableFilter.DeovAaha.js",
+      "importers": 1,
+      "bytes": 19688,
+      "vendor": true
+    },
+    {
+      "chunk": "ViewOptions.BAb1xubN.js",
+      "importers": 1,
+      "bytes": 28882,
+      "vendor": false
+    },
+    {
+      "chunk": "ViewOptionsGroupsPanel.BiqrW28F.js",
+      "importers": 1,
+      "bytes": 7966,
+      "vendor": false
+    },
+    {
+      "chunk": "workspaceMcpServerConnectionsQuery.DkKAcOJs.js",
+      "importers": 1,
+      "bytes": 1099,
+      "vendor": true
+    },
+    {
+      "chunk": "XmlHelper.DmqYQLhJ.js",
+      "importers": 1,
+      "bytes": 961,
+      "vendor": false
+    }
+  ],
+  "demands": [
+    {
+      "monster": "ContextualMenuActions.Dlg9Oa2U.js",
+      "totalExports": 2325,
+      "demanded": [
+        "$H",
+        "$P",
+        "$R",
+        "$d",
+        "$h",
+        "$m",
+        "$v",
+        "$w",
+        "$y",
+        "AE",
+        "AN",
+        "AO",
+        "AR",
+        "AS",
+        "AT",
+        "Al",
+        "Ar",
+        "Av",
+        "Ax",
+        "Az",
+        "BF",
+        "BH",
+        "BI",
+        "Bd",
+        "Bg",
+        "Bs",
+        "Bx",
+        "By",
+        "CI",
+        "CT",
+        "Cc",
+        "Cf",
+        "Ch",
+        "Ck",
+        "Cl",
+        "Cx",
+        "Cz",
+        "DE",
+        "DR",
+        "DS",
+        "Dc",
+        "Dh",
+        "Dx",
+        "E",
+        "EH",
+        "E_",
+        "En",
+        "Ep",
+        "Er",
+        "Ew",
+        "Ex",
+        "Ey",
+        "FP",
+        "FR",
+        "FS",
+        "Fd",
+        "Fk",
+        "Fo",
+        "Fs",
+        "Fx",
+        "Fy",
+        "Fz",
+        "GB",
+        "GD",
+        "GI",
+        "GL",
+        "GN",
+        "GP",
+        "Gg",
+        "Gj",
+        "Gl",
+        "Gm",
+        "Gs",
+        "Gu",
+        "Gx",
+        "Gy",
+        "HH",
+        "HI",
+        "HL",
+        "HP",
+        "HS",
+        "HV",
+        "Hd",
+        "Hg",
+        "Hm",
+        "Hx",
+        "Hz",
+        "IB",
+        "IH",
+        "Id",
+        "Ik",
+        "Is",
+        "Iu",
+        "Iv",
+        "Ix",
+        "Iy",
+        "JB",
+        "J_",
+        "Jd",
+        "Jg",
+        "Jh",
+        "Jl",
+        "Js",
+        "Jx",
+        "Jy",
+        "KB",
+        "KF",
+        "K_",
+        "Kg",
+        "Kh",
+        "Kj",
+        "Km",
+        "Kw",
+        "Kx",
+        "Ky",
+        "LL",
+        "LO",
+        "LP",
+        "LS",
+        "Lg",
+        "Ll",
+        "Ls",
+        "Lx",
+        "ME",
+        "MP",
+        "MR",
+        "MS",
+        "Mf",
+        "Mh",
+        "Mu",
+        "Mv",
+        "Mx",
+        "My",
+        "NB",
+        "NE",
+        "NL",
+        "NR",
+        "NT",
+        "Nf",
+        "Nj",
+        "Ns",
+        "Nu",
+        "Nx",
+        "Ny",
+        "OA",
+        "OH",
+        "OP",
+        "OS",
+        "Oc",
+        "Ox",
+        "Oz",
+        "PH",
+        "PI",
+        "PL",
+        "PP",
+        "Pf",
+        "Pn",
+        "Pu",
+        "Px",
+        "Py",
+        "Pz",
+        "Q",
+        "QB",
+        "QC",
+        "QH",
+        "QI",
+        "Qd",
+        "Qv",
+        "Qy",
+        "RB",
+        "RI",
+        "RN",
+        "RO",
+        "RS",
+        "RT",
+        "Rc",
+        "Rl",
+        "Ru",
+        "Rx",
+        "ST",
+        "Sk",
+        "So",
+        "Sv",
+        "TF",
+        "TH",
+        "TO",
+        "TP",
+        "TR",
+        "Tf",
+        "Tp",
+        "Tr",
+        "Tx",
+        "UF",
+        "UI",
+        "UN",
+        "UR",
+        "US",
+        "Ug",
+        "Uk",
+        "Us",
+        "Uu",
+        "Ux",
+        "VI",
+        "VL",
+        "VP",
+        "Vg",
+        "Vt",
+        "Vx",
+        "Vz",
+        "WB",
+        "WH",
+        "WI",
+        "WN",
+        "WT",
+        "WV",
+        "Wd",
+        "Wg",
+        "Wl",
+        "Ws",
+        "Wx",
+        "Wy",
+        "XB",
+        "XL",
+        "XR",
+        "X_",
+        "Xd",
+        "Xg",
+        "Xh",
+        "Xl",
+        "Xp",
+        "Xv",
+        "Xx",
+        "YA",
+        "YB",
+        "YP",
+        "YR",
+        "Y_",
+        "Yd",
+        "Yg",
+        "Yh",
+        "Yi",
+        "Yl",
+        "ZF",
+        "ZP",
+        "Zd",
+        "Zf",
+        "Zg",
+        "Zh",
+        "Zl",
+        "Zp",
+        "Zx",
+        "Zz",
+        "_B",
+        "_T",
+        "_f",
+        "_k",
+        "_l",
+        "_t",
+        "_v",
+        "_z",
+        "aH",
+        "aI",
+        "aR",
+        "aV",
+        "af",
+        "ai",
+        "at",
+        "az",
+        "bA",
+        "bB",
+        "bO",
+        "bm",
+        "bu",
+        "bv",
+        "bz",
+        "c",
+        "cL",
+        "cR",
+        "cS",
+        "cg",
+        "cu",
+        "dA",
+        "dC",
+        "dL",
+        "dR",
+        "dS",
+        "dT",
+        "dk",
+        "do",
+        "dp",
+        "dt",
+        "du",
+        "dw",
+        "eF",
+        "eN",
+        "eU",
+        "ef",
+        "eg",
+        "et",
+        "ev",
+        "ey",
+        "fC",
+        "fI",
+        "fL",
+        "fS",
+        "fo",
+        "fp",
+        "fs",
+        "ft",
+        "fu",
+        "gA",
+        "gF",
+        "gL",
+        "gP",
+        "gV",
+        "gi",
+        "gk",
+        "gp",
+        "gt",
+        "gu",
+        "gv",
+        "hA",
+        "hB",
+        "hF",
+        "hL",
+        "hP",
+        "hS",
+        "hb",
+        "hk",
+        "hl",
+        "ht",
+        "hu",
+        "hv",
+        "hy",
+        "hz",
+        "i",
+        "iM",
+        "iT",
+        "ib",
+        "ig",
+        "io",
+        "ip",
+        "it",
+        "iz",
+        "jI",
+        "jS",
+        "jT",
+        "jf",
+        "jl",
+        "jn",
+        "jv",
+        "jx",
+        "kH",
+        "kP",
+        "kS",
+        "kv",
+        "kx",
+        "l",
+        "lH",
+        "lL",
+        "lf",
+        "li",
+        "lr",
+        "lt",
+        "lv",
+        "lz",
+        "m",
+        "mA",
+        "m_",
+        "mb",
+        "md",
+        "mf",
+        "ml",
+        "mp",
+        "my",
+        "mz",
+        "nA",
+        "nF",
+        "nI",
+        "nb",
+        "nf",
+        "ng",
+        "nk",
+        "nt",
+        "nz",
+        "o",
+        "oC",
+        "oE",
+        "oF",
+        "oS",
+        "of",
+        "ok",
+        "on",
+        "ot",
+        "oz",
+        "p",
+        "pA",
+        "pF",
+        "pO",
+        "pS",
+        "pc",
+        "pg",
+        "pn",
+        "pp",
+        "ps",
+        "pz",
+        "qB",
+        "qC",
+        "qF",
+        "qP",
+        "qV",
+        "qd",
+        "qg",
+        "qy",
+        "r",
+        "rF",
+        "rH",
+        "rI",
+        "rL",
+        "rT",
+        "rf",
+        "rg",
+        "ri",
+        "rk",
+        "rp",
+        "rr",
+        "rt",
+        "rv",
+        "s",
+        "sB",
+        "sF",
+        "sH",
+        "sN",
+        "sO",
+        "sR",
+        "sS",
+        "sT",
+        "st",
+        "sv",
+        "t",
+        "tL",
+        "tM",
+        "tt",
+        "ty",
+        "uA",
+        "uB",
+        "uF",
+        "uP",
+        "uR",
+        "uS",
+        "uT",
+        "ua",
+        "ub",
+        "uk",
+        "uo",
+        "ut",
+        "uu",
+        "v",
+        "vP",
+        "v_",
+        "vb",
+        "vh",
+        "vk",
+        "vl",
+        "vw",
+        "vz",
+        "wE",
+        "wH",
+        "wP",
+        "wb",
+        "wf",
+        "wi",
+        "wp",
+        "ww",
+        "wx",
+        "wy",
+        "xA",
+        "xB",
+        "xO",
+        "xR",
+        "xS",
+        "xb",
+        "xk",
+        "xm",
+        "xz",
+        "yH",
+        "yI",
+        "yP",
+        "yV",
+        "yh",
+        "yp",
+        "yv",
+        "yz",
+        "zD",
+        "zF",
+        "zP",
+        "zR",
+        "zS",
+        "zd",
+        "zi",
+        "zj",
+        "zl",
+        "zm",
+        "zx",
+        "zy",
+        "zz"
+      ],
+      "importers": [
+        "AddFilterButton.Dmpbz0GW.js",
+        "AgentActivityCommitBadge.AaOoSe4-.js",
+        "AgentAutomationConversation.CJ-vqVie.js",
+        "AgentInput.ekPPAiwd.js",
+        "AgentPageContentWrapper.B8ic33We.js",
+        "AgentPanel.NPHX6bEo.js",
+        "AgentPanelEditor.GbATeTfN.js",
+        "AgentPanelItem.qs7AavHY.js",
+        "AgentSessionActivities.B9yu6arN.js",
+        "AgentSessionExternalUrlsButton.Bs4eIfvh.js",
+        "AgentSessionPage.D4DhwkML.js",
+        "AgentToolbarActions.CbOLDSqu.js",
+        "AiFeedbackControls.B5ln1bIT.js",
+        "AskLinearAboutSelectedModelsAction.Ck4zhau_.js",
+        "AutomationHelper.B0HEcOoo.js",
+        "AutomationHistoryDialog.DYWJ3DgX.js",
+        "AutomationNewButton.DnfgotrN.js",
+        "AutomationOwnerSelect.Cl2Nhq6T.js",
+        "AutomationPage.FVNODuJW.js",
+        "AutomationRunsPage.CwJzxL5C.js",
+        "AutomationTrustedSourceEditorOptions.CsWy7F2e.js",
+        "AutomationsList.wnFzBYvh.js",
+        "AutomationsPage.CRjHv_XJ.js",
+        "CodeSelectionLine.DxrbMLav.js",
+        "CollabEditing.DdzdL3h2.js",
+        "CollaborativeEditor.CIEy9Muw.js",
+        "ColumnHeaders.DLhMXmku.js",
+        "ContentViewHeaderBreadcrumb.tUXZoIJZ.js",
+        "ContentViewHeaderContextualMenu.MkJrcimz.js",
+        "ContentViewHeaderFilterButton.CkyP3XII.js",
+        "ContentViewSubheader.DJG5j2hR.js",
+        "CustomerLogoPile.DndKzFZh.js",
+        "FilterBlockHelper.D1VAkopg.js",
+        "FilterTriggerButton.tFll_T6G.js",
+        "HiddenIndicator.iL6w2SFp.js",
+        "HistoryEntryComponents.jcKfad-R.js",
+        "InitiativeDisplayProperties.D6Xnz4bP.js",
+        "InitiativeTargetDateControl.DiVBa_L_.js",
+        "InlineCommentQuote.BpL5abEq.js",
+        "IssueWidget.DdTrzZA8.js",
+        "LabelsBadges.BpInAh-f.js",
+        "LinearAgentCommentContent.C---p7AT.js",
+        "LinearAgentMcpSettings.8HfTvzal.js",
+        "LinearAgentMessages.BuUfncdI.js",
+        "ListCell.Cs-m0hHw.js",
+        "ListColumns.Dn1S5OeL.js",
+        "LogicListItem.zKP_4iQJ.js",
+        "LoopLimitsPage.BrXlWYB3.js",
+        "LoopTemplateLibrary.C__UMpNm.js",
+        "LoopsManagementPage.CVnaEF7c.js",
+        "MainListHeaderHelperText.SGuuBqni.js",
+        "McpConnectorList.A-Wz50eq.js",
+        "MentionHydrationPlugin.BDLm0Pkv.js",
+        "MultiSelectActions.Dfnd2sNu.js",
+        "NewContentViewHeader.Mh1uiUI4.js",
+        "PageHeaderViewOptions.FyZJ3rtG.js",
+        "PageSidebarContainer.BmnbF6Vm.js",
+        "ProjectListComponents.ClgIH58w.js",
+        "ProjectViewZoomControl.CIw4YcZh.js",
+        "RecurringIssueTemplateControls.C_WzwiQc.js",
+        "RegisterModelsFromViewState.BbUdQdHf.js",
+        "RepositoryAccessList.BhRFE15X.js",
+        "ScratchpadMemoriesPage.CVgbHpr0.js",
+        "SearchInput.BlU8pnvy.js",
+        "SettingsList.BezKBffa.js",
+        "SidebarCollapsedNavigation.DBp0DN4a.js",
+        "SkillActions.CnOYcpvJ.js",
+        "TriageRulePropertiesEdit.DlJAG90x.js",
+        "UpsellBox.DiIr0WGS.js",
+        "UsageHistoryCells.CH1c0TOd.js",
+        "ViewHeaderViewControls.BFmsZSlE.js",
+        "ViewOptions.BAb1xubN.js",
+        "ViewOptions.C6PH-C58.js",
+        "ViewOptionsGroupsPanel.BiqrW28F.js",
+        "ViewOptionsMenu.BJqgjUqZ.js",
+        "WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js",
+        "WorkflowAgentAutomationSettingsPage._wV8723k.js",
+        "getGroupDividerColor.B-wqx-vV.js",
+        "getViewFilters.Cv5M4Ooo.js",
+        "inlineCommentsState.j5wEPkcL.js",
+        "productIntelligenceSettingsContent.B0n-oZkD.js",
+        "useAgentSessionRowInfo.BAgE080r.js",
+        "useCommentsEdit.rx_NkuPS.js",
+        "useContainerSize.SyRU9uAF.js",
+        "useGroupingMenu.D3TLCjLd.js",
+        "useInlineCommentHashNavigation.gWo3l1g8.js",
+        "useIsKeyPressedRef.Cu1ZujKR.js",
+        "useLinearAgentItems.Ci73RDrP.js",
+        "useLoopTemplateLauncher.O9-_gagH.js",
+        "useOrderingMenu.B_SK3wjP.js",
+        "useProjectStatusAdditionalInformation.NMyv3EmX.js",
+        "useScrollRestorationItemKey.Bo_Ytl1Y.js",
+        "useThreadReplyCollapse.DeCNoQiJ.js",
+        "useToolApprovalActions.kadZ6255.js",
+        "useUsageLimitTableFilter.DeovAaha.js",
+        "useViewFilters.6E3JTpzV.js"
+      ]
+    },
+    {
+      "monster": "Issue.DRYymPCa.js",
+      "totalExports": 1316,
+      "demanded": [
+        "$S",
+        "$c",
+        "$d",
+        "$g",
+        "$h",
+        "$m",
+        "$p",
+        "$r",
+        "$t",
+        "Aa",
+        "Ad",
+        "Af",
+        "Ag",
+        "Al",
+        "Am",
+        "An",
+        "Ar",
+        "Au",
+        "B",
+        "BS",
+        "Ba",
+        "Bc",
+        "Bd",
+        "Bf",
+        "Bg",
+        "Bh",
+        "Bi",
+        "Bl",
+        "Bo",
+        "Bp",
+        "Bu",
+        "C",
+        "CC",
+        "C_",
+        "Cd",
+        "Cg",
+        "Cn",
+        "Cr",
+        "Cv",
+        "Cy",
+        "D",
+        "DC",
+        "D_",
+        "Da",
+        "Dc",
+        "Df",
+        "Dg",
+        "Dn",
+        "Dr",
+        "Dt",
+        "E",
+        "EC",
+        "E_",
+        "Ea",
+        "Ed",
+        "Ef",
+        "Eg",
+        "En",
+        "Eo",
+        "Er",
+        "Et",
+        "Eu",
+        "Ey",
+        "FC",
+        "FS",
+        "F_",
+        "Fd",
+        "Ff",
+        "Fh",
+        "Fl",
+        "Fm",
+        "Fo",
+        "Ft",
+        "Fu",
+        "G",
+        "G_",
+        "Gd",
+        "Gg",
+        "Gh",
+        "Gl",
+        "Gm",
+        "Gr",
+        "Gs",
+        "Gt",
+        "Gu",
+        "Gv",
+        "Gy",
+        "H",
+        "HC",
+        "HS",
+        "Ha",
+        "Hf",
+        "Hg",
+        "Hh",
+        "Hl",
+        "Hn",
+        "Ho",
+        "Hs",
+        "IS",
+        "Id",
+        "If",
+        "Ig",
+        "Ih",
+        "Im",
+        "Ip",
+        "Ir",
+        "It",
+        "Iu",
+        "Iv",
+        "JC",
+        "J_",
+        "Jb",
+        "Jd",
+        "Jg",
+        "Jm",
+        "Jp",
+        "Jr",
+        "Jt",
+        "Ju",
+        "K",
+        "KC",
+        "Ka",
+        "Kc",
+        "Kd",
+        "Kf",
+        "Kg",
+        "Kh",
+        "Kn",
+        "Ko",
+        "Kp",
+        "Kr",
+        "Ks",
+        "Kt",
+        "Ku",
+        "Kv",
+        "L",
+        "La",
+        "Lf",
+        "Lg",
+        "Lh",
+        "Lm",
+        "Lp",
+        "Lr",
+        "Lt",
+        "M",
+        "Ma",
+        "Mc",
+        "Md",
+        "Mf",
+        "Mh",
+        "Mm",
+        "Mn",
+        "Mp",
+        "Mr",
+        "Mt",
+        "My",
+        "N",
+        "NC",
+        "NS",
+        "N_",
+        "Nd",
+        "Nf",
+        "Nm",
+        "Nn",
+        "Np",
+        "Nu",
+        "O",
+        "Oa",
+        "Od",
+        "Of",
+        "Og",
+        "On",
+        "Ot",
+        "Ou",
+        "P",
+        "PC",
+        "PS",
+        "P_",
+        "Pa",
+        "Pd",
+        "Pg",
+        "Pt",
+        "Pu",
+        "Pv",
+        "Q",
+        "Q_",
+        "Qa",
+        "Qd",
+        "Qm",
+        "Qr",
+        "Qt",
+        "R",
+        "RC",
+        "RS",
+        "Rf",
+        "Rg",
+        "Rl",
+        "Rn",
+        "Ro",
+        "Rp",
+        "Rr",
+        "Rv",
+        "S",
+        "SC",
+        "S_",
+        "Sc",
+        "Sd",
+        "Sf",
+        "Sg",
+        "Sn",
+        "Sp",
+        "Ss",
+        "Su",
+        "Sv",
+        "Sy",
+        "T",
+        "T_",
+        "Td",
+        "Tf",
+        "Tg",
+        "Tn",
+        "Tr",
+        "Tt",
+        "Ty",
+        "U",
+        "UC",
+        "U_",
+        "Ua",
+        "Uc",
+        "Ud",
+        "Ug",
+        "Uh",
+        "Ul",
+        "Um",
+        "Un",
+        "Uo",
+        "Up",
+        "Ur",
+        "Us",
+        "Uu",
+        "Uv",
+        "V",
+        "VC",
+        "VS",
+        "Vc",
+        "Vd",
+        "Vg",
+        "Vp",
+        "Vu",
+        "W",
+        "WS",
+        "W_",
+        "Wa",
+        "Wc",
+        "Wg",
+        "Wh",
+        "Wl",
+        "Wm",
+        "Wn",
+        "Wr",
+        "Wt",
+        "Wy",
+        "X",
+        "XC",
+        "X_",
+        "Xa",
+        "Xc",
+        "Xd",
+        "Xn",
+        "Xr",
+        "Xt",
+        "Y",
+        "Y_",
+        "Ya",
+        "Yb",
+        "Yc",
+        "Yd",
+        "Yg",
+        "Yh",
+        "Yn",
+        "Yp",
+        "Yr",
+        "Yt",
+        "Yu",
+        "Yv",
+        "Yy",
+        "Z",
+        "ZC",
+        "Z_",
+        "Zd",
+        "Zf",
+        "Zh",
+        "Zi",
+        "Zm",
+        "Zn",
+        "Zr",
+        "Zs",
+        "Zt",
+        "__",
+        "_a",
+        "_d",
+        "_f",
+        "_h",
+        "_l",
+        "_n",
+        "_o",
+        "_r",
+        "_s",
+        "_u",
+        "_y",
+        "a_",
+        "aa",
+        "ab",
+        "af",
+        "ag",
+        "ah",
+        "ai",
+        "am",
+        "an",
+        "ao",
+        "ar",
+        "au",
+        "av",
+        "aw",
+        "ay",
+        "b",
+        "bC",
+        "b_",
+        "bd",
+        "bf",
+        "bg",
+        "bi",
+        "bl",
+        "bn",
+        "br",
+        "bs",
+        "bt",
+        "bu",
+        "bv",
+        "by",
+        "c",
+        "cC",
+        "cS",
+        "ca",
+        "cd",
+        "cf",
+        "cg",
+        "ci",
+        "cl",
+        "cn",
+        "cs",
+        "cv",
+        "cw",
+        "d",
+        "dC",
+        "d_",
+        "dd",
+        "df",
+        "dg",
+        "dl",
+        "dn",
+        "do",
+        "dp",
+        "ds",
+        "dv",
+        "eC",
+        "ef",
+        "eg",
+        "el",
+        "em",
+        "en",
+        "ep",
+        "eu",
+        "ew",
+        "ey",
+        "f",
+        "fa",
+        "fc",
+        "fd",
+        "ff",
+        "fg",
+        "fi",
+        "fn",
+        "fp",
+        "fr",
+        "fs",
+        "fu",
+        "fv",
+        "fy",
+        "g_",
+        "gc",
+        "gf",
+        "gn",
+        "go",
+        "gr",
+        "gs",
+        "gu",
+        "gv",
+        "gw",
+        "gy",
+        "hC",
+        "h_",
+        "ha",
+        "hc",
+        "hd",
+        "hf",
+        "hg",
+        "hh",
+        "hl",
+        "hn",
+        "hp",
+        "hr",
+        "hs",
+        "hv",
+        "hw",
+        "hy",
+        "i",
+        "iS",
+        "i_",
+        "ib",
+        "if",
+        "ig",
+        "im",
+        "in",
+        "ip",
+        "ir",
+        "is",
+        "iv",
+        "j",
+        "ja",
+        "jd",
+        "jf",
+        "jg",
+        "jh",
+        "jm",
+        "jn",
+        "jo",
+        "jr",
+        "jt",
+        "ju",
+        "ka",
+        "kc",
+        "kd",
+        "kf",
+        "kh",
+        "kl",
+        "kn",
+        "ko",
+        "kr",
+        "ks",
+        "kt",
+        "ku",
+        "lC",
+        "lS",
+        "l_",
+        "ld",
+        "lf",
+        "lg",
+        "li",
+        "ll",
+        "ln",
+        "lp",
+        "lv",
+        "ly",
+        "m",
+        "mC",
+        "m_",
+        "ma",
+        "md",
+        "mf",
+        "mg",
+        "mh",
+        "ml",
+        "mn",
+        "mp",
+        "mr",
+        "mw",
+        "n",
+        "nS",
+        "nb",
+        "nd",
+        "nf",
+        "ng",
+        "nh",
+        "ni",
+        "nl",
+        "nm",
+        "nr",
+        "nv",
+        "nw",
+        "ny",
+        "oS",
+        "o_",
+        "oc",
+        "od",
+        "of",
+        "og",
+        "oh",
+        "oi",
+        "ol",
+        "om",
+        "on",
+        "or",
+        "os",
+        "ou",
+        "ov",
+        "oy",
+        "p",
+        "pa",
+        "pd",
+        "pf",
+        "pg",
+        "pm",
+        "pn",
+        "pp",
+        "pr",
+        "ps",
+        "pu",
+        "pw",
+        "q",
+        "qC",
+        "qS",
+        "qb",
+        "qc",
+        "qd",
+        "qh",
+        "qi",
+        "qp",
+        "qr",
+        "qt",
+        "qv",
+        "r",
+        "rS",
+        "ra",
+        "rb",
+        "rc",
+        "rf",
+        "rg",
+        "rh",
+        "rm",
+        "ro",
+        "rp",
+        "ru",
+        "rv",
+        "rw",
+        "sS",
+        "sa",
+        "sc",
+        "sf",
+        "sg",
+        "sl",
+        "sn",
+        "so",
+        "sp",
+        "ss",
+        "sw",
+        "t",
+        "td",
+        "tf",
+        "tg",
+        "th",
+        "ti",
+        "tm",
+        "tn",
+        "tr",
+        "ts",
+        "tv",
+        "u",
+        "uC",
+        "ua",
+        "uc",
+        "ud",
+        "uf",
+        "ug",
+        "uh",
+        "ui",
+        "un",
+        "uo",
+        "uv",
+        "uw",
+        "uy",
+        "v",
+        "v_",
+        "vd",
+        "vf",
+        "vn",
+        "vo",
+        "vr",
+        "vv",
+        "vw",
+        "vy",
+        "w",
+        "w_",
+        "wd",
+        "wf",
+        "wn",
+        "wr",
+        "wt",
+        "wu",
+        "x",
+        "xC",
+        "x_",
+        "xg",
+        "xl",
+        "xm",
+        "xn",
+        "xp",
+        "xs",
+        "xy",
+        "y",
+        "yC",
+        "y_",
+        "ya",
+        "yc",
+        "yd",
+        "yf",
+        "yh",
+        "yl",
+        "yn",
+        "yp",
+        "yr",
+        "yt",
+        "yu",
+        "yv",
+        "yw",
+        "yy",
+        "z",
+        "za",
+        "zc",
+        "zd",
+        "zg",
+        "zh",
+        "zm",
+        "zn",
+        "zo",
+        "zp",
+        "zr",
+        "zs",
+        "zv"
+      ],
+      "importers": [
+        "ActionGroups.DFZZ7QMk.js",
+        "ActivityFilterBlocks.Cv1VErjr.js",
+        "AddFilterButton.Dmpbz0GW.js",
+        "AgentActivityCommitBadge.AaOoSe4-.js",
+        "AgentAutomationConversation.CJ-vqVie.js",
+        "AgentConversationItems.DoHFAP_d.js",
+        "AgentHelper.CjXdMzFb.js",
+        "AgentInput.ekPPAiwd.js",
+        "AgentPanelEditor.GbATeTfN.js",
+        "AgentPanelItem.qs7AavHY.js",
+        "AgentSessionActivities.B9yu6arN.js",
+        "AgentSessionHelper.DjDBF77L.js",
+        "AgentToolbarActions.CbOLDSqu.js",
+        "AgentToolbarState.DPrj1I-A.js",
+        "AiConversationContextHelper.C_bh7SNM.js",
+        "AiConversationPendingMessagesList.DPu-Cg9t.js",
+        "AiFeedbackControls.B5ln1bIT.js",
+        "AskLinearAboutSelectedModelsAction.Ck4zhau_.js",
+        "AutomationBlockingSourceHelper.V_OvF8wq.js",
+        "AutomationHelper.B0HEcOoo.js",
+        "AutomationHistoryDialog.DYWJ3DgX.js",
+        "AutomationNewButton.DnfgotrN.js",
+        "AutomationOwnerSelect.Cl2Nhq6T.js",
+        "AutomationPage.FVNODuJW.js",
+        "AutomationRunsPage.CwJzxL5C.js",
+        "AutomationTrustedSourceDisplay.B2IjptQA.js",
+        "AutomationTrustedSourceEditorOptions.CsWy7F2e.js",
+        "AutomationsList.wnFzBYvh.js",
+        "AutomationsPage.CRjHv_XJ.js",
+        "Avatar.DGwSs61a.js",
+        "CodeSelectionContextHelper.Iw8YtXjv.js",
+        "CollabEditing.DdzdL3h2.js",
+        "CollaborativeEditor.CIEy9Muw.js",
+        "CollapsibleSection.DCAWniu1.js",
+        "ContentViewHeaderBreadcrumb.tUXZoIJZ.js",
+        "ContentViewSubheader.DJG5j2hR.js",
+        "CustomerLogoPile.DndKzFZh.js",
+        "CustomerStatusIcon.BJItzt7c.js",
+        "DraftHelper.DpwuMSIm.js",
+        "EditorFileUploadManager.YTj9uXRp.js",
+        "FastIssueDraftCreateState.BxmAh4lC.js",
+        "FeatureFlagIcon.DOHP4b1a.js",
+        "FileUploadPlugin.lwfDcatI.js",
+        "FilterBlockHelper.D1VAkopg.js",
+        "Form.D0HBDYj2.js",
+        "FuzzyDatePicker.9NVhnGgX.js",
+        "GraphHelpers.DNZMKe0T.js",
+        "HiddenIndicator.iL6w2SFp.js",
+        "IncidentCommunication.B5fpSa6l.js",
+        "InitiativeDisplayProperties.D6Xnz4bP.js",
+        "InitiativeFilterBlocks.CxQgstHS.js",
+        "InitiativeTargetDateControl.DiVBa_L_.js",
+        "InitiativesListViewOptions.Bs0H5cfj.js",
+        "InlineFilter.BbbOUtAK.js",
+        "IssueWidget.DdTrzZA8.js",
+        "LabelsBadges.BpInAh-f.js",
+        "LinearAgentCommentContent.C---p7AT.js",
+        "LinearAgentMcpSettings.8HfTvzal.js",
+        "LinearAgentMessages.BuUfncdI.js",
+        "Link.B583WaeA.js",
+        "ListCell.Cs-m0hHw.js",
+        "LoopLimitsPage.BrXlWYB3.js",
+        "LoopTemplateLibrary.C__UMpNm.js",
+        "LoopsManagementPage.CVnaEF7c.js",
+        "ManageAiCreditsButton.9UxqKkes.js",
+        "McpConnectorList.A-Wz50eq.js",
+        "McpOAuth.CznQ4nb0.js",
+        "MentionHydrationPlugin.BDLm0Pkv.js",
+        "ModelIcon.DQKsMCJu.js",
+        "MultiSelectActions.Dfnd2sNu.js",
+        "NewContentViewHeader.Mh1uiUI4.js",
+        "ProjectFilterBlocks.GhbPbZlo.js",
+        "ProjectListComponents.ClgIH58w.js",
+        "ProjectStatusIcon.CWSLLtli.js",
+        "ProjectViewZoomControl.CIw4YcZh.js",
+        "ProjectsRelevance.Ysg9ZlNt.js",
+        "PullRequestStatusIcon.Bu4WyB8f.js",
+        "QueuedMessageList.CT33uY9-.js",
+        "RecurringIssueTemplateControls.C_WzwiQc.js",
+        "RefreshManager.DpVjn8XM.js",
+        "RegisterAction.BtUuUh2c.js",
+        "RepositoryAccessList.BhRFE15X.js",
+        "ReviewsHelper.CFN0Kk_Y.js",
+        "ScratchpadMemoriesPage.CVgbHpr0.js",
+        "SettingsCatalog.Bseqvifa.js",
+        "SettingsListProvider.CV4gTQOh.js",
+        "SkillActions.CnOYcpvJ.js",
+        "SubscriptionsControl.BbA5QtkK.js",
+        "TabsList.B4X8yXhy.js",
+        "TeamLabel.CTNAPaDj.js",
+        "TemplateModelIcon.OI36HNbN.js",
+        "TriageRulePropertiesEdit.DlJAG90x.js",
+        "UpsellBox.DiIr0WGS.js",
+        "UsageHistoryCells.CH1c0TOd.js",
+        "UsageLimitLabels.B0UCSYIQ.js",
+        "VideoPlayer.B-8ZaYaE.js",
+        "ViewHeaderViewControls.BFmsZSlE.js",
+        "ViewOptions.BAb1xubN.js",
+        "WorkflowAgentAutomationSettingsPage._wV8723k.js",
+        "WorkspaceAiSettingsAccess.BRmUKl4I.js",
+        "aiConversationSendElicitationResponsesMutation.CEPAjw5J.js",
+        "dateBlockFilterUtils.C8hdf4Bf.js",
+        "editor.C9-vrnvs.js",
+        "finishSentryAuth.Cd-7zL4s.js",
+        "getGroupDividerColor.B-wqx-vV.js",
+        "getViewFilters.Cv5M4Ooo.js",
+        "googleAuthUrl.DEpEE2uL.js",
+        "initiativeBlockFilterUtils.C7uGXJRo.js",
+        "isDesktopTabsEnabled.D6x46LOv.js",
+        "labelBlockFilterUtils.DfdxqTXa.js",
+        "labelGroupColumnLabels.BipZ4EGE.js",
+        "lowerCase.BOQ27dWU.js",
+        "numberBlockFilterUtils.BLhmYxqx.js",
+        "projectBlockFilterUtils.B0pJBUCj.js",
+        "proseMirrorNodeForModel.CLHOE5r8.js",
+        "proxyImageSrc.DjrbBx1K.js",
+        "redirects.CpELa_du.js",
+        "skillSlashAction.CXuWRS8L.js",
+        "teamBlockFilterUtils.BHPxTf69.js",
+        "useAgentSessionRowInfo.BAgE080r.js",
+        "useCommentsEdit.rx_NkuPS.js",
+        "useFilterValidation.BnpfA_kB.js",
+        "useHydrateModelsInMarkdown.BqDPY0lm.js",
+        "useInlineCommentHashNavigation.gWo3l1g8.js",
+        "useLinearAgentItems.Ci73RDrP.js",
+        "useLoadIssue.Djn9pp3E.js",
+        "useLoopTemplateLauncher.O9-_gagH.js",
+        "useParentModelForUpdate.B1QZYhKG.js",
+        "useScrollIntoViewUntilStable.3V2Ha5RF.js",
+        "useSendAiMessage.B5bGsmqN.js",
+        "useThreadReplyCollapse.DeCNoQiJ.js",
+        "useToolApprovalActions.kadZ6255.js",
+        "useTrackActiveSession.sxY2NaOx.js",
+        "useUsageLimitGroupPeriod.6-QJ10ya.js",
+        "useUsageLimitTableFilter.DeovAaha.js",
+        "useViewFilters.6E3JTpzV.js",
+        "usersBlockFilterUtils.Dj-qcEgT.js"
+      ]
+    }
+  ]
+}
