@@ -1,0 +1,6 @@
+{
+  "name": "date-kernel",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the plain-Date branch of the boot-installed ambient date library (core.PJIFv7xf.js fe: 9 of 11 Date.prototype methods + String.prototype.toLocalDate), golden-verified against zero-stub corpus execution (DATE-KERNEL claim, #225 2026-09-29; SCHED-1 prerequisite per merged R-BOOT §2)"
+}

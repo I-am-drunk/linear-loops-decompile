@@ -487,7 +487,12 @@ dispositions + the resolveTypeForTrigger conversion kernel golden-backed in
 `Issue.DRYymPCa.js` directly via the config-bootstrap seam).
 R5.1 dataplane is MERGED (#155, main `ddc478b`); R5.2/R5.3 domain
 reads/writes are the next dataplane slices and feed the team/workspace
-projection (R-PROJ).
+projection (R-PROJ). DATE-KERNEL landed 2026-09-29 — the plain branch of the
+boot-installed ambient date library (`core.PJIFv7xf.js` `fe`) golden-backed
+in `src/date-kernel` with a zero-stub corpus execution; SCHED-1's goldens
+are unblocked (they execute on these methods — merged R-BOOT §2 interlock).
+The tz branches + the two spacetime-only methods are a declared follow-up
+row in sections/boot-config.md §2.
 
 More goldens are always claimable (the 40% track): the ledger names every
 GAP chunk; the G4/G5/G6 patterns (case file + hand-verified golden +

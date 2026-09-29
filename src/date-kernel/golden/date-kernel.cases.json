@@ -1,0 +1,9 @@
+{
+  "unit": "date-kernel/date-kernel",
+  "chunk": "core",
+  "drive": {
+    "file": "date-kernel-driver.mjs",
+    "exportMeaning": "export{fe as $, …} (core.PJIFv7xf.js export map, pretty L989) — $ is fe (pretty L297–344), the boot-time installer of the ambient date library: 11 Date.prototype methods + String.prototype.toLocalDate, called by html.CjyPLfH8.js b() at boot (html is the ONLY importer of $ in all 1,550 chunks — merged R-BOOT §2)."
+  },
+  "notes": "DATE-KERNEL (#225 claim 2026-09-29): pins the PLAIN branch (no timezone argument) of every installed method — the branch the SCHED-1 schedule kernel's recurrence math executes on. Zero stubs: all 14 closure chunks (spacetime included) execute REAL. The driver installs via entry.$() and exercises the prototype methods under two pinned process TZs (UTC and America/New_York across both 2026 DST transitions). Facts pinned: offsetByDays (setDate calendar arithmetic) diverges from offsetByHours(24) (epoch-ms) exactly across DST; toLocalDate's invalid-date recursion strips one trailing char at a time (empty → now, projected as a within-5s boolean); nearestMidnight's no-tz fork = offsetByHours(12).midnight(); offsetByBusinessDays' two exact throw strings, whole-week skip, and zero-offset same-instance return; toTimelessDate padStart zero-padding; daysTo local-calendar-day counting across DST and negative spans; toUTCDate's local-offset shift. The tz branches and the two spacetime-only methods (beginningOfWeek, nextWeekDay) are declared OUT of this slice — follow-up row in docs/remap/sections/boot-config.md §2."
+}

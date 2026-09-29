@@ -1,0 +1,25 @@
+{
+  "source": "DATE-KERNEL (#225 claim 2026-09-29, from the merged R-BOOT §2 date-kernel row + the 16:41:38Z #295 reconciliation): src/date-kernel reimplements the PLAIN branch of the boot-installed ambient date library. Evidence: core.PJIFv7xf.js export $ = fe (pretty L297-344), the installer html.CjyPLfH8.js b() calls at boot — html is the ONLY importer of $ in all 1,550 chunks, so the methods are ambient (imported by nobody, assumed by everybody). Executed from the RAW tree in drive mode with ZERO stubs (all 14 closure chunks real, spacetime included): the driver calls entry.$() and exercises the installed prototype methods under pinned process TZs (UTC + America/New_York across both 2026 DST transitions). The clean-module test runs the SAME driver with installDateKernel as entry.$, so the fixture set is byte-identical by construction. Declared scope cut: the spacetime-backed tz branches and the two spacetime-only methods (beginningOfWeek, nextWeekDay) are a follow-up row (docs/remap/sections/boot-config.md §2), not silently dropped — installDateKernel does not install those two names, and the test pins their absence.",
+  "reimplements": [
+    {
+      "chunkPrefix": "core",
+      "exports": [
+        {
+          "minified": "$",
+          "meaning": "fe (L297-344): installs Date.prototype {beginningOfWeek, nextWeekDay, midnight, nearestMidnight, offsetByDays, offsetByBusinessDays, offsetByHours, offsetBySeconds, toUTCDate, daysTo, toTimelessDate} + String.prototype.toLocalDate via the D helper (L280-287: writable, non-enumerable, configurable). Reimplemented as installDateKernel + named pure functions (plain branch only; the two spacetime-only methods deliberately not installed)",
+          "evidenceLine": "src/date-kernel/date-kernel.ts + golden test"
+        }
+      ],
+      "goldens": ["date-kernel.cases"]
+    }
+  ],
+  "goldens": ["date-kernel.cases"],
+  "pinnedFacts": [
+    "offsetByDays (setDate calendar arithmetic, L316-320) diverges from offsetByHours(24) (epoch-ms, L324) exactly across DST transitions and agrees away from them",
+    "toLocalDate invalid-date self-recursion strips ONE trailing character per step until the string parses; empty string yields new Date() (L338-339)",
+    "nearestMidnight no-tz fork is literally offsetByHours(12).midnight() (L315)",
+    "offsetByBusinessDays (j, L380-397): throw strings 'Invalid work days specified' and 'Business day offset out of bounds (>10000000 offset)' verbatim; whole-week skip then day-walk; zero offset returns the SAME instance",
+    "toTimelessDate = local-field YYYY-MM-DD with padStart zero-padding (L332-335)",
+    "daysTo = date-fns differenceInCalendarDays over local calendar days with the UTC-projection offset correction (differenceInCalendarDays.DT1l52ZM.js h/f/m)"
+  ]
+}

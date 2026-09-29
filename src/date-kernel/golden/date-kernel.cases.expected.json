@@ -1,0 +1,359 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": null,
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "core.PJIFv7xf.js",
+    "closureSize": 14,
+    "stubbed": [],
+    "chunkHashes": {
+      "core.PJIFv7xf.js": "bd97b09eba124aa1278b5fdcca1e2ffcfda85be955c89d633fca4c1633a659bc",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87",
+      "addDays.BDe0ZOzk.js": "4b29ac3b519ea2b166dd8ead2dc2dd1d4defe9db9f7c2c7de827d7d32632322c",
+      "differenceInCalendarDays.DT1l52ZM.js": "56eb426f325e8d0c4c6fe47d7c902d739dbf6612cab62b2e85f7078bb37cafab",
+      "spacetime.fdO416V8.js": "3d4b1982c76800b1f440405b59f3366cca2e69f451d2e8d3d471cad6edb107da",
+      "_MapCache.CVQ4sTCO.js": "188fcf9e5f6285a92a78263c4db317daac8abfd91ee1c09bb4e5dc26ca1d038c",
+      "_Map.CIlVSj4D.js": "575c85aba8efc1108a51f8dab12ebf61c8c95c42da404893433d5f343cead037",
+      "isObject.EOlKTQ6h.js": "515e9ff25010d64d706dd346b5561f53441d03cfe9e5eee815a835df258c3fcf",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "_defineProperty.Buzs8hds.js": "c48997174ad02b822f6429d62492b4ac07030777379f6b213d43602db0611c0b",
+      "memoize.BJqL8nwN.js": "e2fbc2035aba0fa6a979d976b78dcc5871243257f4da8707536c47306eade11b",
+      "upperFirst.DgY9DTaO.js": "ea0eb762edfdaacc4fbe728e4aff26e2a78923c594f8553b41e8b4f5e0dbfd8e",
+      "_getTag.BslU1FX9.js": "be2bbecc28be053b3d4d5d2fb1c8c75e6ed875d7519e23e11d6b40f16f0cad9c",
+      "_baseIsEqual.DOUcxQCB.js": "0ac00b67bcdde945892223ccdec601ff43d49dd179c087289eebc029af64a4c3"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "utc",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "midnight",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-15T00:00:00.000Z"
+              }
+            },
+            {
+              "key": "nearestMidnightPM",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-16T00:00:00.000Z"
+              }
+            },
+            {
+              "key": "nearestMidnightAM",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-15T00:00:00.000Z"
+              }
+            },
+            {
+              "key": "offsetByDaysPlus3",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-18T17:30:45.123Z"
+              }
+            },
+            {
+              "key": "offsetByDaysMinus40",
+              "value": {
+                "tag": "string",
+                "value": "2026-05-06T17:30:45.123Z"
+              }
+            },
+            {
+              "key": "offsetByHours25",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-16T18:30:45.123Z"
+              }
+            },
+            {
+              "key": "offsetBySeconds90",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-15T17:32:15.123Z"
+              }
+            },
+            {
+              "key": "toUTCDate",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-15T17:30:45.123Z"
+              }
+            },
+            {
+              "key": "toTimelessDate",
+              "value": {
+                "tag": "string",
+                "value": "2026-06-15"
+              }
+            },
+            {
+              "key": "toTimelessDatePadded",
+              "value": {
+                "tag": "string",
+                "value": "2026-01-05"
+              }
+            },
+            {
+              "key": "daysToNextYear",
+              "value": {
+                "tag": "number",
+                "value": "200"
+              }
+            },
+            {
+              "key": "daysToNegative",
+              "value": {
+                "tag": "number",
+                "value": "-14"
+              }
+            },
+            {
+              "key": "daysToSameDayLateNight",
+              "value": {
+                "tag": "number",
+                "value": "0"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "newYork",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "fallBackByDay",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-01T23:00:00.000Z"
+              }
+            },
+            {
+              "key": "fallBackByHours",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-01T22:00:00.000Z"
+              }
+            },
+            {
+              "key": "fallBackDiverge",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "springByDay",
+              "value": {
+                "tag": "string",
+                "value": "2026-03-08T22:00:00.000Z"
+              }
+            },
+            {
+              "key": "springByHours",
+              "value": {
+                "tag": "string",
+                "value": "2026-03-08T23:00:00.000Z"
+              }
+            },
+            {
+              "key": "springDiverge",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "calmAgree",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "midnightOnFallBackDay",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-01T04:00:00.000Z"
+              }
+            },
+            {
+              "key": "nearestMidnightAcrossFallBack",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-01T04:00:00.000Z"
+              }
+            },
+            {
+              "key": "toUTCDateShift",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-01T02:00:00.000Z"
+              }
+            },
+            {
+              "key": "daysToAcrossFallBack",
+              "value": {
+                "tag": "number",
+                "value": "4"
+              }
+            },
+            {
+              "key": "daysToAcrossSpring",
+              "value": {
+                "tag": "number",
+                "value": "3"
+              }
+            },
+            {
+              "key": "toTimelessDateLocal",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-01"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "businessDays",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "fridayPlus1",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-02T15:00:00.000Z"
+              }
+            },
+            {
+              "key": "fridayPlus10",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-13T15:00:00.000Z"
+              }
+            },
+            {
+              "key": "fridayMinus6",
+              "value": {
+                "tag": "string",
+                "value": "2026-10-22T14:00:00.000Z"
+              }
+            },
+            {
+              "key": "mondayOnlyPlus3",
+              "value": {
+                "tag": "string",
+                "value": "2026-11-16T15:00:00.000Z"
+              }
+            },
+            {
+              "key": "zeroOffsetIsSameInstance",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "emptyWorkDaysThrow",
+              "value": {
+                "tag": "string",
+                "value": "Invalid work days specified"
+              }
+            },
+            {
+              "key": "outOfRangeWorkDayThrow",
+              "value": {
+                "tag": "string",
+                "value": "Invalid work days specified"
+              }
+            },
+            {
+              "key": "offsetOutOfBoundsThrow",
+              "value": {
+                "tag": "string",
+                "value": "Business day offset out of bounds (>10000000 offset)"
+              }
+            },
+            {
+              "key": "offsetAtBoundOk",
+              "value": {
+                "tag": "string",
+                "value": "object"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "toLocalDate",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "isoWithTime",
+              "value": {
+                "tag": "string",
+                "value": "2026-05-04T04:00:00.000Z"
+              }
+            },
+            {
+              "key": "dateOnly",
+              "value": {
+                "tag": "string",
+                "value": "2026-05-04T04:00:00.000Z"
+              }
+            },
+            {
+              "key": "trailingGarbageOneChar",
+              "value": {
+                "tag": "string",
+                "value": "2026-05-04T04:00:00.000Z"
+              }
+            },
+            {
+              "key": "trailingGarbageManyChars",
+              "value": {
+                "tag": "string",
+                "value": "2026-05-04T04:00:00.000Z"
+              }
+            },
+            {
+              "key": "stripStopsAtFirstParse",
+              "value": {
+                "tag": "string",
+                "value": "2026-01-31T05:00:00.000Z"
+              }
+            },
+            {
+              "key": "emptyStringIsNow",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
