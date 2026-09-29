@@ -122,3 +122,56 @@ lattice + `resolveTypeForTrigger` conversion kernel (loops-core —
 `src/loops-type-lattice`, golden-backed), and the `triageAutomation`
 settings-chrome surfaces already dispositioned via the 14:31Z chrome-fork
 kernel. Consumers: R-T (team-settings scope), the type-lattice OUT rows below.
+
+## 12. CSS delivery (how our server ships stage-1 CSS)
+
+From the three settled style-delivery legs (#295 inputs 14:38:00Z,
+14:53:41Z, 15:29:08Z, 2026-09-29; digest §3.8). The corpus stylesheet
+(`style-YZZHHG9P.css`, 565,310 bytes) is Linear's compiled asset — vault-only,
+never committable — but the loops-family demand subset (~17 KB of rules,
+414–442 classes depending on family glob; demand lists must be GENERATED per
+the denominator lesson) is enumerable, and each atomic class is a pure
+`class → declaration` fact, the same fact category as copy strings and theme
+tokens already committed in goldens. Options:
+(a) **Facts-file + generator** (recommended by all three legs): commit
+`css-facts.json` rows (`{class, decl, media?, pseudo?, context?}` plus the
+`varDecls` family — 245 `--sx-*` custom properties of which 145 are
+runtime-injected theme values and 100 carry literal or data-attr-conditioned
+defaults that must ship or ~40% of the var plane silently falls back wrong);
+our build emits an equivalent stylesheet. Exact class names are load-bearing
+(baked into transcribed classNames). The stylex naming law is EXECUTABLE
+(`sx-` + murmur2_32(seed 1) base36, from Meta's MIT `@stylexjs/babel-plugin`;
+3,618/4,403 plain atoms reproduce byte-exact), which upgrades (a) to
+derive-and-check: the extractor recomputes the hash per fact row as a canary,
+with `defineConsts` aliases (254) and const-media atoms (418) closed-listed
+and flagged `const-derived`. Preserve the `.sx-x.sx-x` specificity doubling
+and the `sx--default-marker` cross-chunk contract verbatim.
+(b) Re-derive names as our own hashes: breaks byte-identical className
+transcription, adds a mapping layer, buys nothing. Recommend against.
+(c) Semantic rewrite (our own class names): violates the exactness bar and
+makes every transcription lossy. Recommend against.
+Per-slice subset rule under (a): a slice ships only the classes its
+transcribed chunks demand; a coverage-tool leg asserts every className
+literal in shipped UI resolves in css-facts.
+**This entry gates A1 (foundation kit).** Consumers: A1, the R-STYLE shard,
+`tools/parity` css-facts leg, R-SEAM (the 9 non-`sx` shell layout vars).
+
+## 13. Notification generation
+
+From the settled notification legs (#295 inputs 14:41:10Z, 14:42:39Z,
+2026-09-29; digest §3.7). The four `agentAutomation*` notification types are
+ALWAYS priority-inbox in first-party, but the public API has **no
+notification-create mutation** — we cannot inject into the owner's Linear
+inbox (this also settles the cost side of decision #2: our app receives no
+notifications from Linear either). The copy-builder kernels themselves are
+already merged golden-backed (`src/notif-copy`) and render wherever run
+outcomes render. Options:
+(a) **OUT-chrome** (recommended): no notification surface of our own; the
+runs list and run detail carry the exact failure/response/user-message copy
+via the merged kernels; `metadata.agentAutomationFailure`/`agentAutomationRun`
+payload shapes remain R-SRV's run-outcome event schemas.
+(b) Our own in-app notification surface (bell/inbox): a NEW server + UI row
+family (store, read-state, grouping keys — the grouping contract is
+server-side: per-conversation vs per-day-bucket vs per-definition), exact UI
+per corpus. Deferrable; nothing else consumes it.
+Consumers: R-RUNS rows, R-SRV run-outcome events, decision #2 cross-ref.
