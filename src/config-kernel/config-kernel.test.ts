@@ -73,7 +73,7 @@ test(`injectable-config contract byte-matches the corpus-executed golden`, () =>
 
 /** The golden fixture world, mirrored from golden/world-env-stub.mjs
  * line-for-line (same keys, same values, same omissions). */
-function goldenSources(): { sources: ConfigSources; errors: string[] } {
+function goldenSources(): { sources: ConfigSources } {
   const K = (key: string, value: unknown): [string, unknown] => [key, value];
   const clientEnv = Object.fromEntries([
     K(`ALGOLIA_SEARCH_KEY`, `env-algolia`),
@@ -164,30 +164,20 @@ function goldenSources(): { sources: ConfigSources; errors: string[] } {
     VITE_ASSET_URL: `https://static.linear.app/client/`,
     VITE_CLIENT_URL: `https://linear.app`,
   };
-  const errors: string[] = [];
-  const realError = console.error.bind(console);
-  console.error = (...args: unknown[]) => {
-    errors.push(args.map(String).join(` `));
-  };
-  try {
-    return {
-      sources: {
-        clientEnv,
-        releaseInfo: {
-          BUILD_REVISION: `rel-rev-9`,
-          DEPLOYED_AT: `2026-09-29T12:00:00.000Z`,
-          SHORT_SHA: `abc1234`,
-          PR_NUMBER: `77`,
-        },
-        documentUrl: `https://pr-4242.preview.example.test/settings`,
-        fallback,
-        flagClient: `web`,
+  return {
+    sources: {
+      clientEnv,
+      releaseInfo: {
+        BUILD_REVISION: `rel-rev-9`,
+        DEPLOYED_AT: `2026-09-29T12:00:00.000Z`,
+        SHORT_SHA: `abc1234`,
+        PR_NUMBER: `77`,
       },
-      errors,
-    };
-  } finally {
-    console.error = realError;
-  }
+      documentUrl: `https://pr-4242.preview.example.test/settings`,
+      fallback,
+      flagClient: `web`,
+    },
+  };
 }
 
 test(`CONFIG table byte-matches the corpus-executed golden (ownKeys + values + degraded copy)`, () => {
