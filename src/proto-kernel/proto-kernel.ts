@@ -260,7 +260,11 @@ function setDifferencePolyfill(this: Set<unknown>, e: Set<unknown>): Set<unknown
 // ---- Object / Symbol (corpus `l()` / `v()`) ---------------------------------
 
 function installHasOwn(): void {
-  if (!(`hasOwn` in Object)) {
+  // `'hasOwn' in Object` narrows the else-branch to `never` under lib
+  // es2022+ (TS knows the property statically), so probe the descriptor
+  // like the dispose installer does — same runtime semantics as the
+  // corpus's `\`hasOwn\` in Object ||` guard.
+  if (!Object.getOwnPropertyDescriptor(Object, `hasOwn`)) {
     Object.defineProperty(Object, `hasOwn`, {
       value: Function.prototype.call.bind(Object.prototype.hasOwnProperty),
       writable: true,
