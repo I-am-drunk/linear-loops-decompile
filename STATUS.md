@@ -489,7 +489,11 @@ R-BOOT landed 2026-09-29, main `0a54bac` — the boot/config-plane shard;
 PROTO-KERNEL landed 2026-09-29 — half 1 of the ambient prototype kernel
 (`b()`'s Array/String/Set/Promise/Object/Symbol installs) golden-backed in
 `src/proto-kernel`, the first golden executing the boot chunk
-`html.CjyPLfH8.js` itself; the date half is the claimed DATE-KERNEL slice).
+`html.CjyPLfH8.js` itself; the date half is the claimed DATE-KERNEL slice.
+NOTIF-COPY landed 2026-09-29 — the three loop-notification copy-builder
+kernels golden-backed in `src/notif-copy`, reusing the TYPE-LATTICE seam,
+with the branch-invariant-fixture determinism pattern for clock-reading
+goldens).
 R5.1 dataplane is MERGED (#155, main `ddc478b`); R5.2/R5.3 domain
 reads/writes are the next dataplane slices and feed the team/workspace
 projection (R-PROJ).
