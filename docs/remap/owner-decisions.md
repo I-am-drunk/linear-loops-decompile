@@ -64,18 +64,21 @@ the natural self-hosted answer); (b) build a collab backend. UI is EXACT either
 way; the seam is `src/ui-store` draft persistence, and the ADAPT spec must
 define what `forceSaveSnapshot` means over OUR store.
 
-## 8. Prompt storage format
+## 8. Prompt storage format — SETTLED BY THE CODE (2026-09-29 01:31Z input)
 
-First-party stores the loop prompt as a ProseMirror document
-(`WorkflowDefinition.prompt` + `DocumentContent`; memories/chat use the same
-`bodyData` doc format — it is the product's lingua franca). Evidence says
-**PM-doc-JSON at rest + `MarkdownTransformer`-shaped transcoding at the brain
-boundary** is the only EXACT-compatible answer (markdown-only is lossy for
-mentions/skills and breaks exact re-render), and the transcoder is
-corpus-EXECUTABLE (markdown in → byte-compare doc JSON out), making this option
-golden-verifiable. But it fixes our server schema, so it is ratified here, not
-assumed. Constrains R-CONTENT, R-EDITOR, R-TPL (template instantiation must
-emit the ratified format).
+First-party stores the loop prompt as a ProseMirror document, and
+`publishDraft` (AutomationHelper, read in full) settles the format question the
+thread had filed as an owner fork: publish CANONICALIZES the doc through a
+markdown round-trip (`parseBack(toMarkdown(doc))`) and publishes the
+round-tripped DOC — storage is PM doc JSON, but only the markdown-canonical
+subset survives publish, and the draft's live document is rewritten to
+canonical form when the round trip changed it. So the transcoder is both the
+brain boundary AND the publish-time normalizer; golden-required and
+corpus-executable in both directions in one test family. No owner decision
+needed on the format itself; the residual owner item is only whether we ship
+the canonicalization identically (we should — it is the exact behavior).
+Constrains R-CONTENT, R-EDITOR, R-TPL (template instantiation emits doc JSON).
+(sess_01a0eaae-45af.)
 
 ## 9. Editor file uploads
 

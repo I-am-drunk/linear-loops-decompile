@@ -33,7 +33,7 @@ Settings/Teams/Workspace subset enumerated in `sections/`.
 | Data plane | `OURS` / `PUB-READ` / `PUB-WRITE` / `WEBHOOK` / `POLL` / `BRIDGE` / `N-A` | See settled Finding 1 below |
 | Old code | `REFERENCE` / `PATTERN` / `IGNORE` | vs `archive/v0-swarm-era` |
 | Evidence class | corpus-cited / docs-cited / `OBSERVED/UNVERIFIED` | The third class covers server-runtime semantics a client bundle structurally cannot settle (misfire, webhook dedupe, poll-diff) |
-| Flag | one of the 8 loop-family flags + `ON-exact`/`OFF-exact`/`owner-decision` | Census from the `Features` definition site, not consumer grep |
+| Flag | one of the 14 loop-family flags (UNION rule: definition site ∪ consumers, 01:26:32Z correction) + `ON-exact`/`OFF-exact`/`owner-decision` | Census from the `Features` definition site, not consumer grep |
 
 ## Settled findings (multiply reproduced; cite, don't re-derive)
 
@@ -43,13 +43,21 @@ Settings/Teams/Workspace subset enumerated in `sections/`.
    loop CRUD has no named mutation even client-side (`publishDraft` rides sync
    transactions). The loop store is **OURS** by necessity.
    (sess_01a0ea5b-3018 + sess_01a0ea5b-56ed + sess_01a0ea5a-ff65, 3×.)
-2. **The document stack dominates the closure.** The widened-scope import
-   closure is ~586 chunks / 14.2 MB; the ProseMirror/editor/markdown stack
-   closes over ~415 chunks / 13.3 MB and is NOT severable (cutting editor
-   entries drops <15 chunks — the node-render pipeline is multiply reached; the
-   runs transcript renders through it too). The node-render tier is shared
-   spine of editor AND transcript and ships in the early assembly batches.
-   (sess_01a0eaaf-fcf6 + sess_01a0eaaf-ed60, 2×.)
+2. **The document stack dominates the closure.** Static-only, the
+   widened-scope import closure is ~586 chunks / 14.2 MB — but all pre-01:26Z
+   graphs were LAZY-BLIND (raw-tree dynamic imports are backtick-quoted;
+   the double-quote regexes matched none of the 536 lazy edges). Lazy-aware:
+   **1,062 chunks / 21.8 MB**, and the editor/doc stack's share is ~92% of
+   chunks / 97% of bytes — NOT severable either way (the node-render pipeline
+   is multiply reached; the runs transcript renders through it too). The
+   node-render tier is shared spine of editor AND transcript and ships in the
+   early assembly batches. Closure numbers on ledger rows must come from the
+   committed two-tier (eager/lazy-tagged) tool, self-checked against
+   `__vite__mapDeps`, never from prose regexes — the eager tier is a route's
+   boot cost, the lazy tier is feature reachability, and the corpus's lazy
+   boundaries are themselves parity surface (preserve them, don't flatten).
+   (sess_01a0eaaf-fcf6 + sess_01a0eaaf-ed60 static 2×; lazy correction
+   sess_01a0eaaf-bdaf, reproduced by sess_01a0eaae-45af.)
 3. **`activeTeams` ordering is fully derivable from public fields**
    (per-membership `sortOrder`, Infinity-for-non-member, inherited retirement,
    ancestor-injected DFS flatten) — `defaultTeamForNewLoop` is servable exactly.
