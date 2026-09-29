@@ -93,7 +93,7 @@ definition site: the 00:54:08Z `sortByUserSortOrder` kernel, the memories
 
 | Row | Disposition | Golden-req | Notes |
 |---|---|---|---|
-| prototype-extension module (all of the above, one module) | KEEP-EXACT | **yes (b)** — pure, zero-dep, value-laden forks (`distinct`'s 15-element split, `toQuestion`'s regex, `groupBy`'s sorted-key path, `raceFind`'s all-settle-undefined contract). G7-lineage drive-mode material, executable today | Ships in the FIRST A1 batch, before the primitive tier. Ambient-seam class for R-SEAM: imported by nobody, assumed by everybody — invisible to an import census |
+| prototype-extension module (all of the above, one module) | KEEP-EXACT | **yes (b)** — pure, zero-dep, value-laden forks (`distinct`'s 15-element split, `toQuestion`'s regex, `groupBy`'s sorted-key path, `raceFind`'s all-settle-undefined contract). G7-lineage drive-mode material, executable today | **Half 1 (the `html.CjyPLfH8.js` installs) LANDED as `src/proto-kernel`** (PROTO-KERNEL, #225 2026-09-29 — golden-backed by executing the boot chunk itself; the date half is the DATE-KERNEL slice, `core.PJIFv7xf.js` `fe`). Ships in the FIRST A1 batch, before the primitive tier. Ambient-seam class for R-SEAM: imported by nobody, assumed by everybody — invisible to an import census. Interlock (PR #300 second review): TYPE-LATTICE's `config-bootstrap-stub.mjs` prototype transcription should shrink to import `src/proto-kernel` so the two never drift |
 
 ## 3. The config seam (two chunks, one contract)
 
