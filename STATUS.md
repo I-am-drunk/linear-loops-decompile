@@ -501,7 +501,14 @@ boot-installed ambient date library (`core.PJIFv7xf.js` `fe`) golden-backed
 in `src/date-kernel` with a zero-stub corpus execution; SCHED-1's goldens
 are unblocked (they execute on these methods — merged R-BOOT §2 interlock).
 The tz branches + the two spacetime-only methods are a declared follow-up
-row in sections/boot-config.md §2.
+row in sections/boot-config.md §2. TEAM-TREE landed 2026-09-29 — the O2
+team-picker presentation family (`sortTeamsForTree`/`ByDivider`/`ByGroup`/
+`labelForTeams`/`findClosestCommonParent` + the natural-collation comparator)
+golden-backed in `src/team-tree`: min-input-index root ordering, ancestor
+injection/indentation math, the selected partition, and the raw-exact
+`+ N` label suffix (the pretty-tree template-literal hazard from the #295
+TEAM-PICKER input); the settled flat sortByUserSortOrder kernel stays with
+R-T's row.
 
 More goldens are always claimable (the 40% track): the ledger names every
 GAP chunk; the G4/G5/G6 patterns (case file + hand-verified golden +
