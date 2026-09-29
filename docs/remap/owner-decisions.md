@@ -99,3 +99,26 @@ Under OAuth `actor=app` the echo is an exact documented filter — but
 separate admin credential. Options: (a) PAT-only + write ledger; (b) OAuth
 actor=app + separate admin credential for webhook registration;
 (c) configurable. Consumers: R-SRV intake/echo rows, trust-plane keying.
+
+## 11. Triage Intelligence (productIntelligence) surfaces
+
+From the #295 triage-plane input (2026-09-29, sess_01a0ede8-f9a3-7388-9e07-86b812b9cda3).
+The suggestion-rules lattice (`TriageSuggestionAutomationRules.BGxPADBW.js`,
+mounted by the workspace `/settings/ai/triage` page and the team triage
+settings page) configures Linear's server-side Triage Intelligence: rules in
+`AiPromptRules.settings.productIntelligence.automationRules` with an
+inheritance/tombstone algorithm (team → parents → org, overrides tombstone via
+`disabledInheritedAutomationRules`). Two-source finding: the public
+`AiPromptRules` type is a five-field stub (id/timestamps/updatedBy — no
+`settings`, no `type`, no relations; no create/update mutation; `AiPromptType`
+is `[Internal]`), so the plane is OURS if shipped, and the suggestions
+themselves are produced by intelligence we do not have. Options:
+(a) **OUT** — not Loops; the parallel-to-Linear use case leaves triage in
+first-party Linear (recommended); (b) IN-as-rendered-stub — ship the settings
+UI writing to our store with no consumer; (c) ADAPT — feed the rules into our
+own inference harness (a NEW server capability, not a remap).
+Two residues ship regardless of the choice: the WorkflowDefinition type
+lattice + `resolveTypeForTrigger` conversion kernel (loops-core —
+`src/loops-type-lattice`, golden-backed), and the `triageAutomation`
+settings-chrome surfaces already dispositioned via the 14:31Z chrome-fork
+kernel. Consumers: R-T (team-settings scope), the type-lattice OUT rows below.

@@ -1,0 +1,32 @@
+{
+  "source": "TYPE-LATTICE (#225 claim 2026-09-29, from the #295 triage-plane input): src/loops-type-lattice reimplements the WorkflowDefinition type lattice. Evidence: Issue.DRYymPCa.js exports y_ (six-value type enum, pretty L19992), g_ (isTriage/isAutomation/isViewSubscription, L20133-20141), m_ (resolveTypeForTrigger, L20547 — runs in the model's firstTrigger setter L35962, so the stored type is derived from the trigger on every trigger write), T_ (trigger entity-type enum, L19928), executed from the RAW tree in drive mode over the full 6-type predicate sweep and the 6-type x 4-trigger conversion grid (both conversion directions, all identity rows, and two negative pins: a non-issue trigger type never yields triageAutomation even with the entityInTriage event; a missing event never converts). One stub at config.aM1_XCHx.js (the injected-config proxy), which doubles as the environment bootstrap that makes the model-layer chunk executable — the first golden to execute Issue.DRYymPCa.js directly; every other closure chunk (66) executes REAL. The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "Issue",
+      "exports": [
+        {
+          "minified": "y_",
+          "meaning": "the WorkflowDefinition type enum: {sla, automation, viewSubscription, triage, triageAutomation, release} (local uD, L19992). Reimplemented as WorkflowDefinitionType",
+          "evidenceLine": "src/loops-type-lattice/type-lattice.ts + golden test"
+        },
+        {
+          "minified": "g_",
+          "meaning": "isTriage = triage|triageAutomation (L20133); isAutomation = automation|triageAutomation (L20136); isViewSubscription (L20139) — the overlapping species predicates chrome/permission routing forks on (local gD). Reimplemented as isTriage/isAutomation/isViewSubscription",
+          "evidenceLine": "src/loops-type-lattice/type-lattice.ts + golden test"
+        },
+        {
+          "minified": "m_",
+          "meaning": "resolveTypeForTrigger(type, trigger) (L20547): automation + issue/entityInTriage -> triageAutomation; triageAutomation + anything else -> automation; identity otherwise (local _D). Reimplemented as resolveTypeForTrigger",
+          "evidenceLine": "src/loops-type-lattice/type-lattice.ts + golden test"
+        },
+        {
+          "minified": "T_",
+          "meaning": "the trigger entity-type enum the conversion guard compares against (local iD, L19928). Reimplemented as TriggerEntityType (recorded in the golden so fixture keys are corpus values)",
+          "evidenceLine": "src/loops-type-lattice/type-lattice.ts + golden test"
+        }
+      ],
+      "goldens": ["type-lattice.grid"]
+    }
+  ],
+  "goldens": ["type-lattice.grid"]
+}

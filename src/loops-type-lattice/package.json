@@ -1,0 +1,6 @@
+{
+  "name": "loops-type-lattice",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the WorkflowDefinition type lattice: the six-value type enum, the isTriage/isAutomation/isViewSubscription predicates, and the resolveTypeForTrigger publish auto-conversion kernel, golden-verified against corpus execution (TYPE-LATTICE claim, #225 2026-09-29)"
+}

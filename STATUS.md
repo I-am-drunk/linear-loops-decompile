@@ -477,10 +477,14 @@ golden-required (engine semantics in AutomationHelper, policy/ordering
 kernels, transcoder, degraded states), plus corpus-exec T2/T3 tiers. Every
 slice still answers the four product-contract questions and is gated by
 `parity check` + `coverage check`. Owner decisions are batched in
-`docs/remap/owner-decisions.md` (10 entries, of which #8 settled-by-code) —
+`docs/remap/owner-decisions.md` (11 entries, of which #8 settled-by-code) —
 implementation of consuming
 rows waits; research never does. Shard queue: docs/remap/shards.md (no fixed count — it grows with research
-legs; R-A landed 2026-09-29, main `eb79b36` — the 29-route spine section).
+legs; R-A landed 2026-09-29, main `eb79b36` — the 29-route spine section;
+TYPE-LATTICE landed 2026-09-29 — the six-value WorkflowDefinition type
+dispositions + the resolveTypeForTrigger conversion kernel golden-backed in
+`src/loops-type-lattice`, the first golden executing the model-layer chunk
+`Issue.DRYymPCa.js` directly via the config-bootstrap seam).
 R5.1 dataplane is MERGED (#155, main `ddc478b`); R5.2/R5.3 domain
 reads/writes are the next dataplane slices and feed the team/workspace
 projection (R-PROJ).
