@@ -82,3 +82,18 @@ test(`conversion is trigger-derived and issue-scoped (the two negative pins)`, (
   // A missing event never converts.
   assert.equal(resolveTypeForTrigger(`automation`, { type: TriggerEntityType.schedule }), `automation`);
 });
+
+test(`unlisted strings never match a predicate and never convert (CodeRabbit thread on this PR)`, () => {
+  for (const value of [`unknown`, ``]) {
+    assert.equal(isTriage(value), false);
+    assert.equal(isAutomation(value), false);
+    assert.equal(isViewSubscription(value), false);
+  }
+  // An unlisted type is identity through the conversion even on the triage trigger.
+  assert.equal(
+    resolveTypeForTrigger(`unknown`, { type: TriggerEntityType.issue, event: `entityInTriage` }),
+    `unknown`,
+  );
+  // An issue trigger with NO event never converts (the guard needs both conjuncts).
+  assert.equal(resolveTypeForTrigger(`automation`, { type: TriggerEntityType.issue }), `automation`);
+});
