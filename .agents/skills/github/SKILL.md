@@ -42,6 +42,23 @@ description: GitHub access recipes for linear-loops-decompile: Code Mode methods
   classic PAT found in a public repo, which breaks every session's push access.
   `main` is PR-only regardless (ruleset `main-pr-only`).
 
+## Reviewing (shared-account facts, verified 2026-09-29)
+
+- Formal approval is IMPOSSIBLE on our own PRs: GitHub rejects an author
+  approving their own PR, and every session is the same account, so
+  `POST /pulls/<N>/reviews` with `event: APPROVE` returns
+  `422 "Can not approve your own pull request"` on every PR the shared
+  account authored — which is every PR in this repo today (verified on
+  #307; a PR from an outside fork could still be formally approved).
+  Post verdicts as `event: COMMENT` reviews. Consequences:
+  - No shared-account PR ever reaches an approved review state. The feedback
+    gate keys on review TEXT (scan for the verdict + evidence), never on
+    review state. Tooling that waits for an approval waits forever.
+  - `mergeable_state: blocked` is therefore EXPECTED on our PRs, but the
+    field does not say WHICH blocker it is — before merging, still check
+    the gate's status checks, the applicable rulesets, and the feedback
+    threads rather than attributing `blocked` to the approval quirk.
+
 ## Merging
 
 - `github.merge_pull_request` with `method: "squash"`, after gate evidence and the

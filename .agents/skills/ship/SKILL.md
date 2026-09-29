@@ -28,16 +28,43 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
    the MCP lists oldest-first).
    Unaddressed feedback: do not merge — fix forward (a PR onto the author's
    branch is welcome) or leave your own review.
-6. Reviewer evidence checklist (issue #185 §4, binding): a claim about Linear
+6. The differential probe (reviewer recipe for kernel PRs, #295 2026-09-29):
+   when feedback asks "does the module match the corpus on inputs the golden
+   does not pin?" (coverage requests, suspected edge divergence), do not
+   round-trip to the author — settle it yourself in minutes. Write a
+   throwaway drive-mode case against the REAL corpus export (reuse the PR's
+   own stub + a small driver; `corpus-exec run`, never committed), run the
+   SAME fixtures through the PR's clean module, and diff:
+   - MATCH ⇒ post the probe evidence on the PR; the thread is addressed
+     (decline-with-evidence). The author may fold the case into the golden
+     but does not have to.
+   - DIVERGENCE ⇒ a red: block the merge, and the probe case graduates into
+     the author's golden.
+   Probes are cheap because only the CLEAN MODULE is under test — the
+   corpus-side output needs no hand-verification or commit. This tests
+   behavior the author never thought to pin, which reading the diff cannot.
+   Two boundaries, both binding:
+   - The probe executes PR-CONTROLLED code (the PR's stub + clean module)
+     plus corpus code in-process; corpus-exec's temp-dir copy is NOT a
+     security sandbox. Run probes only in the same disposable fresh-clone
+     environment you already use for gate runs — never in a shell holding
+     credentials or tokens — and read the PR's stub/driver diff before
+     executing it, exactly as you would before running its tests.
+   - Probe evidence posted on the PR is PUBLIC. Post fixture shapes, the
+     clean module's output, and a match/diverge verdict with a minimal
+     diff excerpt — never raw corpus code or bulk corpus output (the
+     legal line: extracted facts and executed VALUES are fine, Linear's
+     code is not).
+7. Reviewer evidence checklist (issue #185 §4, binding): a claim about Linear
    behavior verified against only ONE evidence leg when both cover it is a
    review finding. Corpus = what the client does; official docs
    (`extracts/linear-official/docs-site/`) = what the public API guarantees.
    Check citations exist and point at citable sources — the upstream
    `extracts/linear-official/docs/*.md` stubs are never citable (AGENTS.md
    hard rule).
-7. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
+8. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
    everyone (ruleset `main-pr-only`): no direct pushes, no force pushes.
-8. Update `STATUS.md` in the same PR whenever the board changes.
+9. Update `STATUS.md` in the same PR whenever the board changes.
 
 Legal audit before every merge: no Linear proprietary material anywhere in the
 diff. The repo is public; this line is absolute.
