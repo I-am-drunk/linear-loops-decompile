@@ -1,9 +1,11 @@
 /**
- * Minimal Linear dataplane for the settings vertical: verify a PAT via the
- * public API `viewer` query and report connectivity + rate budget. The full
- * dataplane is the R5 slice series; everything here is fetch over
- * https://api.linear.app/graphql with the operator's own token.
+ * Linear connectivity probe, riding the shared dataplane client
+ * (linear-client.ts — one code path for probe and real calls, R5.1).
+ * Verifies a PAT via the public API `viewer` query and reports
+ * connectivity + rate budget. Secrets are read server-side only.
  */
+
+import { LinearClient, LinearClientError, type RateLimitSnapshot } from "./linear-client.ts";
 
 export interface LinearViewer {
   id: string;
@@ -15,7 +17,7 @@ export interface LinearProbeResult {
   ok: boolean;
   viewer?: LinearViewer;
   organization?: { id: string; name: string; urlKey: string };
-  rateLimit?: { requestsRemaining?: number; requestsReset?: string };
+  rateLimit?: RateLimitSnapshot;
   error?: string;
 }
 
@@ -26,41 +28,38 @@ const VIEWER_QUERY = `query LoopsProbe {
   organization { id name urlKey }
 }`;
 
-export async function probeLinear(token: string, fetchImpl: FetchImpl = fetch): Promise<LinearProbeResult> {
-  let res: Response;
+interface ViewerData {
+  viewer?: LinearViewer;
+  organization?: { id: string; name: string; urlKey: string };
+}
+
+function toProbeResult(e: unknown): LinearProbeResult {
+  if (e instanceof LinearClientError) {
+    if (e.kind === "http" && (e.status === 401 || e.status === 403)) {
+      return { ok: false, error: "unauthorized: Linear rejected the token", rateLimit: e.rateLimit };
+    }
+    if (e.kind === "not_connected") return { ok: false, error: "not connected" };
+    return { ok: false, error: e.message, rateLimit: e.rateLimit };
+  }
+  return { ok: false, error: e instanceof Error ? e.message : String(e) };
+}
+
+/** Probe through an existing client (shared rate budget): dataplane.probe. */
+export async function probeLinearWithClient(client: LinearClient): Promise<LinearProbeResult> {
   try {
-    res = await fetchImpl("https://api.linear.app/graphql", {
-      method: "POST",
-      headers: { "content-type": "application/json", authorization: token },
-      body: JSON.stringify({ query: VIEWER_QUERY }),
-      signal: AbortSignal.timeout(8000),
-    });
+    const data = await client.query<ViewerData>(VIEWER_QUERY, undefined, { timeoutMs: 8000 });
+    if (!data.viewer) return { ok: false, error: "no viewer in response", rateLimit: client.budget() };
+    return { ok: true, viewer: data.viewer, organization: data.organization, rateLimit: client.budget() };
   } catch (e) {
-    return { ok: false, error: `network: ${e instanceof Error ? e.message : String(e)}` };
+    return toProbeResult(e);
   }
+}
 
-  const remaining = res.headers.get("x-ratelimit-requests-remaining");
-  const reset = res.headers.get("x-ratelimit-requests-reset");
-  const rateLimit = {
-    requestsRemaining: remaining ? Number(remaining) : undefined,
-    requestsReset: reset ?? undefined,
-  };
-
-  if (res.status === 401 || res.status === 403) {
-    return { ok: false, error: "unauthorized: Linear rejected the token", rateLimit };
-  }
-  if (!res.ok) {
-    return { ok: false, error: `http ${res.status}`, rateLimit };
-  }
-
-  let body: { data?: { viewer?: LinearViewer; organization?: { id: string; name: string; urlKey: string } }; errors?: unknown };
-  try {
-    body = await res.json();
-  } catch {
-    return { ok: false, error: "invalid JSON from Linear", rateLimit };
-  }
-  if (!body.data?.viewer) {
-    return { ok: false, error: "no viewer in response", rateLimit };
-  }
-  return { ok: true, viewer: body.data.viewer, organization: body.data.organization, rateLimit };
+/**
+ * Probe a candidate token on an ephemeral client: the settings.setLinear
+ * path, where the token is not stored yet (and never stored on failure).
+ */
+export async function probeLinear(token: string, fetchImpl: FetchImpl = fetch): Promise<LinearProbeResult> {
+  const client = new LinearClient({ getToken: () => token, fetchImpl });
+  return probeLinearWithClient(client);
 }

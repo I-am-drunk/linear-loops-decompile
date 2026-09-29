@@ -10,6 +10,7 @@ import type { AddressInfo } from "node:net";
 import { attachWs } from "../connect/server.ts";
 import { Store } from "./store.ts";
 import { createHttpServer } from "./http.ts";
+import { LINEAR_TOKEN_KEY, LinearClient } from "./linear-client.ts";
 import { createSettingsHandlers } from "./settings-rpc.ts";
 
 export interface EnvironmentDescriptor {
@@ -25,6 +26,8 @@ export interface EnvironmentDescriptor {
 export interface LoopsServer {
   http: Server;
   store: Store;
+  /** The shared dataplane client (R5.1): all Linear calls ride this. */
+  linear: LinearClient;
   token: string;
   port: () => number;
   close: () => Promise<void>;
@@ -63,12 +66,17 @@ export function createLoopsServer(opts: BootOptions): LoopsServer {
     version: "0.1.0",
   };
 
+  const linear = new LinearClient({
+    getToken: () => store.getSetting(LINEAR_TOKEN_KEY) || undefined,
+    fetchImpl: opts.fetchImpl,
+  });
+
   const http = createHttpServer({ staticDir: opts.staticDir, descriptor: () => descriptor });
   attachWs(http, {
     authorize: (t) => (t === token ? { token: t } : null),
     registry: {
       "env.describe": () => descriptor,
-      ...createSettingsHandlers(store, opts.fetchImpl),
+      ...createSettingsHandlers(store, opts.fetchImpl, linear),
     },
   });
 
@@ -77,6 +85,7 @@ export function createLoopsServer(opts: BootOptions): LoopsServer {
   return {
     http,
     store,
+    linear,
     token,
     port: () => (http.address() as AddressInfo).port,
     close: () =>

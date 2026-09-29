@@ -76,6 +76,37 @@ Done 2026-09-27:
   golden-verified UI slice ships WITH ui-facts.json. The server halves
   (R3.1-R3.3) stand; the R3.3 Settings RPC layer survives untouched.
 
+- R5.1 dataplane client: `src/server/linear-client.ts` — one GraphQL code
+  path for api.linear.app with a header-driven rate budget (gate before
+  firing on an exhausted window, 429/Retry-After + RATELIMITED mapping, FIFO
+  concurrency cap; budgets never hardcoded — headers are the truth).
+  probeLinear promoted onto it; new read-only `dataplane.rateBudget` RPC.
+  Queued requests re-read credentials at dispatch, honoring replacement or
+  removal while waiting; both paths have deterministic fake-fetch regressions.
+  Header semantics verified against Linear's official docs (KNOWLEDGE §6);
+  9 client tests + 1 RPC test, all fake-fetch. (Pulled ahead of R4: R4.1's
+  page waited on the R3.4 shell; this slice is server-only, was unblocked.)
+  Follow-up: RATELIMITED retry delays use the response's exhausted windows,
+  including endpoint/complexity resets, with seven regression cases and a
+  delayed-body credential-swap check. HTTP 429 fallbacks and preflight failures
+  now use the same exhausted-window calculation: simultaneous exhaustion waits
+  for the latest reset, and missing/expired endpoint resets do not borrow a
+  healthy global window. Nine additional fake-fetch regressions cover this.
+  Complexity-limited 429s also backfill missing/expired resets from Retry-After
+  so preflight blocks until that delay expires. Three fake-fetch cases cover
+  missing, expired, and preserved future resets, including gate reopening.
+  Simultaneously exhausted request windows now receive the same Retry-After
+  backfill even when an endpoint or complexity window is exhausted too. Six
+  fake-fetch cases cover missing/expired request resets and future-reset
+  preservation, including refusal after the other window resets and reopening.
+
+Now:
+- R4.1 loops domain slice: server half claimed by sess_01a0e392-f0c2-7545-
+  b2f2-2c2c875485f3 (issue #150; two later duplicate claims #151/#152 should
+  move on per AGENTS.md earliest-keeps-it). loops.list/upsert/publish/
+  setEnabled over the store + the loops list page wired live;
+  src/model gains loop.ts. Next unassigned: R4.2 loop detail + editor blocks.
+
 Done 2026-09-27 (evening, freeze-era):
 - Feedback gate (user directive, #175/#182 merged): NO merges with unaddressed
   CodeRabbit/peer feedback; ruleset enforces review-thread resolution on main;

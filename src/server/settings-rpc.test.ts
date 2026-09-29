@@ -118,3 +118,20 @@ test("testInference probes the default harness; dataplane.probe reports rate bud
     client.close(); await server.close(); await rm(dir, { recursive: true, force: true });
   }
 });
+
+test("dataplane.rateBudget is read-only and reflects the shared client's last headers", async () => {
+  const { server, client, dir } = await boot();
+  try {
+    const before = await client.call<{ configured: boolean; budget: Record<string, unknown> }>("dataplane.rateBudget");
+    assert.equal(before.configured, false);
+    assert.deepEqual(before.budget, {}); // wired client, but no response headers seen yet
+
+    await client.call("settings.setLinear", { token: "real-token" });
+    await client.call("dataplane.probe");
+    const after = await client.call<{ configured: boolean; budget: { requestsRemaining?: number } }>("dataplane.rateBudget");
+    assert.equal(after.configured, true);
+    assert.equal(after.budget?.requestsRemaining, 2490);
+  } finally {
+    client.close(); await server.close(); await rm(dir, { recursive: true, force: true });
+  }
+});
