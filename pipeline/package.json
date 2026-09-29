@@ -3,6 +3,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "acorn": "8.15.0",
     "js-beautify": "1.15.4"
+  },
+  "scripts": {
+    "test": "node --test prettify.test.mjs analyze.test.mjs"
   }
 }

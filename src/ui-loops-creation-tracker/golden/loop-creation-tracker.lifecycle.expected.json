@@ -1,0 +1,1188 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "LoopCreationTracker.BAiVgMLN.js",
+    "closureSize": 3,
+    "stubbed": [
+      "ClientStorage.2mwQyaxr.js",
+      "v4.9t2fVNdP.js"
+    ],
+    "chunkHashes": {
+      "LoopCreationTracker.BAiVgMLN.js": "da7bfd89c34203e758844dd27bef484f4a98176c3d859d59f1c6d8c9bf9b93a1"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "scratchEntryPoint",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "templateLibrary",
+              "value": {
+                "tag": "string",
+                "value": "template-library"
+              }
+            },
+            {
+              "key": "templateModal",
+              "value": {
+                "tag": "string",
+                "value": "template-modal"
+              }
+            },
+            {
+              "key": "other",
+              "value": {
+                "tag": "string",
+                "value": "create-form"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "events",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Creation Started"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000001"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "triage-rotation"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-library"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Selected"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000001"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "triage-rotation"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-library"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Setup Started"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000001"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "triage-rotation"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-library"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "string",
+                          "value": "draft-a"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "2500"
+                        }
+                      },
+                      {
+                        "key": "conversationId",
+                        "value": {
+                          "tag": "string",
+                          "value": "conv-1"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Created"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000001"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "triage-rotation"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-library"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "string",
+                          "value": "draft-a"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "10000"
+                        }
+                      },
+                      {
+                        "key": "workflowDefinitionId",
+                        "value": {
+                          "tag": "string",
+                          "value": "wfd-1"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Converted"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000001"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "triage-rotation"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-library"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "string",
+                          "value": "draft-a"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "10000"
+                        }
+                      },
+                      {
+                        "key": "workflowDefinitionId",
+                        "value": {
+                          "tag": "string",
+                          "value": "wfd-1"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Creation Started"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000002"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "scratch"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "create-form"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "workspace"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Creation Started"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000003"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "bug-triage"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-modal"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "workspace"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Selected"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000003"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "bug-triage"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-modal"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "workspace"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Setup Failed"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000003"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "bug-triage"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-modal"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "workspace"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "string",
+                          "value": "draft-d"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "1000"
+                        }
+                      },
+                      {
+                        "key": "stage",
+                        "value": {
+                          "tag": "string",
+                          "value": "setup"
+                        }
+                      },
+                      {
+                        "key": "reason",
+                        "value": {
+                          "tag": "string",
+                          "value": "network"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Setup Abandoned"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000003"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "bug-triage"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-modal"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "workspace"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "string",
+                          "value": "draft-d"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "3000"
+                        }
+                      },
+                      {
+                        "key": "reason",
+                        "value": {
+                          "tag": "string",
+                          "value": "closed-dialog"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Creation Started"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000004"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "standup-summary"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-modal"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "name",
+                  "value": {
+                    "tag": "string",
+                    "value": "Loop Template Selected"
+                  }
+                },
+                {
+                  "key": "props",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "setupId",
+                        "value": {
+                          "tag": "string",
+                          "value": "00000000-0000-4000-8000-000000000004"
+                        }
+                      },
+                      {
+                        "key": "creationPath",
+                        "value": {
+                          "tag": "string",
+                          "value": "template"
+                        }
+                      },
+                      {
+                        "key": "templateKey",
+                        "value": {
+                          "tag": "string",
+                          "value": "standup-summary"
+                        }
+                      },
+                      {
+                        "key": "entryPoint",
+                        "value": {
+                          "tag": "string",
+                          "value": "template-modal"
+                        }
+                      },
+                      {
+                        "key": "sourceScope",
+                        "value": {
+                          "tag": "string",
+                          "value": "team"
+                        }
+                      },
+                      {
+                        "key": "draftId",
+                        "value": {
+                          "tag": "undefined"
+                        }
+                      },
+                      {
+                        "key": "elapsedMs",
+                        "value": {
+                          "tag": "number",
+                          "value": "0"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "forDraft",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "unconvertedFound",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "refoundEntryDraftId",
+              "value": {
+                "tag": "string",
+                "value": "draft-b"
+              }
+            },
+            {
+              "key": "convertedIsUndefined",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "unknownIsUndefined",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "noDraftIsUndefined",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "expiry",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "staleGoneAfterSevenDays",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "freshSurvives",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "cap",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "oldestEvicted",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "fifthEvicted",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "sixthKept",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "newestKept",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "capEventSummary",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "count",
+              "value": {
+                "tag": "number",
+                "value": "105"
+              }
+            },
+            {
+              "key": "distinctNames",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "Loop Creation Started"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "storage",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "user1WriteCount",
+              "value": {
+                "tag": "number",
+                "value": "7"
+              }
+            },
+            {
+              "key": "user1LastWrite",
+              "value": {
+                "tag": "object",
+                "prototype": "object",
+                "properties": [
+                  {
+                    "key": "key",
+                    "value": {
+                      "tag": "string",
+                      "value": "loopTemplateSetups:user-1"
+                    }
+                  },
+                  {
+                    "key": "value",
+                    "value": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "draft-c",
+                          "value": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "setupId",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "00000000-0000-4000-8000-000000000004"
+                                }
+                              },
+                              {
+                                "key": "templateKey",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "standup-summary"
+                                }
+                              },
+                              {
+                                "key": "creationPath",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "template"
+                                }
+                              },
+                              {
+                                "key": "entryPoint",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "template-modal"
+                                }
+                              },
+                              {
+                                "key": "sourceScope",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "team"
+                                }
+                              },
+                              {
+                                "key": "startedAt",
+                                "value": {
+                                  "tag": "number",
+                                  "value": "1700604820000"
+                                }
+                              },
+                              {
+                                "key": "draftId",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "draft-c"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": "capUserWriteCount",
+              "value": {
+                "tag": "number",
+                "value": "105"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

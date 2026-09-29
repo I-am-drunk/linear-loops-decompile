@@ -1,0 +1,28 @@
+# Copy canaries (issue #162 consult): strings that MUST extract from a
+# healthy corpus. Missing from corpus = drift alarm; present but not
+# extracted = copy-grammar regression. Both fail extraction loudly.
+New loop
+Find loops…
+My loops
+Loops are available on Business and Enterprise plans
+Notes saved by Linear Agent from previous runs
+
+# Route canaries (issue #177): one matcher-declared route with an optional
+# param, one route-table registration. Route-extraction regression fails red.
+route:/:orgKey/loops/:viewType?
+route:/:orgKey/automation/:automationId/run/:runId
+
+# Order canaries (H3 #207): whole-sequence facts that MUST extract. A chain
+# mismatch = order-grammar regression or corpus drift; both fail red.
+order:AutomationsList=name > trigger > team > owner > runs > lastExecuted
+order:LoopsManagementPage=Enabled > Team > Owner > Trusted external source
+
+# States canaries (H3 #213 slice 3): one alternate pair per grammar form —
+# the empty-state pair proves the ternary-alternate grammar per extraction.
+states:LoopsManagementPage=alt:No matching loops|No loops yet
+states:AutomationRunsPage=alt:Failed|Completed
+
+# Value canaries (#218): one golden token value per theme mode, pinned so a
+# goldens-wiring regression or theme drift on a corpus refresh fails red.
+value:theme.values.darkDefault.retina0=bgBase=#111212
+value:theme.values.darkDefault.retina0=hash=f4ac7a583d9525072ff197abaefc16701f7817d1

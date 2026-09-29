@@ -1,0 +1,22 @@
+{
+  "source": "G13 (#225 claim, this slice): src/ui-loops-owner-select reimplements the automation owner-select component. Evidence: AutomationOwnerSelect.Cl2Nhq6T.js (matrix §A 'Owner select' row), executed from the RAW tree in drive mode — the component export is hook-free after the identity observer stub (G11 precedent), its render prop invoked with a pinned tooltip-content marker (the exact seam the tooltip chunk fills). Three parametrizations: default property appearance + allowed access (dangerouslyNeverDisabled true), inline appearance (sx forwarding + Button/Text/UserName nesting + the inlineButton sx table), and disabled configure kind (dangerouslyNeverDisabled false + the helper's disabledReason branch). Component seams are declared string markers (each stays its own ledger row); the AutomationHelper seam is pinned from its hand-verified raw source (getChangeAutomationOwnerAction) because its 50KB closure reads window at module scope (the G7 finding). The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "AutomationOwnerSelect",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{w as t} — the owner-select component (mobx observer wrap): UsersTooltip(users:[workflow.effectiveOwner]) around a render prop building the trigger config (targets/action/dangerouslyNeverDisabled/tooltipContentFactory/tooltipInteractive/secondaryTrigger) and rendering the inline branch (ActionTrigger > Button > Text > UserName) or the default property branch (PropertyTrigger > [Avatar, Text > UserName]). Reimplemented as renderAutomationOwnerSelect(props, seams, tooltipContent)",
+          "evidenceLine": "src/ui-loops-owner-select/automation-owner-select.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{C as n} — the restore-history HOOK (useCallback/useMemo composing AutomationHelper.createOrLoadDraft/restoreDraftToHistoryEntry + AlertDialog.show side effects). NOT covered: its observable surface is effect-tangled (dialog side effects, async draft IO) and stays GAP pending a T2/effect tier rather than getting a vacuous golden (the G11 1-of-2 denominator precedent).",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        }
+      ],
+      "goldens": ["owner-select.branches"]
+    }
+  ],
+  "goldens": ["owner-select.branches"]
+}

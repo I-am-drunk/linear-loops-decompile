@@ -1,0 +1,74 @@
+{
+  "source": "G12 (#225 claim, this slice): src/ui-loops-coding-agent reimplements the coding-agent settings/repo helper statics. Evidence: CodingAgentModelSelect.USYHzowP.js (matrix \u00a7E 'Coding harness' row), executed from the RAW tree in drive mode with five declared stubs (Issue model-layer enums pinned verbatim + throw-on-unpinned, render-only boundary components throw-if-rendered). The golden pins: repo hostName/fullName/label incl. the github.com-vs-other-host branch; sandboxSizes and their vCPU\u00b7memory copy; harnesses order; the nine settings description strings; per-harness label() incl. passthrough; autoPreference() incl. the Unhandled-harness throw message; the harness\u2192icon identity mapping; modelDescription's default branch. Out of scope (unpinned, still GAP-honest): isAvailable, the non-ZDR description branch, icon render output, the observer Select component. G20 addendum: the package also reimplements CodingAgentSettingsPage.lcMyXnM7.js export r (the coding-sessions settings metadata) via the G18 jsx-fragment recipe \u2014 a three-chunk cross-provenance chain (the golden-backed CodingAgentModelSelect statics and the real CommitSigningWorkspaceSetting execute inside the golden; the reimplementation composes from our golden-backed helpers). G21 addendum: the re-export shim CodingAgentSettingsPage.C73HMBrM.js is golden-backed via the alias-map pattern (the shim executes as entry over the real target; its metadata region byte-matches the G20 golden).",
+  "reimplements": [
+    {
+      "chunkPrefix": "CodingAgentModelSelect",
+      "exports": [
+        {
+          "minified": "r",
+          "meaning": "export{g as r} \u2014 static repo helper class (hostName/fullName/label); reimplemented as CodingAgentRepoHelper",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-helpers.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{y as n} \u2014 static coding-agent settings helper (harnesses, sandboxSizes, descriptions, label, autoPreference, icon mapping, default modelDescription); reimplemented as CodingAgentSettingsHelper (statics only \u2014 isAvailable/non-ZDR branch/observer component out of scope)",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-helpers.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "coding-agent-model-select.statics"
+      ]
+    },
+    {
+      "chunkPrefix": "CodingAgentSettingsPage.lcMyXnM7.js",
+      "exports": [
+        {
+          "minified": "r",
+          "meaning": "export{Q as r} \u2014 the coding-sessions settings metadata: a module-eval literal composing this package's golden-backed CodingAgentModelSelect statics (descriptions.agent/model), the CommitSigningWorkspaceSetting metadata (verbatim 4-key literal), its own item/section literals, a descriptionElement JSX fragment (DocsLink href = raw Issue literal wJ as Ci), and three applicable closures (regionPinning flag-gated, loopsRepositoryAccess two-feature conjunction asking agentAutomations FIRST, environments codingSessions). Reimplemented as codingAgentSettingsMetadata(docsLinkSeam, featureFlags).",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-settings-metadata.ts + golden test"
+        },
+        {
+          "minified": "n",
+          "meaning": "export{ke as n} \u2014 the suspense-observer settings page component (store reads, hooks, credits IO). NOT covered: T2/T3 tier, declared GAP.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        },
+        {
+          "minified": "t",
+          "meaning": "export{$ as t} \u2014 the inner suspense-observer settings content component. NOT covered: T2/T3 tier, declared GAP.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        }
+      ],
+      "goldens": [
+        "coding-agent-settings-metadata"
+      ]
+    },
+    {
+      "chunkPrefix": "CodingAgentSettingsPage.C73HMBrM.js",
+      "exports": [
+        {
+          "minified": "pageMetadata",
+          "meaning": "export{t as pageMetadata} over the target's r \u2014 the re-export shim surfaces the coding-sessions settings metadata under its public route name. The golden pins the alias map (own export names + which target export each surfaces) and its metadata/probes regions byte-match the G20 golden's. Reimplemented as a re-export of our golden-backed codingAgentSettingsMetadata.",
+          "evidenceLine": "src/ui-loops-coding-agent/coding-agent-settings-shim.ts + golden test"
+        },
+        {
+          "minified": "Component",
+          "meaning": "export{n as Component} \u2014 aliases the target's GAP observer page component; declared GAP with its target.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        },
+        {
+          "minified": "CodingAgentSettingsContent",
+          "meaning": "export{t(target) as CodingAgentSettingsContent} \u2014 aliases the target's GAP observer content component; declared GAP with its target.",
+          "evidenceLine": "declared out of T1 scope \u2014 no golden claims this export"
+        }
+      ],
+      "goldens": [
+        "coding-agent-settings-shim"
+      ]
+    }
+  ],
+  "goldens": [
+    "coding-agent-model-select.statics",
+    "coding-agent-settings-metadata",
+    "coding-agent-settings-shim"
+  ]
+}

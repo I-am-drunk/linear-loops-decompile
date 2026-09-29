@@ -1,0 +1,72 @@
+{
+  "source": "Reference manifest instance (G2, provisional pending the G3 retrofit): src/ui-theme reimplements the corpus theme generator. Evidence: ThemeHelper.CeMKYPhf.js (generateTheme + derived themes + object-hash input), ColorConverter.CVwFbLBP.js (LCh/APCA color math), lightThemeRefresh.DyWCsE3P.js (the four first-party parametrizations). Goldens were EXECUTED from the corpus generator (issue #168 recipe; #215).",
+  "reimplements": [
+    {
+      "chunkPrefix": "ThemeHelper",
+      "exports": [
+        {
+          "minified": "generateTheme",
+          "meaning": "theme generator: base/accent/colorFormat/contrast -> 116 color + 18 shell tokens + derived themes",
+          "evidenceLine": "src/ui-theme/generate-theme.ts (issue #168)"
+        },
+        {
+          "minified": "object-hash",
+          "meaning": "theme-input sha1 hash (sorted keys, ordered arrays)",
+          "evidenceLine": "src/ui-theme/hash.ts"
+        }
+      ],
+      "goldens": [
+        "golden-derived-retina0",
+        "golden-derived-retina1",
+        "golden-formats-retina0",
+        "golden-functions-retina0",
+        "golden-sidebar-retina0",
+        "golden-sidebar-retina1"
+      ]
+    },
+    {
+      "chunkPrefix": "ColorConverter",
+      "exports": [
+        {
+          "minified": "LCh/APCA",
+          "meaning": "D50 Lab, sRGB/P3 matrices, APCA contrast, mix/adjust/toCss",
+          "evidenceLine": "src/ui-theme/color.ts"
+        }
+      ],
+      "goldens": [
+        "golden-derived-retina0",
+        "golden-derived-retina1",
+        "golden-formats-retina0",
+        "golden-functions-retina0",
+        "golden-sidebar-retina0",
+        "golden-sidebar-retina1"
+      ]
+    },
+    {
+      "chunkPrefix": "lightThemeRefresh",
+      "exports": [
+        {
+          "minified": "presets",
+          "meaning": "the four first-party parametrizations (dark/light x default/high-contrast)",
+          "evidenceLine": "src/ui-theme/generate-theme.ts themePresets"
+        }
+      ],
+      "goldens": [
+        "golden-derived-retina0",
+        "golden-derived-retina1",
+        "golden-formats-retina0",
+        "golden-functions-retina0",
+        "golden-sidebar-retina0",
+        "golden-sidebar-retina1"
+      ]
+    }
+  ],
+  "goldens": [
+    "golden-derived-retina0",
+    "golden-derived-retina1",
+    "golden-formats-retina0",
+    "golden-functions-retina0",
+    "golden-sidebar-retina0",
+    "golden-sidebar-retina1"
+  ]
+}

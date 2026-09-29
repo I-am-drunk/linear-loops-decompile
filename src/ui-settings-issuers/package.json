@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-issuers",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementations of the agent-issuers settings chunks, golden-verified against corpus execution (G25 + G26, matrix \u00a7F Issuers)"
+}

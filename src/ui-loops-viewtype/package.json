@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-viewtype",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementations of the Loops view-type chunk, golden-verified against corpus execution (G6, matrix §A loop view types)"
+}

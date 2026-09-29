@@ -1,0 +1,32 @@
+{
+  "unit": "ui-loops-dialog/AutomationNewDialog",
+  "chunk": "AutomationNewDialog",
+  "stubs": {
+    "ThemeProvider": {
+      "file": "theme-stub.mjs",
+      "why": "The entry reads useTheme() (`i`) and renders ThemeProvider (`t`). `i` is stubbed to a Proxy pinning exactly the members the corpus code reads — baseTheme (undefined: this case pins the `?? theme` fallback branch) and elevatedTheme() (returns the H2 darkDefault ELEVATED derived-theme identity pins; unpinned reads throw). `t` is stubbed to a string marker so the observed tree stays host-tier: the ThemeProvider chunk is its own ledger row, not this golden's subject. The elevatedTheme() RESULT lands verbatim in the observed output's theme prop, proving the derived-theme seam."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "source": "export const eL = `stub:ContextualMenuActions.eL(Modal)`;",
+      "why": "eL (source fn GO) is the animated Modal shell (spring transitions, focus trap, backdrop) \u2014 a 4.7 MB chunk whose closure pulls the app core; full name pinned: the corpus carries a hash-rotated re-export twin (Bcp3eWHc) and prefix resolution is deliberately loud on ambiguity. Its own behavior is a separate ledger row; this golden observes WHAT THE ENTRY PASSES IT (isOpen/onRequestClose/zIndex/children), which the string-typed element keeps in the output."
+    },
+    "CloseIcon": {
+      "source": "export const t = `stub:CloseIcon.t`;",
+      "why": "The close-glyph SVG component \u2014 sibling icon chunk, its own future golden (the G4 icon pattern). The entry passes it no props; the marker pins only that the entry mounts it inside the IconButton."
+    },
+    "IconButton": {
+      "source": "export const t = `stub:IconButton.t`;",
+      "why": "Shared Button-family component (own ledger row). The observed output pins the props the entry gives it: aria-label 'Close modal dialog', onClick routing, the closeButton sx table."
+    },
+    "LoopTemplateLibrary": {
+      "source": "export const t = `stub:LoopTemplateLibrary.t`;",
+      "why": "The dialog's body (15.8 KB chunk, store-connected \u2014 matrix row 'Template library + launcher'). The observed output pins the props the entry gives it: parent passthrough + variant 'modal'."
+    }
+  },
+  "invoke": {
+    "export": "AutomationNewDialog",
+    "exportMeaning": "export{c as AutomationNewDialog} \u2014 c(props) is the new-loop modal dialog function component: Modal(isOpen,zIndex) > ThemeProvider(elevatedTheme) > div[role=dialog aria-label='Create a new loop'] > [IconButton(CloseIcon), div > LoopTemplateLibrary(variant modal)]. The chunk's only export.",
+    "args": [{ "parent": "pin:parent", "onRequestClose": "pin:onRequestClose" }]
+  },
+  "notes": "G10: matrix \u00a7A 'New-loop dialog + button' row, AutomationNewDialog.Wu-wKkiY.js. With the five seams stubbed the component is hook-free (its only hook-like call is the stubbed useTheme), so this is invoke-tier \u2014 the same finding as the merged G4 (a theme-consuming leaf needs no dispatcher). The props args are plain string pins: the component only ROUTES parent/onRequestClose (never calls them during render), and the pins make that routing visible in the serialized output. darkDefault case: root theme has NO baseTheme \u2014 pins the `d.baseTheme ?? d` fallback branch; the lightDefault sibling pins the baseTheme-present branch."
+}

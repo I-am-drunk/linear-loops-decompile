@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-guidance",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementations of the agent-guidance settings chunk, golden-verified against corpus execution (G11, matrix §F agent guidance)"
+}

@@ -1,0 +1,104 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "NewAgentIssuerSettingsPage.iSpIpxtS.js",
+    "closureSize": 19,
+    "stubbed": [
+      "Button.DD4dEZh7.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "ErrorBoundary.Biei1WuN.js",
+      "Flex.BS495mgi.js",
+      "Form.D0HBDYj2.js",
+      "Input.CX9538jp.js",
+      "Issue.DRYymPCa.js",
+      "Logger.qFaEBF6-.js",
+      "Text.gv7OudGa.js",
+      "WorkloadIssuerRegistry.CCSU2pyj.js",
+      "hooks.D4LfSm6u.js",
+      "jsx-runtime.BH9nBM82.js",
+      "lib.3x4I7cm8.js",
+      "react.Bfm_Hgom.js",
+      "resolvePromise.B8FauNXm.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "useStore.BpZDR8VN.js"
+    ],
+    "chunkHashes": {
+      "NewAgentIssuerSettingsPage.iSpIpxtS.js": "26a217ad32a521ff0365ac258cc6da833fe8c526ec6407fdc0ae29e20495f49e",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "pageMetadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "new-agent-issuer"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Add approved issuer"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            }
+          ]
+        }
+      },
+      {
+        "key": "componentDisplayName",
+        "value": {
+          "tag": "string",
+          "value": "NewAgentIssuerSettingsPage"
+        }
+      },
+      {
+        "key": "ownExportNames",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "Component"
+            },
+            {
+              "tag": "string",
+              "value": "pageMetadata"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

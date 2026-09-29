@@ -7,17 +7,47 @@ repo `I-am-drunk/linear-loops-vault` under `corpus/` (private, so Linear materia
 may live there; it must still NEVER enter THIS public repo). To get it locally:
 
 ```bash
-export GIT_TOKEN='<vault token; see .agents/skills/github/SKILL.md>'
-git -c credential.helper='!f() { echo username=x-access-token; echo password=$GIT_TOKEN; }; f' \
-  clone --depth 1 https://github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
-cp -r /tmp/linear-loops-vault/corpus pipeline/corpus
-unset GIT_TOKEN
+# token: vault GIT-TOKEN.md (see .agents/skills/github/SKILL.md)
+git clone --depth 1 https://x-access-token:<TOKEN>@github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
+```
+
+**Use a full `git clone` (as above) and nothing else.** API-based fetch paths
+truncate silently: the GitHub contents API caps a directory listing at 1,000
+entries, and `corpus/pretty/client/` holds ~1,550 files — a sparse or per-file
+fetch yields a partial corpus with no error, and a partial corpus produces a
+silently wrong parity reference (the 2026-09-27 "vault is incomplete" alarm on
+issue #162 was exactly this: a 1,043-file fetch of a complete 1,550-file vault).
+
+**Then verify the CLONE and swap it in only when the counts match** (validating
+`pipeline/corpus` in place is a trap: `cp -r` into an existing `pipeline/corpus`
+nests as `corpus/corpus` and the checks silently read the stale copy):
+
+```bash
+c=/tmp/linear-loops-vault/corpus
+python3 -c "import json; print(len(json.load(open('$c/analysis/chunks.json'))))"
+find "$c/pretty/client" -name '*.js' | wc -l   # must be EQUAL to the line above
+rm -rf pipeline/corpus && cp -r "$c" pipeline/corpus
+# provenance stamp (issue #250): a copied tree has no .git, so corpus-exec
+# reads this one-line `.corpus-head` stamp as the corpus head instead of mis-resolving the
+# CONTAINING repo's HEAD. Without it, provenance honestly records "unknown".
+git -C /tmp/linear-loops-vault rev-parse HEAD > pipeline/corpus/.corpus-head
 ```
 
 Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
 constantly, so compare the counts against the baseline below, note material deltas
 in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
 current.
+
+The drift check has a SECOND leg (issue #185): the official docs move under us
+too (the 2026-04-01 refresh-token migration and the 2026-09-25 agent-skill ops
+both shipped as doc changes). In the same pass:
+
+1. Re-fetch every page listed in `extracts/linear-official/docs-site/README.md`
+   (plain `curl` works — the pages are server-rendered).
+2. Diff the FACTS against the corresponding `docs-site/<page>.md` digest —
+   quotas, header names, status codes, retry ladders, token lifetimes.
+3. Update the digests and bump their `Fetched` dates even when nothing changed.
+4. Log material deltas in `KNOWLEDGE.md` (same rule as corpus drift).
 
 ## Running the pipeline (the 30-day job)
 
@@ -31,9 +61,14 @@ What it does:
    the Electron asar shell.
 2. Crawls the full production web client bundle from static.linear.app
    (~1,550 chunks, ~29 MB; BFS over Vite asset references; no source maps exist).
-3. Prettifies every chunk.
-4. Analyzes the prettified corpus into `analysis/*.json` and regenerates the
-   committed `extracts/models.md` + `extracts/graphql-ops.md`.
+3. Prettifies every chunk. Every beautifier output is parsed as ESM and its
+   template-token structure is compared to raw input (the narrowly targeted
+   guard for js-beautify's known template-literal corruption). When a candidate
+   is invalid or changes that structure, the pipeline preserves the raw bytes
+   verbatim and reports a `raw-fallback`. Cached `pretty/` trees receive the
+   same checks before reuse and rebuild if any artifact is invalid.
+4. Analyzes the executable pretty corpus into `analysis/*.json` and regenerates
+   the committed `extracts/models.md` + `extracts/graphql-ops.md`.
 
 ## Where things live (this is the whole point)
 
@@ -53,10 +88,21 @@ Stages skip existing outputs. `bash pipeline/run.sh --force` rebuilds everything
 The crawl stage is resumable (existing chunks are skipped); if a chunk 404s,
 Linear deployed mid-crawl: re-run (hashes rotate).
 
-## Expected counts (2026-09-26 baseline)
+## Expected counts (2026-09-28 baseline, layout-invariant grammars — issue #241)
 
-~1,550 chunks, ~87 models, ~258 GraphQL ops, ~119 routes. Drift is normal (Linear
-ships constantly): note material deltas in `KNOWLEDGE.md`.
+~1,550 chunks, ~136 models (all with fields), ~376 GraphQL ops, ~490 routes
+(unique paths). Earlier baselines undercounted from grammar bugs, not corpus
+drift: the pre-#241 baseline said 87 models / 258 ops because (a) the old
+beautifier injected newlines inside template literals, hiding 49 model
+registrations from the fixed-layout grammar, and (b) the global literal-pairing
+regex desynced on escaped newlines, dropping 118 ops (the anchored grammar
+agrees exactly with the raw minified tree, 376 = 376). The pre-2026-09-27
+route baseline said ~119 because only route-table registrations were extracted
+— issue #174 added match-helper route literals, recovering e.g. the Loops list
+route `/:orgKey/loops/:viewType?`. Drift is normal (Linear ships constantly):
+note material deltas in `KNOWLEDGE.md`. `pipeline/analyze.test.mjs` holds the
+layout-invariance contract (identical facts from a beautified and a minified
+rendering).
 
 ## Finding things in the corpus
 

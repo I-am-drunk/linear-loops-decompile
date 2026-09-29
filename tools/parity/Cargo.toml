@@ -1,0 +1,13 @@
+[package]
+name = "parity"
+version = "0.1.0"
+edition = "2021"
+description = "UI parity harness: compute that our Loops UI matches Linear's compiled client (SPECS/ui-parity.md)"
+license = "MIT"
+
+[[bin]]
+name = "parity"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 2

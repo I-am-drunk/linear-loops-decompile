@@ -1,0 +1,21 @@
+{
+  "source": "G15 (#225 claim, this slice): src/ui-loops-elicitation-wire reimplements the elicitation-responses mutation caller. Evidence: aiConversationSendElicitationResponsesMutation.CEPAjw5J.js (matrix \u00a7D 'Elicitations' row \u2014 the ledger's AiConversationSendElicitationResponses wire entry), executed from the RAW tree in drive mode with two declared stubs (elicitation-kind enum + GraphQL template tag, both pinned verbatim from their raw-source definitions, throw-on-unpinned; UnreachableCaseError executes REAL). The golden pins the full mutation document bytes, all four kind branches incl. the hardcoded confirmed:true quirk, the per-response {elicitationId,data} narrowing vs top-level passthrough, the mutate return passthrough, and the real UnreachableCaseError default.",
+  "reimplements": [
+    {
+      "chunkPrefix": "aiConversationSendElicitationResponsesMutation",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{r as t} \u2014 r(client, input) submits elicitation responses: builds the AiConversationSendElicitationResponses document, serializes each response's data per kind, calls client.mutate; reimplemented as sendElicitationResponses",
+          "evidenceLine": "src/ui-loops-elicitation-wire/send-elicitation-responses.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "send-elicitation-responses.wire"
+      ]
+    }
+  ],
+  "goldens": [
+    "send-elicitation-responses.wire"
+  ]
+}

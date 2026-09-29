@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "surfaces": {
+    "AutomationNewDialog": {
+      "routes": [],
+      "copy": [
+        "Close modal dialog",
+        "Create a new loop"
+      ],
+      "structure": [
+        "LoopTemplateLibrary"
+      ],
+      "tokens": [],
+      "primitive": "dialog"
+    },
+    "AutomationRunsPage": {
+      "routes": [],
+      "copy": [
+        "Active view",
+        "Archived view",
+        "Done",
+        "Duration",
+        "Loop runs",
+        "Name",
+        "No matching runs",
+        "No runs to show",
+        "No runs yet",
+        "Not copy here",
+        "Started",
+        "Status",
+        "Team"
+      ],
+      "structure": [],
+      "tokens": [],
+      "order": [
+        "name",
+        "started",
+        "duration"
+      ],
+      "states": [
+        "alt:Archived view|Active view",
+        "alt:No matching runs|No runs to show"
+      ],
+      "primitive": "page"
+    },
+    "app.routes": {
+      "routes": [
+        "/:orgKey/loop/:loopId",
+        "/:orgKey/loop/:loopId/runs",
+        "/:orgKey/loops/:viewType?",
+        "/:orgKey/loops/new"
+      ],
+      "copy": [],
+      "structure": [],
+      "tokens": []
+    },
+    "theme.tokens": {
+      "routes": [],
+      "copy": [],
+      "structure": [],
+      "tokens": [
+        "bgBase",
+        "bgSub",
+        "textPrimary"
+      ]
+    },
+    "HarnessSettingsPage": {
+      "routes": [],
+      "copy": [
+        "Inference harness"
+      ],
+      "structure": [],
+      "tokens": []
+    }
+  }
+}

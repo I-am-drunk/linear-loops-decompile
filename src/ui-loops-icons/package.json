@@ -1,0 +1,6 @@
+{
+  "name": "ui-loops-icons",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementations of the Loops icon chunks, golden-verified against corpus execution (G4, matrix §A empty states)"
+}

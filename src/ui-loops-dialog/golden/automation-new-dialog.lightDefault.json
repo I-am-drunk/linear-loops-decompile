@@ -1,0 +1,32 @@
+{
+  "unit": "ui-loops-dialog/AutomationNewDialog",
+  "chunk": "AutomationNewDialog",
+  "stubs": {
+    "ThemeProvider": {
+      "file": "theme-stub-light.mjs",
+      "why": "Sibling of the darkDefault stub (same provenance discipline; see theme-stub.mjs). This one pins the OTHER branch of the corpus's `useTheme().baseTheme ?? theme`: the root carries a baseTheme and elevatedTheme() lives ONLY there, so a reimplementation that wrongly derived from the root theme throws instead of silently passing. Elevated pins identify the H2 lightDefault ELEVATED derived theme."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "source": "export const eL = `stub:ContextualMenuActions.eL(Modal)`;",
+      "why": "Same seam as the darkDefault case \u2014 see that case file."
+    },
+    "CloseIcon": {
+      "source": "export const t = `stub:CloseIcon.t`;",
+      "why": "Same seam as the darkDefault case \u2014 see that case file."
+    },
+    "IconButton": {
+      "source": "export const t = `stub:IconButton.t`;",
+      "why": "Same seam as the darkDefault case \u2014 see that case file."
+    },
+    "LoopTemplateLibrary": {
+      "source": "export const t = `stub:LoopTemplateLibrary.t`;",
+      "why": "Same seam as the darkDefault case \u2014 see that case file."
+    }
+  },
+  "invoke": {
+    "export": "AutomationNewDialog",
+    "exportMeaning": "export{c as AutomationNewDialog} \u2014 c(props) is the new-loop modal dialog function component: Modal(isOpen,zIndex) > ThemeProvider(elevatedTheme) > div[role=dialog aria-label='Create a new loop'] > [IconButton(CloseIcon), div > LoopTemplateLibrary(variant modal)]. The chunk's only export.",
+    "args": [{ "parent": "pin:parent", "onRequestClose": "pin:onRequestClose" }]
+  },
+  "notes": "G10 lightDefault sibling \u2014 pair pins the elevatedTheme token flow AND the baseTheme-present branch of `d.baseTheme ?? d` (the darkDefault case pins the fallback branch). See the darkDefault case notes."
+}

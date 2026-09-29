@@ -1,0 +1,293 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "AutomationNewDialog.Wu-wKkiY.js",
+    "closureSize": 8,
+    "stubbed": [
+      "CloseIcon.CKEypAHi.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "IconButton.B46fVFUo.js",
+      "LoopTemplateLibrary.C__UMpNm.js",
+      "ThemeProvider.BNrg3wTr.js"
+    ],
+    "chunkHashes": {
+      "AutomationNewDialog.Wu-wKkiY.js": "008ac11cc8126e6875aba3b672d55b8f51416fe8f0ed4cfdd3cc4eda3b11fc90",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "element",
+    "type": "stub:ContextualMenuActions.eL(Modal)",
+    "key": {
+      "tag": "null"
+    },
+    "props": {
+      "tag": "object",
+      "prototype": "object",
+      "properties": [
+        {
+          "key": "isOpen",
+          "value": {
+            "tag": "boolean",
+            "value": true
+          }
+        },
+        {
+          "key": "onRequestClose",
+          "value": {
+            "tag": "string",
+            "value": "pin:onRequestClose"
+          }
+        },
+        {
+          "key": "zIndex",
+          "value": {
+            "tag": "string",
+            "value": "default"
+          }
+        },
+        {
+          "key": "children",
+          "value": {
+            "tag": "element",
+            "type": "stub:ThemeProvider.t",
+            "key": {
+              "tag": "null"
+            },
+            "props": {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "theme",
+                  "value": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "themePin",
+                        "value": {
+                          "tag": "string",
+                          "value": "H2 golden-derived-retina0.json darkDefault.derived.elevated"
+                        }
+                      },
+                      {
+                        "key": "hash",
+                        "value": {
+                          "tag": "string",
+                          "value": "9cc5a10052803f8f8560263e4208bb1e7e59d237"
+                        }
+                      },
+                      {
+                        "key": "isDark",
+                        "value": {
+                          "tag": "boolean",
+                          "value": true
+                        }
+                      },
+                      {
+                        "key": "bgBase",
+                        "value": {
+                          "tag": "string",
+                          "value": "#19191b"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "key": "children",
+                  "value": {
+                    "tag": "element",
+                    "type": "div",
+                    "key": {
+                      "tag": "null"
+                    },
+                    "props": {
+                      "tag": "object",
+                      "prototype": "object",
+                      "properties": [
+                        {
+                          "key": "role",
+                          "value": {
+                            "tag": "string",
+                            "value": "dialog"
+                          }
+                        },
+                        {
+                          "key": "aria-modal",
+                          "value": {
+                            "tag": "string",
+                            "value": "true"
+                          }
+                        },
+                        {
+                          "key": "aria-label",
+                          "value": {
+                            "tag": "string",
+                            "value": "Create a new loop"
+                          }
+                        },
+                        {
+                          "key": "className",
+                          "value": {
+                            "tag": "string",
+                            "value": "sx-1n2onr6 sx-dpfuu1 sx-w7nakj sx-m7jadh sx-2lwn1j sx-78zum5 sx-dt5ytf sx-1lmytr0 sx-4pepcl sx-mhyh96 sx-b3r6kr"
+                          }
+                        },
+                        {
+                          "key": "children",
+                          "value": {
+                            "tag": "array",
+                            "values": [
+                              {
+                                "tag": "element",
+                                "type": "stub:IconButton.t",
+                                "key": {
+                                  "tag": "null"
+                                },
+                                "props": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "aria-label",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "Close modal dialog"
+                                      }
+                                    },
+                                    {
+                                      "key": "onClick",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "pin:onRequestClose"
+                                      }
+                                    },
+                                    {
+                                      "key": "sx",
+                                      "value": {
+                                        "tag": "object",
+                                        "prototype": "object",
+                                        "properties": [
+                                          {
+                                            "key": "kVAEAm",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-10l6tqk"
+                                            }
+                                          },
+                                          {
+                                            "key": "k87sOh",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-omnu4r sx-bme5g0"
+                                            }
+                                          },
+                                          {
+                                            "key": "kCIrl2",
+                                            "value": {
+                                              "tag": "string",
+                                              "value": "sx-n5hqff sx-krrm2v"
+                                            }
+                                          },
+                                          {
+                                            "key": "$$css",
+                                            "value": {
+                                              "tag": "boolean",
+                                              "value": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "element",
+                                        "type": "stub:CloseIcon.t",
+                                        "key": {
+                                          "tag": "null"
+                                        },
+                                        "props": {
+                                          "tag": "object",
+                                          "prototype": "object",
+                                          "properties": []
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "tag": "element",
+                                "type": "div",
+                                "key": {
+                                  "tag": "null"
+                                },
+                                "props": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "className",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "sx-2lwn1j sx-1odjw0f sx-ggk2y7"
+                                      }
+                                    },
+                                    {
+                                      "key": "children",
+                                      "value": {
+                                        "tag": "element",
+                                        "type": "stub:LoopTemplateLibrary.t",
+                                        "key": {
+                                          "tag": "null"
+                                        },
+                                        "props": {
+                                          "tag": "object",
+                                          "prototype": "object",
+                                          "properties": [
+                                            {
+                                              "key": "parent",
+                                              "value": {
+                                                "tag": "string",
+                                                "value": "pin:parent"
+                                              }
+                                            },
+                                            {
+                                              "key": "variant",
+                                              "value": {
+                                                "tag": "string",
+                                                "value": "modal"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

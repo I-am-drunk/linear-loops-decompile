@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "surfaces": {
+    "AutomationNewDialog": {
+      "routes": [],
+      "copy": [
+        "Create a new loop",
+        "Inference harness"
+      ],
+      "structure": [
+        "LoopTemplateLibrary"
+      ],
+      "tokens": []
+    },
+    "app.routes": {
+      "routes": [
+        "/:orgKey/loop/:loopId",
+        "/:orgKey/loop/:loopId/runs",
+        "/:orgKey/loops/:viewType?",
+        "/:orgKey/loops/new"
+      ],
+      "copy": [],
+      "structure": [],
+      "tokens": []
+    }
+  }
+}

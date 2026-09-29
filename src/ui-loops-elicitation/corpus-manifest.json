@@ -1,0 +1,21 @@
+{
+  "source": "G9 (#225 claim, this slice): src/ui-loops-elicitation reimplements the elicitation-progress status chunk. Evidence: AgentElicitationResponseQueue.BM8OrYyq.js (matrix §D 'Elicitations' row), executed from the RAW tree in drive mode — the entry and its whole composite closure (corpus Flex/Text) are hook-free, so the driver flattens to the exact host tree by executing the corpus components themselves; nothing is stubbed (closure 11 chunks, 0 stubs; Text resolves labelFaint through ThemeProvider's static CSS-var map, not useTheme, so no theme pin is needed). Three parametrizations pin both text branches (count template incl. zero case + isSubmitting) and the full static class/var chain. The clean module byte-matches the committed golden through the tagged-v2 serializer (declared observation driver).",
+  "reimplements": [
+    {
+      "chunkPrefix": "AgentElicitationResponseQueue",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{i as t} — i(props) is the elicitation-progress status line (Flex[align:center,grow:1,noMinWidth] > div[aria-live=polite] > Text[variant:small,color:labelFaint]; label `${answeredCount} of ${elicitationCount} answered` or `Submitting answers…`); reimplemented as ElicitationProgress(props)",
+          "evidenceLine": "src/ui-loops-elicitation/elicitation-progress.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "elicitation-progress.states"
+      ]
+    }
+  ],
+  "goldens": [
+    "elicitation-progress.states"
+  ]
+}

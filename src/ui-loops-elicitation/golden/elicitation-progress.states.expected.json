@@ -1,0 +1,363 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "AgentElicitationResponseQueue.BM8OrYyq.js",
+    "closureSize": 11,
+    "stubbed": [],
+    "chunkHashes": {
+      "AgentElicitationResponseQueue.BM8OrYyq.js": "3105ba5609ac8841e26a563a35290b0cc25b1e6ab57f3c1a15f2e81a01a4f184",
+      "Flex.BS495mgi.js": "da19446268fcbc806376f8a2fbcca7bed1fce4cf1d6587815f5cc25f7b3bd956",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "mixins.stylex.BUgiQC4g.js": "9fc03b921bb2d167fe0ac1e195126bb88ab0de4a4a8de930f60a312d93f27628",
+      "stylex.CiFZl61Z.js": "68976c03e608faf476d53e39895947f8ee1a5cc42e38136c83e33a2960e6f7f6",
+      "Text.gv7OudGa.js": "c8a54ccabc2f583746fed40cbffc4da5b387ee11faba406aed4a664fe082d3c4",
+      "ThemeProvider.BNrg3wTr.js": "dbed779ea3300f378b229176d1ed0326d09ef16e81473ba5a4381ab5fbf8fa18",
+      "hash.DpuBqitv.js": "0acd5094b5490619845bde4f5e756c1bdd8679ca9d35b82ed2a522008cef3f9b",
+      "react.Bfm_Hgom.js": "1e0e89abb243deb629f8fb7e94d2221d5c87ee86f2baf505bffe17fed85eddec",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "inProgress",
+        "value": {
+          "tag": "element",
+          "type": "div",
+          "key": {
+            "tag": "null"
+          },
+          "props": {
+            "tag": "object",
+            "prototype": "object",
+            "properties": [
+              {
+                "key": "ref",
+                "value": {
+                  "tag": "undefined"
+                }
+              },
+              {
+                "key": "className",
+                "value": {
+                  "tag": "string",
+                  "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-6s0dn4 sx-euugli sx-1iyjqo2 sx-h8yej3 sx-1lqa7cf sx-y13l1i sc2sx-Flex-d11c8f6e"
+                }
+              },
+              {
+                "key": "style",
+                "value": {
+                  "tag": "undefined"
+                }
+              },
+              {
+                "key": "children",
+                "value": {
+                  "tag": "element",
+                  "type": "div",
+                  "key": {
+                    "tag": "null"
+                  },
+                  "props": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "aria-live",
+                        "value": {
+                          "tag": "string",
+                          "value": "polite"
+                        }
+                      },
+                      {
+                        "key": "children",
+                        "value": {
+                          "tag": "element",
+                          "type": "span",
+                          "key": {
+                            "tag": "null"
+                          },
+                          "props": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "ref",
+                                "value": {
+                                  "tag": "undefined"
+                                }
+                              },
+                              {
+                                "key": "className",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "sx-1j61x8r sx-ggjnk3 sx-oxd7ts sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sc2sx-Text-c50a30fa"
+                                }
+                              },
+                              {
+                                "key": "style",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "--x-4xs81a",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "var(--sx-1eapsa9)"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "children",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "2 of 5 answered"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "none",
+        "value": {
+          "tag": "element",
+          "type": "div",
+          "key": {
+            "tag": "null"
+          },
+          "props": {
+            "tag": "object",
+            "prototype": "object",
+            "properties": [
+              {
+                "key": "ref",
+                "value": {
+                  "tag": "undefined"
+                }
+              },
+              {
+                "key": "className",
+                "value": {
+                  "tag": "string",
+                  "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-6s0dn4 sx-euugli sx-1iyjqo2 sx-h8yej3 sx-1lqa7cf sx-y13l1i sc2sx-Flex-d11c8f6e"
+                }
+              },
+              {
+                "key": "style",
+                "value": {
+                  "tag": "undefined"
+                }
+              },
+              {
+                "key": "children",
+                "value": {
+                  "tag": "element",
+                  "type": "div",
+                  "key": {
+                    "tag": "null"
+                  },
+                  "props": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "aria-live",
+                        "value": {
+                          "tag": "string",
+                          "value": "polite"
+                        }
+                      },
+                      {
+                        "key": "children",
+                        "value": {
+                          "tag": "element",
+                          "type": "span",
+                          "key": {
+                            "tag": "null"
+                          },
+                          "props": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "ref",
+                                "value": {
+                                  "tag": "undefined"
+                                }
+                              },
+                              {
+                                "key": "className",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "sx-1j61x8r sx-ggjnk3 sx-oxd7ts sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sc2sx-Text-c50a30fa"
+                                }
+                              },
+                              {
+                                "key": "style",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "--x-4xs81a",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "var(--sx-1eapsa9)"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "children",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "0 of 3 answered"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "submitting",
+        "value": {
+          "tag": "element",
+          "type": "div",
+          "key": {
+            "tag": "null"
+          },
+          "props": {
+            "tag": "object",
+            "prototype": "object",
+            "properties": [
+              {
+                "key": "ref",
+                "value": {
+                  "tag": "undefined"
+                }
+              },
+              {
+                "key": "className",
+                "value": {
+                  "tag": "string",
+                  "value": "sx-78zum5 sx-vx4679 sx-1q0g3np sx-6s0dn4 sx-euugli sx-1iyjqo2 sx-h8yej3 sx-1lqa7cf sx-y13l1i sc2sx-Flex-d11c8f6e"
+                }
+              },
+              {
+                "key": "style",
+                "value": {
+                  "tag": "undefined"
+                }
+              },
+              {
+                "key": "children",
+                "value": {
+                  "tag": "element",
+                  "type": "div",
+                  "key": {
+                    "tag": "null"
+                  },
+                  "props": {
+                    "tag": "object",
+                    "prototype": "object",
+                    "properties": [
+                      {
+                        "key": "aria-live",
+                        "value": {
+                          "tag": "string",
+                          "value": "polite"
+                        }
+                      },
+                      {
+                        "key": "children",
+                        "value": {
+                          "tag": "element",
+                          "type": "span",
+                          "key": {
+                            "tag": "null"
+                          },
+                          "props": {
+                            "tag": "object",
+                            "prototype": "object",
+                            "properties": [
+                              {
+                                "key": "ref",
+                                "value": {
+                                  "tag": "undefined"
+                                }
+                              },
+                              {
+                                "key": "className",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "sx-1j61x8r sx-ggjnk3 sx-oxd7ts sx-1nzvdvg sx-ek0tjz sx-13jp3wb sx-3d248p sx-1wuuqhr sx-dpxx8g sc2sx-Text-c50a30fa"
+                                }
+                              },
+                              {
+                                "key": "style",
+                                "value": {
+                                  "tag": "object",
+                                  "prototype": "object",
+                                  "properties": [
+                                    {
+                                      "key": "--x-4xs81a",
+                                      "value": {
+                                        "tag": "string",
+                                        "value": "var(--sx-1eapsa9)"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "key": "children",
+                                "value": {
+                                  "tag": "string",
+                                  "value": "Submitting answers…"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

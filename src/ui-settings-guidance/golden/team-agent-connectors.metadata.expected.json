@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "TeamAgentConnectorsSettingsPage.DcAOUyLv.js",
+    "closureSize": 7,
+    "stubbed": [
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "Integration.B02xjlHD.js",
+      "McpConnectorList.A-Wz50eq.js",
+      "jsx-runtime.BH9nBM82.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "useRouteData.DN0g9O-t.js"
+    ],
+    "chunkHashes": {
+      "TeamAgentConnectorsSettingsPage.DcAOUyLv.js": "1f7219a2c1d56101aab17873a9befcc4695379adb385d0059d3b7ae38fe961da"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "pageMetadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "team-agent-connectors"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Agent connectors"
+              }
+            },
+            {
+              "key": "description",
+              "value": {
+                "tag": "string",
+                "value": "Add MCP connectors that team members can use with Linear Agent"
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "agent connectors mcp model context protocol shared linear agent"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "componentDisplayName",
+        "value": {
+          "tag": "string",
+          "value": "TeamAgentConnectorsSettingsPage"
+        }
+      }
+    ]
+  }
+}

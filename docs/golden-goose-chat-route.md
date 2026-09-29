@@ -1,10 +1,12 @@
 # The golden-goose chat route — trace (issue #14)
 
-The goose: Linear's normal AI chat route, driven by OUR loops server with the
-user's own Linear account, so loops get the Linear-grade brain on the chat path
-instead of the credit-metered loop path. This document is the trace of that
-route. Facts only (op names, field names, enum values, behavior); no Linear
-code. Every claim names its evidence.
+The goose: Linear's normal AI chat route, driven by OUR original, narrowly scoped
+Loops server with the user's own interactive Linear session. It is the primary brain
+for Loops, so loop runs use the Linear-grade chat path instead of the credit-metered
+Loops wrapper. This does not make the product a Linear clone: the UI is Loops and its
+necessary views plus our own Settings. This document is the route trace. Facts only
+(op names, field names, enum values, behavior); no Linear code. Every claim names its
+evidence.
 
 Sources:
 - **Corpus** — decompile of Linear 1.32.4 (2026-09-27 run; 1,550 chunks, 258
@@ -32,7 +34,7 @@ then). (Corpus: `useSendAiMessage.B5bGsmqN.js`, `Issue.DRYymPCa.js`.)
 | `userMessageId` | Client-generated message/turn id (idempotency handle) |
 | `bodyData` | Message body — a ProseMirror document JSON |
 | `prompt` | Optional prompt override |
-| `context` | Pinned entity context: `[{ type: "Issue"|"Project"|"Initiative"|"Cycle"|…, id }]` |
+| `context` | Pinned entity context: `[{ type: "Issue"\|"Project"\|"Initiative"\|"Cycle"\|…, id }]` |
 | `issueId` / `projectId` / `initiativeId` / `documentId` / `pullRequestId` / `diffId` | Owning-entity links (one drives the conversation's owner) |
 | `userId` | Set only for ephemeral/private-session sends |
 | `resume` | Client always sends `true` |
@@ -90,7 +92,9 @@ socket (`wss://sync.linear.app`, KNOWLEDGE §4):
   live-capture item** (E1, needs the user's account).
 - PAT/OAuth tokens for `api.linear.app` do NOT apply: the public API has zero
   `aiConversation*` root ops (re-verified on master @ 2026-09-25). The chat
-  route exists only on the client API with user-session auth.
+  route exists only on the client API with user-session auth. Product rule: our
+  Settings must show this as a **separate Linear chat-session bridge**, never present
+  a public-API connection as if it could power the brain.
 
 **How a loop turn maps onto the same ops.** A loop run is the same
 `AiConversation` model with: `initialSource = workflow`, `workflowDefinition`
@@ -187,14 +191,15 @@ matrix §D rows).
 
 ## What our driver does with this (design pointer, not a spec)
 
-- **v1, no socket:** our cron → `AiConversationSendMessage` (entity context per
-  the loop target) → poll conversation state via `AiConversationsQuery` (and
+- **v1, no socket:** our Loops cron → `AiConversationSendMessage` (entity context
+  per the loop target) → poll conversation state via `AiConversationsQuery` (and
   debug thread state where permitted) on our tick. No sync socket needed.
 - **v2, live stream:** minimal sync reader — hshk (protocolVersion 3, omit
   `compressionDictionaryVersion` and `useBinaryProtocol`) → `streamData`
   subscribe on `AiConversation.parts` (status `active`) and, when flagged,
   `AiConversationTurn.parts` → run the parts reducer → done at terminal
-  `status`. Bounded module; NOT an LSE slice.
+  `status`. This is a bounded chat adapter, not an LSE or generic Linear-client
+  implementation.
 - **Open live-capture items (user's account):** token lifetime/refresh;
   JSON-frame acceptance when binary/compression are not negotiated; concrete
   `cellName` / `clientDatabaseId` / client-id handshake values; whether

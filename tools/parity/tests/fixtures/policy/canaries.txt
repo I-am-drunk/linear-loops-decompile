@@ -1,0 +1,6 @@
+# fixture canary
+Create a new loop
+route:/:orgKey/loops/:viewType?
+route:/:orgKey/loop/:loopId/runs
+order:AutomationRunsPage=name > started > duration
+states:AutomationRunsPage=alt:No matching runs|No runs to show

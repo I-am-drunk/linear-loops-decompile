@@ -1,0 +1,31 @@
+{
+  "unit": "ui-settings-agents/useActiveAgents",
+  "chunk": "useActiveAgents",
+  "stubs": {
+    "useStore": {
+      "file": "stubs/use-store.mjs",
+      "why": "The application-store hook is React-context machinery (its own ledger row); the entry consumes exactly one call returning the store. The stub returns the driver-installed store fixture and throws if read before one is installed."
+    },
+    "resolvePromise": {
+      "file": "stubs/resolve-promise.mjs",
+      "why": "The entry consumes exactly one member, `a` (suspending resolve-with-reset). Its suspense machinery is React-tier ambient; the stub records the (thunk, resetKey) call and invokes the thunk synchronously so the hydrate call it closes over is observed at the store fixture."
+    },
+    "Issue": {
+      "file": "stubs/issue.mjs",
+      "why": "The entry consumes exactly one member, `ni` (raw `C1 as ni`) — the agentApplicationsInfo GraphQL fetch. The fetch body is the Issue chunk's own ledger row; the stub records argument identity (graphQLClient + concrete ids) and returns a marker, never executing a network op."
+    },
+    "react": {
+      "file": "stubs/react.mjs",
+      "why": "The entry interops the react namespace at module eval and reads exactly one member in the hook body, useMemo. The stub computes the memo eagerly (memoization is React scheduling, not this chunk's behavior) and records the deps array; through the real rolldown interop only the pinned member exists, so any unpinned hook read fails loudly."
+    },
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "stubs/contextual-menu-actions.mjs",
+      "why": "The entry consumes exactly one member, `jR` (raw `CRe as jR`) — the suspense useQuery wrapper (hand-verified in the raw chunk: CRe(e,t) forces enabled/suspense and returns the query result whose `.data` the entry destructures). react-query execution is its own surface; the stub records the descriptor the entry built and returns the scripted {data} fixture. Full chunk name pinned: the corpus carries a hash-rotated twin (Bcp3eWHc); the entry imports Dlg9Oa2U (verified in its import list)."
+    }
+  },
+  "drive": {
+    "file": "use-active-agents-driver.mjs",
+    "exportMeaning": "export{s as n, c as t} (useActiveAgents.DsLeeQpq.js, raw tail) — n is the active-agents hook (useStore -> resolvePromise.a hydrate-with-resetKey -> jR suspense query over the module-local descriptor -> useMemo id-keyed reduce of data.applicationInfoByIds; returns {activeAgentUsers, oauthAppById}); t is the prefetch (await store.organization.allUsers.hydrate(arg), then await queryClient.prefetchQuery(<same descriptor shape>)). Module-locals l (filter isActive && !!oauthClientId, orderBy('name')) and u (queryKey ['agentApplicationsInfo', ids.join(',')], queryFn () => ni(graphQLClient, ids)) surface entirely through the two exports."
+  },
+  "notes": "G34: first golden on the matrix §F Account agents row. Drive mode; one probe per export. Pins: both filter conjuncts (isActive arm and the !!oauthClientId coercion arm) via four fixture users; the orderBy('name') argument; the queryKey literal + comma join over the concrete ids; queryFn argument identity (the exact store.graphQLClient object and the ids array) via the recording Issue seam; the resolvePromise resetKey === organization.id and its thunk reaching allUsers.hydrate() with zero args; the useMemo deps [data] identity; the id-keyed reduce preserving element identity; the hook's return-key surface; and the prefetch's hydrate-then-prefetchQuery order with the hydrate argument passed through identically. The store collection surface (filter/orderBy/map/concrete) is a declared driver fixture — the corpus collection class stays its own ledger row."
+}

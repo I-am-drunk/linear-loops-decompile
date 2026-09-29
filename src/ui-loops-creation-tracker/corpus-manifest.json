@@ -1,0 +1,21 @@
+{
+  "source": "G8 (#225 stale-claim takeover 13:2xZ, original claim 03:35Z): src/ui-loops-creation-tracker reimplements the loop-creation analytics tracker. Evidence: LoopCreationTracker.BAiVgMLN.js (matrix §A 'AI-assisted loop compose' row), executed from the RAW tree in drive mode — the first stateful/behavioral golden: a class lifecycle (start -> attachDraft -> started/failed -> converted/abandoned) with declared stubs for ClientStorage (recording in-memory store) and uuid-v4 (deterministic counter), the ambient clock pinned through the driver (Date.now replaced for the run). Pins: six analytics event names + full payload shapes (elapsedMs from the pinned clock), converted/abandoned idempotence guards, trackTemplate gating on templateKey, forDraft resolution, the 7-day expiry filter (6048e5), the 100-entry sort-by-startedAt cap keeping the newest, and the persisted storage shape + write cadence. The clean class byte-matches through the tagged-v2 serializer, replaying the identical lifecycle.",
+  "reimplements": [
+    {
+      "chunkPrefix": "LoopCreationTracker",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "export{n as t} — n is the LoopCreationTracker class: static start(user, opts)/scratchEntryPoint(ep)/forDraft(user, draft); instance attachDraft/started/failed/converted/abandoned; ClientStorage persistence under `loopTemplateSetups:${user.id}`; analytics via user.store.analytics?.track. Reimplemented as LoopCreationTracker with the storage/uuid/clock seams constructor-injected.",
+          "evidenceLine": "src/ui-loops-creation-tracker/loop-creation-tracker.ts + golden test"
+        }
+      ],
+      "goldens": [
+        "loop-creation-tracker.lifecycle"
+      ]
+    }
+  ],
+  "goldens": [
+    "loop-creation-tracker.lifecycle"
+  ]
+}

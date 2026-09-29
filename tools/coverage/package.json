@@ -1,0 +1,9 @@
+{
+  "name": "coverage",
+  "private": true,
+  "type": "module",
+  "description": "G2 coverage ledger: matrix x corpus-manifests x goldens -> per-surface golden|improvement|GAP (SPECS/ui-parity.md golden tier item 4)",
+  "scripts": {
+    "test": "node --experimental-strip-types --test coverage.test.ts"
+  }
+}

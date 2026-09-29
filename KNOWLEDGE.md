@@ -61,11 +61,38 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   effectiveTeam, hasUnknownEffectiveTeam, runs`.
 - Schedules: separate **`WorkflowCronJobDefinition`** (`name, description, enabled,
   activities, schedule, team, creator, sortOrder`) - server-side cron.
-- Trigger model (from AutomationHelper): `triggerType` ∈ `schedule | chat | event-ish`;
-  events carry `activationMode` ∈ `collectionChanged | watchedPropertyChanged`;
-  conditions support `watchedProperties`, `collectionChange{property,operation}`,
-  `commentMatch`; triage variants exist (`entityInTriage`). `defaultAutomationSchedule`
-  exists; validation is zod (`$e.safeParse({type,event,activationMode,...})`).
+- Trigger model (AutomationHelper chunk `Issue.DRYymPCa.js`; CORRECTED 2026-09-27,
+  sess_01a0e381-7391 — the earlier `schedule|chat|event-ish` reading was wrong):
+  - `triggerType` IS the entity, PascalCase, 9 values: `Issue | Project | Document |
+    Initiative | Team | Release | Cycle | Schedule | Chat`.
+  - Trigger events (12): `entityCreated, entityUpdated, entityCreatedOrUpdated,
+    entityRemoved, entityUnarchived, cycleStarted, cycleEnded, commentAdded,
+    updatePosted, chatMessagePosted, chatReactionAdded, customerRequestAdded`.
+    Support is per triggerType, enforced client-side (unsupported pair throws):
+    Issue = entityCreated/Updated/CreatedOrUpdated + commentAdded +
+    customerRequestAdded; Project = entity events + commentAdded + updatePosted +
+    customerRequestAdded; Initiative = entity events + commentAdded + updatePosted;
+    Cycle = entityCreated + cycleStarted + cycleEnded only; Release = entity events
+    only; Document/Team/Chat event support UNVERIFIED; Schedule carries no event.
+  - `activationMode` has FOUR values: `conditionsStartedMatching | anyUpdate |
+    watchedPropertyChanged | collectionChanged` (earlier notes listed two).
+    Only `entityUpdated`/`entityCreatedOrUpdated` support an activationMode.
+    `collectionChanged` requires exactly one condition with `collectionChange` and
+    none with `watchedProperties`; `watchedPropertyChanged` requires a non-empty
+    watchedProperties set (`activationModeMatchesConditions`).
+  - `collectionChange`: `{ property: labels|assignee|delegate|state|team|priority|
+    project, operation: "added"|"removed", qualifier? }`.
+  - `schedule` is a STRUCTURED object, NOT an rrule: `{ startAt: TimelessDate,
+    type: hours|days|weeks|months|years, interval: positive int, hour?: 0-23,
+    minute?: 0-59, timezone?: IANA, daysOfWeek?: int 1..7 unique (weeks only),
+    lastRecurredAt?, lastRecurredAtTimestamp? }`; "timed" = hour AND timezone
+    present. `defaultAutomationSchedule` = next top of the hour, days x1, creator
+    timezone. Client validation is zod.
+  - Limits (AutomationHelper constants): name <= 64 chars, groupName <= 64,
+    description <= 255.
+  - Team scope (`applyToSubTeams`) supported for Issue|Project|Initiative|Cycle|
+    Team; manual runs unsupported for commentAdded/updatePosted/
+    customerRequestAdded triggers (`supportsManualRun`).
 - **A run = an `AiConversation`** with `initialSource: workflow`, plus
   `workflowDefinition`, `loopExecution`, `isWorkflowRun` set. `AiConversationInitialSource`
   enum: `slack, microsoftTeams, mcp, directChat, entityChat, comment, pullRequestComment,
@@ -91,22 +118,52 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 - Notifications for run lifecycle: `agentAutomationRunResponse`,
   `agentAutomationUserMessage`, `agentAutomationFailedToRun`, `agentAutomationDisabled`.
 
-## §4. Sync protocol (LSE) - documented so we know what we are NOT building
+## §4. Sync protocol (LSE) - reference for the goose sync-reader (we consume it; we do NOT rebuild the server side)
 
-- Socket `wss://sync.linear.app`; handshake `{cmd:"hshk", userId, userAccountId,
-  clientType, clientDatabaseId, protocolVersion:3, clientVersion, useBinaryProtocol:true,
-  compressionDictionaryVersion, supportsSpectatorMode:true, cellName, token}`; then
-  `sync` messages (model deltas, lastSyncId), `ephm`/`ephp` (ephemeral), `streamData`
-  (AI streaming), `presence`, `ping/pong`, `noauth`.
-- Compression: zstd with a server-sent dictionary (`syncCompression=zstd-v1`, dictionary
-  SHA256-pinned, frames declare content size; 64 MB cap). Binary frames: `[type][dictVer]
-  [payload]`, type 0 = raw, 1 = zlib-dict-compressed; inner payload is a custom packer
-  (records off, bundleStrings off).
+- Socket `wss://sync.linear.app` (URL params `userId`, `userAccountId`, plus
+  `syncCompression=zstd-v1` when the client advertises zstd); handshake
+  `{cmd:"hshk", userId, userAccountId, clientType, flagClient, clientDatabaseId,
+  protocolVersion:3, clientVersion, releaseChannelOverride, useBinaryProtocol:true,
+  compressionDictionaryVersion?, supportsSpectatorMode:true, cellName, token}`; then
+  `sync` messages (model deltas keyed by lastSyncId), `ephm`/`ephp` (ephemeral),
+  `streamData` (AI streaming), `presence`, `ping/pong`, `noauth`, `refresh`,
+  `syncCatchup`. (Corpus: `RefreshManager.DpVjn8XM.js`.)
+- Framing: hshk goes out as a JSON text frame; after auth the client switches to
+  **msgpack** binary frames — the "custom packer" is stock msgpackr (socket:
+  `{useRecords:false, bundleStrings:false, sequential:false}`; REST
+  `application/octet-stream` model streams: `{useRecords:true, sequential:true}`;
+  packer classes in `Logger.qFaEBF6-.js`). Incoming: text frames parse as JSON;
+  binary frames: byte0==1 → zstd payload (byte1 = dictionary id), byte0==0 → raw
+  payload from byte1, anything else → whole frame is msgpack.
+- Compression: zstd, two layers (both corpus-verified, `RefreshManager.DpVjn8XM.js`):
+  the dictionary CONTENT is a static, versioned, client-embedded vocabulary blob
+  (every cmd/model/field name + defaults; `LATEST_VERSION = 1`,
+  `byVersion = Map([[1, encode(...)]])`, ~:10002-10010); the DELIVERY is
+  server-sent and identity-pinned — `cmd:"syncDictionary"` → `setDictionary`
+  computes SHA-256(dictionary) and throws `Sync compression dictionary identity
+  mismatch` on a dictionaryId mismatch (:10088, :10114-10121), and later
+  `syncCompressed` frames reference that dictionaryId (:10092-10093). Advertised
+  only when flag `enableSyncMessageCompression` is on (URL `syncCompression=zstd-v1`
+  + handshake `compressionDictionaryVersion`, :10807); frames must declare content
+  size, 64 MB decoded cap. NOT advertising is a first-class mode: the server never
+  sends `syncDictionary`/`syncCompressed` (the client even throws on an
+  unrequested one, :10844), and Linear itself falls back to it via `zstdFailed`
+  (:10799, :10830). **Sync-reader v1: do not advertise; zero zstd handling needed.**
+  (Earlier revisions were each half right: the wire IS SHA-256-pinned server
+  delivery, the content IS a static embedded blob, and the packer is stock
+  msgpackr; reconciled 2026-09-27, audit #157 + #169 review.)
+- Liveness: ping every 20 s after handshake; idle disconnect at 30 min (activity
+  polled per 5 min); `noauth` gets ONE retry inside a 2-min window, then the client
+  treats the token as rejected (→ re-import); reconnect backoff
+  `min(30s, (200+rand·100)·n²)` capped at n=12 and healed 2 levels per `pong`;
+  commands sent pre-auth (all except `collab`/`ephp`) queue and flush after auth.
 - Mutations: client transactions → GraphQL `mutation <Model>{Create,Update,Delete,Archive}`
   built per model class; batched; offline queue with rollback; lock-timeout/ratelimit
   retries. Hydration: `restModelsStream(path, {lastSyncId, clientDatabaseId})`.
-- **We replace all of this with T3 connect** (SPECS/t3-connect.md): our UI and server are
-  both ours, so a small typed WS RPC + server-authoritative SQLite is sufficient.
+- **What we build of this:** a minimal sync READER for the goose (hshk + `streamData`
+  subscribe + the parts reducer — §8 and `docs/golden-goose-chat-route.md`). Our own
+  UI↔server transport stays ours; its design is under re-review in the #157/#164
+  audits. We never implement the server side of LSE.
 
 ## §5. Agent sessions & coding harness (adjacent system - reuse ideas)
 
@@ -132,33 +189,45 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   `~/.linear/coding-tools.json` → `{openIssue:{path,args[],env[]}}`; allowlisted commands
   `amp|claude|codex|opencode|custom`; template vars `{{prompt}} {{workDir}}
   {{issue.identifier}} {{issue.branchName}} {{project.name}} {{pullRequestComment.id}}`;
-  env mapping `LINEAR_PROMPT, LINEAR_WORK_DIR, LINEAR_ISSUE_IDENTIFIER,
-  LINEAR_ISSUE_BRANCH_NAME, LINEAR_PROJECT_NAME, LINEAR_PULL_REQUEST_COMMENT_ID`;
+  env mapping (verified in the asar 2026-09-27, audit #157): `LINEAR_PROMPT,
+  LINEAR_WORK_DIR, LINEAR_PROJECT_NAME` — the `{{issue.*}}`/`{{pullRequestComment.*}}`
+  template vars exist, but `LINEAR_ISSUE_*`/`LINEAR_PULL_REQUEST_*` env names do NOT
+  appear in the desktop source (an earlier revision listed them; wrong);
   launches via Terminal/Ghostty/Warp/iTerm (mac) or PowerShell (win). First run scaffolds
   an example config and opens it in `$EDITOR`.
 
 ## §6. Linear public API facts (for our dataplane)
 
+Precise, sourced versions of the GraphQL, rate-limit, webhook, and OAuth
+facts below live in `extracts/linear-official/docs-site/` (fact digests of the LIVE
+linear.app/developers pages, fetched 2026-09-27 — the vendored
+`extracts/linear-official/docs/*.md` are one-line upstream stubs and must never
+be cited as a source). The Agent API facts below are sourced from
+`extracts/linear-official/AGENT-API.md`.
+
 - Public API: `https://api.linear.app/graphql` - PAT (Settings → API) or OAuth2; personal
-  keys act as the user. Rate limit ≈ 2,500 req/h/user (batch + budget). Webhooks
-  configurable per workspace for issue/comment/project/etc. changes.
-- Rate-limit mechanics (official docs, linear.app/developers/rate-limiting, verified
-  2026-09-27; implemented in `src/server/linear-client.ts`): every response carries
-  `X-RateLimit-Requests-{Limit,Remaining,Reset}` and `X-RateLimit-Complexity-{Limit,
-  Remaining,Reset}` plus `X-Complexity` (that query's cost); resets are UTC epoch
-  MILLISECONDS. Budgets: API key 2,500 req/h + 3,000,000 complexity pts/h, per USER
-  (all keys share); single-query complexity cap 10,000 pts (always rejected above).
-  Some endpoints carry lower per-endpoint limits signalled via
-  `X-RateLimit-Endpoint-Requests-*` + `X-RateLimit-Endpoint-Name`. Exhaustion: the
-  DOCUMENTED shape is HTTP **400** with `errors[].extensions.code ===
-  "RATELIMITED"` in the body (official rate-limiting page, "Handling rate
-  limit errors"); 429/`Retry-After` and 200-with-RATELIMITED are handled
-  defensively but are not the documented contract. The docs' numbers have
-  drifted across third-party write-ups — treat the response headers as the
-  only source of truth. (NOTE: this branch predates the #184 §6 rewrite on
-  main; resolve any conflict in favor of main's sourced version, which states
-  the same 400 fact.)
-- The CLIENT's API (client-api.linear.app) is the sync frontend - not for us.
+  keys act as the user. Auth header shapes DIFFER: PAT = `Authorization: <key>`
+  (no Bearer); OAuth = `Authorization: Bearer <token>` (docs-site/graphql-basics.md).
+- Rate limits (docs-site/rate-limiting.md): requests/h — API key 2,500/user,
+  OAuth 5,000/user, unauth 600/IP; complexity/h — 3M / 2M / 100k, single query
+  hard cap 10,000. Budget headers `X-RateLimit-Requests-{Limit,Remaining,Reset}`
+  + `X-Complexity` / `X-RateLimit-Complexity-*` on every response (Reset = epoch
+  ms); endpoint-specific `X-RateLimit-Endpoint-*` when a per-op limit is hit.
+  Exhaustion = HTTP **400** with `errors[].extensions.code = "RATELIMITED"`
+  (the header-driven budget + both exhaustion mappings in PR #155 are now
+  officially sourced).
+- Webhooks (docs-site/webhooks.md): org-scoped; only workspace admins or
+  OAuth apps with the `admin` scope can create/read them; entity
+  coverage list, 5s/200 consumer contract, 3 retries (1min/1h/6h), HMAC-SHA256
+  `Linear-Signature` over the RAW body + `webhookTimestamp` replay guard.
+- OAuth (docs-site/oauth.md): token exchange/refresh at
+  `api.linear.app/oauth/token` (form-encoded), access tokens 24h + refresh
+  token (mandatory since 2026-04-01), 30-min refresh replay grace;
+  `client_credentials` app-actor tokens 30 days, no refresh.
+- The CLIENT's API (client-api.linear.app) is the sync + chat frontend — and it IS the
+  golden-goose path (§8): chat ops ride it with the login-born user session token.
+  api.linear.app stays the dataplane/write-back surface (PAT/OAuth). (Line corrected
+  2026-09-27, audit #157: the earlier "not for us" predated the goose ruling, #14.)
 - Agent API (Developer Preview, changes possible): custom agents appear as workspace
   agents; `AgentSessionEvent` webhooks on mention/delegate; `agentSessionCreateOnIssue` /
   `agentSessionCreateOnComment` for proactive sessions; activities (thought/action/
@@ -168,7 +237,9 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
 ## §7. Process facts
 
 - Linear ships the client continuously; chunks are content-hashed. Expect drift; R1
-  re-verifies counts on each refresh (1,550 chunks / 87 models / 258 ops @ 2026-09-26).
+  re-verifies counts on each refresh (1,550 chunks / 136 models / 376 ops @
+  2026-09-28 under the layout-invariant grammars of issue #241; the earlier
+  87/258 figures were grammar undercounts on the same corpus, not drift).
 - The marketing site (linear.app homepage) is a SEPARATE build (`/web/_next/static/`,
   ~535 chunks) - plan features/pricing strings live there (`agentAutomations: "Loops"`).
 
@@ -187,14 +258,18 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   `AiConversationsQuery`.
 - **Zero GraphQL subscriptions exist in the entire 1,550-chunk bundle.** Turn
   streaming arrives over the LSE sync queue (`wss://sync.linear.app`; the
-  `lastSyncId` acknowledgement model, SPECS/sync-protocol.md). To reproduce the
+  `lastSyncId` acknowledgement model — §4, corpus `RefreshManager.DpVjn8XM.js`). To reproduce the
   chat exactly we reproduce the sync-channel consumption, not a subscription API.
 - The credit gate lives on the loop/workflow side
   (`RegisterLoopRunUsageCostTarget`, `FreeLoopCredit`, `LoopLimitsPage`), not on
   `AiConversationSendMessage` itself. Whether send is credit-gated server-side for
   loop-linked conversations remains an open probe question (issue #14).
 - 2026-09-27 re-run of the pipeline on Linear v1.32.4: 1,550 chunks, 258 ops,
-  87 models, zero drift vs the 2026-09-26 baseline.
+  87 models, zero drift vs the 2026-09-26 baseline. (2026-09-28, issue #241:
+  those op/model counts were fixed-layout grammar artifacts; the corrected
+  layout-invariant extraction on the SAME corpus reads 376 ops / 136 models,
+  cross-checked exactly against the raw minified tree. The zero-drift verdict
+  stands — both runs saw the same bytes.)
 
 ### §8a. Goose trace answers (2026-09-27, sess_01a0e2c4-a88f-730b-acee-8188d527c324; full trace: `docs/golden-goose-chat-route.md`)
 
@@ -240,7 +315,9 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   ERROR: upstream `linear/linear` has a stale `main` branch (schema 885 KB) and the
   default branch is **`master`** (schema 1,335 KB, @ `689ccc1e`, 2026-09-25).
   Re-checked against master: schema grew 485→723 types, 72→129 enums, 337→402
-  inputs, 463→526 root ops (+63 new, −4 removed: `asksWebSettings*`, `fetchData`);
+  inputs, 463→526 root ops (net +63; removals observed: `asksWebSettings*`,
+  `fetchData` — the gross add count was not re-verified that day, see
+  postscript below);
   SDK documents 577→671 ops. Headlines: (1) the full `AiConversation` type zoo —
   174 types incl. unions `AiConversationPart`/`AiConversationToolCall`/
   `AiConversationWidget`/`AiConversationElicitationResponseData` — is now in the
@@ -253,6 +330,14 @@ extracted the Electron asar, then crawled the ENTIRE production web client (1,55
   updated in `extracts/linear-official/AGENT-API.md`; upstream `docs/`, package
   READMEs, and the full SDK changelog now vendored in `extracts/linear-official/`
   (pin: master, see its README for the refresh recipe).
+
+- **2026-09-27 (sess_01a0e381-7391; corrected by sess_01a0e44e-9831 same day):**
+  branch-trap postscript — an earlier draft claimed upstream deleted the stale
+  `linear/linear@main` branch; live re-checks (three sessions, ~19:0x-19:5xZ:
+  raw HTTP 200, branches API 200 on `main`) show the branch STILL EXISTS and
+  silently serves stale content. The trap is ARMED: `master` is the default
+  branch — never fetch upstream by `main`. Historical gross op-add counts from
+  that day's diff remain unverified; net +63 stands.
 
 - **2026-09-27 (agent-04@gen6):** R1 drift-watch re-check. `schema.graphql` +
   `_generated_documents.graphql` re-fetched from `linear/linear@main`:

@@ -8,4 +8,12 @@ package-lock.json
 .test-out/
 
 # Decompile corpus (Linear proprietary material lives ONLY here, never in git)
+pipeline/corpus
 pipeline/corpus/
+
+# parity harness generated artifacts (regenerate: `parity extract`; SPECS/ui-parity.md)
+.parity/
+parity-report.md
+
+# Rust build output
+tools/parity/target/

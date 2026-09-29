@@ -1,0 +1,9 @@
+[
+  {
+    "surface": "AutomationNewDialog",
+    "family": "copy",
+    "fact": "Inference harness",
+    "reason": "BYO inference is our addition, not in Linear",
+    "issue": 162
+  }
+]

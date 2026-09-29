@@ -1,0 +1,53 @@
+{
+  "source": "G23 (#225 claim 16:44Z): src/ui-loops-management reimplements the loops-management page metadata and its route shim. Evidence: LoopsManagementPage.CVnaEF7c.js export n (the pure literal Q) + LoopsManagementPage.BAhf8Ti3.js (the re-export shim, G21 alias-map pattern with loaded-target identity pins per the #276 finding) — matrix §A 'Loops management page' row, both chunks. Module-eval surface honestly stubbed: a constructible-but-throwing SettingsListProvider base (the class-extension seam, new to the stub library), SettingsList height constants pinned from raw source (GROUP_HEIGHT 32 / ROW_HEIGHT 44), identity observer/suspense wraps, inert react namespace, 41 generated linking-only seams. All component/page exports declared GAP pending T2/T3. The clean literal byte-matches both goldens' metadata regions through the tagged-v2 serializer.",
+  "reimplements": [
+    {
+      "chunkPrefix": "LoopsManagementPage.CVnaEF7c.js",
+      "exports": [
+        {
+          "minified": "n",
+          "meaning": "export{Q as n} — the loops-management page metadata literal {id:'loops-management', title:'Manage loops', keywords:'automations usage manage'}. Reimplemented as loopsManagementPageMetadata.",
+          "evidenceLine": "src/ui-loops-management/loops-management-metadata.ts + golden test"
+        },
+        {
+          "minified": "a",
+          "meaning": "export{J as a} — the trusted-source icon renderer (jsx component). NOT covered: render-tier, declared GAP.",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        },
+        {
+          "minified": "i",
+          "meaning": "export{Y as i} — the loops filter panel (observer component over view-filter state). NOT covered: render/store-tier, declared GAP.",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        },
+        {
+          "minified": "r",
+          "meaning": "export{X as r} — the filter-values helper class (reads team/owner/source stores). NOT covered: store-tier, declared GAP pending T3.",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        },
+        {
+          "minified": "t",
+          "meaning": "export{Ne as t} — the loops-management usage page (observer + suspense, GraphQL usage query, list provider). NOT covered: render/effect-tier, declared GAP pending T2/T3.",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        }
+      ],
+      "goldens": ["loops-management.metadata"]
+    },
+    {
+      "chunkPrefix": "LoopsManagementPage.BAhf8Ti3.js",
+      "exports": [
+        {
+          "minified": "pageMetadata",
+          "meaning": "export{e as pageMetadata} over the target's n — the route shim surfaces the metadata literal; the golden pins the alias map with loaded-target identity checks and its metadata region byte-matches the target golden's. Reimplemented as the pageMetadata alias.",
+          "evidenceLine": "src/ui-loops-management/loops-management-metadata.ts + golden test"
+        },
+        {
+          "minified": "Component",
+          "meaning": "export{t as Component} — aliases the target's GAP usage-page component; declared GAP with its target.",
+          "evidenceLine": "declared out of T1 scope — no golden claims this export"
+        }
+      ],
+      "goldens": ["loops-management.shim"]
+    }
+  ],
+  "goldens": ["loops-management.metadata", "loops-management.shim"]
+}

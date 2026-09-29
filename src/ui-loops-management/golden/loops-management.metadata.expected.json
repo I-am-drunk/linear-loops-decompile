@@ -1,0 +1,152 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "LoopsManagementPage.CVnaEF7c.js",
+    "closureSize": 51,
+    "stubbed": [
+      "ActionGroups.DFZZ7QMk.js",
+      "ActionTrigger.CLIWDN56.js",
+      "AgentAutomationEmptyStateIcon.BW9M5hMw.js",
+      "AutomationNewButton.DnfgotrN.js",
+      "Avatar.DGwSs61a.js",
+      "Button.DD4dEZh7.js",
+      "CloseIcon.CKEypAHi.js",
+      "CollapseListGroupButton.CUimnkG3.js",
+      "ContentViewHeaderFilterPanel.C0PbWZVx.js",
+      "ContentViewHeaderSearch.BKW3UenD.js",
+      "ContextualMenuActions.Dlg9Oa2U.js",
+      "CurrentUserIcon.i7R3q6OF.js",
+      "FeatureFlagIcon.DOHP4b1a.js",
+      "FilterBlockStyles.BPSPHYHd.js",
+      "FilterTriggerButton.tFll_T6G.js",
+      "Flex.BS495mgi.js",
+      "FuzzyDatePicker.9NVhnGgX.js",
+      "IconButton.B46fVFUo.js",
+      "Integration.B02xjlHD.js",
+      "Issue.DRYymPCa.js",
+      "Link.B583WaeA.js",
+      "ListCell.Cs-m0hHw.js",
+      "PlusIcon.B0xt_MlV.js",
+      "ReviewsHelper.CFN0Kk_Y.js",
+      "SettingsList.BezKBffa.js",
+      "SettingsListProvider.CV4gTQOh.js",
+      "TeamLabel.CTNAPaDj.js",
+      "Text.gv7OudGa.js",
+      "UnreachableCaseError.gONpwKHj.js",
+      "WorkspaceAiSettingsAccess.BRmUKl4I.js",
+      "automationTrustedSourcesQuery.Dztz91Tf.js",
+      "currency.f0EU3rYF.js",
+      "hooks.CWG3Ngg6.js",
+      "hooks.D4LfSm6u.js",
+      "initiativeBlockFilterUtils.C7uGXJRo.js",
+      "mobx.BEIB-Y2s.js",
+      "mobxreactlite.BAMBvwfh.js",
+      "nodes.DrSymAVM.js",
+      "react.Bfm_Hgom.js",
+      "suspenseObserver.Cawdgu7K.js",
+      "usageLimitSpendQuery.U-MPSaPj.js",
+      "useComputed.Vpsf1omy.js",
+      "useQuery.CNd_8BPl.js",
+      "useScreenSize.BOSsj2U3.js",
+      "useStore.BpZDR8VN.js",
+      "useUsageVisibilityRefresh.BwqEubJb.js",
+      "useViewFilters.6E3JTpzV.js",
+      "usersBlockFilterUtils.Dj-qcEgT.js"
+    ],
+    "chunkHashes": {
+      "LoopsManagementPage.CVnaEF7c.js": "9f65221666ca89e1083bbc939e83a3f6a8dc1260de103c3481ea1be0b38d83f8",
+      "jsx-runtime.BH9nBM82.js": "d66857493635e2c732f60edba8abefa7b51eaa643b3d8905879c8ec07d7a23c6",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "pageMetadata",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "id",
+              "value": {
+                "tag": "string",
+                "value": "loops-management"
+              }
+            },
+            {
+              "key": "title",
+              "value": {
+                "tag": "string",
+                "value": "Manage loops"
+              }
+            },
+            {
+              "key": "keywords",
+              "value": {
+                "tag": "string",
+                "value": "automations usage manage"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "id"
+            },
+            {
+              "tag": "string",
+              "value": "title"
+            },
+            {
+              "tag": "string",
+              "value": "keywords"
+            }
+          ]
+        }
+      },
+      {
+        "key": "ownExportNames",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "a"
+            },
+            {
+              "tag": "string",
+              "value": "i"
+            },
+            {
+              "tag": "string",
+              "value": "n"
+            },
+            {
+              "tag": "string",
+              "value": "r"
+            },
+            {
+              "tag": "string",
+              "value": "t"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

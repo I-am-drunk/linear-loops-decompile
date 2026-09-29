@@ -1,0 +1,58 @@
+{
+ "darkDefault": {
+  "highlightVariant": {
+   "#5e6ad2": "#717df1",
+   "#f2994a": "#ffac55",
+   "lch(48% 59.31 288.43)": "#717df1",
+   "#eb5757": "#ff6766"
+  },
+  "textHighlight": {
+   "#5e6ad2": "#282d59",
+   "#f2994a": "#674121",
+   "lch(48% 59.31 288.43)": "#282d5a",
+   "#eb5757": "#642626"
+  }
+ },
+ "darkHC": {
+  "highlightVariant": {
+   "#5e6ad2": "#717df1",
+   "#f2994a": "#ffac55",
+   "lch(48% 59.31 288.43)": "#717df1",
+   "#eb5757": "#ff6766"
+  },
+  "textHighlight": {
+   "#5e6ad2": "#2b2f5b",
+   "#f2994a": "#684224",
+   "lch(48% 59.31 288.43)": "#2b2f5b",
+   "#eb5757": "#652829"
+  }
+ },
+ "lightDefault": {
+  "highlightVariant": {
+   "#5e6ad2": "#495dcd",
+   "#f2994a": "#e78931",
+   "lch(48% 59.31 288.43)": "#495dcd",
+   "#eb5757": "#e23f46"
+  },
+  "textHighlight": {
+   "#5e6ad2": "#eaebf9",
+   "#f2994a": "#fcefea",
+   "lch(48% 59.31 288.43)": "#eaebf9",
+   "#eb5757": "#fbeaeb"
+  }
+ },
+ "lightHC": {
+  "highlightVariant": {
+   "#5e6ad2": "#495dcd",
+   "#f2994a": "#e78931",
+   "lch(48% 59.31 288.43)": "#495dcd",
+   "#eb5757": "#e23f46"
+  },
+  "textHighlight": {
+   "#5e6ad2": "#ecedfa",
+   "#f2994a": "#fef1ec",
+   "lch(48% 59.31 288.43)": "#ecedfa",
+   "#eb5757": "#fdeced"
+  }
+ }
+}

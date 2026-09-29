@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # pipeline/run.sh: the one command: download Linear, build the local corpus
 # (gitignored), refresh the committed extracts/. Stages skip existing outputs;
-# `--force` rebuilds everything. Run from anywhere:  bash pipeline/run.sh
+# `--force` rebuilds everything. Invoke from the repo root:  bash pipeline/run.sh
+#   (the script self-locates once launched; the invocation path is relative).
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT="$PWD/.."
@@ -27,8 +28,12 @@ echo "== 2/4 client bundle crawl (resumable) =="
 
 COUNT_CLIENT=$(find "$CORPUS/client" -name '*.js' 2>/dev/null | wc -l || true)
 COUNT_PRETTY=$(find "$CORPUS/pretty/client" -name '*.js' 2>/dev/null | wc -l || true)
-if [ "$COUNT_PRETTY" -ge "$COUNT_CLIENT" ] && [ "$COUNT_PRETTY" -gt 0 ] && [ "$FORCE" != "--force" ]; then
-  echo "== 3/4 prettify: cached ($COUNT_PRETTY files) =="
+if [ "$COUNT_PRETTY" -eq "$COUNT_CLIENT" ] && [ "$COUNT_PRETTY" -gt 0 ] && [ "$FORCE" != "--force" ]; then
+  echo "== 3/4 prettify: cached ($COUNT_PRETTY files); validating parse integrity =="
+  if ! (cd "$CORPUS" && node ../prettify.mjs --check); then
+    echo "== 3/4 prettify: cached output invalid; rebuilding with raw fallbacks =="
+    (cd "$CORPUS" && node ../prettify.mjs)
+  fi
 else
   echo "== 3/4 prettify =="
   (cd "$CORPUS" && node ../prettify.mjs)

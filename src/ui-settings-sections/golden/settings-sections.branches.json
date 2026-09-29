@@ -1,0 +1,15 @@
+{
+  "unit": "ui-settings-sections/SettingsSections",
+  "chunk": "WorkflowAgentAutomationSettingsConstants",
+  "stubs": {
+    "ContextualMenuActions.Dlg9Oa2U.js": {
+      "file": "cma-seam-stubs.mjs",
+      "why": "full chunk name pinned (hash-rotated twin Bcp3eWHc exists \u2014 the G10/G11/G12 finding). The three imports (MP settings-item content wrapper, VP themed settings card, ZP settings list row) are hook/forwardRef-bearing barrel components, so they are seam-stubbed as string markers (the merged G13 discipline): the golden pins the exact props the entry passes through each seam; the components themselves stay their own ledger rows."
+    }
+  },
+  "drive": {
+    "file": "settings-sections-driver.mjs",
+    "exportMeaning": "export{l as a, u as i, c as n, s as r, f as t} \u2014 s (exported r) is SettingsSection (section > optional header Flex[align:flex-end, justify:space-between, gap:12, wrap] with Text[as:h3, miniPlus, labelMuted] title + optional 8-class accessory div); c (exported n) is SettingsCard (the VP seam with sx [card, flush&&cardFlush, sx]); l (exported a) is the labeled settings row (divided computed-member class trick, MP/ZP seams, labelFor ? Text[as:label, htmlFor] : Text, optional description Text[mini, labelMuted]); u (exported i) is the description-only row (same divided trick); f (exported t) is the `agent-automation-permissions` anchor id. All four components are hook-free; corpus Flex/Text execute REAL and flatten (G9), the CMA seams stay markers."
+  },
+  "notes": "G19: first golden on the matrix \u00a7F 'Workflow automation settings' row. Ten parametrizations pin every branch: section title/untitled/accessory, card flush on/off + sx composition, labeled row labelFor+description+divided vs plain (both sides of the [!!divided<<0] computed-member class sets), description row divided/undivided, plus the anchor constant. The sx tables (sectionHeader/sectionTitle/card/cardFlush/row/description) land verbatim in the projected seam props \u2014 each key:class pair is a corpus fact."
+}

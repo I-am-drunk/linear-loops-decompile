@@ -67,7 +67,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 | AiConversationTurn model (position, parts, status, role, responseToTurn) | `models.json` | corpus |
 | Send message | mutation `AiConversationSendMessage` (returns `success`, `lastSyncId`, `userMessage.id`, `assistantMessage.id`) | corpus |
 | Cancel | mutation `AiConversationCancel` | corpus |
-| Elicitations | mutation `AiConversationSendElicitationResponses`; `AgentElicitationResponseQueue.BM8OrYyq.js` | corpus |
+| Elicitations | mutation `AiConversationSendElicitationResponses`; `aiConversationSendElicitationResponsesMutation.CEPAjw5J.js` (the caller building that mutation); `AgentElicitationResponseQueue.BM8OrYyq.js` | corpus |
 | Prompt progress | mutation `AddUserMessageToAiPromptProgress` | corpus |
 | Conversation list/hydration | query `AiConversationsQuery`; `useHydrateAgentConversations.DJ4Hg1po.js` | corpus |
 | Entity chat hooks | `useEntityAgentChat.DCgQcFjU.js`, `useEntityAgentChatRoute.UazehM1s.js` | corpus |
@@ -81,7 +81,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 |---|---|---|
 | AgentSession model (status, plan, agentActivities, codingEnvironment, modelSelection, externalUrls, diffs, availableSkills) | `models.json` | corpus |
 | AgentActivity model (content, signal, ephemeral, sourceComment, queued) | `models.json` | corpus |
-| Session UI | `AgentSessionPage.D4DhwkML.js`, `AgentSessionActivities.B9yu6arN.js`, `LinearAgentCommentContent.C---p7AT.js`, `LinearAgentEmptyState(+Hero)` | corpus |
+| Session UI | `AgentSessionPage.D4DhwkML.js`, `AgentSessionActivities.B9yu6arN.js`, `LinearAgentCommentContent.C---p7AT.js`, `LinearAgentEmptyState.Bi0MEgFo.js`, `LinearAgentEmptyStateHero.Cu9P_j7X.js` | corpus |
 | Coding harness | ops `AgentSessionCodingHarness(ModelLabel)`, `AgentSessionSandbox`, `AgentSessionSshAddress`, `AgentSessionRestartWithDefaultModel`; `CodingAgentModelSelect.USYHzowP.js` | corpus |
 | PR integration | ops `PullRequestAgentSessionCreate`, `PullRequestAgentFixDispatch`, `PullRequestCommentDispatchToAgent`; model `AgentSessionToPullRequest`; `canOpenAgentSessionInReview.BbTwURTH.js` | corpus |
 | Official public API surface | `extracts/linear-official/AGENT-API.md` (12 ops) | corpus |
@@ -96,7 +96,7 @@ part vocabulary, meter placement): `docs/golden-goose-chat-route.md`.
 | Agent guidance | `AgentGuidanceSettings.BgeC_uVo.js` | corpus |
 | Skills | `AgentSkillDetailSuggestion`, `agentSkillsSettingsBackLink` | corpus |
 | Issuers | `AgentIssuersSettingsPage`, `NewAgentIssuerSettingsPage` | corpus |
-| Workflow automation settings | `WorkflowAgentAutomationSettings{Constants,Page}`, `TeamAutomationSettingsPage` | corpus |
+| Workflow automation settings | `WorkflowAgentAutomationSettingsConstants.DhHHohXQ.js`, `WorkflowAgentAutomationSettingsPage._wV8723k.js`, `TeamAutomationSettingsPage` | corpus |
 | MCP settings | `LinearAgentMcpSettings.8HfTvzal.js` | corpus |
 | Coding agent settings | `CodingAgentSettingsPage.{C73HMBrM,lcMyXnM7}.js` | corpus |
 
