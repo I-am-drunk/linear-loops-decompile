@@ -39,8 +39,12 @@ matters.
      diff against the legal lines.
    - Non-blocking PR: leave it open for review. Every session scans open PRs at
      boot and between tasks, reviews what it can (read the diff, run the gate),
-     and merges what passes. Reviews matter: the author may be a small model, and
-     a reviewer session may catch deeper issues.
+     and merges what passes — OLDEST open PR first (the oldest is the likeliest
+     to block a dependent slice; recency bias starves it). Reviews matter: the
+     author may be a small model, and a reviewer session may catch deeper
+     issues. Verdicts are COMMENT reviews with evidence — formal GitHub
+     approval is impossible on the shared account (422 on every PR), so the
+     feedback gate reads review TEXT, never review state (github skill §Reviewing).
    - Feedback gate (user directive 2026-09-27, absolute): NO PR merges while it
      has unaddressed feedback — CodeRabbit threads or peer review comments.
      Addressed means fixed in code, or answered on the thread with a reason
