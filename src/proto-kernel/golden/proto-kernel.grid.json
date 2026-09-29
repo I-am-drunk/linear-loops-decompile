@@ -1,0 +1,20 @@
+{
+  "unit": "proto-kernel/proto-kernel",
+  "chunk": "html.CjyPLfH8.js",
+  "stubs": {
+    "entry.BGeHYrTB.js": {
+      "file": "entry-stub.mjs",
+      "why": "the boot chunk's final dynamic import (B7) cascades the whole application (react-dom, mobx store, SW registration) into the sandbox; the app is not under test. An inert module keeps the import resolving so the boot chunk's __showLoadingError failure path never fires. Full name pinned from the entry's import literal."
+    },
+    "config.aM1_XCHx.js": {
+      "file": "config-bootstrap-stub.mjs",
+      "why": "the injected-config proxy chunk (same seam class as TYPE-LATTICE's stub), doubling as the browser-globals bootstrap: html.CjyPLfH8 imports it at static position 3, before config.Uz-QjVze.js whose module scope constructs new URL(n('CLIENT_URL')) and new URL(self.document.URL). The stub supplies window/document/CLIENT_ENV (every key answering a URL-shaped literal) so those module scopes complete, plus the real chunk's t/n export contract. The driven prototype methods read NONE of it — the installs are defined and executed by the entry chunk itself. See the stub header for the piece-by-piece benignity argument."
+    }
+  },
+  "drive": {
+    "file": "proto-kernel-driver.mjs",
+    "exportMeaning": "html.CjyPLfH8.js exports nothing — its module-scope call `b()` (pretty L165: f(), t(), h(), g(), l(), _(), v()) installs the ambient prototype library onto the real globals (each install via the non-enumerable defineProperty helper `i`, core.PJIFv7xf.js `ot` re-export). The driver runs after the entry import and drives the INSTALLED Array/String/Set/Promise methods over a fixed value grid, so the recorded outputs are computed by the corpus's own installed implementations (Array.distinct/concrete/groupBy/orderBy/sortBy/count at pretty L65-99, String.capitalize/deCapitalize/toQuestion L133-143, Set.isEqualTo L144-147, Promise.raceFind L101-131).",
+    "note": "conditional installs (at/toReversed/Set.difference/withResolvers/hasOwn/dispose Symbols) are deliberately not golden-driven: on a modern Node target the corpus skips them, so a golden would pin the NATIVE method (#300 review caveat). raceFind IS driven — never native, its conditional install always fires."
+  },
+  "notes": "PROTO-KERNEL (#225 claim 2026-09-29 20:22:42Z, from the R-BOOT shard's KEEP-EXACT ambient-kernel row, settled 2x on PR #300): pins distinct's <=15 indexOf fork including the NaN divergence between branches (short branch drops every NaN, Set branch keeps one), the 15/16 boundary itself, groupBy's Map-with-first-seen-order + sorted-key re-map, sortBy/orderBy's lodash delegation (string-key + function iteratees, desc flip, orders-shorter-than-iteratees, cross-type compareAscending order incl. undefined/null/NaN, index-stable ties), count, the String trio (toQuestion's single-trailing-strip + lastIndexOf guard over 10 shapes), Set.isEqualTo, and Promise.raceFind's five behaviors (first passing, default truthy predicate, none-pass -> undefined, empty array, rejection propagation). First golden executing the boot chunk html.CjyPLfH8.js itself."
+}

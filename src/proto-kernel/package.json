@@ -1,0 +1,6 @@
+{
+  "name": "proto-kernel",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the ambient prototype-extension kernel (half 1 of the boot chunk's b(): Array/String/Set/Promise/Object/Symbol installs), golden-verified against corpus execution of html.CjyPLfH8.js itself (PROTO-KERNEL claim, #225 2026-09-29)"
+}
