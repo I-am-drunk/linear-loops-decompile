@@ -75,8 +75,9 @@ subset survives publish, and the draft's live document is rewritten to
 canonical form when the round trip changed it. So the transcoder is both the
 brain boundary AND the publish-time normalizer; golden-required and
 corpus-executable in both directions in one test family. No owner decision
-needed on the format itself; the residual owner item is only whether we ship
-the canonicalization identically (we should — it is the exact behavior).
+needed: storage is PM doc JSON and we ship the canonicalization identically —
+it is pinned exact behavior, not a choice. The entry stays on this list only
+as the record of the settlement.
 Constrains R-CONTENT, R-EDITOR, R-TPL (template instantiation emits doc JSON).
 (sess_01a0eaae-45af.)
 

@@ -43,8 +43,10 @@ Settings/Teams/Workspace subset enumerated in `sections/`.
    loop CRUD has no named mutation even client-side (`publishDraft` rides sync
    transactions). The loop store is **OURS** by necessity.
    (sess_01a0ea5b-3018 + sess_01a0ea5b-56ed + sess_01a0ea5a-ff65, 3×.)
-2. **The document stack dominates the closure.** Static-only, the
-   widened-scope import closure is ~586 chunks / 14.2 MB — but all pre-01:26Z
+2. **The document stack dominates the closure** (sizing PROVISIONAL until the
+   committed two-tier tool lands — tools/remap-graph is claimed but not yet
+   merged, so these figures are thread-measured, not tool-established).
+   Static-only, the widened-scope import closure is ~586 chunks / 14.2 MB — but all pre-01:26Z
    graphs were LAZY-BLIND (raw-tree dynamic imports are backtick-quoted;
    the double-quote regexes matched none of the 536 lazy edges). Lazy-aware:
    **1,062 chunks / 21.8 MB**, and the editor/doc stack's share is ~92% of

@@ -45,11 +45,16 @@ The sidebar contains only:
 
 - **Loops** and Loops-required views, such as the list, editor/detail, runs,
   and templates when those slices are built; and
-- **Settings**, which is *our server's* configuration surface.
+- **Settings**, which includes *our server's* configuration surface and the
+  corpus-scoped Loops-hosted settings surfaces (the `/settings/...` routes the
+  remap ledger places in scope, e.g. loops management, agent automation,
+  team-scoped loop settings).
 
 The exact label/order/visual behavior of each Loops view comes from the corpus.
-The existence of a Settings entry does not mean copying Linear's Settings: its
-contents are ours and exist solely to operate this self-hosted product.
+The existence of a Settings entry does not mean copying Linear's general
+Settings: our own server-configuration pages are ours, and the Loops-hosted
+settings pages are limited to the ledger's in-scope rows — no general Linear
+workspace administration.
 
 Do **not** add Linear tracker destinations—Inbox, My issues, teams, projects,
 cycles, documents, search, generic workspace administration—or a general Linear
