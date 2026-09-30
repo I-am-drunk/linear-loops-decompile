@@ -167,8 +167,11 @@ notifications from Linear either). The copy-builder kernels themselves are
 already merged golden-backed (`src/notif-copy`) and render wherever run
 outcomes render. Options:
 (a) **OUT-chrome** (recommended): no notification surface of our own; the
-runs list and run detail carry the exact failure/response/user-message copy
-via the merged kernels; `metadata.agentAutomationFailure`/`agentAutomationRun`
+runs list and run detail are the INTENDED display path for the exact
+failure/response/user-message copy via the merged kernels (`src/notif-copy`),
+but no runs-list/run-detail consumer exists in `src/` yet, so that integration
+is unverified until the R-RUNS views ship and wire the builders;
+`metadata.agentAutomationFailure`/`agentAutomationRun`
 payload shapes remain R-SRV's run-outcome event schemas.
 (b) Our own in-app notification surface (bell/inbox): a NEW server + UI row
 family (store, read-state, grouping keys — the grouping contract is
