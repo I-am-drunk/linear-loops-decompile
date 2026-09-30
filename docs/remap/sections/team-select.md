@@ -154,7 +154,10 @@ is **owner-decision #3** (see §A); `User` 22 referenced / 11 public —
 `activeTeams` fully derived (00:54:08Z). `userCanAccessTeam` (recovered
 00:54:08Z: `public ? nonGuest||member : restricted ? member||effectiveRestrictedBy?.userIsMember : member`)
 matters for scope VALIDATION and degraded rendering only — team LISTING is
-already viewer-scoped server-side by the public API.
+already viewer-scoped server-side by the public API (scoped to the VIEWER's
+access, per the docs-site pagination/filtering digest; whether that scoping
+also EXCLUDES `private`/`restricted` teams from the result set is exactly the
+§C UNVERIFIED — this line does not settle it).
 
 The union projection page (`SPECS/data-projection.md`) is R-PROJ's deliverable;
 this table is R-T's contribution to it — cross-link, don't duplicate.
