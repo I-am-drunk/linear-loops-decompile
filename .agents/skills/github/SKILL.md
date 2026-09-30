@@ -15,6 +15,13 @@ description: GitHub access recipes for linear-loops-decompile: Code Mode methods
   paging through it is clumsy. For the tail of a long thread use unauthenticated
   curl and page until a short page:
   `curl -s "https://api.github.com/repos/I-am-drunk/linear-loops-decompile/issues/<N>/comments?per_page=100&page=<K>"`
+- RAW vs PRETTY (binding for value-laden reads, 2026-09-29): the corpus
+  prettifier rewrites template-literal interiors, so string values read from
+  `pipeline/corpus/pretty/` can be byte-wrong. Cite raw `client/*.js` offsets
+  or corpus-executed output for any copy string, label, or other value-laden
+  literal; use `pretty/` only for structure and identifiers. Proof case:
+  `labelForTeams`'s `+ ${n-3}` (no space before `+`) — correct in raw,
+  corrupted in pretty (PR #307).
 - Open PRs and issues: the REST list endpoints via curl, or
   `github.search_issues`.
 
