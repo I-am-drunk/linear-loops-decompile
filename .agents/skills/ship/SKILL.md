@@ -55,16 +55,41 @@ description: Land work in linear-loops-decompile: branch, commit, PR, gate evide
      diff excerpt — never raw corpus code or bulk corpus output (the
      legal line: extracted facts and executed VALUES are fine, Linear's
      code is not).
-7. Reviewer evidence checklist (issue #185 §4, binding): a claim about Linear
+7. The citation audit (reviewer recipe for TRANSCRIPTION/ASSEMBLY PRs,
+   #295 2026-09-30): kernel probes (step 6) presume an executable corpus
+   counterpart. A transcription or assembly PR (a shard doc, an A-track view
+   shell, any diff whose acceptance bar is the transcription rule + seam rule)
+   ships cited STRUCTURE instead — so its review is a citation audit:
+   - Census: extract every string literal, className token, copy string, and
+     structural claim from the diff (grep-grade; the same census
+     `ci/check-ui.sh` will eventually automate for UI slices).
+   - Dereference each citation. Value-laden strings ONLY against the RAW
+     tree or corpus-executed output, never `pretty/` — the prettifier
+     rewrites template-literal interiors, so a pretty-tree check can
+     confirm a byte-wrong string (proof case: `labelForTeams`'s
+     `+ ${n-3}` no-space byte fact, PR #307). `pretty/` remains fine for
+     structure and identifiers.
+   - Bucket every uncited literal: seam-list / data-gap region / VIOLATION.
+     A violation is a red verdict regardless of plausibility — plausibility
+     was R3.4's failure smell, not its defense.
+   - Derived-pinned structural claims ("this branch behaves like that one")
+     need the author's probe-before-ship record where an executable
+     counterpart exists, or a raw-tree re-cite where none does. "Derived
+     from adjacent structure" is not a citation (the #307 flat-leg
+     divergence measured this failure mode at >=1 per PR carrying one).
+   - Verdicts are evidence-shaped: "N/N literals cited, K seam, M gap,
+     0 violations" — not taste-shaped. Worked example: the #311 merged
+     review.
+8. Reviewer evidence checklist (issue #185 §4, binding): a claim about Linear
    behavior verified against only ONE evidence leg when both cover it is a
    review finding. Corpus = what the client does; official docs
    (`extracts/linear-official/docs-site/`) = what the public API guarantees.
    Check citations exist and point at citable sources — the upstream
    `extracts/linear-official/docs/*.md` stubs are never citable (AGENTS.md
    hard rule).
-8. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
+9. Merge method: squash via `github.merge_pull_request`. `main` is PR-only for
    everyone (ruleset `main-pr-only`): no direct pushes, no force pushes.
-9. Update `STATUS.md` in the same PR whenever the board changes.
+10. Update `STATUS.md` in the same PR whenever the board changes.
 
 Legal audit before every merge: no Linear proprietary material anywhere in the
 diff. The repo is public; this line is absolute.
