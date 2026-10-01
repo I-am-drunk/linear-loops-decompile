@@ -1,0 +1,49 @@
+{
+  "source": "CONFIG-KERNEL (#225 claim 2026-09-29, from the merged R-BOOT shard docs/remap/sections/boot-config.md \u00a71 B3/B4 + \u00a73): src/config-kernel reimplements the config seam. Evidence at vault c44f2cf: config.aM1_XCHx.js (the injectable-config contract \u2014 throwing Proxy export t + injectConfig export n; 50 importer chunks), config.Uz-QjVze.js (the 90-member CONFIG table over window.CLIENT_ENV with the baked VITE_* fallback \u2014 accessors n (required, pretty L104) and r (optional, L109); 85 importer chunks), and html.CjyPLfH8.js boot rows B3 (o(s) = injectConfig(TABLE)) and B4 (window.__toStaticUrl, pretty L168\u2013171). Four corpus-exec goldens: the contract chunk executed REAL with zero stubs; the table chunk executed REAL over a fixture world installed through the Features import seam; the boot chunk executed REAL (both CACHE_BUST branches across a case pair) with the contract chunk replaced by a recording injectConfig and the app entry stubbed empty (declared). The clean module byte-matches the contract, table, and B4-branch goldens through the tagged-v2 serializer; the baked first-party VALUES are deliberately not shipped (the mechanism takes the fallback table as a parameter \u2014 the R-SRV CLIENT_ENV-injection row supplies ours).",
+  "reimplements": [
+    {
+      "chunkPrefix": "config.aM1_XCHx.js",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "the config Proxy: throws the exact injection-required copy until injectConfig runs, then forwards reads (missing keys read undefined; re-injection replaces). Reimplemented as createInjectableConfig().config",
+          "evidenceLine": "src/config-kernel/config.ts + config-contract golden"
+        },
+        {
+          "minified": "n",
+          "meaning": "injectConfig: unconditional replacement setter. Reimplemented as createInjectableConfig().injectConfig",
+          "evidenceLine": "src/config-kernel/config.ts + config-contract golden"
+        }
+      ],
+      "goldens": ["config-contract.case"]
+    },
+    {
+      "chunkPrefix": "config.Uz-QjVze.js",
+      "exports": [
+        {
+          "minified": "t",
+          "meaning": "the 90-member CONFIG table (82 accessor keys: 64 n()/18 r(); FLAG_CLIENT; the __RELEASE_INFO block; 3 IS_* constants) with every derivation verbatim (?? vs ||, === 'true' coercions, !!, the /pr-(\\d+)/ host fallback, CLIENT_HOSTNAME via new URL). Reimplemented as buildConfigTable + requiredEnv/optionalEnv + ACCESSOR_KEYS",
+          "evidenceLine": "src/config-kernel/config.ts + config-table golden"
+        }
+      ],
+      "goldens": ["config-table.case"]
+    },
+    {
+      "chunkPrefix": "html.CjyPLfH8.js",
+      "exports": [
+        {
+          "minified": "(module eval)",
+          "meaning": "boot rows B3 + B4 only: injectConfig(TABLE-object identity) and window.__toStaticUrl = ASSET_URL + path (+ '?' + CACHE_BUST when truthy), both ternary branches pinned across the case pair. Reimplemented as toStaticUrl; B2's prototype/date installers are PROTO-KERNEL and DATE-KERNEL ground (probed ran-first only), B5\u2013B13 stay with their R-BOOT dispositions",
+          "evidenceLine": "src/config-kernel/config.ts + boot-static-url golden pair"
+        }
+      ],
+      "goldens": ["boot-static-url.bust.case", "boot-static-url.nobust.case"]
+    }
+  ],
+  "goldens": [
+    "config-contract.case",
+    "config-table.case",
+    "boot-static-url.bust.case",
+    "boot-static-url.nobust.case"
+  ]
+}

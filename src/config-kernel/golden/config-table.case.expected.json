@@ -1,0 +1,1049 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "config.Uz-QjVze.js",
+    "closureSize": 2,
+    "stubbed": [
+      "Features.CzCTqIRs.js"
+    ],
+    "chunkHashes": {
+      "config.Uz-QjVze.js": "3e1839b2a07993bebd77e5f6ce3ae1e0171d3aee45677632c77b857d74c5d880"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "ownKeys",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "FLAG_CLIENT"
+            },
+            {
+              "tag": "string",
+              "value": "ALGOLIA_SEARCH_KEY"
+            },
+            {
+              "tag": "string",
+              "value": "API_SERVER_URL"
+            },
+            {
+              "tag": "string",
+              "value": "ASSET_URL"
+            },
+            {
+              "tag": "string",
+              "value": "CACHE_BUST"
+            },
+            {
+              "tag": "string",
+              "value": "CLIENT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "OAUTH_CLIENT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "CLIENT_HOSTNAME"
+            },
+            {
+              "tag": "string",
+              "value": "ANALYTICS_URL"
+            },
+            {
+              "tag": "string",
+              "value": "CLOUDFLARE_TURNSTILE_SITEKEY"
+            },
+            {
+              "tag": "string",
+              "value": "DEMO_ORGANIZATION_ID"
+            },
+            {
+              "tag": "string",
+              "value": "DEMO_USER_EMAIL"
+            },
+            {
+              "tag": "string",
+              "value": "DEMO_USER_ID"
+            },
+            {
+              "tag": "string",
+              "value": "DEMO_USER_ACCOUNT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "DISCORD_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "DISCORD_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "EMAIL_INTAKE_HOSTNAME"
+            },
+            {
+              "tag": "string",
+              "value": "EMAIL_INTAKE_FROM_EMAIL"
+            },
+            {
+              "tag": "string",
+              "value": "FIGMA_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "FIGMA_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_APP_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_IMPORTER_APP_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_CODE_ACCESS_APP_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_APP_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_APP_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_CODE_ACCESS_APP_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_CODE_ACCESS_APP_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "GITHUB_IMPORTER_INSTALL_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GONG_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "GONG_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GOOGLE_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "GOOGLE_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GOOGLE_SHEETS_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GOOGLE_CALENDAR_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "GRAPHQL_SERVER_HTTP"
+            },
+            {
+              "tag": "string",
+              "value": "INTERCOM_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "JIRA_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "JIRA_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "LINEAR_DEMO_ORGANIZATION_ID"
+            },
+            {
+              "tag": "string",
+              "value": "NOTION_INTERNAL_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "FIGMA_INTERNAL_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "PAGERDUTY_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "PAGERDUTY_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "LAUNCHDARKLY_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "LAUNCHDARKLY_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "MCP_INTERNAL_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "MICROSOFT_TEAMS_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "PUSH_MESSAGE_VAPID_PUBLIC_KEY"
+            },
+            {
+              "tag": "string",
+              "value": "SANITY_PROJECT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "SANITY_CHANGELOG_API_KEY"
+            },
+            {
+              "tag": "string",
+              "value": "SECURE_IMAGE_PROXY_URL"
+            },
+            {
+              "tag": "string",
+              "value": "SENTRY_DSN"
+            },
+            {
+              "tag": "string",
+              "value": "SENTRY_DIST"
+            },
+            {
+              "tag": "string",
+              "value": "SENTRY_TUNNEL"
+            },
+            {
+              "tag": "string",
+              "value": "SENTRY_INTEGRATION_APP_NAME"
+            },
+            {
+              "tag": "string",
+              "value": "SLACK_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "SLACK_STAGING_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "SLACK_INTAKE_APP_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "SOCKET_SERVER_URL"
+            },
+            {
+              "tag": "string",
+              "value": "STRIPE_PUBLIC_KEY"
+            },
+            {
+              "tag": "string",
+              "value": "ZENDESK_INTERNAL_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "ZENDESK_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "ZENDESK_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "FRONT_INTERNAL_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "FRONT_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "FRONT_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "BUILD_REVISION"
+            },
+            {
+              "tag": "string",
+              "value": "DEPLOYED_AT"
+            },
+            {
+              "tag": "string",
+              "value": "SHORT_SHA"
+            },
+            {
+              "tag": "string",
+              "value": "PR_NUMBER"
+            },
+            {
+              "tag": "string",
+              "value": "PREVIEW_BUILD"
+            },
+            {
+              "tag": "string",
+              "value": "PREVIEW_PR_NUMBER"
+            },
+            {
+              "tag": "string",
+              "value": "PREVIEW_FEATURE_FLAGS"
+            },
+            {
+              "tag": "string",
+              "value": "POSTHOG_WRITE_KEY"
+            },
+            {
+              "tag": "string",
+              "value": "POSTHOG_SESSION_REPLAY_WRITE_KEY"
+            },
+            {
+              "tag": "string",
+              "value": "COUNTRY_CODE"
+            },
+            {
+              "tag": "string",
+              "value": "SALESFORCE_INTERNAL_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "SALESFORCE_OAUTH_CLIENT_ID"
+            },
+            {
+              "tag": "string",
+              "value": "SALESFORCE_OAUTH_REDIRECT_URL"
+            },
+            {
+              "tag": "string",
+              "value": "ASKS_WEB_FORMS_URL"
+            },
+            {
+              "tag": "string",
+              "value": "UPLOAD_BUCKET_DOMAIN"
+            },
+            {
+              "tag": "string",
+              "value": "DEV_BRANCH"
+            },
+            {
+              "tag": "string",
+              "value": "LINCTL_CONTROL_PLANE_URL"
+            },
+            {
+              "tag": "string",
+              "value": "ENABLE_CRASH_REPORTING"
+            },
+            {
+              "tag": "string",
+              "value": "IS_PRODUCTION_BUILD"
+            },
+            {
+              "tag": "string",
+              "value": "IS_DEVELOPMENT_BUILD"
+            },
+            {
+              "tag": "string",
+              "value": "IS_TEST_ENV"
+            },
+            {
+              "tag": "string",
+              "value": "IS_PRODUCTION_RUNTIME"
+            },
+            {
+              "tag": "string",
+              "value": "DEBUG_LOG_NETWORK_DATA"
+            },
+            {
+              "tag": "string",
+              "value": "DEBUG_LOG_EXPAND_BATCH_LOAD"
+            }
+          ]
+        }
+      },
+      {
+        "key": "table",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "FLAG_CLIENT",
+              "value": {
+                "tag": "string",
+                "value": "web"
+              }
+            },
+            {
+              "key": "ALGOLIA_SEARCH_KEY",
+              "value": {
+                "tag": "string",
+                "value": "env-algolia"
+              }
+            },
+            {
+              "key": "API_SERVER_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://api.example.test"
+              }
+            },
+            {
+              "key": "ASSET_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://static.linear.app/client/"
+              }
+            },
+            {
+              "key": "CACHE_BUST",
+              "value": {
+                "tag": "string",
+                "value": "cb-123"
+              }
+            },
+            {
+              "key": "CLIENT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://linear.app"
+              }
+            },
+            {
+              "key": "OAUTH_CLIENT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://oauth.example.test"
+              }
+            },
+            {
+              "key": "CLIENT_HOSTNAME",
+              "value": {
+                "tag": "string",
+                "value": "linear.app"
+              }
+            },
+            {
+              "key": "ANALYTICS_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://analytics.example.test"
+              }
+            },
+            {
+              "key": "CLOUDFLARE_TURNSTILE_SITEKEY",
+              "value": {
+                "tag": "string",
+                "value": "env-turnstile"
+              }
+            },
+            {
+              "key": "DEMO_ORGANIZATION_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-demo-org"
+              }
+            },
+            {
+              "key": "DEMO_USER_EMAIL",
+              "value": {
+                "tag": "string",
+                "value": "demo@example.test"
+              }
+            },
+            {
+              "key": "DEMO_USER_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-demo-user"
+              }
+            },
+            {
+              "key": "DEMO_USER_ACCOUNT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-demo-account"
+              }
+            },
+            {
+              "key": "DISCORD_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-discord-id"
+              }
+            },
+            {
+              "key": "DISCORD_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/discord"
+              }
+            },
+            {
+              "key": "EMAIL_INTAKE_HOSTNAME",
+              "value": {
+                "tag": "string",
+                "value": "intake.example.test"
+              }
+            },
+            {
+              "key": "EMAIL_INTAKE_FROM_EMAIL",
+              "value": {
+                "tag": "string",
+                "value": "issues@example.test"
+              }
+            },
+            {
+              "key": "FIGMA_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-figma-id"
+              }
+            },
+            {
+              "key": "FIGMA_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/figma"
+              }
+            },
+            {
+              "key": "GITHUB_APP_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://github.example.test/app"
+              }
+            },
+            {
+              "key": "GITHUB_IMPORTER_APP_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://github.example.test/importer"
+              }
+            },
+            {
+              "key": "GITHUB_CODE_ACCESS_APP_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://github.example.test/code"
+              }
+            },
+            {
+              "key": "GITHUB_APP_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/gh"
+              }
+            },
+            {
+              "key": "GITHUB_APP_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-gh-id"
+              }
+            },
+            {
+              "key": "GITHUB_CODE_ACCESS_APP_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/ghca"
+              }
+            },
+            {
+              "key": "GITHUB_CODE_ACCESS_APP_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-ghca-id"
+              }
+            },
+            {
+              "key": "GITHUB_IMPORTER_INSTALL_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://github.example.test/install"
+              }
+            },
+            {
+              "key": "GONG_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-gong-id"
+              }
+            },
+            {
+              "key": "GONG_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/gong"
+              }
+            },
+            {
+              "key": "GOOGLE_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-google-id"
+              }
+            },
+            {
+              "key": "GOOGLE_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/google"
+              }
+            },
+            {
+              "key": "GOOGLE_SHEETS_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/sheets"
+              }
+            },
+            {
+              "key": "GOOGLE_CALENDAR_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/calendar"
+              }
+            },
+            {
+              "key": "GRAPHQL_SERVER_HTTP",
+              "value": {
+                "tag": "string",
+                "value": "https://gql.example.test"
+              }
+            },
+            {
+              "key": "INTERCOM_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-intercom-id"
+              }
+            },
+            {
+              "key": "JIRA_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-jira-id"
+              }
+            },
+            {
+              "key": "JIRA_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/jira"
+              }
+            },
+            {
+              "key": "LINEAR_DEMO_ORGANIZATION_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-linear-demo-org"
+              }
+            },
+            {
+              "key": "NOTION_INTERNAL_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-notion-id"
+              }
+            },
+            {
+              "key": "FIGMA_INTERNAL_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-figma-internal-id"
+              }
+            },
+            {
+              "key": "PAGERDUTY_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-pd-id"
+              }
+            },
+            {
+              "key": "PAGERDUTY_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/pd"
+              }
+            },
+            {
+              "key": "LAUNCHDARKLY_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-ld-id"
+              }
+            },
+            {
+              "key": "LAUNCHDARKLY_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/ld"
+              }
+            },
+            {
+              "key": "MCP_INTERNAL_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-mcp-id"
+              }
+            },
+            {
+              "key": "MICROSOFT_TEAMS_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-teams-id"
+              }
+            },
+            {
+              "key": "PUSH_MESSAGE_VAPID_PUBLIC_KEY",
+              "value": {
+                "tag": "string",
+                "value": "env-vapid"
+              }
+            },
+            {
+              "key": "SANITY_PROJECT_ID",
+              "value": {
+                "tag": "null"
+              }
+            },
+            {
+              "key": "SANITY_CHANGELOG_API_KEY",
+              "value": {
+                "tag": "string",
+                "value": ""
+              }
+            },
+            {
+              "key": "SECURE_IMAGE_PROXY_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://imgproxy.example.test"
+              }
+            },
+            {
+              "key": "SENTRY_DSN",
+              "value": {
+                "tag": "null"
+              }
+            },
+            {
+              "key": "SENTRY_DIST",
+              "value": {
+                "tag": "string",
+                "value": "env-sentry-dist"
+              }
+            },
+            {
+              "key": "SENTRY_TUNNEL",
+              "value": {
+                "tag": "null"
+              }
+            },
+            {
+              "key": "SENTRY_INTEGRATION_APP_NAME",
+              "value": {
+                "tag": "string",
+                "value": "env-sentry-app"
+              }
+            },
+            {
+              "key": "SLACK_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-slack-id"
+              }
+            },
+            {
+              "key": "SLACK_STAGING_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-slack-staging-id"
+              }
+            },
+            {
+              "key": "SLACK_INTAKE_APP_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-slack-intake-id"
+              }
+            },
+            {
+              "key": "SOCKET_SERVER_URL",
+              "value": {
+                "tag": "string",
+                "value": "wss://sync.example.test"
+              }
+            },
+            {
+              "key": "STRIPE_PUBLIC_KEY",
+              "value": {
+                "tag": "string",
+                "value": "env-stripe-pk"
+              }
+            },
+            {
+              "key": "ZENDESK_INTERNAL_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-zd-internal-id"
+              }
+            },
+            {
+              "key": "ZENDESK_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-zd-id"
+              }
+            },
+            {
+              "key": "ZENDESK_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/zd"
+              }
+            },
+            {
+              "key": "FRONT_INTERNAL_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-front-internal-id"
+              }
+            },
+            {
+              "key": "FRONT_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-front-id"
+              }
+            },
+            {
+              "key": "FRONT_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/front"
+              }
+            },
+            {
+              "key": "BUILD_REVISION",
+              "value": {
+                "tag": "string",
+                "value": "rel-rev-9"
+              }
+            },
+            {
+              "key": "DEPLOYED_AT",
+              "value": {
+                "tag": "date",
+                "value": "2026-09-29T12:00:00.000Z"
+              }
+            },
+            {
+              "key": "SHORT_SHA",
+              "value": {
+                "tag": "string",
+                "value": "abc1234"
+              }
+            },
+            {
+              "key": "PR_NUMBER",
+              "value": {
+                "tag": "string",
+                "value": "77"
+              }
+            },
+            {
+              "key": "PREVIEW_BUILD",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "PREVIEW_PR_NUMBER",
+              "value": {
+                "tag": "string",
+                "value": "4242"
+              }
+            },
+            {
+              "key": "PREVIEW_FEATURE_FLAGS",
+              "value": {
+                "tag": "array",
+                "values": [
+                  {
+                    "tag": "string",
+                    "value": "alpha"
+                  },
+                  {
+                    "tag": "string",
+                    "value": "beta"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "POSTHOG_WRITE_KEY",
+              "value": {
+                "tag": "string",
+                "value": "env-posthog"
+              }
+            },
+            {
+              "key": "POSTHOG_SESSION_REPLAY_WRITE_KEY",
+              "value": {
+                "tag": "string",
+                "value": "env-posthog-replay"
+              }
+            },
+            {
+              "key": "COUNTRY_CODE",
+              "value": {
+                "tag": "string",
+                "value": "DE"
+              }
+            },
+            {
+              "key": "SALESFORCE_INTERNAL_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-sf-internal-id"
+              }
+            },
+            {
+              "key": "SALESFORCE_OAUTH_CLIENT_ID",
+              "value": {
+                "tag": "string",
+                "value": "env-sf-id"
+              }
+            },
+            {
+              "key": "SALESFORCE_OAUTH_REDIRECT_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://cb.example.test/sf"
+              }
+            },
+            {
+              "key": "ASKS_WEB_FORMS_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://asks.example.test"
+              }
+            },
+            {
+              "key": "UPLOAD_BUCKET_DOMAIN",
+              "value": {
+                "tag": "string",
+                "value": "https://uploads.example.test"
+              }
+            },
+            {
+              "key": "DEV_BRANCH",
+              "value": {
+                "tag": "undefined"
+              }
+            },
+            {
+              "key": "LINCTL_CONTROL_PLANE_URL",
+              "value": {
+                "tag": "string",
+                "value": "https://linctl.example.test"
+              }
+            },
+            {
+              "key": "ENABLE_CRASH_REPORTING",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "IS_PRODUCTION_BUILD",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "IS_DEVELOPMENT_BUILD",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "IS_TEST_ENV",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "IS_PRODUCTION_RUNTIME",
+              "value": {
+                "tag": "boolean",
+                "value": true
+              }
+            },
+            {
+              "key": "DEBUG_LOG_NETWORK_DATA",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            },
+            {
+              "key": "DEBUG_LOG_EXPAND_BATCH_LOAD",
+              "value": {
+                "tag": "boolean",
+                "value": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "consoleErrors",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "string",
+              "value": "Environment variable SANITY_CHANGELOG_API_KEY is not defined"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

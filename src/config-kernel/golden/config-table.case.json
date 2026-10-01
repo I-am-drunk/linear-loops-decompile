@@ -1,0 +1,15 @@
+{
+  "unit": "config-kernel/config-table",
+  "chunk": "config.Uz-QjVze.js",
+  "stubs": {
+    "Features.CzCTqIRs.js": {
+      "file": "world-env-stub.mjs",
+      "why": "the fixture seam: the subject chunk reads window.CLIENT_ENV, window.__RELEASE_INFO, and self.document.URL at MODULE EVAL, and its single static import is this chunk \u2014 ESM executes imports first, so stubbing Features is the one place the fixture world (and the console.error recorder for the required accessor's degraded copy) can install in time without touching the subject. Cost declared: the real Features chunk does not execute; its one consumed export (`r`, the client enum \u2014 pretty L1054 `d = {web, ios, android}`, exported `d as r` L1115) is pinned verbatim from raw source, so FLAG_CLIENT flows from pinned corpus data (G12 precedent). Full chunk name pinned from the subject's import literal."
+    }
+  },
+  "drive": {
+    "file": "table-env-driver.mjs",
+    "exportMeaning": "export{t} (config.Uz-QjVze.js raw): t = the 90-member CONFIG table literal computed at module eval (pretty L12\u2013102) over accessors n (required, L104) and r (optional, L109). The driver projects ownKeys (key census in own-key order), the table verbatim, and the recorded console.error calls."
+  },
+  "notes": "CONFIG-KERNEL (#225 claim 2026-09-29, merged R-BOOT shard \u00a73 row '82-accessor-key table + __RELEASE_INFO derived block' KEEP-EXACT golden-required (b)): one fixture world exercises every distinct path \u2014 CLIENT_ENV per-key `in` wins (79 keys hit); baked VITE_ fallback on `in` miss (ASSET_URL, CLIENT_URL omitted \u2192 first-party baked values + the CLIENT_HOSTNAME = new URL(n(CLIENT_URL)).hostname derivation); the required accessor's degraded path (SANITY_CHANGELOG_API_KEY explicitly undefined \u2192 exact console.error copy + '' in the table, exactly once); null passthrough (SANITY_PROJECT_ID null through n() \u2014 strict-undefined guard; SENTRY_DSN/SENTRY_TUNNEL null through r() \u2014 the R-BOOT \u00a74 telemetry self-disable shape); both-miss \u2192 undefined on an optional key with no baked entry (DEV_BRANCH omitted); OAUTH_CLIENT_URL ?? vs PREVIEW_PR_NUMBER || (empty string falls through || to the /pr-(\\d+)/ host regex on the pr-4242 fixture URL, but survives ??); PREVIEW_FEATURE_FLAGS 'alpha,,beta' split+filter(Boolean); the === 'true' coercions incl. case-sensitivity ('TRUE' \u2192 false) ; !!'' \u2192 false; the __RELEASE_INFO block with DEPLOYED_AT as a real Date (tagged-v2 pins the type); the three IS_* build constants; LINCTL fallback suppressed by a CLIENT_ENV hit. The 11 no-baked-fallback optional keys and the n() both-miss unreachability are facts in the module header, verified by the census."
+}

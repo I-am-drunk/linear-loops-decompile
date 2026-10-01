@@ -1,0 +1,6 @@
+{
+  "name": "config-kernel",
+  "private": true,
+  "type": "module",
+  "description": "Clean reimplementation of the config seam: the injectable-config contract (throwing proxy + injectConfig), the 82-accessor-key CONFIG table over CLIENT_ENV with the VITE_-keyed fallback mechanism, and boot's __toStaticUrl kernel, golden-verified against corpus execution (CONFIG-KERNEL claim, #225 2026-09-29)"
+}

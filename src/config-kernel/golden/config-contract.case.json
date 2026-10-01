@@ -1,0 +1,9 @@
+{
+  "unit": "config-kernel/injectable-config",
+  "chunk": "config.aM1_XCHx.js",
+  "drive": {
+    "file": "uninjected-driver.mjs",
+    "exportMeaning": "export{t as n, e as t} (config.aM1_XCHx.js raw export map): t = the throwing config Proxy (`e`, raw body), n = injectConfig (`t(e){n=e}`). Full chunk name pinned: the hash-rotated twin config.Uz-QjVze.js is the TABLE chunk, a different unit (its own case), and a prefix ref `config` is ambiguous between them."
+  },
+  "notes": "CONFIG-KERNEL (#225 claim 2026-09-29, merged R-BOOT shard \u00a73 row 'throwing-proxy + injectConfig contract' KEEP-EXACT golden-required (b),(c)): pins the exact uninjected-read throw copy (the reachable degraded state: any of the 50 importer chunks reading config before boot's injectConfig call), injection passthrough, missing-key-after-injection = undefined (bare `n[t]`, no existence check), and unconditional re-injection replacement. Closure size 1, zero stubs \u2014 the chunk executes REAL."
+}

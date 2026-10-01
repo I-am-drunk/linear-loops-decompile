@@ -29,7 +29,7 @@ Boot order read top-to-bottom in `html.CjyPLfH8.js`, then `entry.BGeHYrTB.js`:
 | B1 | modulepreload polyfill (MutationObserver over `link[rel=modulepreload]`; crossOrigin→credentials map) | html.CjyPLfH8 top IIFE | ADAPT (modern browsers; keep the credentials map if kept at all) | no | N-A |
 | B2 | `b()` — prototype-extension installer | html.CjyPLfH8 `b()` | KEEP-EXACT — see §2 | yes (b) | N-A |
 | B3 | `injectConfig(CONFIG)` — config seam wiring | html.CjyPLfH8, imports from both config chunks | KEEP-EXACT — see §3 | yes (b),(c) | N-A |
-| B4 | `window.__toStaticUrl = e => ASSET_URL + e (+ '?' + CACHE_BUST)` | html.CjyPLfH8 | KEEP-EXACT (every `__vite__mapDeps` table in all 1,550 chunks calls it) | yes (b) — one tiny golden with B3 | N-A |
+| B4 | `window.__toStaticUrl = e => ASSET_URL + e (+ '?' + CACHE_BUST)` | html.CjyPLfH8 | KEEP-EXACT (every `__vite__mapDeps` table in all 1,550 chunks calls it) | **LANDED** — `src/config-kernel` boot-static-url golden pair (both CACHE_BUST branches + the B3 table-object-identity pin) | N-A |
 | B5 | `jitless: true` init; `requestIdleCallback`/`cancelIdleCallback` polyfills | html.CjyPLfH8 | KEEP-EXACT (cheap) | no | N-A |
 | B6 | Electron locale patch: validate `window.__electronSystemLocale__` via `new Intl.Locale` (strip `@`-suffix, fall back `en-US`), REPLACE `Intl.DateTimeFormat`/`Intl.NumberFormat` constructors with locale-defaulting wrappers (`Object.setPrototypeOf` preserved), redefine `navigator.language`/`languages` getters | html.CjyPLfH8 | OUT (desktop-only; we ship no Electron shell). NOTE for the harness: this is why every tz/locale golden is ambient-sensitive — first-party desktop pins ambient locale at boot | no | N-A |
 | B7 | dynamic-import `entry.BGeHYrTB.js` (96-dep preload list); failure → `window.__clearEntryLoadTimeout?.()` + `window.__showLoadingError?.('script-error', err)` | html.CjyPLfH8 tail | KEEP-EXACT structure; the two `window.__*` hooks are defined in the MISSING index.html — see §6 | no | N-A |
@@ -140,8 +140,8 @@ ThemeProvider-injection finding (#295 14:38Z).
 
 | Row | Disposition | Golden-req | Data plane |
 |---|---|---|---|
-| throwing-proxy + `injectConfig` contract | KEEP-EXACT | yes (b),(c) — the throw copy is a reachable degraded state | N-A |
-| 82-accessor-key table (64 `n()` / 18 `r()`) + `__RELEASE_INFO` derived block | KEEP-EXACT (transcription-rule DATA: key names + accessor kind per key) | yes (b) — one golden pins the key surface and the n/r fork | N-A |
+| throwing-proxy + `injectConfig` contract | KEEP-EXACT | **LANDED** — `src/config-kernel` config-contract golden (exact throw copy, passthrough, missing-key undefined, re-injection replacement; chunk executed REAL, zero stubs) | N-A |
+| 82-accessor-key table (64 `n()` / 18 `r()`) + `__RELEASE_INFO` derived block | KEEP-EXACT (transcription-rule DATA: key names + accessor kind per key) | **LANDED** — `src/config-kernel` config-table golden (ownKeys census in corpus order, every derivation incl. the `??`/`\|\|` forks + `=== 'true'` coercions + the `/pr-(\d+)/` host fallback, the required accessor's exact degraded copy, null passthrough incl. the §4 SENTRY_DSN self-disable shape; chunk executed REAL over a fixture world) | N-A |
 | the VALUES our deployment injects | NEW — "CLIENT_ENV injection endpoint" server row (our analog of first-party's index.html script). R-SRV adjacency | no (spec-ratified) | OURS |
 | required-key coverage leg | NEW (tools/coverage): the set of `n()`-accessed keys demanded by the widened-scope closure is GENERATED, never hand-listed (00:56Z rule) — a deploy missing one fails loudly in CI, not silently at `console.error` | — | N-A |
 

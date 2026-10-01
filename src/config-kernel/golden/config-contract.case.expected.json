@@ -1,0 +1,63 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "config.aM1_XCHx.js",
+    "closureSize": 1,
+    "stubbed": [],
+    "chunkHashes": {
+      "config.aM1_XCHx.js": "a2bc47862761928f27035f29e5da51711bbd87ad452fad06618097ba3421a5ef"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "uninjectedThrow",
+        "value": {
+          "tag": "string",
+          "value": "Config has not been injected. Call injectConfig() during client initialization."
+        }
+      },
+      {
+        "key": "injectedRead",
+        "value": {
+          "tag": "string",
+          "value": "https://first.example.test"
+        }
+      },
+      {
+        "key": "injectedNumber",
+        "value": {
+          "tag": "number",
+          "value": "3"
+        }
+      },
+      {
+        "key": "missingKeyRead",
+        "value": {
+          "tag": "undefined"
+        }
+      },
+      {
+        "key": "reinjectedRead",
+        "value": {
+          "tag": "string",
+          "value": "https://second.example.test"
+        }
+      },
+      {
+        "key": "replacedKeyRead",
+        "value": {
+          "tag": "undefined"
+        }
+      }
+    ]
+  }
+}
