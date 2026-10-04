@@ -88,6 +88,10 @@ async function handle(opts: HttpOptions, req: IncomingMessage, res: ServerRespon
         } catch { /* try next */ }
       }
     }
-    res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(appDocument(url));
+    // Render BEFORE writing the header: writeHead(200) commits the status, so
+    // a throw in appDocument would be reported as 200 "internal error" by the
+    // catch in createHttpServer rather than as a 500.
+    const doc = appDocument(url);
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(doc);
   }
 }

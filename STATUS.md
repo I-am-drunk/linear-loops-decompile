@@ -11,16 +11,18 @@ the decompile-and-publish method retired (`docs/PROVENANCE.md`).
 
 | Lane | Next slice | State |
 |---|---|---|
-| SH shell | SH1 **shipped** (PR #320) → SH2 layout primitives | SH3 node/markdown tier open |
+| SH shell | SH1 **in review** (PR #320) → SH2 layout primitives | SH3 node/markdown tier open |
 | ST settings | ST1 settings shell | open |
 | IN inference | IN1 provider registry | open |
 | IG integrations | IG1 integration interface | open |
-| AU automations | AU1 list page | unblocked — SH1 landed |
+| AU automations | AU1 list page | waits on SH1 merging (#320) |
 | MCP mcp | MCP1 registry model | open |
 
-`SH1` landed, so every UI lane is unblocked: `registerSurface(path, fn)` is the
-seam. `SH2` (layout primitives) and `SH3` (node/markdown render tier, shared by
-the prompt editor and the run transcript) are the next shell slices.
+`SH1` is **in review at #320, not yet on `main`** — do not start a slice that
+imports `src/ui` until it merges. Once it does, `registerSurface(path, fn)` is
+the seam every UI lane mounts through. `SH2` (layout primitives) and `SH3`
+(node/markdown render tier, shared by the prompt editor and the run
+transcript) are the next shell slices and depend on it.
 
 ## Open PRs
 
@@ -41,12 +43,10 @@ budget. Model layer (`src/model`). Theme (`src/ui-theme`, token-generated).
 ~16 presentation kernels under `src/ui-*`. Analysis harness (`pipeline/`,
 `tools/`).
 
-UI: the shell (`src/ui`) — hash router, nav from the route table, theme tokens
-as CSS variables, a placeholder per unclaimed route. Renders in a browser;
-surfaces mount via `registerSurface`.
-
-Still empty: every actual surface. The nav is honest about which slice owes
-each one.
+UI: nothing on `main` yet. The shell is in review at #320 — hash router, nav
+from the route table, theme tokens as CSS variables, a placeholder per
+unclaimed route, verified rendering in a browser. Until it merges, zero routes
+render.
 
 ## History
 
