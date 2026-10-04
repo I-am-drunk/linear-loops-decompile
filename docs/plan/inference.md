@@ -22,7 +22,10 @@ automation — and, with prompt chaining, per chain step.
 
 Pairing-based rather than key-based: the server pairs with a Code Connect
 environment and gets a scoped session token, so no long-lived API key sits in
-our database. The transport pattern already exists in this repo
+our database. The pairing exchange and the channel are **`wss:` only** — the
+transport sends the token in its first frame after the socket opens, so a
+`ws:` URL would put it on the wire in cleartext. IN4 rejects a non-TLS URL
+rather than warning about it. The transport pattern already exists in this repo
 (`src/connect`, `SPECS/t3-connect.md`) — descriptor fetch, pairing exchange,
 scoped token, WebSocket channel. The provider adapter wraps that channel in the
 registry's interface.

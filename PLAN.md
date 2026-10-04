@@ -6,11 +6,11 @@ Lanes run in parallel; slices within a lane are ordered.
 | Lane | Doc | What |
 |---|---|---|
 | **SH** shell | — | app shell: router, nav, theme, layout primitives |
-| **ST** settings | `plan/settings.md` | Linear-style settings UI |
-| **IN** inference | `plan/inference.md` | provider registry; T3 Code Connect first-class |
-| **IG** integrations | `plan/integrations.md` | integration interface; Linear as one |
-| **AU** automations | `plan/automations.md` | the automations page, Cursor layout |
-| **MCP** mcp | `plan/mcp.md` | MCP per automation |
+| **ST** settings | `docs/plan/settings.md` | Linear-style settings UI |
+| **IN** inference | `docs/plan/inference.md` | provider registry; T3 Code Connect first-class |
+| **IG** integrations | `docs/plan/integrations.md` | integration interface; Linear as one |
+| **AU** automations | `docs/plan/automations.md` | the automations page, Cursor layout |
+| **MCP** mcp | `docs/plan/mcp.md` | MCP per automation |
 
 ## Order
 

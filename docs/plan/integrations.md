@@ -34,9 +34,12 @@ knows there are integrations that offer triggers and actions.
 ## Linear, concretely
 
 **Sign-in.** The owner connects their Linear account from Settings. OAuth, or a
-personal access token for a single-user deployment. Tokens are write-only and
-stored hashed-at-rest. Public OAuth tokens expire in 24 hours, so refresh is
-required, not optional.
+personal access token for a single-user deployment. Tokens are **write-only in
+the UI and encrypted at rest** — not hashed: the client has to send the actual
+value in the `authorization` header, and OAuth refresh needs the refresh token
+back, so a one-way hash would make both impossible. Public OAuth tokens expire
+in 24 hours, so refresh is required rather than optional
+(`extracts/linear-official/docs-site/oauth.md`).
 
 **Entities.** Issues, projects, teams, cycles, documents, initiatives — read
 through the public GraphQL API, which this repo already has a hardened client
@@ -45,10 +48,17 @@ on HTTP 400, per-window reset handling). That client is the best thing the old
 eras produced and it carries over unchanged.
 
 **Events.** Linear's webhooks cover issues, labels, comments, projects,
-initiatives, documents. HMAC-SHA256 over the raw body, a timestamp replay
-guard, respond within 5 seconds, at-least-once delivery — so dedupe on the
-delivery id is mandatory. What webhooks do not cover (cycle start/end, releases,
-team membership) we poll or derive from our own clock.
+initiatives, documents and releases, and Linear recommends webhooks over
+polling for change notification
+(`extracts/linear-official/docs-site/webhooks.md`). HMAC-SHA256 over the raw
+body, a timestamp replay guard, respond within 5 seconds, at-least-once
+delivery — so dedupe on the delivery id is mandatory, not an optimization.
+
+An earlier draft of this plan listed releases as poll-only; that was wrong,
+`Release` is a webhook resource type. What webhooks genuinely do not deliver is
+cycle start/end (no webhook action fires at the boundary) and team membership,
+so those we derive from our own clock or poll. Re-verify the resource list
+against the docs digest when IG4 starts rather than trusting this paragraph.
 
 **Actions.** Create and update issues, comment, set status — public API
 mutations, through the same client, audited.

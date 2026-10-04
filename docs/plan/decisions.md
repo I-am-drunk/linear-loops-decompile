@@ -22,3 +22,26 @@ holds until the owner says otherwise.
 - **Linear is one integration** — owner directive.
 - **Progress is measured in working surfaces**, not golden-chunk counts. The
   old meter rewarded apparatus over product.
+
+## 8. The pre-existing corpus-derived extracts (owner's call)
+
+`extracts/models.md` (3,427 lines), `extracts/graphql-ops.md` (380) and
+`extracts/config-endpoints.md` (175) enumerate Linear's internal model fields
+and GraphQL operations, generated from the corpus and committed to this public
+repo. None of their operations appear in the public MIT schema, so they are
+internal surface, not public API.
+
+`docs/PROVENANCE.md` forbids producing more of this. These three predate the
+rule, and deleting ~4,000 lines of prior work is the owner's decision rather
+than a session's — so: **nothing regenerates or extends them** (the pipeline
+step that refreshed them is removed), and they stay until the owner rules.
+
+Worth noting on each side. *For keeping*: an operation name plus its variable
+signature is wire-protocol shaped, and interoperability is the strongest case
+there is for reading someone's protocol. *For removing*: they are an
+enumeration of a competitor's internal API, published, and nothing in the
+current plan uses them — the plan reads the **public** API, for which we have
+the MIT schema.
+
+Recommendation: remove them. Nothing depends on them and the asymmetry is bad —
+we would not accept the same extraction of our own internals.

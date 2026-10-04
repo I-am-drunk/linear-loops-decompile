@@ -5,11 +5,24 @@ layout, because that layout is better for this job.
 
 ## Why not Linear's
 
-Linear's Loops page is a list of loops, each with a trigger and a prompt. The
-features we want are not in it: there is no per-automation tool
-configuration, no multi-trigger form, no prompt chaining, no per-step model
-choice. Cursor's automations page has all four. The owner's call, and it is the
-right one.
+The owner's directive: build the automations page on Cursor's layout rather
+than Linear's Loops layout, because the features they want are in the former.
+
+Being honest about what is established and what is not — the feature
+comparison in the first draft of this doc was asserted without evidence, which
+is the failure mode `AGENTS.md` names:
+
+| Capability | Status |
+|---|---|
+| per-automation tool/MCP selection | Cursor's automations docs describe tool selection. Our design is built from the MCP spec regardless, so this does not depend on the comparison. |
+| multiple triggers per automation | Cursor's docs describe multiple triggers. |
+| prompt chaining | `UNVERIFIED` as a Cursor claim. The owner asked for it; we build it because it is wanted, not because a competitor has it. |
+| per-step model choice | `UNVERIFIED` as a Cursor claim. Same: it follows from chaining plus a provider registry. |
+| what Linear's Loops does or does not offer | `UNVERIFIED`. Not needed — the directive is to build this shape, and we do not have to prove the alternative is worse. |
+
+The design below stands on its own merits. Nothing in it requires the
+comparison to be true, which is why the unverified rows can stay unverified
+instead of being quietly upgraded to justify a decision already made.
 
 ## Shape
 
@@ -82,6 +95,6 @@ billing to meter. No run retention policy beyond a configurable prune.
 | AU2 | detail frame: section registry, save/dirty | AU1 |
 | AU3 | triggers: schedule + manual | AU2 |
 | AU4 | prompts: single, then chain | AU2, inference registry |
-| AU5 | tools: MCP section | `mcp.md` |
+| AU5 | tools: MCP section | AU2, `mcp.md` |
 | AU6 | runs feed + transcript | AU2 |
 | AU7 | environment, memories, parameters | AU2 |

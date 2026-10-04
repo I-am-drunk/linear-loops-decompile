@@ -19,8 +19,10 @@ McpServerAuth    kind: none | bearer | oauth2 | header
 AutomationTool   automationId · serverId · allowedTools[] | all · approval
 ```
 
-- **Transport**: stdio (local command) or HTTP/SSE (remote URL). The spec
-  defines both.
+- **Transport**: stdio (local command) or **Streamable HTTP** (remote URL).
+  Streamable HTTP is the current remote transport; the legacy HTTP+SSE
+  transport is deprecated in the spec, so we implement it only as a
+  compatibility fallback if a server we care about still requires it.
 - **Scope**: `user` or `workspace`. A workspace server is shared; a user server
   is private. When both exist under one name, the automation's explicit
   `serverId` wins; absent that, prefer the scope the automation asks for.
@@ -29,6 +31,25 @@ AutomationTool   automationId · serverId · allowedTools[] | all · approval
   inherited.
 - **Approval**: `auto` or `ask`. `ask` surfaces the call for confirmation
   before it executes.
+
+## Two security rules, stated before anything is built
+
+Both come from the runner being the thing that connects: it has the filesystem
+and the network, and it runs on a schedule with nobody watching.
+
+**A stdio server is arbitrary code execution, so treat it as one.** The config
+holds a command the runner will execute. Therefore: only a workspace admin may
+register or edit a stdio server (an ordinary member may *use* one that exists);
+the command runs isolated from the runner — separate process, no inherited
+environment beyond an explicit allowlist, its own working directory, a wall
+clock limit; and a run records which server it invoked. A deployment that wants
+no local execution at all can disable the stdio transport outright.
+
+**Never send credentials in cleartext.** A remote server with any auth beyond
+`none` must be `https://`; the runner refuses to dispatch to `http://` with
+credentials attached rather than warning about it. `http://` is permitted only
+for an unauthenticated server on a loopback address, which is the local-dev
+case this exception exists for.
 
 ## Connection status
 

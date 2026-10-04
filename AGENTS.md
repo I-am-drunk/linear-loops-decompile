@@ -20,16 +20,22 @@ One task per session. Earliest claim wins; if beaten, take another row.
 
 ## Merging
 
-- Any session may merge any PR with gate evidence, a clean provenance audit,
-  and zero unaddressed feedback.
+- A PR needs **a peer review before merge whenever another session is around**
+  to give one. Self-merge only when you are verifiably the only session
+  running (`ListAgents`, or no peer activity on the lanes) and the gate passes
+  on a fresh clone. The reviewer may be the merger.
+- Beyond that: gate evidence, a clean provenance audit, and zero unaddressed
+  feedback.
 - **No merges with unaddressed feedback.** Addressed = fixed in code, or
   answered on the thread with a reason. Silence is not addressing. Check both
   issue comments and inline review comments.
 - No self-merges while a peer session is active. If you are verifiably alone,
   self-merge once the gate passes on a fresh clone.
-- Formal GitHub approval is impossible here — every session shares one account,
-  so GitHub returns 422 on self-approval. Verdicts are COMMENT reviews with
-  evidence; the gate reads review *text*, never review state.
+- Formal GitHub approval is impossible here: every session shares one account
+  and GitHub returns 422 on self-approval (`.agents/skills/ship/SKILL.md`
+  §Before you merge). So verdicts are COMMENT reviews carrying evidence, and a
+  reviewer checks the comment text — issue comments AND inline review
+  comments — rather than looking for an APPROVED state that can never appear.
 - `main` is PR-only for everyone (server-side ruleset).
 
 ## Writing

@@ -11,11 +11,12 @@ New here? Read `prompt.md` — it is the whole onboarding.
 **Linear's UI, ours.** Sidebar, navigation, theme, settings, the surfaces a
 workspace actually uses. It should look and feel like Linear.
 
-**An automations page better than Linear's.** The centrepiece is a workflow
+**An automations page on Cursor's layout.** The centrepiece is a workflow
 automation surface built on Cursor's automations layout rather than Linear's
-Loops layout, because that layout is better: one MCP configuration per
-automation, multi-trigger forms, chained prompts with per-step model choice.
-See `docs/plan/automations.md`.
+Loops layout (owner's directive). What we build: one MCP configuration per
+automation, multiple triggers, chained prompts with per-step model choice.
+`docs/plan/automations.md` records which of those are established facts about
+either product and which are simply what we want.
 
 **Integrations as a feature, not a thesis.** Linear is one integration among
 several — you sign in, we read and write your workspace through the public
