@@ -1,158 +1,55 @@
-# PLAN: rebuild-era milestones
+# PLAN
 
-The bar for every milestone: verified against the decompile corpus or Linear's
-official docs. Never plausibility.
+Six lanes. Each has a design doc in `docs/plan/` and an issue on the board.
+Lanes run in parallel; slices within a lane are ordered.
 
-## The doctrine: thin slices, perfected as we go
+| Lane | Doc | What |
+|---|---|---|
+| **SH** shell | — | app shell: router, nav, theme, layout primitives |
+| **ST** settings | `plan/settings.md` | Linear-style settings UI |
+| **IN** inference | `plan/inference.md` | provider registry; T3 Code Connect first-class |
+| **IG** integrations | `plan/integrations.md` | integration interface; Linear as one |
+| **AU** automations | `plan/automations.md` | the automations page, Cursor layout |
+| **MCP** mcp | `plan/mcp.md` | MCP per automation |
 
-We build slowly and incrementally, on purpose. The first implementation failed by
-building breadth before depth, so:
+## Order
 
-- ONE PR = ONE thin vertical slice, reviewable in minutes. Never a whole layer,
-  never the whole stack.
-- Foundation slices first (transport, boot, settings): they set the patterns
-  every later slice copies, so they get extra care and review while change is
-  cheap.
-- A slice is done when: the gate passes on a fresh clone, the diff is audited
-  against the legal lines, a sibling session has reviewed it when one is around
-  (self-merge only when you are verifiably the only session running; while any peer
-  session is active there are no self-merges, blocking PRs included — AGENTS.md,
-  user directive #154), and STATUS.md plus
-  docs/feature-matrix.md are updated in the same PR.
-- Code stays small: zero runtime deps, strict TS, boring patterns. If a slice
-  feels big, it is two slices.
-- Anything touching Linear behavior is verified against the corpus
-  (`pipeline/corpus/`, via the vault) and the matrix row is noted.
+**Milestone 1 — a usable automation.** Create a scheduled automation with a
+prompt, pick a model, run it, see the transcript.
 
-Done: R0 reset (2026-09-27), R1 pipeline harness + corpus in the vault, R2
-feature matrix, R3.1-R3.4 foundation slices (R3.4's UI shell subsequently
-failed the exactness audit — see the H track below; the server halves stand).
+```
+SH1 shell + router + theme
+SH2 layout primitives
+ST1 settings shell ──┬── ST2 row patterns ──┬── ST3 inference section
+IN1 provider registry┘                      │
+IN2 openai-compatible adapter               │
+AU1 list page ── AU2 detail frame ── AU3 schedule trigger
+                                  └─ AU4 prompt + model
+                                  └─ AU6 runs feed
+```
 
-## R3: foundation slices (the architecture, perfected)
+**Milestone 2 — tools.** `MCP1`→`MCP5`, `ST5`, `AU5`. An automation that calls
+an MCP server.
 
-- R3.1 transport: `src/connect` (RFC 6455 framing + JSON-RPC + server mount +
-  client + round-trip test).
-- R3.2 boot: `src/server` (http + static + environment descriptor + dev token +
-  node:sqlite store + health).
-- R3.3 settings vertical (server): `settings.*` RPCs + `dataplane.probe`.
-  Write-only secrets; probes never hit the network in tests.
-- R3.4 UI shell: `src/ui` skeleton for the deliberately narrow product: sidebar
-  contains only Loops, Loops-required views (Runs/Templates as needed), and our
-  Settings; it does not recreate Linear tracker navigation or Linear Settings. Theme
-  tokens come from `docs/ui-reference.md`; our Settings page wires to R3.3 RPCs.
+**Milestone 3 — Linear.** `IG1`→`IG6`, `ST4`. Sign in, read the workspace,
+trigger on issue events, write back.
 
-## H: the harness era (inserted 2026-09-27 — the freeze's exit path)
+**Milestone 4 — breadth.** Prompt chaining (`AU4` full), `IN3`/`IN4`,
+parameters and memories (`AU7`), more integrations.
 
-The 2026-09-27 audit (docs/audit-2026-09-27.md) froze feature work: the R3.4 UI
-shell failed the exactness bar and nothing could PROVE a slice exact. The H
-track builds that proof, then restarts the R sequence behind it. Work items:
+## Dependencies worth knowing
 
-- H1 parity harness P1 (issue #162, PR #171): `tools/parity` extract+check on
-  routes/copy/structure/tokens, wired into `ci/check-ui.sh` (a NEW gate that
-  lands with #171 — `ci/check-src.sh` stays untouched; the two red
-  independently). Follow-ups: route
-  extraction from chunk literals (#174/#177 — PR #181 supplies the enriched
-  routes.json) and the reference manifest.
-- H2 generateTheme exact reimplementation (issue #168): reproduces Linear's
-  runtime theme function so token VALUES are exact by construction; golden
-  vectors feed the harness's theme family.
-- H3 corpus fact extraction for the matrix §A surfaces (copy, structure, order,
-  primitives) so the reference covers what the UI rebuild will be checked
-  against.
-- H4 official-docs leg (issue #185): live-site digests under
-  `extracts/linear-official/docs-site/` + citation rule + docs drift check.
-  (The upstream-vendored `docs/*.md` are stubs; never cite them.)
+- **The shell blocks all UI.** `SH1`/`SH2` are the foundation slices; they get
+  extra review because every later slice copies their patterns.
+- **The node/markdown render tier is shared** by the prompt editor and the run
+  transcript. Build it once, early, not twice.
+- **`IN1` before `AU4`** — prompt config needs the model list.
+- Lanes `IG` and `MCP` are independent of each other and of `AU` past `AU2`.
 
-- G track — golden-tier acceptance bar (user directive 2026-09-27, issue
-  #220): the extract→compare families demote to drift canaries; the bar
-  becomes hand-verified golden tests whose expected values are computed by
-  EXECUTING the corpus code (the #215 pattern, generalized). Slices: G0 spec
-  rewrite · G1 `tools/corpus-exec` · G2 golden manifests + `parity check`
-  golden leg + coverage ledger · G3 generateTheme retrofit (subsumes #218) ·
-  G4 first rendered-component golden.
+## Carried forward
 
-FREEZE EXIT (amended by #220): #171 merged with `parity check` in the gate
-(done); #168 merged with golden vectors matching corpus execution (done);
-G1+G2 landed; one surface rebuilt end-to-end whose modules carry hand-verified
-golden manifests with the golden leg green (the pattern every later slice
-copies — `ui-facts.json` alone no longer suffices); the R3.4 shell either
-brought to golden-green or archived like v0.
-
-## A: the assembly track (owner directive 2026-09-28, issue #295 — the 60%)
-
-The product becomes visible and usable: a runnable UI composing golden-backed
-modules plus corpus-informed non-golden slices (~80% of UI work needs no
-golden), served by src/server. Scope is the widened product-contract scope:
-Loops + Settings + workspace context + team-select. The disposition ledger
-(`docs/remap/`) is the row source; its transcription rule + seam rule are the
-anti-R3.4 bar for the non-golden 80%.
-
-Sequencing is fan-in-ordered, bottom-up (measured on the corpus import graph;
-docs/remap/README.md Findings 2 and the 00:49Z/00:56Z closure work):
-
-- A1 foundation kit: the ~46-chunk primitive tier (Flex/Text/Icon/Button/
-  Tooltip/Input…) that absorbs ~half the closure's import edges; the router
-  over the 29 loops routes (roots GENERATED from routes.json).
-- A2 node-render tier: the document node/markdown render pipeline — shared
-  spine of the loop editor AND the runs transcript (settled Finding 2; NOT
-  deferrable as "editor, later"). Includes the readonly renderer.
-- A3 store seam: `src/ui-store` (projected model layer: public-API intake +
-  our loop/run store) + the run-event stream over R3.1 transport; the ~34-chunk
-  seam contract is the closed list where owner-licensed changes live.
-- A4 composition tier -> A5 route shells (list, detail/editor frame, runs,
-  memories, settings pages), each transcribed with cited chunk evidence.
-- Monster chunks (ContextualMenuActions, Issue) are consumed through schedule
-  facades with tool-emitted demanded-export lists (tools/remap-graph), never
-  reimplemented whole.
-
-The 40% harness track runs in parallel: goldens concentrate on the
-golden-required rows (engine-semantics kernels, policy/ordering lattices,
-transcoder, degraded states), plus T2 render / T3 store corpus-exec tiers.
-
-## R4: loops domain slices (post-freeze; trigger model CORRECTED)
-
-Trigger entities are PascalCase model values (`Issue`, `Project`, `Document`,
-`Initiative`, `Team`, `Release`, `Cycle`, `Schedule`, `Chat`) — NOT a
-`schedule|chat|event` type with a separate event field. The audit's Finding 2
-killed the R4.1 PRs (#160/#161) that encoded the wrong model; the redo builds
-on `SPECS/loops.md` as corrected by #167/#173.
-
-- R4.1 `loops.list/upsert/publish/setEnabled` + the loops list page (rebuilt
-  against `LoopsManagementPage`/`AutomationsList` facts, parity-checked).
-- R4.2 loop detail + editor blocks (trigger picker, schedule, conditions,
-  prompt).
-- R4.3 template library + new-loop prefill.
-
-## R5: public-API dataplane slices (Linear as the connected account's data plane)
-
-A Linear PAT/OAuth credential serves only documented reads and write-back. It is not
-an AI credential and cannot call the client chat route.
-
-- R5.1 GraphQL client + rate budget (promote the R3.3 probe).
-- R5.2 reads (issues, projects, teams, labels, states) with fixtures.
-- R5.3 writes (comment create, issue update) + idempotency + audit.
-
-## R6: engine + runtime slices
-
-- R6.1 scheduler (rrule) + trigger evaluator.
-- R6.2 run state machine + turns/parts + streaming (`runs.subscribe` seq/resume).
-- R6.3 brain interface + first harness adapter (OpenRouter-compatible).
-- R6.4 steer/continue/cancel + elicitations.
-
-## R7: the golden goose (research in parallel; integrate after R6)
-
-- Trace `AiConversationSendMessage` call sites in the corpus (streaming shape,
-  auth context), reading only, anytime.
-- Live probe with the user's interactive Linear session (user-guided). Keep that
-  session bridge separate from the public-API connection.
-- If proven: make the normal Linear chat route the primary brain adapter. External
-  inference remains an explicit fallback, not the product thesis.
-- Scope guard: build Loops only. The app shell exposes only Loops, Loops-required
-  views, and our Settings; no generic Linear navigation or copied Linear Settings.
-
-## R8: matrix burn-down
-
-Rows to `built` then `exact`. Release bar: every row verified, UI checked against
-the corpus (issue #20) — **computed, not eyeballed**: `tools/parity` (the Rust
-parity harness, SPECS/ui-parity.md) turns the corpus into the reference and every
-UI PR carries its `parity check` report.
+Kept from earlier eras: `src/server` (transport, boot, settings RPCs,
+rate-budget Linear client), `src/model`, `src/ui-theme`, the presentation
+kernels under `src/ui-*` and `src/*-kernel`, `pipeline/`, `tools/coverage`.
+Retired: the 60/40 effort split, the golden-count meter, "EXACT REPRODUCTION"
+as the bar, the mega-thread. See `docs/LEARNINGS.md`.

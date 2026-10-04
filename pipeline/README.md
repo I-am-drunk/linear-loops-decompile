@@ -1,42 +1,40 @@
-# pipeline: the decompile harness
+# pipeline: local analysis harness
 
-## Getting the corpus (fast path, read this first)
+## Scope and limits
 
-You almost never run this pipeline. The corpus is committed in the PRIVATE vault
-repo `I-am-drunk/linear-loops-vault` under `corpus/` (private, so Linear material
-may live there; it must still NEVER enter THIS public repo). To get it locally:
+This harness downloads a Linear release and unpacks it **locally** so a session
+can understand how something behaves. Its output tree (`corpus/`) is gitignored
+and must never enter this public repo.
 
-```bash
-# token: vault GIT-TOKEN.md (see .agents/skills/github/SKILL.md)
-git clone --depth 1 https://x-access-token:<TOKEN>@github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
-```
+Read `docs/PROVENANCE.md` before using it. The rule it enforces: reading a
+shipped bundle locally is fine; publishing a byte-fidelity transcription of its
+internals is not, and a fact table of every string, prop and class name counts
+as a transcription. This harness is for understanding, not for producing
+publishable specifications.
 
-**Use a full `git clone` (as above) and nothing else.** API-based fetch paths
-truncate silently: the GitHub contents API caps a directory listing at 1,000
-entries, and `corpus/pretty/client/` holds ~1,550 files — a sparse or per-file
-fetch yields a partial corpus with no error, and a partial corpus produces a
-silently wrong parity reference (the 2026-09-27 "vault is incomplete" alarm on
-issue #162 was exactly this: a 1,043-file fetch of a complete 1,550-file vault).
-
-**Then verify the CLONE and swap it in only when the counts match** (validating
-`pipeline/corpus` in place is a trap: `cp -r` into an existing `pipeline/corpus`
-nests as `corpus/corpus` and the checks silently read the stale copy):
+Run it yourself:
 
 ```bash
-c=/tmp/linear-loops-vault/corpus
-python3 -c "import json; print(len(json.load(open('$c/analysis/chunks.json'))))"
-find "$c/pretty/client" -name '*.js' | wc -l   # must be EQUAL to the line above
-rm -rf pipeline/corpus && cp -r "$c" pipeline/corpus
-# provenance stamp (issue #250): a copied tree has no .git, so corpus-exec
-# reads this one-line `.corpus-head` stamp as the corpus head instead of mis-resolving the
-# CONTAINING repo's HEAD. Without it, provenance honestly records "unknown".
-git -C /tmp/linear-loops-vault rev-parse HEAD > pipeline/corpus/.corpus-head
+bash pipeline/run.sh
 ```
 
-Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
-constantly, so compare the counts against the baseline below, note material deltas
-in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
-current.
+There is no shared corpus repo and no token to fetch. The vault-clone fast path
+and its `GIT-TOKEN.md` were removed in the 2026-10-04 rearchitecture along with
+the rest of the credential machinery; if you need the corpus, generate it.
+
+**Verify before trusting any corpus.** A partial tree fails silently and
+produces confidently wrong analysis — a 1,043-of-1,550-file fetch once produced
+both a false "corpus incomplete" alarm and a false "zero drift" pass:
+
+```bash
+python3 -c "import json; print(len(json.load(open('pipeline/corpus/analysis/chunks.json'))))"
+find pipeline/corpus/pretty/client -name '*.js' | wc -l   # must be EQUAL
+```
+
+**Indexes are a floor, not a ceiling.** `graphql-ops.json` reported 258
+operations where 376 existed; `routes.json` missed routes that only appear as
+chunk literals. Grep the corpus to confirm a negative; never cite an index as
+proof that something is absent.
 
 The drift check has a SECOND leg (issue #185): the official docs move under us
 too (the 2026-04-01 refresh-token migration and the 2026-09-25 agent-skill ops
