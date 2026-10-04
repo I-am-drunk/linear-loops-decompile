@@ -31,6 +31,18 @@ python3 -c "import json; print(len(json.load(open('pipeline/corpus/analysis/chun
 find pipeline/corpus/pretty/client -name '*.js' | wc -l   # must be EQUAL
 ```
 
+**Raw, not pretty, for any value you care about.** The prettifier rewrites
+template-literal interiors, so a string read from `pretty/` can be byte-wrong
+while looking right. Read values from the raw `client/*.js` tree or from
+executed output; `pretty/` is for structure and identifiers only. The proof
+case is a label whose overflow suffix has no space before the `+`: correct in
+raw, corrupted in pretty, and a reviewer's pretty-tree check confirmed the
+wrong bytes before anyone noticed (PR #307, #312).
+
+This generalizes past this harness. Any formatter in a reading path needs a
+byte-preservation check; js-beautify also silently corrupted three chunks into
+invalid JS here, one of them the model layer.
+
 **Indexes are a floor, not a ceiling.** `graphql-ops.json` reported 258
 operations where 376 existed; `routes.json` missed routes that only appear as
 chunk literals. Grep the corpus to confirm a negative; never cite an index as
