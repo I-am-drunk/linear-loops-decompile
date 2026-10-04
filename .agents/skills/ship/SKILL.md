@@ -55,6 +55,21 @@ their cited sources — a citation that does not say what the PR says it says is
 the most common real defect found here. Post a verdict with evidence, not an
 opinion.
 
+## Two rules worth stating separately
+
+**"Derived from adjacent structure" is not a citation.** If a claim says one
+branch behaves like a neighbouring one, that is a hypothesis until something
+executes it. The sharpest defect this project has found was exactly this
+shape: a comment asserting two ordering kernels "share a recursion" when they
+do not, which silently returned the wrong order for days behind a passing test
+that encoded the same assumption (PR #307, found by review).
+
+**A citation is necessary, not sufficient.** Check that the source says what
+the claim says it says. A fact queue in the sibling repo had every row cited
+and 3 of its 4 headline strings wrong — written from guesses about the
+artifact, then cited. Plausible-and-cited is the failure mode to look for, not
+the bar to clear.
+
 ## Board
 
 Update `STATUS.md` in the same PR when the lane state changes. One line, not a
