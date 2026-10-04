@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # pipeline/run.sh: the one command: download Linear, build the local corpus
-# (gitignored), refresh the committed extracts/. Stages skip existing outputs;
+# (gitignored). Stages skip existing outputs;
 # `--force` rebuilds everything. Invoke from the repo root:  bash pipeline/run.sh
 #   (the script self-locates once launched; the invocation path is relative).
 set -euo pipefail
@@ -39,7 +39,12 @@ else
   (cd "$CORPUS" && node ../prettify.mjs)
 fi
 
-echo "== 4/4 analyze -> extracts/ =="
-(cd "$CORPUS" && EXTRACTS_DIR="$ROOT/extracts" node ../analyze.mjs)
+# Analysis output stays INSIDE the gitignored corpus. It used to write
+# `extracts/models.md` + `graphql-ops.md` in the repo root for committing;
+# those catalogue Linear's internal API surface, so docs/PROVENANCE.md stops
+# us refreshing them (owner decision 8 covers the files that already exist).
+echo "== 4/4 analyze -> corpus/analysis (gitignored) =="
+(cd "$CORPUS" && EXTRACTS_DIR="$CORPUS/analysis" node ../analyze.mjs)
 
-echo "DONE. Corpus: pipeline/corpus/ (local only, never committed). extracts/ refreshed; commit with the counts."
+echo "DONE. Everything written under pipeline/corpus/ — local only, never committed."
+echo "Nothing to commit from this run; note material count deltas in KNOWLEDGE.md."

@@ -37,9 +37,12 @@ find pipeline/corpus/pretty/client -name '*.js' | wc -l   # equal even if the cr
 ```
 
 For completeness you need a source independent of the index: every asset
-reference the crawl DISCOVERED must have been fetched. The crawler skips a
-chunk it cannot retrieve, so check its skip/404 log and compare the discovered
-set against the fetched set before treating any count as proof.
+reference the crawl DISCOVERED must have been fetched. `crawl-client.mjs`
+currently swallows a failed fetch without recording which asset it was — it
+reports per-round totals only — **so there is no log to check and no
+independent verification available today.** Treat the counts as "the index
+agrees with the disk", never as "the crawl was complete". Adding per-asset
+failure logging is the fix and is not done.
 
 **Raw, not pretty, for any value you care about.** The prettifier rewrites
 template-literal interiors, so a string read from `pretty/` can be byte-wrong

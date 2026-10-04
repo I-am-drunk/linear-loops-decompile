@@ -26,10 +26,17 @@ holds until the owner says otherwise.
 ## 8. The pre-existing corpus-derived extracts (owner's call)
 
 `extracts/models.md` (3,427 lines), `extracts/graphql-ops.md` (380) and
-`extracts/config-endpoints.md` (175) enumerate Linear's internal model fields
-and GraphQL operations, generated from the corpus and committed to this public
-repo. None of their operations appear in the public MIT schema, so they are
-internal surface, not public API.
+`extracts/config-endpoints.md` (175) enumerate Linear model fields, client
+GraphQL operations and client config endpoints, generated from the corpus and
+committed to this public repo.
+
+Checked: a sample of operation names from `graphql-ops.md` is absent from the
+vendored public MIT schema. **`UNVERIFIED`**: whether *every* row across all
+three files is absent from the public surface — nobody has diffed them field
+by field, and `config-endpoints.md` has no public counterpart to diff against
+at all. So "these are internal, not public" is the working read rather than an
+established fact. It does not change the recommendation below, which does not
+rest on it.
 
 `docs/PROVENANCE.md` forbids producing more of this. These three predate the
 rule, and deleting ~4,000 lines of prior work is the owner's decision rather

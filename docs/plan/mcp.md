@@ -51,6 +51,26 @@ credentials attached rather than warning about it. `http://` is permitted only
 for an unauthenticated server on a loopback address, which is the local-dev
 case this exception exists for.
 
+**A configurable URL the server fetches is an SSRF primitive.** TLS protects
+the credential in transit; it does nothing about *where* the runner is
+pointed. Since the runner sits inside the deployment's network, a remote entry
+is a request to reach any address its host can:
+
+- **Destinations are deny-by-default.** Public unicast only. Private and
+  special ranges are refused — loopback, link-local (including
+  `169.254.0.0/16`, so cloud metadata endpoints), RFC1918, CGNAT, multicast,
+  and their IPv6 equivalents — unless the deployment explicitly allowlists a
+  host.
+- **Resolve, check, then connect to the address you checked.** Validating a
+  hostname and then reconnecting by name re-resolves and loses the check (DNS
+  rebinding). Re-validate every redirect hop the same way, or refuse
+  redirects.
+- The loopback exception above is **opt-in per deployment**, not the default,
+  precisely because loopback is the most valuable SSRF target.
+- Registration is **admin-only for any non-allowlisted host**, matching the
+  stdio rule: a member may use entries that exist, not point the runner
+  somewhere new.
+
 ## Connection status
 
 Every server reference renders one of five states, and each needs its own copy
