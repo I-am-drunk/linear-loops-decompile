@@ -1,42 +1,65 @@
-# pipeline: the decompile harness
+# pipeline: local analysis harness
 
-## Getting the corpus (fast path, read this first)
+## Scope and limits
 
-You almost never run this pipeline. The corpus is committed in the PRIVATE vault
-repo `I-am-drunk/linear-loops-vault` under `corpus/` (private, so Linear material
-may live there; it must still NEVER enter THIS public repo). To get it locally:
+This harness downloads a Linear release and unpacks it **locally** so a session
+can understand how something behaves. Its output tree (`corpus/`) is gitignored
+and must never enter this public repo.
 
-```bash
-# token: vault GIT-TOKEN.md (see .agents/skills/github/SKILL.md)
-git clone --depth 1 https://x-access-token:<TOKEN>@github.com/I-am-drunk/linear-loops-vault.git /tmp/linear-loops-vault
-```
+Read `docs/PROVENANCE.md` before using it. The rule it enforces: reading a
+shipped bundle locally is fine; publishing a byte-fidelity transcription of its
+internals is not, and a fact table of every string, prop and class name counts
+as a transcription. This harness is for understanding, not for producing
+publishable specifications.
 
-**Use a full `git clone` (as above) and nothing else.** API-based fetch paths
-truncate silently: the GitHub contents API caps a directory listing at 1,000
-entries, and `corpus/pretty/client/` holds ~1,550 files — a sparse or per-file
-fetch yields a partial corpus with no error, and a partial corpus produces a
-silently wrong parity reference (the 2026-09-27 "vault is incomplete" alarm on
-issue #162 was exactly this: a 1,043-file fetch of a complete 1,550-file vault).
-
-**Then verify the CLONE and swap it in only when the counts match** (validating
-`pipeline/corpus` in place is a trap: `cp -r` into an existing `pipeline/corpus`
-nests as `corpus/corpus` and the checks silently read the stale copy):
+Run it yourself:
 
 ```bash
-c=/tmp/linear-loops-vault/corpus
-python3 -c "import json; print(len(json.load(open('$c/analysis/chunks.json'))))"
-find "$c/pretty/client" -name '*.js' | wc -l   # must be EQUAL to the line above
-rm -rf pipeline/corpus && cp -r "$c" pipeline/corpus
-# provenance stamp (issue #250): a copied tree has no .git, so corpus-exec
-# reads this one-line `.corpus-head` stamp as the corpus head instead of mis-resolving the
-# CONTAINING repo's HEAD. Without it, provenance honestly records "unknown".
-git -C /tmp/linear-loops-vault rev-parse HEAD > pipeline/corpus/.corpus-head
+bash pipeline/run.sh
 ```
 
-Regenerate (`bash pipeline/run.sh`) only for the ~30-day drift check: Linear ships
-constantly, so compare the counts against the baseline below, note material deltas
-in `KNOWLEDGE.md`, and push the fresh corpus to the vault so the fast path stays
-current.
+There is no shared corpus repo and no token to fetch. The vault-clone fast path
+and its `GIT-TOKEN.md` were removed in the 2026-10-04 rearchitecture along with
+the rest of the credential machinery; if you need the corpus, generate it.
+
+**Verify before trusting any corpus.** A partial tree fails silently and
+produces confidently wrong analysis — a 1,043-of-1,550-file fetch once produced
+both a false "corpus incomplete" alarm and a false "zero drift" pass.
+
+Note what the obvious check does NOT prove. `analyze.mjs` writes one
+`chunks.json` entry per `.js` file it finds, so comparing those two numbers
+only shows the index matches the files on disk — an incomplete crawl agrees
+with itself:
+
+```bash
+python3 -c "import json; print(len(json.load(open('pipeline/corpus/analysis/chunks.json'))))"
+find pipeline/corpus/pretty/client -name '*.js' | wc -l   # equal even if the crawl skipped files
+```
+
+For completeness you need a source independent of the index: every asset
+reference the crawl DISCOVERED must have been fetched. `crawl-client.mjs`
+currently swallows a failed fetch without recording which asset it was — it
+reports per-round totals only — **so there is no log to check and no
+independent verification available today.** Treat the counts as "the index
+agrees with the disk", never as "the crawl was complete". Adding per-asset
+failure logging is the fix and is not done.
+
+**Raw, not pretty, for any value you care about.** The prettifier rewrites
+template-literal interiors, so a string read from `pretty/` can be byte-wrong
+while looking right. Read values from the raw `client/*.js` tree or from
+executed output; `pretty/` is for structure and identifiers only. The proof
+case is a label whose overflow suffix has no space before the `+`: correct in
+raw, corrupted in pretty, and a reviewer's pretty-tree check confirmed the
+wrong bytes before anyone noticed (PR #307, #312).
+
+This generalizes past this harness. Any formatter in a reading path needs a
+byte-preservation check; js-beautify also silently corrupted three chunks into
+invalid JS here, one of them the model layer.
+
+**Indexes are a floor, not a ceiling.** `graphql-ops.json` reported 258
+operations where 376 existed; `routes.json` missed routes that only appear as
+chunk literals. Grep the corpus to confirm a negative; never cite an index as
+proof that something is absent.
 
 The drift check has a SECOND leg (issue #185): the official docs move under us
 too (the 2026-04-01 refresh-token migration and the 2026-09-25 agent-skill ops
@@ -67,8 +90,15 @@ What it does:
    is invalid or changes that structure, the pipeline preserves the raw bytes
    verbatim and reports a `raw-fallback`. Cached `pretty/` trees receive the
    same checks before reuse and rebuild if any artifact is invalid.
-4. Analyzes the executable pretty corpus into `analysis/*.json` and regenerates
-   the committed `extracts/models.md` + `extracts/graphql-ops.md`.
+4. Analyzes the corpus into `analysis/*.json` — all of it gitignored.
+
+   It no longer regenerates `extracts/models.md` or `extracts/graphql-ops.md`.
+   Those files are corpus-derived enumerations of Linear's INTERNAL API
+   surface (the ops in them are absent from the public MIT schema), so
+   refreshing and committing them is the pattern `docs/PROVENANCE.md` stops.
+   See decision 8 in `docs/plan/decisions.md`: the existing files predate the
+   rule and are the owner's call, but nothing regenerates them in the
+   meantime.
 
 ## Where things live (this is the whole point)
 
@@ -78,9 +108,11 @@ What it does:
   - `corpus/client/`: raw chunks
   - `corpus/pretty/client/`: readable chunks
   - `corpus/analysis/`: `graphql-ops.json`, `models.json`, `routes.json`, `chunks.json`
-- `extracts/`: COMMITTED facts only (original condensed catalogs, never Linear
-  code). Regenerated by the analyze stage; commit the refresh with the counts in
-  the commit message.
+- `extracts/linear-official/`: Linear's own MIT-licensed schema, SDK and docs
+  digests. Freely citable — that is the point of the two-source rule.
+- `extracts/models.md`, `extracts/graphql-ops.md`, `extracts/config-endpoints.md`:
+  corpus-derived, predate `docs/PROVENANCE.md`, pending owner decision 8. Do
+  not extend them and do not regenerate them.
 
 ## Re-running
 
