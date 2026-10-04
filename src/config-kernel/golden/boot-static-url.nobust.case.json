@@ -1,0 +1,19 @@
+{
+  "unit": "config-kernel/boot-static-url",
+  "chunk": "html.CjyPLfH8.js",
+  "stubs": {
+    "config.aM1_XCHx.js": {
+      "file": "boot-world-nobust-stub.mjs",
+      "why": "identical seam to the bust case (see boot-static-url.bust.case.json) except the fixture CLIENT_ENV OMITS CACHE_BUST \u2014 an optional key with no baked VITE_CACHE_BUST entry, so s.CACHE_BUST is undefined and __toStaticUrl's ternary takes the bare-URL branch. Both branch values pinned across the case pair per the stub doctrine."
+    },
+    "entry.BGeHYrTB.js": {
+      "source": "export {};",
+      "why": "same as the bust case: the app entry's closure is out of this unit; stubbed empty so B7 resolves."
+    }
+  },
+  "drive": {
+    "file": "boot-static-url-driver.mjs",
+    "exportMeaning": "same driver as the bust case \u2014 html.CjyPLfH8.js has no exports; the driver probes the evaluated world."
+  },
+  "notes": "CONFIG-KERNEL: the CACHE_BUST-ABSENT branch of B4's __toStaticUrl (bare `ASSET_URL + path`, no trailing `?`). Second half of the boot-static-url case pair."
+}

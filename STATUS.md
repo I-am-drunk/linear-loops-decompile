@@ -393,6 +393,23 @@ reimplementation byte-matching by replaying the driver fixtures; the store
 collection surface (filter/orderBy/map/concrete) is a declared driver
 fixture — the corpus collection class stays its own ledger row; meter:
 82 chunks · 26 golden · 56 GAP).
+CONFIG-KERNEL LANDED 2026-09-29 (src/config-kernel — the merged R-BOOT
+shard's §3 + B4 golden-required rows, off-matrix spine per that shard: the
+injectable-config contract chunk executed REAL zero-stub (exact uninjected
+throw copy, passthrough, missing-key undefined, re-injection replacement);
+the 90-member CONFIG table chunk executed REAL over a fixture world through
+the Features import seam (ownKeys census in corpus order, all derivations —
+`??` vs `||` forks, `=== 'true'` case-sensitive coercions, the `/pr-(\d+)/`
+host fallback, CLIENT_HOSTNAME via new URL — the required accessor's exact
+degraded copy exactly once, null passthrough incl. the telemetry
+self-disable shape, both-miss undefined); boot html.CjyPLfH8 executed REAL
+as a case pair pinning B4's both CACHE_BUST branches + the B3 fact that
+boot injects the table chunk's export OBJECT (identity) + ran-first probes
+for the B2 installers; clean module byte-matching through tagged-v2, 6/6;
+the baked first-party VALUES deliberately not shipped — the mechanism takes
+the fallback table as a parameter, our values are the R-SRV CLIENT_ENV-
+injection row. Boot-plane goldens are off-matrix: the meter's denominator
+is unchanged).
 H3 family expansion
 beyond what is merged is ON HOLD; #218 reframes as G3.
 

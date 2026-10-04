@@ -1,0 +1,19 @@
+{
+  "unit": "config-kernel/boot-static-url",
+  "chunk": "html.CjyPLfH8.js",
+  "stubs": {
+    "config.aM1_XCHx.js": {
+      "file": "boot-world-bust-stub.mjs",
+      "why": "the environment-bootstrap seam (#301 recipe) + a RECORDING injectConfig so the golden pins WHAT B3 injects: the boot chunk imports this contract chunk before the table chunk, so the fixture world (browser-global shapes, CLIENT_ENV with ASSET_URL + CACHE_BUST set) installs in time; the recorder keeps the real setter semantics and exposes the injected object via globalThis.__injectedConfig. The real contract chunk is the SUBJECT of the sibling config-contract case, where it executes REAL with zero stubs. Full name pinned (hash-rotated table twin config.Uz-QjVze.js is a different unit)."
+    },
+    "entry.BGeHYrTB.js": {
+      "source": "export {};",
+      "why": "B7's dynamic-import target is the 35.9 KB app entry whose closure is the app itself (hundreds of chunks; store bootstrap, DOM mount) — out of this unit. Stubbed empty so B7's import RESOLVES (the catch path with __showLoadingError stays untraveled — that degraded state needs the missing index.html, an R-BOOT §6 GAP). Everything else in the boot chunk executes REAL."
+    }
+  },
+  "drive": {
+    "file": "boot-static-url-driver.mjs",
+    "exportMeaning": "html.CjyPLfH8.js has NO exports — the module eval IS the behavior (B2 prototype install, B3 o(s) = injectConfig(TABLE), B4 window.__toStaticUrl, B5 polyfills, B7 entry import; pretty L165–214). The driver probes the world the eval left behind: __toStaticUrl over three paths, injected-object identity with the REAL table chunk's export t, and one ambient-invariant probe per B2 installer family."
+  },
+  "notes": "CONFIG-KERNEL (#225 claim 2026-09-29, merged R-BOOT §1 row B4 'KEEP-EXACT, one tiny golden with B3'): the CACHE_BUST-SET branch of __toStaticUrl (`ASSET_URL + path + '?' + CACHE_BUST`), the B3 fact that boot injects the table chunk's export OBJECT itself (identity, not a copy — so injectConfig-before-table-consumers is pure wiring), and the B2-ran-first probes (both distinct fork sides, toQuestion strip+append and already-terminal, Set.isEqualTo, raceFind's all-settle-undefined contract, Object.hasOwn, the Symbol.dispose guard's already-defined branch (nodejs.dispose on Node >= 20.4; the @linear/ install branch is browser-only, declared untraveled), offsetBySeconds epoch arithmetic). Pair case: boot-static-url.nobust pins the other ternary branch. Ambient-invariant by construction (no local-date reads, TZ/locale-free probes)."
+}
