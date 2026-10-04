@@ -33,8 +33,14 @@ const TYPES: Record<string, string> = {
 function appDocument(url: URL): string {
   // ?theme=lightDefault etc. switches preset without a rebuild; unknown
   // values fall through to the dark default rather than erroring.
+  //
+  // Object.hasOwn, NOT `in`: `in` walks the prototype chain, so
+  // `?theme=constructor` passed the check and then threw deep inside the
+  // theme generator on a preset with no `base`. One unauthenticated GET
+  // killed the process. Any attacker-controlled string used as a key needs
+  // an own-property test.
   const want = url.searchParams.get("theme");
-  const preset = want && want in themePresets ? (want as PresetName) : "darkDefault";
+  const preset = want && Object.hasOwn(themePresets, want) ? (want as PresetName) : "darkDefault";
   return indexHtml(preset);
 }
 
@@ -44,7 +50,21 @@ export interface HttpOptions {
 }
 
 export function createHttpServer(opts: HttpOptions): Server {
-  return createServer(async (req: IncomingMessage, res: ServerResponse) => {
+  return createServer((req: IncomingMessage, res: ServerResponse) => {
+    // The request handler is async, so a rejection here is an unhandled
+    // rejection — which terminates the process under Node's default policy.
+    // One bad request must never take the server down, so every path is
+    // wrapped and a failure becomes a 500.
+    void handle(opts, req, res).catch((err: unknown) => {
+      console.error("http: request failed", err);
+      if (!res.headersSent) res.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
+      res.end("internal error");
+    });
+  });
+}
+
+async function handle(opts: HttpOptions, req: IncomingMessage, res: ServerResponse): Promise<void> {
+  {
     const url = new URL(req.url ?? "/", "http://localhost");
 
     if (url.pathname === "/health") {
@@ -69,5 +89,5 @@ export function createHttpServer(opts: HttpOptions): Server {
       }
     }
     res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(appDocument(url));
-  });
+  }
 }

@@ -112,3 +112,35 @@ test("http: the SPA fallback serves the app shell document", async () => {
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+test("http: a prototype-chain ?theme value cannot crash the server", async () => {
+  const { server, dir } = await boot();
+  try {
+    const addr = server.http.address();
+    assert.ok(addr && typeof addr === "object");
+    const base = `http://127.0.0.1:${addr.port}`;
+
+    // Regression (PR #320 review): the preset lookup used `want in presets`,
+    // and `in` walks the prototype chain — so `?theme=constructor` passed the
+    // check, then threw inside the theme generator on a preset with no
+    // `base`. The handler was async with no catch, so the rejection was
+    // unhandled and took the process down. One unauthenticated GET, verified
+    // to kill a live server before the fix.
+    for (const hostile of ["constructor", "__proto__", "toString", "valueOf", "hasOwnProperty"]) {
+      const res = await fetch(`${base}/?theme=${hostile}`);
+      assert.equal(res.status, 200, hostile);
+      const html = await res.text();
+      // Falls back to the default preset rather than erroring.
+      assert.match(html, /color-scheme: dark/, hostile);
+      assert.match(html, /<div id="root"><\/div>/, hostile);
+    }
+
+    // Still alive, and a real preset still works.
+    const light = await fetch(`${base}/?theme=lightDefault`);
+    assert.match(await light.text(), /color-scheme: light/);
+    assert.equal((await fetch(`${base}/health`)).status, 200);
+  } finally {
+    await server.close();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
