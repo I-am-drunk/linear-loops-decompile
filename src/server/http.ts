@@ -7,6 +7,8 @@ import { createServer, type Server, type IncomingMessage, type ServerResponse } 
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import type { EnvironmentDescriptor } from "./index.ts";
+import { indexHtml } from "../ui/index-html.ts";
+import { themePresets, type PresetName } from "../ui/theme-css.ts";
 
 const TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -19,13 +21,22 @@ const TYPES: Record<string, string> = {
   ".ico": "image/x-icon",
 };
 
-const PLACEHOLDER = `<!doctype html><html><head><meta charset="utf-8"><title>loops-server</title>
-<style>body{background:#08090a;color:#e8e3e3;font-family:"Inter Variable",-apple-system,sans-serif;
-display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}
-main{max-width:34rem}code{background:#ffffff14;padding:2px 6px;border-radius:4px}</style></head>
-<body><main><h1>loops-server is running</h1>
-<p>No UI build is present. The R3.4 shell was archived (tag <code>archive/r3.4-ui-shell</code>,
-issue #200); the next UI ships golden-verified per SPECS/ui-parity.md.</p></main></body></html>`;
+/**
+ * The app document, rendered per request so a theme or preset change needs no
+ * rebuild. It is the SPA fallback: any path with no matching `staticDir` asset
+ * gets the shell, which then routes on the hash.
+ *
+ * The client bundle itself is a build artifact — `bash src/ui/build.sh` emits
+ * it into `staticDir`. Until that has run the document loads and the shell
+ * stays blank, which the smoke test asserts rather than papering over.
+ */
+function appDocument(url: URL): string {
+  // ?theme=lightDefault etc. switches preset without a rebuild; unknown
+  // values fall through to the dark default rather than erroring.
+  const want = url.searchParams.get("theme");
+  const preset = want && want in themePresets ? (want as PresetName) : "darkDefault";
+  return indexHtml(preset);
+}
 
 export interface HttpOptions {
   staticDir?: string;
@@ -57,6 +68,6 @@ export function createHttpServer(opts: HttpOptions): Server {
         } catch { /* try next */ }
       }
     }
-    res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(PLACEHOLDER);
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(appDocument(url));
   });
 }

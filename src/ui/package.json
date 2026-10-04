@@ -1,0 +1,9 @@
+{
+  "name": "ui",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "typescript": "5.9.2",
+    "@types/node": "22.18.0"
+  }
+}
