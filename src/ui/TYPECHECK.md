@@ -1,38 +1,55 @@
 # Type-checking this package
 
-Both repo-convention strict options are on in `tsconfig.json`
-(`exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`), and **our files
-pass under them**:
+`tsconfig.json` runs `strict` but **omits `exactOptionalPropertyTypes` and
+`noUncheckedIndexedAccess`**, which the repo otherwise expects. This file is
+why, and what it would take to remove the exception.
 
-```bash
-cd src/ui && npx tsc --noEmit -p tsconfig.json 2>&1 | grep -v '^\.\./ui-theme'
-```
+## The constraint
 
-That filter is load-bearing and needs explaining rather than hiding.
+`theme-css.ts` imports `../ui-theme/generate-theme.ts`. TypeScript applies the
+**root** config to every file it reaches, so those two options get applied to
+`ui-theme` as well — producing **125 errors** (74 in `color.ts`, 51 in
+`generate-theme.ts`) in a package that passes its own gate, which omits them.
 
-## Why the raw command reports errors
+`ci/check-src.sh` checks every `src/*/tsconfig.json` **and does reach this
+one**, so the errors fail CI. (An earlier revision of this file claimed the
+gate did not reach it. That was wrong — CI proved it on PR #320.)
 
-`theme-css.ts` imports `../ui-theme`, whose own `tsconfig.json` does not enable
-those two options. TypeScript applies the **root** config to every file it
-pulls in, so checking this package also re-checks `ui-theme` under stricter
-settings than it was written for: **125 errors** (74 in `color.ts`, 51 in
-`generate-theme.ts`) in a package that passes its own gate.
+Precedent: `src/ui-loops-template-launcher` also imports `../ui-theme` and also
+omits both options. This package matches it rather than inventing a third
+convention.
 
-Three fixes were tried and rejected, recorded so nobody repeats them:
+## Workarounds that do not work
 
-| Attempt | Why it failed |
+Recorded so nobody spends the time again:
+
+| Attempt | Why it fails |
 |---|---|
 | `@ts-expect-error` on the import | cannot suppress errors raised *inside* an imported file |
-| `exclude` / `paths` redirection | `exclude` does not apply to files reached by import; `paths` did not displace the real module |
+| `exclude: ["../ui-theme/**"]` | `exclude` does not apply to files reached by import |
+| `paths` redirection to a stub | did not displace the real relative module |
 | ambient `declare module "../ui-theme/…"` | a relative specifier resolves to the real file, which wins |
-| committing generated `.d.ts` | build output is not source; it would silently drift from the module |
+| committing generated `.d.ts` | build output is not source; it drifts silently |
 
-`ci/check-src.sh` does not hit this: it checks each package in its own
-directory, where `ui-theme` is checked by *its* config.
+## What our code actually holds to
 
-## The actual fix, and why it is not in this slice
+Our seven modules are clean under the **full** set, both options included:
 
-Make `src/ui-theme` strict-clean under both options, then this note goes away.
-That is its own PR: `ui-theme` is a golden-backed module and 125 type changes
-there must not perturb its goldens. Doing it inside the shell slice would mean
-one PR that both introduces the UI and rewrites the theme generator.
+```bash
+cd src/ui
+npx tsc --noEmit -p tsconfig.json --exactOptionalPropertyTypes --noUncheckedIndexedAccess \
+  2>&1 | grep -v '^\.\./ui-theme' | grep -v '^\s'
+# (silent)
+```
+
+And `build.sh` enforces both for real, because the browser build's three input
+modules (`client`, `shell`, `routes`) do not import `ui-theme` — the theme
+renders server-side.
+
+## Removing the exception
+
+Make `src/ui-theme` clean under both options, then add them here and delete
+this file. That is its own PR: `ui-theme` is golden-backed, and 125 type
+changes must not perturb its goldens. It is a good slice for someone — the
+errors are the mechanical `Record<string, string>` indexing and tuple-access
+kind, not design problems.

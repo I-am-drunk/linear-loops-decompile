@@ -1,4 +1,14 @@
 {
+  // `strict` plus the repo's standard options. `exactOptionalPropertyTypes` and
+  // `noUncheckedIndexedAccess` are deliberately absent — see TYPECHECK.md.
+  //
+  // Short version: `theme-css.ts` imports `../ui-theme`, TypeScript applies
+  // THIS config to everything it reaches, and `ui-theme` does not hold to those
+  // two options (125 errors). `src/ui-loops-template-launcher`, the only other
+  // package importing `ui-theme`, omits them for the same reason.
+  //
+  // `build.sh` compiles only the three browser modules, which do not import
+  // `ui-theme` at all, so it DOES apply the full strict set.
   "compilerOptions": {
     "target": "es2023",
     "module": "nodenext",
@@ -9,9 +19,7 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "lib": ["es2023", "dom"],
-    "types": ["node"],
-    "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true
+    "types": ["node"]
   },
   "include": ["**/*.ts"]
 }
