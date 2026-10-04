@@ -20,7 +20,9 @@
 //      and bump hideAncestors but not indentationLevel.
 //   3. `selected` partitions: selected block first, both blocks tree-sorted.
 //   4. useIndentation:false is OUT of this golden (see the declared limit
-//      at the call site); pinned derived-only in the clean-module test.
+//      at the call site). It delegates to `sortTeams`, a DISTINCT kernel
+//      whose order is comparator-ordered at every level — NOT the tree
+//      flatten with indentation zeroed. Pinned in the clean-module test.
 //   5. ByDivider splits at the first divider row; first row of the second
 //      block carries divider:true.
 //   6. ByGroup: groups in first-appearance order, tree-sort within.
@@ -93,9 +95,12 @@ export default async ({ entry }) => {
     // NOTE (declared limit): the useIndentation:false fallback delegates to
     // sortTeams, whose `ua.of(X, …)` store-collection plumbing needs model-
     // class-backed collections a fixture cannot satisfy (probe: "i is not a
-    // function" inside the Decorators collection). The flat semantics are
-    // sortTeams = the tree flatten with all indentation zeroed; pinned in
-    // the clean-module test as derived expectations, marked non-golden.
+    // function" inside the Decorators collection), so it stays non-golden.
+    // Its semantics are NOT the tree flatten with indentation zeroed — the
+    // raw `!r` branch returns `i(e,n)`, the flat comparator-ordered kernel,
+    // which omits the tree path's `t===void 0` root re-sort by input index.
+    // Corrected 2026-09-29 (PR #307 review); the divergence is now pinned
+    // as a fact in the clean-module test.
     selectedPartition: O2.sortTeamsForTree(input, { selected: (t) => t.id === `eng-web` || t.id === `t2` }).map(row),
     byDivider: O2.sortTeamsForTreeByDivider(
       [

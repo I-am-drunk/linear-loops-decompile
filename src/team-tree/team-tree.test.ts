@@ -13,6 +13,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { serialize, SERIALIZER_VERSION } from "../../tools/corpus-exec/serialize.ts";
 import {
+  sortTeams,
   sortTeamsForTree,
   sortTeamsForTreeByDivider,
   sortTeamsForTreeByGroup,
@@ -60,9 +61,14 @@ const ghostKid = mk(`ghost-kid`, `Ghost Kid`, `GK`, ghost);
 const lone = mk(`lone`, `aardvark`, `AAR`);
 const n10 = mk(`n10`, `Team 10`, `N10`, lone);
 const n2 = mk(`n2`, `Team 2`, `N2`, lone);
-eng.kids.push(engWeb, engApi);
+// Omitted siblings: present in the parent's `children`, absent from `input`.
+// They exercise the `present.has(t.id)` membership filter on both recursive
+// paths — under a real parent (`eng`) and under an INJECTED one (`ghost`).
+const engOmitted = mk(`eng-omitted`, `Absent`, `ABS`, eng);
+const ghostOmitted = mk(`ghost-omitted`, `Absent Kid`, `AGK`, ghost);
+eng.kids.push(engWeb, engApi, engOmitted);
 engApi.kids.push(apiCore);
-ghost.kids.push(ghostKid);
+ghost.kids.push(ghostKid, ghostOmitted);
 lone.kids.push(n10, n2);
 
 const input: TeamLike[] = [t10, apiCore, eng, engWeb, ghostKid, t2, engApi, lone, n10, n2];
@@ -137,16 +143,56 @@ test(`injected ancestors are dropped but bump hideAncestors (ghost-kid at level 
   assert.deepEqual(gk.indentOptions, { indentationLevel: 0, hideAncestors: 0 });
 });
 
-test(`useIndentation:false flattens to level-0 rows in tree order (declared non-golden leg)`, () => {
-  // The corpus fallback delegates to sortTeams over store collections the
-  // golden's fixtures cannot satisfy (see the driver's declared limit); the
-  // flat order equals the tree flatten's order with indentation zeroed.
+test(`useIndentation:false delegates to sortTeams: NAME order, not tree order (declared non-golden leg)`, () => {
+  // The corpus fallback is `if(!r)return i(e,n).map(…)` — it delegates to the
+  // flat kernel, which orders every level by the comparator. The tree path's
+  // root re-sort by min input index does not apply. Order below is natural:
+  // aardvark (+ its Team 2 / Team 10 children) < Engineering <
+  // Ghost(injected slot) < Team 2 < Team 10.
   const flat = sortTeamsForTree(input, { useIndentation: false });
-  assert.deepEqual(
-    flat.map((r) => r.team.id),
+  assert.deepEqual(flat.map((r) => r.team.id), [
+    `lone`,
+    `n2`,
+    `n10`,
+    `eng`,
+    `eng-api`,
+    `api-core`,
+    `eng-web`,
+    `ghost-kid`,
+    `t2`,
+    `t10`,
+  ]);
+  assert.ok(flat.every((r) => r.indentOptions.indentationLevel === 0 && r.indentOptions.hideAncestors === 0));
+});
+
+test(`the flat and tree kernels DIVERGE — the tree path's root re-sort is real`, () => {
+  // Pinned as a fact per the probe-graduation rule: an earlier revision
+  // derived the flat leg from the tree pass, assuming one recursion. Two
+  // independent corpus re-reads showed the root re-sort exists only on the
+  // tree path, so the two orders differ on this input.
+  assert.notDeepEqual(
+    sortTeamsForTree(input, { useIndentation: false }).map((r) => r.team.id),
     sortTeamsForTree(input).map((r) => r.team.id),
   );
-  assert.ok(flat.every((r) => r.indentOptions.indentationLevel === 0 && r.indentOptions.hideAncestors === 0));
+});
+
+test(`sortTeams is the flat leg's order source`, () => {
+  assert.deepEqual(
+    sortTeams(input).map((t) => t.id),
+    sortTeamsForTree(input, { useIndentation: false }).map((r) => r.team.id),
+  );
+});
+
+test(`omitted siblings never surface — under a real parent AND an injected one`, () => {
+  // CodeRabbit finding on PR #307: no fixture had a child absent from the
+  // input, so the membership filter was untested on either recursive path.
+  for (const ids of [
+    sortTeamsForTree(input).map((r) => r.team.id),
+    sortTeams(input).map((t) => t.id),
+  ]) {
+    assert.equal(ids.includes(`eng-omitted`), false);
+    assert.equal(ids.includes(`ghost-omitted`), false);
+  }
 });
 
 test(`labelForTeams overflow suffix has NO space before the plus (raw-tree byte fact)`, () => {

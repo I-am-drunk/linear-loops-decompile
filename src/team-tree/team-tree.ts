@@ -36,12 +36,29 @@
  *   - findClosestCommonParent: nearest-first walk over withAncestors
  *     (= [...root-first ancestors, self]); null when disjoint.
  *
- * Declared limit: the corpus `sortTeamsForTree` `useIndentation:false`
- * fallback delegates to `sortTeams` over store collections (`ua.of(X, …)`),
- * which fixtures cannot satisfy — that leg is pinned in the module test as
- * derived expectations (the tree flatten with indentation zeroed), not in
- * the golden. The `orderBy` option override is likewise exercised only with
- * the default comparator here.
+ * THREE ordering kernels, not two (corrected 2026-09-29 by the review on
+ * PR #307, confirmed independently twice at the raw site):
+ *   - `sortTeams` (corpus `i`): the FLAT comparator-ordered flatten. Ordered
+ *     by the comparator at EVERY level, roots included.
+ *   - `sortTeamsForTree` (corpus `a`): the tree flatten. Identical EXCEPT
+ *     that roots are re-sorted by minimum input index
+ *     (`t===void 0&&a.sort((e,t)=>(d.get(e.id)??1/0)-…)`), which exists only
+ *     on this path.
+ *   - `sortTeamsForTree({useIndentation:false})`: delegates to `sortTeams`
+ *     (`if(!r)return i(e,n).map(…indentationLevel:0,hideAncestors:0)`) — so
+ *     it inherits the FLAT order, NOT the tree order.
+ *
+ * The tree flatten therefore does not degenerate into the flat one: given a
+ * single input whose name order and input order disagree, the two produce
+ * different sequences. An earlier revision of this module derived the
+ * `useIndentation:false` leg from the tree pass on the stated assumption
+ * that they shared a recursion; they do not, and the module test now pins
+ * the divergence as a fact rather than asserting the equality.
+ *
+ * Declared limit: the corpus fallback reads store collections
+ * (`ua.of(X, …)`) that fixtures cannot satisfy, so the flat leg is pinned in
+ * the module test, not in the golden. The `orderBy` option override is
+ * likewise exercised only with the default comparator here.
  */
 
 /** The team shape this kernel reads. `ancestors` is ROOT-FIRST, matching
@@ -100,6 +117,52 @@ const ancestorsOf = (team: TeamLike): TeamLike[] => {
 };
 
 /**
+ * `sortTeams` (corpus `i`): the FLAT comparator-ordered flatten.
+ *
+ * Missing ancestors are injected so a child reaches its structural slot, the
+ * comparator orders every level including the roots, and injected ancestors
+ * are dropped from the output (`.filter(e=>!r.has(e))`) after ordering their
+ * subtree at their own name's sibling slot.
+ *
+ * The one thing this does NOT do is the tree path's root re-sort by minimum
+ * input index — that sort is guarded by `t===void 0` inside `sortTeamsForTree`
+ * and has no counterpart here. This is the whole difference between the two
+ * kernels, and it is why `useIndentation:false` delegates here rather than
+ * reusing the tree pass.
+ */
+export function sortTeams(
+  teams: readonly TeamLike[],
+  options?: { orderBy?: ((a: TeamLike, b: TeamLike) => number) | undefined },
+): TeamLike[] {
+  if (teams.length === 0) return [];
+  const compare = options?.orderBy ?? compareByName;
+
+  const present = new Set(teams.map((t) => t.id));
+  const injected = new Set<TeamLike>();
+  for (const t of teams) {
+    for (const a of ancestorsOf(t)) {
+      if (!present.has(a.id)) {
+        injected.add(a);
+        present.add(a.id);
+      }
+    }
+  }
+
+  const all: TeamLike[] = [...teams, ...injected];
+
+  const walk = (pool: readonly TeamLike[], parent: TeamLike | undefined): TeamLike[] => {
+    if (pool.length === 0) return [];
+    const siblings = [...pool]
+      .sort(compare)
+      .filter((t) => t.parent === parent && present.has(t.id));
+    return siblings.flatMap((t) => [t, ...walk(t.children, t)]);
+  };
+
+  // Injected ancestors order their subtree at their own slot, then drop out.
+  return walk(all, undefined).filter((t) => !injected.has(t));
+}
+
+/**
  * `sortTeamsForTree` (corpus `a`): the ancestor-grouped tree flatten with
  * indentation accounting. See the module header for the pinned semantics.
  */
@@ -121,10 +184,10 @@ export function sortTeamsForTree(
   }
 
   if (!useIndentation) {
-    // Corpus fallback: flat `sortTeams` order with zeroed indentation. The
-    // flat order equals the tree flatten's order (same recursion, no
-    // indentation bookkeeping), so derive it from the tree pass.
-    return sortTeamsForTree(teams).map(({ team }) => ({
+    // Corpus fallback (`if(!r)return i(e,n).map(…)`): delegate to the FLAT
+    // kernel, then zero the indentation. Not derivable from the tree pass —
+    // the tree path re-sorts roots by input index and this one does not.
+    return sortTeams(teams).map((team) => ({
       team,
       indentOptions: { indentationLevel: 0, hideAncestors: 0 },
     }));
