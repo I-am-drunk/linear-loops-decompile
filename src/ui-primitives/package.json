@@ -1,0 +1,7 @@
+{
+  "name": "ui-primitives",
+  "private": true,
+  "type": "module",
+  "ui": true,
+  "description": "SH2: layout and control primitives. Every dimension read from the corpus and dereferenced to the style object that uses it."
+}
