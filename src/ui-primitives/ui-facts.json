@@ -1,0 +1,140 @@
+{
+  "surface": "primitives",
+  "facts": [
+    {
+      "name": "button small height",
+      "value": "24px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `small` key on Button's size style object (class sx-xk0z11), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button small min-width",
+      "value": "24px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `small` key on Button's size style object (class sx-nei2rj), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button small font-size",
+      "value": "0.75rem",
+      "cite": "Button.DD4dEZh7.js \u2014 the `small` key on Button's size style object (class sx-167xe44), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button medium height",
+      "value": "28px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `medium` key on Button's size style object (class sx-1fgtraw), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button medium min-width",
+      "value": "28px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `medium` key on Button's size style object (class sx-1264ykn), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button medium font-size",
+      "value": "0.75rem",
+      "cite": "Button.DD4dEZh7.js \u2014 the `medium` key on Button's size style object (class sx-84vug0), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button normal height",
+      "value": "32px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `normal` key on Button's size style object (class sx-10w6t97), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button normal min-width",
+      "value": "32px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `normal` key on Button's size style object (class sx-46jg8d), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button normal font-size",
+      "value": "0.8125rem",
+      "cite": "Button.DD4dEZh7.js \u2014 the `normal` key on Button's size style object (class sx-oxd7ts), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button large height",
+      "value": "44px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `large` key on Button's size style object (class sx-n3w4p2), resolved via pipeline/sx.sh. Dereferenced: the class sits under a NAMED size key, not swept from the stylesheet by frequency."
+    },
+    {
+      "name": "button large min-width",
+      "value": "32px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `large` key on Button's size style object (class sx-46jg8d), resolved via pipeline/sx.sh. Shares normal's class \u2014 large is taller, not wider-minimum."
+    },
+    {
+      "name": "button large font-size",
+      "value": "0.8125rem",
+      "cite": "Button.DD4dEZh7.js \u2014 the `large` key on Button's size style object (class sx-oxd7ts), resolved via pipeline/sx.sh. Shares normal's class \u2014 large is not bigger type."
+    },
+    {
+      "name": "button small padding-inline",
+      "value": "8px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `small` key on Button's padding style object (class sx-163pfp), resolved via pipeline/sx.sh. padding-left; the matching padding-right class carries the same value."
+    },
+    {
+      "name": "button medium padding-inline",
+      "value": "10px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `medium` key on Button's padding style object (class sx-1lqa7cf), resolved via pipeline/sx.sh. padding-left; the matching padding-right class carries the same value."
+    },
+    {
+      "name": "button normal padding-inline",
+      "value": "12px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `normal` key on Button's padding style object (class sx-f18ygs), resolved via pipeline/sx.sh. padding-left; the matching padding-right class carries the same value."
+    },
+    {
+      "name": "button large padding-inline",
+      "value": "18px",
+      "cite": "Button.DD4dEZh7.js \u2014 the `large` key on Button's padding style object (class sx-1k8dnhd), resolved via pipeline/sx.sh. padding-left; the matching padding-right class carries the same value."
+    },
+    {
+      "name": "button border radius",
+      "value": "9999px",
+      "cite": "Button.DD4dEZh7.js \u2014 class sx-1m94j66 on the `kaIpWk` radius slot of Button's `base` style object. Linear's buttons are pills; a 6px rectangle is the invented-from-memory answer."
+    },
+    {
+      "name": "button circle variant radius",
+      "value": "50%",
+      "cite": "Button.DD4dEZh7.js \u2014 class sx-16rqkct on the `kaIpWk` slot of the `circle` variant style object."
+    },
+    {
+      "name": "input border radius",
+      "value": "5px",
+      "cite": "style-*.css --sx-ykavoc in the var group sx-18yeszy, which ThemeProvider.BNrg3wTr.js publishes as its __varGroupHash__. Dereferenced: --sx-ykavoc is consumed by exactly one rule, .sx-1mecoeu{border-radius}, and sx-1mecoeu sits on the `inputBase` style object in Input.CX9538jp.js. NOT 8px: that is generateTheme's default layer, which the var group overrides (issue #354)."
+    },
+    {
+      "name": "input padding",
+      "value": "6px 12px",
+      "cite": "style-*.css --sx-18pfyxa in the var group sx-18yeszy (ThemeProvider's __varGroupHash__), key `inputPadding`. Agrees with generateTheme's own literal, so both layers concur \u2014 unlike the radius."
+    },
+    {
+      "name": "input padding-block",
+      "value": "6px",
+      "cite": "style-*.css --sx-x8afrf in the var group sx-18yeszy (ThemeProvider's __varGroupHash__), key `inputPaddingBlock`. Agrees with generateTheme's own literal, so both layers concur \u2014 unlike the radius."
+    },
+    {
+      "name": "input padding-inline",
+      "value": "12px",
+      "cite": "style-*.css --sx-1uu732i in the var group sx-18yeszy (ThemeProvider's __varGroupHash__), key `inputPaddingInline`. Agrees with generateTheme's own literal, so both layers concur \u2014 unlike the radius."
+    },
+    {
+      "name": "input font-size",
+      "value": "0.8125rem",
+      "cite": "style-*.css --sx-11lpf43 in the var group sx-18yeszy (ThemeProvider's __varGroupHash__), key `inputFontSize`. Agrees with generateTheme's own literal, so both layers concur \u2014 unlike the radius."
+    },
+    {
+      "name": "input appearance",
+      "value": "none",
+      "cite": "Input.CX9538jp.js \u2014 class sx-jyslct on the `inputBase` style object, resolved via pipeline/sx.sh. Dereferenced: the class is on inputBase, the input's own base styles, not a wrapper."
+    },
+    {
+      "name": "input transition",
+      "value": "border .15s",
+      "cite": "Input.CX9538jp.js \u2014 class sx-1e1sxwh on the `inputBase` style object, resolved via pipeline/sx.sh. Dereferenced: the class is on inputBase, the input's own base styles, not a wrapper."
+    },
+    {
+      "name": "input font-feature-settings",
+      "value": "\"calt\" 0",
+      "cite": "Input.CX9538jp.js \u2014 class sx-14bywn9 on the `inputBase` style object, resolved via pipeline/sx.sh. Dereferenced: the class is on inputBase, the input's own base styles, not a wrapper."
+    },
+    {
+      "name": "input border",
+      "value": "1px solid var(--t-bg-border)",
+      "cite": "ThemeHelper.CeMKYPhf.js \u2014 `inputBorder: `1px solid ${color.bgBorder}``, the same theme object the other input metrics come from. The colour is the bgBorder token, so it is published by src/ui-theme rather than hardcoded. 1px is on the gate's FREE list, so this citation is voluntary \u2014 recorded because it was verified."
+    }
+  ]
+}
