@@ -1,0 +1,1084 @@
+{
+  "provenance": {
+    "tool": "corpus-exec/g1",
+    "serializer": "corpus-exec-tagged-json-v2",
+    "corpusHead": "c44f2cfc2d29bf57a064f741763f9e872b300aac",
+    "corpusSource": {
+      "flavor": "raw",
+      "path": "client"
+    },
+    "entry": "Issue.DRYymPCa.js",
+    "closureSize": 67,
+    "stubbed": [
+      "config.aM1_XCHx.js"
+    ],
+    "chunkHashes": {
+      "Issue.DRYymPCa.js": "6d08004c61b2e89c58ef9aaa7d6716ede5ef528e6efb3da59216490210962039",
+      "LoadingDoneHelper.DxcZh5nm.js": "9a45f7eac5991ada3750d88844315fa6268e4b21946ca74793f066aef956c54a",
+      "Signal.DmjPTkN_.js": "b23d583dc8d6b956df4fbd76801fa14557a0683a8523b0311043d0dc2b72775a",
+      "Logger.qFaEBF6-.js": "f46ad56ee8892f0c71ee949572cc70a1e86393959ae09a28a103d29dca94e44d",
+      "hooks.D4LfSm6u.js": "a0e4fd938dc91aa808d0aa75ed286eedd9358c61bfea2583b33351a6377e0eac",
+      "react.Bfm_Hgom.js": "1e0e89abb243deb629f8fb7e94d2221d5c87ee86f2baf505bffe17fed85eddec",
+      "rolldown-runtime.C0FnF6B9.js": "77397ec55d236c9c94348b7741cb8a0adbfb0861ad61f0b5bbaeaa2d3b48ac6d",
+      "v4.9t2fVNdP.js": "420aeb95f0bce4c26c22cd9eafa2926a77ece3ebec430f0974db8e5d57049ef9",
+      "browser.B82UtVRh.js": "83ba6f88a8521a004e6d89a8530d44ea0aadc2f54fe5a9c2e7d4dc3f1e4c859f",
+      "ClientStorage.2mwQyaxr.js": "ce0b34e2ba1ee38196bace3e1a7deb7698677fc8bef44af760983445959ed5d3",
+      "preload-helper.HclGiUj8.js": "93f50f1fb43b747a24bc36df128769012f485b894199b4b8267577a1153b22d7",
+      "types.7f0h45Sh.js": "f4630ef820bea5081ad17c43383820e79b456469bb5947fbe17e7ff4ca9a8228",
+      "resolveValueOrGetter.yDaRTFqU.js": "fc5034be790ffe6b8b315461f30fbbf5fc3ac42de045909d81000fea1375b124",
+      "mobx.BEIB-Y2s.js": "0ff3a54714b26b6d6a88a0b7671601e7f1fb6fae173b9bb66267062cc8854abd",
+      "Features.CzCTqIRs.js": "a32fef8a17d269c909a775b6ebed0287ca41daae12c07a76080a05713ff581a3",
+      "UsageFeature.DxHbtH5P.js": "fe7b87bf4ff9a770b4a6fd8c3dfcdb5a989a3fff750733e8ada1d743ae00669d",
+      "UnreachableCaseError.gONpwKHj.js": "2fe98aa58b017ea02ded4cceda9256c705dd458f4f1b0a9b3f1857f2fc485f87",
+      "upperFirst.DgY9DTaO.js": "ea0eb762edfdaacc4fbe728e4aff26e2a78923c594f8553b41e8b4f5e0dbfd8e",
+      "isObject.EOlKTQ6h.js": "515e9ff25010d64d706dd346b5561f53441d03cfe9e5eee815a835df258c3fcf",
+      "clamp.DdkIgtRO.js": "2736825b64b0c8f83f6a9882df6ae639d5fbd852426831d05b6f7f9c108dd527",
+      "toNumber.ClFirwKk.js": "bd5cb08334c62158a30c6170d8aeedfe36ca569333f4540a26f39eae54f54567",
+      "_trimmedEndIndex.vh2QLOq1.js": "5b6d203637c690c7fc8eed144c01b9f0add6ae4f2f5082f2dfbaaf6dabe04967",
+      "time.Dn7wnS7i.js": "a7957ecd69ab1d8d6f50b08398e58062d7500fbf6ca474d1734ff4e1feb864b2",
+      "format.ni2VJc-v.js": "407e8e9268eebf26c7ad7894f77c6f12b32433b361040803c61347c1301acf35",
+      "differenceInCalendarDays.DT1l52ZM.js": "56eb426f325e8d0c4c6fe47d7c902d739dbf6612cab62b2e85f7078bb37cafab",
+      "addDays.BDe0ZOzk.js": "4b29ac3b519ea2b166dd8ead2dc2dd1d4defe9db9f7c2c7de827d7d32632322c",
+      "_getTag.BslU1FX9.js": "be2bbecc28be053b3d4d5d2fb1c8c75e6ed875d7519e23e11d6b40f16f0cad9c",
+      "_Map.CIlVSj4D.js": "575c85aba8efc1108a51f8dab12ebf61c8c95c42da404893433d5f343cead037",
+      "DiffUtils.C9PmCZ-u.js": "cec965a5e699c9c1ad1095c3261076863f52293184f50cdadf8871e2f709aaaa",
+      "ArrayPool.CW_oYlKc.js": "6880446402d7150d17918dc64fee8f2f158fd824ffdd7fec9a42e727d879333e",
+      "file.BfaDIq-J.js": "6c4eb8f9ee4e19e758f457bc4aae32a9fee1e9e872b824eb075ba62b5508c46c",
+      "Locale.BJE_q3Oj.js": "00b25d16032eebb60e65c0f570e0f75c4e5e30bac21511b766f7cd4ce6cfb118",
+      "currency.f0EU3rYF.js": "2bd96bc649fda723248e868449ac72f8975712ee5ddf2901f474bf0cd89476f1",
+      "numbers.CyjUJWvi.js": "ddc1941f785193b618584dca4167a5ba97cb67815c8243c5fe3ad54c08eec59a",
+      "matchPath.BaEbF362.js": "9f89d0338bfa21aa6f3588ec301ae0841c20ef2c2c0683a67a599135e5910b78",
+      "trimEnd.BndZ8NfH.js": "f6019e342cec81b5d1d6debd7dfa00ff40c535a9b41fb03d269c5fd655d0b774",
+      "XmlHelper.DmqYQLhJ.js": "b21623b18d2f17aa17740a205b4ce6988d6c02bdea017cbd3246b6629e9ca2d4",
+      "Electron.dhyFDmX-.js": "699a45a65084d31d8e8edd1dc4e5bb26988e8953b187a0cbda175dee9bd76d93",
+      "ResolvablePromise.K_XC6Vcq.js": "34ce2ed74a0834033069a2da2b674006e26e20ef0fdd135bae5f4538d7f92e68",
+      "Tracing.DoHIW8jH.js": "47938952051c8915c0dc87a37566ca649aa92ff5be1b39954ecc8dd83dea3115",
+      "SearchScoreHelper.Bz603FMp.js": "53e2369c3e7e5db734ad6e5df7a2d2b6de1aa213deba9daed358f6f79e336b9e",
+      "PullRequestsFeatureHelper.woc0KNxh.js": "41ebdc61681ff061bcde9f97cd67da82e95499e63e087cc405362a657730f9fc",
+      "capitalize.BWfvr41B.js": "8490eaeed746ac090ab8cc330230e9c42411feb2d3c013896d4f4050a014709a",
+      "Integration.B02xjlHD.js": "f70a022e7f3e9a0325960cee0b536c0a7121a3458071c110f1619c6d1612dc4e",
+      "ColorConverter.CVwFbLBP.js": "b08766ccc0d0bcaf964009b562a143c9bc75ac10bdbc82ade7f19bbddb841dd0",
+      "MimeTypes.mHzDg6ZD.js": "9b563d209599153502cd398470e83052910b2c5e02048d8320997dbcd83f8c48",
+      "DiffModificationDetector.CvjVc3nq.js": "ccc1e904ba23310c395aee0f4ce617baca88697460c537050654aa73bc76a67a",
+      "Decorators.Du6V7UQY.js": "41de15135b2b6eea065cb206a1bf02d78cd98e28deefb9e37899afc8071e6518",
+      "SyntaxHighlightStyles.CqYlFYV4.js": "557dd99c983d715220e5adf4d06c588659d339622ba4293e83d6395a89f3409c",
+      "VisibilityHelper.BZX7bbt7.js": "5d0566c8f413acea06caca46f9fc6206eadb8c286a89dadae41597bb4f3260e3",
+      "throttle.BQuZxQlq.js": "d63e799be0d16fe5ad20a9e1e3921a9f04b165e368799972f7f6d159572a5eb7",
+      "object_hash.B923Anbb.js": "fa6736900c88ec88de44263a8ae7512870557dc03b74982f3e622eb1d62256ce",
+      "hash.DpuBqitv.js": "0acd5094b5490619845bde4f5e756c1bdd8679ca9d35b82ed2a522008cef3f9b",
+      "validation.DM_YZW7p.js": "6c34044a813a6aabe4c5a425b08bd6e378de27039ac523e3d5340206ec3b6aab",
+      "MarkdownTransformer.DI8Fsgra.js": "7416a0dea7b4e552db581e5774d87b1390c07612fa25d20077af0d2018df6ee9",
+      "nodes.DrSymAVM.js": "9f4f384d7a2117891dae673e89267f5bbfe6044b9148183a907ffa070540e1fb",
+      "subDays.Bld4IkeA.js": "a26e07f9f61d0bb4bb34c4fc7e84939cfbd8e88e14736d1461a62bfeec55333c",
+      "_baseIsEqual.DOUcxQCB.js": "0ac00b67bcdde945892223ccdec601ff43d49dd179c087289eebc029af64a4c3",
+      "_MapCache.CVQ4sTCO.js": "188fcf9e5f6285a92a78263c4db317daac8abfd91ee1c09bb4e5dc26ca1d038c",
+      "timezones.CNro5uti.js": "9a7092d820c8826c778b6c07169771d09086d29471833cc109618de2cf9ade88",
+      "spacetime.fdO416V8.js": "3d4b1982c76800b1f440405b59f3366cca2e69f451d2e8d3d471cad6edb107da",
+      "_defineProperty.Buzs8hds.js": "c48997174ad02b822f6429d62492b4ac07030777379f6b213d43602db0611c0b",
+      "memoize.BJqL8nwN.js": "e2fbc2035aba0fa6a979d976b78dcc5871243257f4da8707536c47306eade11b",
+      "InitiativesTab.CHJzgeEz.js": "8672aeaabe7bda9b532c080cbb7ff1c8cb4be50dc28230aac6b0b757090f626f",
+      "timezone.lphPF5Vd.js": "55824660160cdb453bcd4513fb10b2ae82c410aafeab656397508840d9ec24e9",
+      "core.PJIFv7xf.js": "bd97b09eba124aa1278b5fdcca1e2ffcfda85be955c89d633fca4c1633a659bc"
+    }
+  },
+  "output": {
+    "tag": "object",
+    "prototype": "object",
+    "properties": [
+      {
+        "key": "tree",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t10"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng-api"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "api-core"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "2"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "2"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng-web"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "ghost-kid"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t2"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "lone"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "n2"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "n10"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "selectedPartition",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng-web"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t2"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t10"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng-api"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "api-core"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "2"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "2"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "ghost-kid"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "lone"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "n2"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "n10"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "sel",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "byDivider",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t10"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "div",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "div",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t2"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "div",
+                  "value": {
+                    "tag": "boolean",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "lone"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "div",
+                  "value": {
+                    "tag": "boolean",
+                    "value": false
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "byGroup",
+        "value": {
+          "tag": "array",
+          "values": [
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t2"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "grp",
+                  "value": {
+                    "tag": "string",
+                    "value": "beta"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "t10"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "grp",
+                  "value": {
+                    "tag": "string",
+                    "value": "beta"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "0"
+                  }
+                },
+                {
+                  "key": "grp",
+                  "value": {
+                    "tag": "string",
+                    "value": "alpha"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "object",
+              "prototype": "object",
+              "properties": [
+                {
+                  "key": "id",
+                  "value": {
+                    "tag": "string",
+                    "value": "eng-web"
+                  }
+                },
+                {
+                  "key": "lvl",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "hide",
+                  "value": {
+                    "tag": "number",
+                    "value": "1"
+                  }
+                },
+                {
+                  "key": "grp",
+                  "value": {
+                    "tag": "string",
+                    "value": "alpha"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "labels",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "one",
+              "value": {
+                "tag": "string",
+                "value": "Engineering"
+              }
+            },
+            {
+              "key": "three",
+              "value": {
+                "tag": "string",
+                "value": "ENG, T10, T2"
+              }
+            },
+            {
+              "key": "five",
+              "value": {
+                "tag": "string",
+                "value": "ENG, T10, T2+ 2"
+              }
+            },
+            {
+              "key": "customMax",
+              "value": {
+                "tag": "string",
+                "value": "ENG, T10+ 2"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "closestCommonParent",
+        "value": {
+          "tag": "object",
+          "prototype": "object",
+          "properties": [
+            {
+              "key": "siblings",
+              "value": {
+                "tag": "string",
+                "value": "eng"
+              }
+            },
+            {
+              "key": "deep",
+              "value": {
+                "tag": "string",
+                "value": "eng"
+              }
+            },
+            {
+              "key": "selfAndChild",
+              "value": {
+                "tag": "string",
+                "value": "eng"
+              }
+            },
+            {
+              "key": "disjoint",
+              "value": {
+                "tag": "null"
+              }
+            },
+            {
+              "key": "single",
+              "value": {
+                "tag": "string",
+                "value": "api-core"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
