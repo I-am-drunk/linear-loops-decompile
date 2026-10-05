@@ -2,12 +2,12 @@
 /**
  * ui-facts: the corpus-free UI exactness checker.
  *
- * It answers the one question a reviewer cannot answer from a screenshot:
+ * It answers one question a reviewer cannot answer by looking at a screenshot:
  * is every value in this UI traceable to something someone actually read?
  *
- * Fast on purpose — pure file reads, no corpus, no network, no toolchain — so
- * it can be a REQUIRED check on every PR rather than something a reviewer
- * runs sometimes.
+ * Fast on purpose — pure file reads, no corpus, no network, no toolchain. It
+ * runs on every PR in a couple of seconds, which is what makes it mandatory
+ * rather than aspirational.
  *
  * Legs:
  *   1. every UI package declares ui-facts.json
@@ -15,15 +15,16 @@
  *   3. every dimensional value in the CSS appears in ui-facts.json
  *   4. every fact carries a citation
  *
- * Leg 3 is the one that catches invention: an agent working from memory writes
- * numbers it cannot cite, and this finds them without needing to know the
- * right answer itself.
+ * Leg 3 is the one that catches invention. An agent working from memory writes
+ * numbers it cannot cite; this finds them without needing to know the right
+ * answer.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = process.argv[2] ?? '.';
 const errors = [];
+const warnings = [];
 let checked = 0;
 
 /** A UI package is any src/* dir holding a file that emits CSS. */
@@ -40,11 +41,11 @@ function uiPackages() {
 const VALUE_RE = /(-?\d*\.?\d+)(px|rem|em|ch|vh|vw|%)/g;
 
 /**
- * Values carrying no design information, where citing would be pure noise.
+ * Values that carry no design information and would be pure noise to cite.
  * Deliberately tiny: 0 is 0 in every design system, and 1px/100% are
  * structural rather than chosen. Everything else must be read.
  */
-const FREE = new Set(['0px', '0rem', '0%', '0em', '1px', '100%', '100vh', '100vw']);
+const FREE = new Set(['0px', '0rem', '0%', '1px', '100%', '100vh', '100vw', '0em']);
 
 const COLOUR_RE = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\s*\(/g;
 
@@ -53,7 +54,7 @@ for (const pkg of uiPackages()) {
   const name = path.relative(ROOT, pkg);
   const factsPath = path.join(pkg, 'ui-facts.json');
 
-  // --- leg 1: the package declares its facts at all ----------------------
+  // --- leg 1: declaration ------------------------------------------------
   if (!fs.existsSync(factsPath)) {
     errors.push(
       `${name}: no ui-facts.json.\n` +
@@ -76,39 +77,39 @@ for (const pkg of uiPackages()) {
     continue;
   }
 
-  // --- leg 4: every fact carries a citation ------------------------------
+  // --- leg 4: citations --------------------------------------------------
   const declared = new Set();
   for (const [i, r] of rows.entries()) {
     const where = `${name}/ui-facts.json[${i}]`;
     if (!r || typeof r !== 'object') { errors.push(`${where}: not an object`); continue; }
     if (!r.name) errors.push(`${where}: missing "name"`);
     if (r.value === undefined) errors.push(`${where}: missing "value"`);
-
     const unverified = String(r.label ?? '').toUpperCase() === 'UNVERIFIED';
     if (!r.cite && !r.citation && !unverified) {
       errors.push(
         `${where} (${r.name}): no citation.\n` +
-        `    Name the file + class/identifier you read it at, or mark it\n` +
-        `    UNVERIFIED and leave the property out of the CSS.`,
+        `    Give the file + class/identifier you read it at, or mark it UNVERIFIED\n` +
+        `    and leave the property out of the CSS.`,
       );
     }
-    // An UNVERIFIED fact does NOT license its value for use.
     if (!unverified) for (const m of String(r.value).matchAll(VALUE_RE)) declared.add(m[0]);
   }
 
-  // --- legs 2 and 3: the CSS itself --------------------------------------
+  // --- legs 2 and 3: the CSS itself -------------------------------------
   for (const f of fs.readdirSync(pkg).filter((f) => /\.css\.ts$|\.css$/.test(f))) {
-    const text = fs.readFileSync(path.join(pkg, f), 'utf8');
+    const file = path.join(pkg, f);
+    const text = fs.readFileSync(file, 'utf8');
+    const lines = text.split('\n');
 
-    text.split('\n').forEach((line, n) => {
+    lines.forEach((line, n) => {
       if (/^\s*(\/\/|\*|\/\*)/.test(line)) return; // comments are prose
 
       for (const m of line.matchAll(COLOUR_RE)) {
         errors.push(
           `${name}/${f}:${n + 1}: colour literal \`${m[0]}\`.\n` +
-          `    Colours come from src/ui-theme as --t-* variables, exact by\n` +
-          `    construction. A hand-picked hex is how three GitHub colours\n` +
-          `    once shipped as "Linear's palette".`,
+          `    Colours come from src/ui-theme as --t-* variables and are exact by\n` +
+          `    construction. A hand-picked hex is how three GitHub colours once\n` +
+          `    shipped as "Linear's palette".`,
         );
       }
 
@@ -117,8 +118,8 @@ for (const pkg of uiPackages()) {
         if (FREE.has(v) || declared.has(v)) continue;
         errors.push(
           `${name}/${f}:${n + 1}: \`${v}\` is not in ui-facts.json.\n` +
-          `    Cite it (read it: bash pipeline/sx.sh <class>) or delete the\n` +
-          `    property. An uncited value is a guess.`,
+          `    Either cite it (read it out of the corpus: bash pipeline/sx.sh <class>)\n` +
+          `    or delete the property. An uncited value is a guess.`,
         );
       }
     });
@@ -130,10 +131,12 @@ if (!checked) {
   process.exit(0);
 }
 
+for (const w of warnings) console.log(`ui-facts: WARN ${w}`);
+
 if (errors.length) {
   console.error(`\nui-facts: FAIL — ${errors.length} problem(s) across ${checked} UI package(s):\n`);
   for (const e of errors) console.error(`  ✗ ${e}\n`);
-  console.error('docs/UI-EXACTNESS.md has the procedure. Every value is one grep away.\n');
+  console.error('docs/UI-EXACTNESS.md explains the procedure. Every value is one grep away.\n');
   process.exit(1);
 }
 

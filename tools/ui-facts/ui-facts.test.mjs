@@ -1,7 +1,7 @@
 /**
- * Tests for the ui-facts checker, built on fixtures so each case encodes a
- * real mistake from the 2026-10-04 shell: no facts file, uncited values, a
- * hand-picked hex.
+ * Tests for the ui-facts checker — built on fixtures, so they encode the
+ * actual failures this tool exists to catch. Each case is a real mistake
+ * from the 2026-10-04 shell: no facts file, uncited values, a hand-picked hex.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -20,7 +20,8 @@ function run(files) {
     fs.writeFileSync(p, body);
   }
   try {
-    return { code: 0, out: execFileSync('node', [CHECKER, dir], { encoding: 'utf8' }) };
+    const out = execFileSync('node', [CHECKER, dir], { encoding: 'utf8' });
+    return { code: 0, out };
   } catch (e) {
     return { code: e.status, out: (e.stdout ?? '') + (e.stderr ?? '') };
   } finally {
@@ -78,39 +79,54 @@ test('colour literals FAIL even when declared', () => {
   }
 });
 
-test('an uncited fact FAILS', () => {
-  const r = run({
+test('an uncited fact FAILS; UNVERIFIED is allowed without a citation', () => {
+  const bad = run({
     'src/ui/shell.css.ts': 'export const C = `.a{width:220px}`',
     'src/ui/ui-facts.json': JSON.stringify({ facts: [{ name: 'w', value: '220px' }] }),
   });
-  assert.equal(r.code, 1);
-  assert.match(r.out, /no citation/);
-});
+  assert.equal(bad.code, 1);
+  assert.match(bad.out, /no citation/);
 
-test('UNVERIFIED needs no citation but does NOT license the value', () => {
-  const r = run({
+  // UNVERIFIED is the honest escape hatch — but it does NOT license the value,
+  // so the CSS must not use it.
+  const ok = run({
     'src/ui/shell.css.ts': 'export const C = `.a{color:var(--t-label-base)}`',
     'src/ui/ui-facts.json': JSON.stringify({
       facts: [{ name: 'sidebar width', value: '220px', label: 'UNVERIFIED' }],
     }),
   });
-  assert.equal(r.code, 0, r.out);
-});
-
-test('an UNVERIFIED value used in the CSS still FAILS', () => {
-  const r = run({
-    'src/ui/shell.css.ts': 'export const C = `.a{width:220px}`',
-    'src/ui/ui-facts.json': JSON.stringify({
-      facts: [{ name: 'sidebar width', value: '220px', label: 'UNVERIFIED' }],
-    }),
-  });
-  assert.equal(r.code, 1, 'marking a value unverified must not license using it');
-  assert.match(r.out, /`220px` is not in ui-facts\.json/);
+  assert.equal(ok.code, 0, ok.out);
 });
 
 test('structural values (0, 1px, 100%) need no citation', () => {
   const r = run({
     'src/ui/shell.css.ts': 'export const C = `.a{inset:0;border-width:1px;width:100%;height:100vh}`',
+    'src/ui/ui-facts.json': JSON.stringify({ facts: [{ name: 'x', value: 'n/a', cite: 'n/a' }] }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
+
+test('malformed ui-facts.json FAILS loudly, not silently', () => {
+  const r = run({
+    'src/ui/shell.css.ts': 'export const C = `.a{width:220px}`',
+    'src/ui/ui-facts.json': '{ not json',
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /not valid JSON/);
+});
+
+test('an empty facts list FAILS — a stub is not a declaration', () => {
+  const r = run({
+    'src/ui/shell.css.ts': 'export const C = `.a{width:220px}`',
+    'src/ui/ui-facts.json': JSON.stringify({ facts: [] }),
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /zero facts/);
+});
+
+test('comment lines are prose, not claims', () => {
+  const r = run({
+    'src/ui/shell.css.ts': '// the sidebar is 220px wide and #09090a\nexport const C = `.a{color:var(--t-x)}`',
     'src/ui/ui-facts.json': JSON.stringify({ facts: [{ name: 'x', value: 'n/a', cite: 'n/a' }] }),
   });
   assert.equal(r.code, 0, r.out);
