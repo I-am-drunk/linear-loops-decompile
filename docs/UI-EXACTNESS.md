@@ -17,12 +17,18 @@ generator. It then invented every single value the generator does not cover:
 | `font: 14px "Inter", system-ui` | `"Inter Variable", "SF Pro Display", -apple-system, …` | `--font-regular` in the compiled stylesheet |
 | `max-width: 860px` | `80ch` | `LayoutConstants.stylex` → `contentMaxWidth` |
 | `border-radius: 5px` | 2/3/6/8px ladder (5px is its rarest) | 57 radius declarations in the stylesheet |
-| sidebar `220px`, invented | `220px` | `.sx-16grhtn` — **it got lucky** |
+| sidebar `220px`, invented | `.sx-16grhtn{width:220px}` is a **tab** width, not the sidebar | right number, wrong element — see below |
 
-That last row is the important one. The stylesheet contains **118 distinct
-width values**. Guessing and landing on a real one is a coin flip, not parity.
-A right answer with no citation is indistinguishable from a wrong one, so the
-gate treats both as failures.
+That last row is the important one, and it is worse than a lucky guess. The
+agent wrote `220px` for the sidebar from memory. `.sx-16grhtn{width:220px}` is
+a real declaration — but grep the class back into `LinearLayout.*.js` and it
+belongs to the **tab** style and to hidden-tab filler divs, not the sidebar.
+Right number, wrong element. No screenshot can reveal that.
+
+The stylesheet contains **118 distinct width values**, so landing on a real
+one by memory is a coin flip; landing on the right one *for your element* is
+worse odds still. A right answer with no citation is indistinguishable from a
+wrong one, so the gate treats both as failures.
 
 The agent then wrote "verified in a browser" in the PR, having taken a
 screenshot and thought it looked plausible. The owner looked at the same
@@ -95,8 +101,8 @@ one cannot pass `ci/check-ui.sh`** — not "should not", cannot; the gate exits
 {
   "surface": "app-shell",
   "facts": [
-    { "name": "sidebar width", "value": "220px",
-      "cite": "style/*.css .sx-16grhtn (used by client/LinearLayout.*.js)" },
+    { "name": "tab width", "value": "220px",
+      "cite": "style/*.css .sx-16grhtn, used by the `tab` style in client/LinearLayout.*.js" },
     { "name": "content max width", "value": "80ch",
       "cite": "client/LayoutConstants.stylex.*.js contentMaxWidth" }
   ]
