@@ -167,3 +167,43 @@ test('a non-UI package with CSS-looking TS is NOT flagged', () => {
   });
   assert.equal(r.code, 0, r.out);
 });
+
+test('leg 5: a citation that resolves but does not SUPPORT the claim FAILS', () => {
+  // sess 89 refused this by hand: .875rem occurs in the stylesheet only as
+  // --editor-h5/h6-font-size, so citing it for a settings heading is true
+  // about the value and false about the claim.
+  const css = "--editor-h5-font-size:.875rem;--editor-h6-font-size:.875rem;";
+  const r = run({
+    'pipeline/corpus/style/style-abc123.css': css,
+    'src/ui/style.css.ts': 'export const C = `.h{font-size:.875rem}`',
+    "src/ui/ui-facts.json": JSON.stringify({
+      facts: [{ name: "settings heading size", value: ".875rem", cite: "style-*.css" }],
+    }),
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /does not support the claim/);
+});
+
+test('leg 5 stays quiet when the value is used as a real declaration', () => {
+  const css = ".sx-oxd7ts{font-size:.8125rem}--editor-h5-font-size:.875rem;";
+  const r = run({
+    'pipeline/corpus/style/style-abc123.css': css,
+    'src/ui/style.css.ts': 'export const C = `.h{font-size:.8125rem}`',
+    "src/ui/ui-facts.json": JSON.stringify({
+      facts: [{ name: "settings heading size", value: ".8125rem", cite: ".sx-oxd7ts" }],
+    }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
+
+test('leg 5 is skipped without a corpus, not silently passed as checked', () => {
+  // Legs 0-4 are corpus-free; leg 5 needs the stylesheet. Absent one, an
+  // unsupportable citation is UNVERIFIABLE rather than fine.
+  const r = run({
+    'src/ui/style.css.ts': 'export const C = `.h{font-size:.875rem}`',
+    "src/ui/ui-facts.json": JSON.stringify({
+      facts: [{ name: "settings heading size", value: ".875rem", cite: "style-*.css" }],
+    }),
+  });
+  assert.equal(r.code, 0, r.out);
+});

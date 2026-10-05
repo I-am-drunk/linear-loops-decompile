@@ -199,9 +199,26 @@ What `ui-facts` checks:
 2. no colour literals in UI source
 3. every dimensional value in the CSS appears in `ui-facts.json`
 4. every fact carries a citation
+5. *(corpus only)* a citation that resolves but does not **support** its claim
 
-Legs 0–4 need no corpus and run on every PR in CI as a required check. The
-corpus-gated leg re-reads each cited value and compares it; run that locally.
+Legs 0–4 need no corpus and run on every PR in CI as a required check. Leg 5
+needs the stylesheet, so it runs locally — and it is the one that catches the
+hardest error, so run it before you ship.
+
+### Leg 5: a citation can resolve and still be wrong
+
+The failure it catches, found by a session who refused it by hand: `.875rem`
+occurs in Linear's stylesheet only as `--editor-h5-font-size`. Citing it for a
+settings heading is *true about the value and false about the claim* — the grep
+resolves, the fact is still invented. They changed the declaration to the
+cited `.8125rem` instead, which is the right instinct.
+
+So leg 5 fires when **every** occurrence of a cited value is a custom-property
+definition whose name shares no meaningful word with the fact's own name.
+Generic CSS nouns (`size`, `width`, `color`, `font`…) are excluded from that
+overlap test — "size" appearing in both `settings heading size` and
+`--editor-h5-font-size` is not evidence they describe the same element, and
+counting it suppressed the real case.
 
 ### Declaring a UI package
 

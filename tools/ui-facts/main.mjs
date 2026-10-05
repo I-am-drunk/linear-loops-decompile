@@ -28,6 +28,20 @@ const warnings = [];
 let checked = 0;
 
 /**
+ * The compiled stylesheet, when a corpus is present. Legs 0-4 never need it;
+ * leg 5 (does a citation support its claim?) does, and is skipped without it.
+ */
+const CORPUS_CSS = (() => {
+  const dir = path.join(ROOT, 'pipeline/corpus/style');
+  try {
+    const f = fs.readdirSync(dir).find((n) => /^style-.*\.css$/.test(n));
+    return f ? fs.readFileSync(path.join(dir, f), 'utf8') : null;
+  } catch {
+    return null;
+  }
+})();
+
+/**
  * Which files in a UI package carry CSS.
  *
  * Detection is a two-part rule, and the second part is why:
@@ -108,6 +122,50 @@ const FREE = new Set(['0px', '0rem', '0%', '1px', '100%', '100vh', '100vw', '0em
 
 const COLOUR_RE = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\s*\(/g;
 
+/**
+ * Leg 5 (corpus-gated): a citation that resolves but does not SUPPORT its
+ * claim. Found by sess 89, who refused such a citation by hand: `.875rem`
+ * occurs in the stylesheet only as `--editor-h5-font-size`, so citing it for a
+ * settings heading would be true about the value and false about the claim.
+ *
+ * Narrow by design — it fires only when EVERY occurrence of the cited value in
+ * the stylesheet is a custom-property definition whose name shares no word
+ * with the fact's own name. That is the one case where "it is in the
+ * stylesheet" is demonstrably not evidence for the stated use.
+ */
+/**
+ * CSS nouns that say nothing about SCOPE. "size" appearing in both
+ * `settings heading size` and `--editor-h5-font-size` is not evidence they
+ * describe the same element — it suppressed the real case this leg exists for.
+ */
+const GENERIC_WORDS = new Set([
+  'size', 'width', 'height', 'color', 'font', 'padding', 'margin', 'gap',
+  'radius', 'border', 'background', 'weight', 'line', 'space', 'spacing',
+  'top', 'left', 'right', 'bottom', 'inline', 'block', 'min', 'max', 'var',
+]);
+
+function scopeMismatch(value, factName, css) {
+  const esc = String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const occurrences = [...css.matchAll(new RegExp(`([-\\w]+)\\s*:\\s*${esc}\\b`, 'g'))];
+  if (!occurrences.length) return null;
+
+  const props = occurrences.map((m) => m[1]);
+  if (!props.every((p) => p.startsWith('--'))) return null; // used as a real declaration somewhere
+
+  const words = new Set(
+    String(factName).toLowerCase().split(/[^a-z0-9]+/)
+      .filter((w) => w.length > 2 && !GENERIC_WORDS.has(w)),
+  );
+  const shares = props.some((p) =>
+    p.toLowerCase().split(/[^a-z0-9]+/)
+      .some((w) => w.length > 2 && !GENERIC_WORDS.has(w) && words.has(w)),
+  );
+  if (shares) return null;
+
+  return [...new Set(props)].join(', ');
+}
+
+
 // Undeclared packages that look like they ship UI. Demand a declaration; do
 // not try to judge their values without one.
 for (const pkg of undeclaredUiPackages()) {
@@ -165,6 +223,19 @@ for (const pkg of uiPackages()) {
       );
     }
     if (!unverified) for (const m of String(r.value).matchAll(VALUE_RE)) declared.add(m[0]);
+
+    // --- leg 5: does the citation SUPPORT the claim? (corpus-gated) -------
+    if (!unverified && CORPUS_CSS) {
+      const props = scopeMismatch(r.value, r.name, CORPUS_CSS);
+      if (props) {
+        errors.push(
+          `${where} (${r.name}): \`${r.value}\` occurs in the stylesheet ONLY as\n` +
+          `    ${props} — a differently-scoped custom property. The citation\n` +
+          `    resolves but does not support the claim. Read the value for THIS\n` +
+          `    element, or mark it UNVERIFIED and drop the property.`,
+        );
+      }
+    }
   }
 
   // --- legs 2 and 3: the CSS itself -------------------------------------
