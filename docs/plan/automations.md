@@ -53,8 +53,8 @@ An automation holds a **list** of triggers, any of which fires it. Each trigger
 is a kind plus that kind's options. Kinds we ship:
 
 - **Schedule** — cron, with presets and a custom editor. Our clock, our
-  scheduler. Built from the public cron specification; see `docs/plan/cron.md`
-  when that slice starts.
+  scheduler. Built from the public cron specification (POSIX/Vixie: five fields, the
+  day-of-month/day-of-week OR rule, `@daily`-style macros).
 - **Integration event** — something happened in a connected service. For
   Linear: an issue changed, a project updated. Delivered by webhook where the
   integration offers one, polled where it does not.
