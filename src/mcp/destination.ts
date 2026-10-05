@@ -81,11 +81,32 @@ function forbiddenV6(host: string): string | undefined {
 }
 
 /** Is this literal address one the runner must never be pointed at? */
+function nonCanonicalNumeric(host: string): boolean {
+  return /^(0x[\da-f]+|\d+|\d{1,3}(\.\d{1,3}){1,2})$/i.test(host);
+}
+
+
+/**
+ * Canonicalize an IPv6 literal via the WHATWG URL parser, which compresses
+ * `0:0:0:0:0:0:0:1` to `::1` and rewrites a mapped dotted-quad tail to hex.
+ * checkDestination got this for free from url.hostname; a DIRECT caller --
+ * which MCP2 is instructed to be -- did not, so do it here.
+ */
+function canonicalV6(host: string): string {
+  try {
+    return new URL(`https://[${host}]/`).hostname.replace(/^\[|\]$/g, ``);
+  } catch {
+    return host;
+  }
+}
+
 export function isForbiddenAddress(host: string): string | undefined {
-  const q = v4(host);
+  const h = host.toLowerCase().replace(/\.$/, ``);
+  if (nonCanonicalNumeric(h)) return `non-canonical address form`;
+  const q = v4(h);
   if (q) return forbiddenV4(q);
-  if (host.includes(`:`)) return forbiddenV6(host);
-  if (host === `localhost`) return `loopback`;
+  if (h.includes(`:`)) return forbiddenV6(canonicalV6(h));
+  if (h === `localhost` || h.endsWith(`.localhost`)) return `loopback`;
   return undefined;
 }
 
