@@ -66,6 +66,11 @@
       "name": "desktop tab height",
       "value": "26px",
       "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep for `{mainPageMargin:` returns exactly one chunk); key `desktopTabHeight`."
+    },
+    {
+      "name": "monospace font stack",
+      "value": "\"Berkeley Mono\", \"SFMono Regular\", Consolas, \"Liberation Mono\", Menlo, Courier, monospace",
+      "cite": "style-*.css custom property `--font-monospace` \u2014 a single definition in the stylesheet. A font stack's canonical home IS a custom property, so citing it there supports the claim. Consumed by the SH3 node tier's code blocks."
     }
   ]
 }
