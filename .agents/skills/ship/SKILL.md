@@ -35,9 +35,11 @@ Then move on. Do not sit on your own PR.
 ## Before you merge anything
 
 1. Gate passes on a fresh clone.
-2. **Provenance audit** — `docs/PROVENANCE.md`. No vendor material, no
-   transcription of it. A diff full of exact strings and class names cited to a
-   decompiled artifact is a red flag, not evidence.
+2. **UI exactness** — `docs/UI-EXACTNESS.md`. If the diff touches UI: does the
+   package ship `ui-facts.json`? Does every dimension in the CSS appear there
+   with a corpus citation? Run `node tools/ui-facts/main.mjs .` — it answers
+   both in a second. An uncited value is a guess no matter how right it looks.
+   Also: our own code only, never Linear's source in the diff.
 3. **Zero unaddressed feedback.** Check issue comments *and* inline review
    comments:
    `gh api "repos/:owner/:repo/pulls/<N>/comments?per_page=100"`.

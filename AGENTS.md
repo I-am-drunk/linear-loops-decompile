@@ -63,10 +63,14 @@ marked `UNVERIFIED` — not padded until it looks sourced. Two independent
 analyses of this repo found "cited" facts that were invented; that is the
 failure this rule exists to prevent.
 
-**Read `docs/PROVENANCE.md` before any extraction work.** It is the one
-non-negotiable rule: we do not commit vendor material or a transcription of it,
-and a fact table reproducing a surface's internals at byte fidelity counts as a
-transcription.
+**Read `docs/UI-EXACTNESS.md` before touching any UI file.** The bar is
+EXACT: our UI is the same UI Linear renders. Every dimension, spacing value,
+radius, font stack and copy string is read from the corpus and cited in
+`ui-facts.json`. `ci/check-ui.sh` fails a UI package that ships no facts, and
+CI fails the PR. There is no path to merge a UI slice built from memory.
+
+Commit only our own code — never Linear's bundles or source. Extracted facts
+are what we commit; the corpus stays in gitignored `pipeline/corpus/`.
 
 ## Tooling
 

@@ -6,11 +6,14 @@
 #   1. tools/corpus-exec node tests (the golden runner, G1).
 #   2. tools/coverage node tests + `coverage check` (the ledger joins
 #      matrix x corpus-manifests x goldens; consistency errors are red, G2).
-# Corpus/toolchain-gated legs (labeled skips, never silent):
-#   3. cargo test the parity tool itself.
-#   4. When the corpus (pipeline/corpus, via the vault) AND our UI facts
-#      (src/ui/ui-facts.json) are both present: extract the reference and run
-#      the check.
+# Toolchain-gated:
+#   3. A UI package must declare ui-facts.json (corpus-free; runs ALWAYS).
+# Corpus-gated legs (labeled skips, never silent):
+#   4. cargo test the parity tool; golden re-verification; extract + check of
+#      our declared facts against the corpus reference.
+#
+# Ordering is load-bearing: every corpus-free leg runs before the corpus gate,
+# so a sandbox without a corpus still cannot green-light an undeclared UI.
 
 set -euo pipefail
 
@@ -33,8 +36,44 @@ fi
 echo "=== tools/parity (cargo test) ==="
 cargo test --manifest-path tools/parity/Cargo.toml --quiet
 
-if [ ! -d pipeline/corpus/pretty/client ]; then
-  echo "check-ui: no local corpus (pipeline/corpus) — skipping golden re-verification and extract/check. Vacuous pass."
+# ---------------------------------------------------------------------------
+# Corpus-FREE declaration check. This must run BEFORE the corpus gate below.
+#
+# It used to live after it, which made it unreachable: a sandbox with no corpus
+# hit the `exit 0` first, so a UI package shipping no facts got a GREEN gate.
+# That is exactly the hole issue #200 was filed about, and PR #320 fell through
+# it — src/ui landed with invented spacing, radii and font stack while
+# check-ui.sh printed "Vacuous pass". Asking whether a package declares its
+# facts needs no corpus, so it is asked unconditionally.
+# ---------------------------------------------------------------------------
+echo "=== ui-facts: every UI value declared and cited (corpus-free) ==="
+node --test tools/ui-facts/ui-facts.test.mjs
+node tools/ui-facts/main.mjs .
+
+echo "=== doc cross-references resolve (corpus-free) ==="
+node tools/ui-facts/check-links.mjs .
+
+# Belt-and-braces: ui-facts/main.mjs only treats a dir as a UI package when it
+# emits CSS. A UI dir that ships markup but no stylesheet yet still owes facts.
+if [ -d src/ui ] && [ ! -f src/ui/ui-facts.json ]; then
+  echo "check-ui: FAIL — src/ui exists but declares no ui-facts.json." >&2
+  echo "  Every UI slice ships the facts it claims (SPECS/ui-parity.md)." >&2
+  echo "  Each entry: the value, and the corpus citation it came from." >&2
+  echo "  A UI package with no facts file has nothing to check and cannot pass." >&2
+  exit 1
+fi
+
+# Two different corpus needs, so two separate gates:
+#   - VALUE legs (parity extract/check) read raw `client/` + `style/*.css`.
+#     StyleX classes resolve against the stylesheet and literals are exact in
+#     minified source, so a crawl-only corpus is enough.
+#   - GOLDEN re-verification EXECUTES corpus modules, which needs the
+#     prettified ESM tree from the prettify stage.
+# Gating everything on `pretty/` made a usable crawl-only corpus look absent.
+if [ ! -d pipeline/corpus/client ]; then
+  echo "check-ui: no local corpus (pipeline/corpus) — golden re-verification and parity extract/check SKIPPED."
+  echo "check-ui: regenerate with 'bash pipeline/run.sh' (public assets, no credentials) before reviewing a UI slice."
+  echo "check-ui: declaration legs passed; VALUE comparison did NOT run."
   exit 0
 fi
 
@@ -53,11 +92,8 @@ done
 echo "=== parity extract (corpus → reference; canaries enforced) ==="
 cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
+# The FAIL case for a factless src/ui is handled corpus-free above.
 if [ ! -f src/ui/ui-facts.json ]; then
-  if [ -d src/ui ]; then
-    echo "check-ui: FAIL — src/ui exists but declares no ui-facts.json (SPECS/ui-parity.md: every UI slice ships its facts)." >&2
-    exit 1
-  fi
   echo "check-ui: no src/ui package — extraction healthy, nothing to check yet. Vacuous pass."
   exit 0
 fi
