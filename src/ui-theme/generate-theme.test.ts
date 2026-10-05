@@ -37,13 +37,51 @@ function makeRoot(retina: boolean, preset: keyof typeof themePresets, colorForma
   return generate({ ...themePresets[preset], colorFormat });
 }
 
+/**
+ * Engine float tolerance (issue #333).
+ *
+ * The goldens record what the CORPUS generator computed on one V8 build. The
+ * OkLab -> P3/LCH path runs through Math.cbrt and Math.pow, which the spec
+ * does not pin to bit-exactness, and V8's implementations changed between
+ * Node 22 and 24. So dozens of the 116 tokens differ in the last one or two
+ * digits (observed delta 2.8e-17) depending purely on the engine.
+ *
+ * Comparing raw doubles therefore made this suite green on Node 22 and red on
+ * Node 24 for a clean checkout, which taught sessions to ignore the gate they
+ * are told to run before pushing.
+ *
+ * We compare at DIGITS significant digits instead. A real regression in this
+ * code moves a channel in digit 3 or earlier; nothing meaningful hides in
+ * digit 16. The bar stays "our numbers are the corpus's numbers" — it just
+ * stops also asserting "and your V8 rounds like ours."
+ */
+const DIGITS = 12;
+
+const roundNums = (s: string): string =>
+  s.replace(/\d+\.\d{10,}/g, (m) => Number.parseFloat(Number(m).toPrecision(DIGITS)).toString());
+
+/** Normalize for comparison: round long decimals inside color() strings. */
+function atPrecision(v: unknown): unknown {
+  if (typeof v === `string`) return roundNums(v);
+  if (typeof v === `number`) return Number.parseFloat(v.toPrecision(DIGITS));
+  if (Array.isArray(v)) return v.map(atPrecision);
+  if (v && typeof v === `object`) {
+    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, atPrecision(x)]));
+  }
+  return v;
+}
+
 /** Every scalar (string/number/boolean) field plus the full color map. */
 function assertShellAndColors(ours: Theme, want: Record<string, unknown>, label: string): void {
   for (const [key, value] of Object.entries(want)) {
     if (key === `color`) {
-      assert.deepEqual(ours.color, value, `${label}: color map`);
+      assert.deepEqual(atPrecision(ours.color), atPrecision(value), `${label}: color map`);
     } else if (typeof value !== `object`) {
-      assert.equal((ours as unknown as Record<string, unknown>)[key], value, `${label}: ${key}`);
+      assert.equal(
+        atPrecision((ours as unknown as Record<string, unknown>)[key]),
+        atPrecision(value),
+        `${label}: ${key}`,
+      );
     }
   }
 }
@@ -94,7 +132,11 @@ test(`LCH and P3 color formats match the corpus`, () => {
   for (const format of [`LCH`, `P3`] as const) {
     for (const [fixtureKey, presetKey] of CASES) {
       const root = makeRoot(false, presetKey, format);
-      assert.deepEqual(root.color, fixtures[format][fixtureKey], `${format} ${fixtureKey}: color map`);
+      assert.deepEqual(
+        atPrecision(root.color),
+        atPrecision(fixtures[format][fixtureKey]),
+        `${format} ${fixtureKey}: color map`,
+      );
     }
   }
 });
