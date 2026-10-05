@@ -36,7 +36,10 @@ test('no UI packages: passes and says so', () => {
 });
 
 test('UI package with no ui-facts.json FAILS (the 2026-10-04 shell)', () => {
-  const r = run({ 'src/ui/shell.css.ts': 'export const C = `.a{width:220px}`' });
+  const r = run({
+    'src/ui/shell.css.ts': 'export const C = `.a{width:220px}`',
+    'src/ui/package.json': '{"name":"ui","ui":true}',
+  });
   assert.equal(r.code, 1);
   assert.match(r.out, /no ui-facts\.json/);
 });
@@ -128,6 +131,39 @@ test('comment lines are prose, not claims', () => {
   const r = run({
     'src/ui/shell.css.ts': '// the sidebar is 220px wide and #09090a\nexport const C = `.a{color:var(--t-x)}`',
     'src/ui/ui-facts.json': JSON.stringify({ facts: [{ name: 'x', value: 'n/a', cite: 'n/a' }] }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
+
+test('a style.ts stylesheet is NOT a bypass (sess 89 finding)', () => {
+  // Keying detection on *.css.ts let a package using style.ts skip the gate
+  // entirely. Declared packages are scanned by source file, not by filename.
+  const r = run({
+    'src/ui/style.ts': 'export const C = `.a{width:220px;border-radius:5px}`',
+    'src/ui/package.json': '{"name":"ui","ui":true}',
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /no ui-facts\.json/);
+});
+
+test('an UNDECLARED package shipping a stylesheet FAILS', () => {
+  // Declaration-based detection has a limit: declare nothing, be invisible.
+  // So a file NAMED like a stylesheet demands a declaration.
+  const r = run({
+    'src/ui-sneaky/style.ts': 'export const C = `.a{width:220px}`',
+    'src/ui-sneaky/package.json': '{"name":"ui-sneaky"}',
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /declares no UI/);
+});
+
+test('a non-UI package with CSS-looking TS is NOT flagged', () => {
+  // Content-sniffing flagged all 27 packages: { ".html": "text/html" } in
+  // src/server/http.ts and a `color:` property in the theme generator are
+  // indistinguishable from CSS without a parser.
+  const r = run({
+    'src/server/http.ts': 'const TYPES = { ".html": "text/html" };\nconst s = "body{background:#000}";',
+    'src/server/package.json': '{"name":"server"}',
   });
   assert.equal(r.code, 0, r.out);
 });

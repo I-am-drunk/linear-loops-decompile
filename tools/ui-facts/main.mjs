@@ -27,15 +27,74 @@ const errors = [];
 const warnings = [];
 let checked = 0;
 
-/** A UI package is any src/* dir holding a file that emits CSS. */
+/**
+ * Which files in a UI package carry CSS.
+ *
+ * Detection is a two-part rule, and the second part is why:
+ *
+ *   1. A package DECLARES whether it ships UI, via `"ui": true` in its
+ *      package.json (or by having a ui-facts.json at all).
+ *   2. Within such a package, every source file is scanned.
+ *
+ * Why not sniff content repo-wide: keying on `*.css.ts` let a package using
+ * `style.ts` bypass the gate entirely (found by sess 89). The obvious fix —
+ * grep every file for CSS-looking text — is worse. It flagged all 27 packages,
+ * because `{ ".html": "text/html" }` in src/server/http.ts and a `color:`
+ * property in the theme generator are indistinguishable from CSS without a
+ * parser. Declaration is honest: a package that ships UI says so, and the
+ * gate then checks it thoroughly.
+ */
+const SOURCE_RE = /\.(css|ts|tsx|js|jsx|mjs)$/;
+
+function declaresUi(dir) {
+  if (fs.existsSync(path.join(dir, 'ui-facts.json'))) return true;
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
+    return pkg.ui === true;
+  } catch {
+    return false;
+  }
+}
+
+function cssFiles(dir) {
+  return fs.readdirSync(dir).filter(
+    (f) => SOURCE_RE.test(f) && !/\.test\.[a-z]+$/.test(f),
+  );
+}
+
+/** A UI package is any src/* dir that declares it ships UI. */
 function uiPackages() {
   const src = path.join(ROOT, 'src');
   if (!fs.existsSync(src)) return [];
   return fs.readdirSync(src)
     .map((d) => path.join(src, d))
     .filter((d) => fs.statSync(d).isDirectory())
-    .filter((d) => fs.readdirSync(d).some((f) => /\.css\.ts$|\.css$/.test(f)));
+    .filter((d) => declaresUi(d));
 }
+
+/**
+ * The honest limit of declaration-based detection: a package that declares
+ * nothing is invisible. So catch the specific case that matters — a file
+ * NAMED like a stylesheet in a package that never declared itself.
+ *
+ * Narrow on purpose. Content-sniffing every source file flagged all 27
+ * packages (TS object literals look like CSS), so this checks names only, and
+ * only to demand a declaration rather than to judge the values.
+ */
+const STYLESHEET_NAME_RE = /^(?:css|style|styles|stylesheet)\.(?:ts|tsx|js|jsx|mjs)$|\.css\.(?:ts|tsx|js|jsx|mjs)$|\.css$/;
+
+function undeclaredUiPackages() {
+  const src = path.join(ROOT, 'src');
+  if (!fs.existsSync(src)) return [];
+  return fs.readdirSync(src)
+    .map((d) => path.join(src, d))
+    .filter((d) => fs.statSync(d).isDirectory())
+    .filter((d) => !declaresUi(d))
+    .filter((d) => fs.readdirSync(d).some(
+      (f) => STYLESHEET_NAME_RE.test(f) && !/\.test\.[a-z]+$/.test(f),
+    ));
+}
+
 
 /** Values whose exactness is visible: lengths, not counts or keywords. */
 const VALUE_RE = /(-?\d*\.?\d+)(px|rem|em|ch|vh|vw|%)/g;
@@ -48,6 +107,19 @@ const VALUE_RE = /(-?\d*\.?\d+)(px|rem|em|ch|vh|vw|%)/g;
 const FREE = new Set(['0px', '0rem', '0%', '1px', '100%', '100vh', '100vw', '0em']);
 
 const COLOUR_RE = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\s*\(/g;
+
+// Undeclared packages that look like they ship UI. Demand a declaration; do
+// not try to judge their values without one.
+for (const pkg of undeclaredUiPackages()) {
+  const name = path.relative(ROOT, pkg);
+  errors.push(
+    `${name}: ships a stylesheet but declares no UI.\n` +
+    `    Add "ui": true to its package.json (or a ui-facts.json) so the gate\n` +
+    `    can check its values. A UI package that declares nothing is\n` +
+    `    unverifiable, which is how invented CSS shipped before.`,
+  );
+  checked++;
+}
 
 for (const pkg of uiPackages()) {
   checked++;
@@ -96,7 +168,7 @@ for (const pkg of uiPackages()) {
   }
 
   // --- legs 2 and 3: the CSS itself -------------------------------------
-  for (const f of fs.readdirSync(pkg).filter((f) => /\.css\.ts$|\.css$/.test(f))) {
+  for (const f of cssFiles(pkg)) {
     const file = path.join(pkg, f);
     const text = fs.readFileSync(file, 'utf8');
     const lines = text.split('\n');

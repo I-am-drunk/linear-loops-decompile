@@ -194,13 +194,28 @@ bash ci/check-ui.sh                # adds the corpus value comparison
 
 What `ui-facts` checks:
 
+0. a package shipping a stylesheet **declares** it ships UI
 1. every UI package declares `ui-facts.json`
 2. no colour literals in UI source
 3. every dimensional value in the CSS appears in `ui-facts.json`
 4. every fact carries a citation
 
-Legs 1–4 need no corpus and run on every PR in CI as a required check. The
+Legs 0–4 need no corpus and run on every PR in CI as a required check. The
 corpus-gated leg re-reads each cited value and compares it; run that locally.
+
+### Declaring a UI package
+
+Add `"ui": true` to your package's `package.json` (a `ui-facts.json` counts
+too). The gate then scans every source file in it, whatever they are named.
+
+This is a declaration rather than a sniff, and the reason is worth knowing.
+Detection originally keyed on `*.css.ts`, which let a package using `style.ts`
+skip the gate entirely. The obvious fix — grep every file for CSS-looking
+text — was worse: it flagged all 27 packages, because `{ ".html": "text/html" }`
+in `src/server/http.ts` and a `color:` property in the theme generator are
+indistinguishable from CSS without a parser. So a package says what it is, and
+leg 0 catches the one case declaration cannot: a file *named* like a
+stylesheet in a package that declared nothing.
 
 ## Where CI runs these
 
