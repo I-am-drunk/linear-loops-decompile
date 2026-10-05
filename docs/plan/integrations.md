@@ -68,6 +68,39 @@ definitions, drafts, runs, or memories. Those are ours by necessity, which is
 settled and reproduced independently three times. We are not a client for
 Linear's automations; we are our own product that integrates with Linear.
 
+## Linear's agent surface: a second, free UI for our runs
+
+Issue #14 asked whether Linear's chat could be free inference. It cannot —
+every Linear entry point draws the same AI-credits wallet. But the research
+found something more useful, and it has been sitting in a closed research
+thread instead of this plan.
+
+The **Agent Sessions API** (Developer Preview) gives us Linear's whole native
+agent UX — sessions, activities, plans, elicitations, inbox wiring — at no
+cost, because *we* bring the brain. An OAuth app with `app:mentionable` +
+`app:assignable` makes our server an agent member of the workspace. Mention or
+delegate to it and a session opens; we stream `thought` / `action` /
+`response` activities into it and the run renders inside Linear.
+
+Facts in `extracts/linear-official/AGENT-API.md`, verified against the MIT
+schema at `linear/linear@689ccc1e` (`master`) plus the live preview docs:
+
+| Fact | Consequence for us |
+|---|---|
+| Session status is auto-derived from emitted activities | we never manage state, we just emit |
+| `promptContext` on the webhook is Linear's own assembled prompt | usable verbatim as our brain's context |
+| Activities are frozen snapshots; comments are editable | read history from activities, never comments |
+| `externalUrls` point at our run view | keeps the session from being marked unresponsive |
+| `thought` must land within 10s of session start | our runner emits an ack before doing work |
+| `signal: stop` arrives on a `prompt` | halt immediately, then confirm with `response`/`error` |
+| `plan` updates REPLACE the whole array | no per-item patch; send the full checklist |
+
+This is additive, not a dependency. Our own automations page stays the primary
+surface; this is a second front end for the same runs, for the case where the
+owner is already in Linear. It is **`IG7`, after `IG5`** — it needs actions and
+auth working first. Re-verify the op list before starting; it is a preview
+surface and moved once already (12 ops → 22 between two checks a day apart).
+
 ## Others
 
 The interface exists so the second integration is cheap. GitHub, Slack, and a
@@ -83,3 +116,4 @@ generic webhook are the obvious next three. None are in the first milestone.
 | IG4 | Linear: webhook receiver — HMAC, replay guard, dedupe |
 | IG5 | Linear: actions (comment, update) with audit |
 | IG6 | trigger/action catalog registration from integrations |
+| IG7 | Linear agent sessions: our runs rendered inside Linear (after IG5) |
