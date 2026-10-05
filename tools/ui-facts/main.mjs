@@ -38,8 +38,19 @@ const CORPUS_CSS = (() => {
   try {
     const f = fs.readdirSync(dir).find((n) => /^style-.*\.css$/.test(n));
     return f ? fs.readFileSync(path.join(dir, f), 'utf8') : null;
-  } catch {
-    return null;
+  } catch (e) {
+    // ENOENT is the normal case: no corpus, so leg 5 is skipped and the run
+    // says so. ANY other error — EACCES, EISDIR, a truncated read — means the
+    // corpus is there and unreadable, which would silently disable leg 5 and
+    // still report success. Fail loudly instead (CodeRabbit, #327 inline).
+    if (e?.code === 'ENOENT') return null;
+    console.error(
+      `\nui-facts: cannot read the corpus stylesheet at ${path.relative(ROOT, dir) || dir}\n` +
+      `    ${e?.code ?? ''} ${e?.message ?? String(e)}\n` +
+      `    Leg 5 (does a citation support its claim?) needs it. Fix the read\n` +
+      `    error, or remove pipeline/corpus/style to run without leg 5.\n`,
+    );
+    process.exit(1);
   }
 })();
 

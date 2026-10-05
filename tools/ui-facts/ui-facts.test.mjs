@@ -12,13 +12,16 @@ import path from 'node:path';
 
 const CHECKER = new URL('./main.mjs', import.meta.url).pathname;
 
-function run(files) {
+function run(files, prepare) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'uifacts-'));
   for (const [rel, body] of Object.entries(files)) {
     const p = path.join(dir, rel);
     fs.mkdirSync(path.dirname(p), { recursive: true });
     fs.writeFileSync(p, body);
   }
+  // `prepare` can mutate the fixture after it is written -- chmod for the
+  // unreadable-corpus case, which no file-contents map can express.
+  if (prepare) prepare(dir);
   try {
     // stdio: stderr PIPED, not inherited — see the same note in
     // check-links.test.mjs. Seven of these fixtures deliberately fail, and
@@ -360,4 +363,23 @@ test(`leg 5 fires on a PERCENTAGE value (#327 inline review)`, () => {
   });
   assert.equal(r.code, 1, 'a percentage borrowed from an unrelated token must fail');
   assert.match(r.out, /editor-h5-width/);
+});
+
+test(`an unreadable corpus fails loudly instead of skipping leg 5`, () => {
+  // ENOENT means "no corpus" and is fine. Any other read error means the
+  // corpus is present and unreadable, which would disable leg 5 and still
+  // report success (CodeRabbit, #327 inline review).
+  const r = run(
+    {
+      'src/p/package.json': '{"name":"p","ui":true}',
+      'src/p/ui-facts.json': JSON.stringify({
+        facts: [{ name: 'x', value: '4px', cite: 'c' }],
+      }),
+      'src/p/style.css.ts': 'export const A = `.a{gap:4px}`;',
+      'pipeline/corpus/style/style-x.css': ':root{--a:4px}',
+    },
+    (dir) => fs.chmodSync(path.join(dir, 'pipeline/corpus/style/style-x.css'), 0o000),
+  );
+  assert.equal(r.code, 1, 'an unreadable corpus must fail');
+  assert.match(r.out, /cannot read the corpus stylesheet/);
 });
