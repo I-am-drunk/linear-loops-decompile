@@ -1,0 +1,146 @@
+{
+  "surface": "settings-shell",
+  "note": "Every value in style.ts is read from the corpus and cited here. Corpus: pipeline/corpus (gitignored); stylesheet style-p6hK3mv7.css, 566143 bytes.",
+  "facts": [
+    {
+      "name": "SPACE.xs",
+      "value": "4px",
+      "cite": "style-p6hK3mv7.css .sx-6wrskw{padding-left:4px} (used by AccountPreferencesSettingsPage.d0arPMFw.js); 29 padding declarations at 4px"
+    },
+    {
+      "name": "SPACE.sm",
+      "value": "6px",
+      "cite": "style-p6hK3mv7.css .sx-11iknt3{padding-left:6px} (used by SettingsList.DcdYNrAZ.js); .sx-10b6aqq{padding-bottom:6px}"
+    },
+    {
+      "name": "SPACE.md",
+      "value": "8px",
+      "cite": "style-p6hK3mv7.css .sx-167g77z{gap:8px} and .sx-1db2dqx{margin-right:8px} (SettingsList.DcdYNrAZ.js)"
+    },
+    {
+      "name": "SPACE.lg",
+      "value": "12px",
+      "cite": "style-p6hK3mv7.css .sx-c7ga6q{padding:12px} (AccountPreferencesSettingsPage.d0arPMFw.js); most frequent padding scalar, 49 declarations"
+    },
+    {
+      "name": "SPACE.xl",
+      "value": "16px",
+      "cite": "style-p6hK3mv7.css .sx-1tamke2{padding:16px} and .sx-1hr3lfm{padding-inline:16px} (AccountPreferencesSettingsPage.d0arPMFw.js)"
+    },
+    {
+      "name": "SPACE.xxl",
+      "value": "24px",
+      "cite": "style-p6hK3mv7.css .sx-1p5oq8j{padding-top:24px} and .sx-8e5d8q{padding-right:24px} (AccountPreferencesSettingsPage.d0arPMFw.js)"
+    },
+    {
+      "name": "RADIUS.sm",
+      "value": "2px",
+      "cite": "style-p6hK3mv7.css: most frequent radius in the stylesheet, 14 border-radius:2px declarations"
+    },
+    {
+      "name": "RADIUS.md",
+      "value": "3px",
+      "cite": "style-p6hK3mv7.css: second most frequent radius, 12 border-radius:3px declarations"
+    },
+    {
+      "name": "RADIUS.lg",
+      "value": "8px",
+      "cite": "style-p6hK3mv7.css .sx-1i9j6mr{border-radius:8px} (used by SettingsList.DcdYNrAZ.js); 11 declarations"
+    },
+    {
+      "name": "ROW_HEIGHT",
+      "value": "32px",
+      "cite": "style-p6hK3mv7.css .sx-10w6t97{height:32px} (used by SettingsList.DcdYNrAZ.js and AccountPreferencesSettingsPage.d0arPMFw.js)"
+    },
+    {
+      "name": "NAV_WIDTH",
+      "value": "220px",
+      "cite": "style-p6hK3mv7.css .sx-16grhtn{width:220px}; dereferenced to its users: LinearLayout.BBj6JEjr.js, AutomationRunsPage.B4BlrXdr.js, DebugRouter.hm9jVXTg.js"
+    },
+    {
+      "name": "font stack",
+      "value": "\"Inter Variable\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+      "cite": "style-p6hK3mv7.css --font-regular"
+    },
+    {
+      "name": "body font-size",
+      "value": ".8125rem",
+      "cite": "style-p6hK3mv7.css font-size:.8125rem (5 declarations, = 13px at 16px root)"
+    },
+    {
+      "name": "small font-size",
+      "value": ".75rem",
+      "cite": "style-p6hK3mv7.css font-size:.75rem (3 declarations, = 12px)"
+    },
+    {
+      "name": "title font-size",
+      "value": ".9375rem",
+      "cite": "style-p6hK3mv7.css font-size:.9375rem (5 declarations, the most frequent, = 15px)"
+    },
+    {
+      "name": "page max-width",
+      "value": "640px",
+      "cite": "style-p6hK3mv7.css .sx-11gisft{max-width:640px}"
+    },
+    {
+      "name": "toggle width",
+      "value": "28px",
+      "cite": "style-p6hK3mv7.css .sx-gd8bvy{width:28px}"
+    },
+    {
+      "name": "toggle height",
+      "value": "16px",
+      "cite": "style-p6hK3mv7.css .sx-lup9mm{height:16px}"
+    },
+    {
+      "name": "toggle knob",
+      "value": "12px",
+      "cite": "style-p6hK3mv7.css .sx-smyaan{width:12px}"
+    },
+    {
+      "name": "pill radius",
+      "value": "999px",
+      "cite": "style-p6hK3mv7.css .sx-1e6avla{border-radius:999px}"
+    },
+    {
+      "name": "line-height 24px",
+      "value": "24px",
+      "cite": "style-p6hK3mv7.css .sx-1o2sk6j{line-height:24px}"
+    },
+    {
+      "name": "line-height 20px",
+      "value": "20px",
+      "cite": "style-p6hK3mv7.css .sx-1fc57z9{line-height:20px}"
+    },
+    {
+      "name": "line-height 18px",
+      "value": "18px",
+      "cite": "style-p6hK3mv7.css .sx-d4r4e8{line-height:18px}"
+    },
+    {
+      "name": "line-height 16px",
+      "value": "16px",
+      "cite": "style-p6hK3mv7.css .sx-1d3mw78{line-height:16px}"
+    },
+    {
+      "name": "2px micro-offset",
+      "value": "2px",
+      "cite": "style-p6hK3mv7.css 21 padding declarations at 2px; .sx-1i6ynl5{padding:2px} family"
+    },
+    {
+      "name": "heading font-weight",
+      "value": "550",
+      "cite": "style-p6hK3mv7.css .sx-h88oxj{font-weight:550}. Corrected from an invented 510, which does not appear in the stylesheet at all."
+    },
+    {
+      "name": "page-title font-size",
+      "value": "1.125rem",
+      "cite": "style-p6hK3mv7.css .sx-fd0w6u{font-size:1.125rem} and .sx-x25i5n{font-size:1.125rem} (= 18px at 16px root)"
+    },
+    {
+      "name": "focus outline-offset",
+      "value": "-1px",
+      "cite": "style-p6hK3mv7.css outline-offset:-1px; the inset-focus idiom, also .sx-1jz8bvi{inset:-1px}"
+    }
+  ]
+}

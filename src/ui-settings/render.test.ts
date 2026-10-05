@@ -78,7 +78,7 @@ test(`section and shell nest without losing rows`, () => {
 });
 
 test(`no colour literal anywhere in the stylesheet`, async () => {
-  const { SETTINGS_CSS } = await import("./style.ts");
+  const { SETTINGS_CSS } = await import("./style.css.ts");
   // docs/plan/settings.md: colours come from src/ui-theme tokens only.
   // Mechanical, because "no component hardcodes a color" needs enforcing.
   const literals = SETTINGS_CSS.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g);
