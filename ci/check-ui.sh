@@ -44,12 +44,25 @@ if [ -d src/ui ] && [ ! -f src/ui/ui-facts.json ]; then
   exit 1
 fi
 
+# The value/citation legs. Corpus-free and fast, so they sit above every early
+# return too — same reason as the declaration check: the leg that always runs
+# must not be the one that can be skipped.
+echo "=== ui-facts: every UI value declared and cited ==="
+node --test tools/ui-facts/ui-facts.test.mjs tools/ui-facts/check-links.test.mjs
+node tools/ui-facts/main.mjs .
+
+echo "=== doc cross-references resolve ==="
+node tools/ui-facts/check-links.mjs .
+
 if ! command -v cargo >/dev/null 2>&1; then
   if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
     echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
     exit 1
   fi
-  echo "check-ui: cargo not found — install Rust (https://rustup.rs) to run the parity gate. Vacuous pass (set CHECK_UI_STRICT=1 to make this a failure; reviewers merging UI slices should run with a toolchain)."
+  echo "check-ui: cargo not found — the Rust parity legs did NOT run. Declaration"
+  echo "check-ui: legs above passed. Install Rust (https://rustup.rs) or set"
+  echo "check-ui: CHECK_UI_STRICT=1 to make this a failure; a reviewer merging a"
+  echo "check-ui: UI slice should run with a toolchain."
   exit 0
 fi
 
@@ -114,7 +127,8 @@ cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
 # The FAIL case for a factless src/ui is handled corpus-free above.
 if [ ! -f src/ui/ui-facts.json ]; then
-  echo "check-ui: no src/ui package — extraction healthy, nothing to check yet. Vacuous pass."
+  echo "check-ui: no src/ui package — extraction healthy; there is no UI to"
+  echo "check-ui: compare yet, so the value legs had nothing to do."
   exit 0
 fi
 
