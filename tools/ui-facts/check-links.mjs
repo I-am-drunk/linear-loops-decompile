@@ -22,7 +22,9 @@ const DOCS = [];
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     // Archives are historical records — they SHOULD cite files that no longer
     // exist, and rewriting them would falsify the history. Live docs only.
-    if (['node_modules', '.git', 'corpus', 'archive'].includes(e.name)) continue;
+    // archive/ is a historical record and SHOULD cite files that are gone.
+    // .claude/ holds scratch worktrees that mirror the tree.
+    if (['node_modules', '.git', 'corpus', 'archive', '.claude'].includes(e.name)) continue;
     const p = path.join(dir, e.name);
     if (e.isDirectory()) walk(p, depth + 1);
     else if (/\.md$/.test(e.name)) DOCS.push(p);

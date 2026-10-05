@@ -30,16 +30,18 @@ unpushed work is lost work.
 evidence, cite the evidence, and mark what you could not verify as
 `UNVERIFIED` rather than guessing.
 
-**Provenance (read this before any extraction work).** This repo is public.
-Never commit vendor material: no app bundles, no decompiled or prettified
-source, no transcription of one. Reading a shipped bundle locally to
-understand behavior is fine; publishing a byte-fidelity transcription of its
-internals is not, and "facts, not code" does not change that — a table of
-every string, prop and class name is the same substance in a different shape.
-Build from open specifications, public documentation, and the product as a
-user sees it. Where that leaves a genuine gap, say so in the PR and let the
-owner decide. `docs/PROVENANCE.md` has the full rule and the history behind
-it.
+**The UI bar is EXACT, and it is mechanically enforced.** Our UI is the same UI
+Linear renders — not similar, not inspired by. Every dimension, spacing value,
+radius, font stack and copy string comes out of the decompiled corpus and is
+cited in your package's `ui-facts.json`. Working from a memory of what Linear
+looks like is the mistake that has sunk this project repeatedly, including by
+fifty agents in one day; `node tools/ui-facts/main.mjs .` now fails it, on
+every PR. **Read `docs/UI-EXACTNESS.md` before you touch a UI file** — it
+tells you how to get the corpus (one command, public assets, no credentials)
+and how to read a value out of it.
+
+Commit only our own code: never Linear's bundles or source. The corpus lives
+in gitignored `pipeline/corpus/`.
 
 **Tooling:** the `gh` CLI, already authenticated. No MCP, no PAT handling.
 

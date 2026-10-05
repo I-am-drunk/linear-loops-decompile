@@ -27,10 +27,16 @@ After three days the meter read *78 chunks · 16 golden · 62 GAP*: months of
 runway to finish proving, and no product. The owner's 60/40 directive (#295)
 was aimed exactly here and arrived late.
 
-**3. The method poisoned the facts.** See `docs/PROVENANCE.md`. Byte-fidelity
-extraction into a public repo was both the legal exposure and a quality
-problem: 3 of 4 headline strings in our own Cursor fact queue were wrong,
-written from guesses about the artifact and cited as if verified.
+**3. Reviewing UI by eye let invented work through, fifty times.** Agents
+built shells from a recollection of Linear rather than from the corpus,
+screenshotted them, judged them plausible, and shipped. Colors were right —
+they come from the golden-backed generator. Every dimension the generator does
+not cover was made up. Linear's stylesheet holds 118 distinct width values, so
+guessing a real one is a coin flip. Fixed mechanically rather than by
+exhortation: `docs/UI-EXACTNESS.md` plus `tools/ui-facts`, wired into the
+required CI check. Related: a fact queue where 3 of 4 headline strings were
+wrong, each written from a guess *about* an artifact and then cited — a
+citation is necessary, not sufficient.
 
 ## Coordination: what the thread taught
 

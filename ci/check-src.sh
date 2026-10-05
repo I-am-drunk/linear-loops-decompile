@@ -41,6 +41,22 @@ has_jq_expr() { # has_jq_expr <dir> <node-eval-expr-over-p>
   (cd "$1" && node -e "const p=require('./package.json');process.exit(($2)?0:1)")
 }
 
+# ---------------------------------------------------------------------------
+# UI exactness. Lives here because `typecheck` is the required CI check and
+# this must run on EVERY PR — it is the gate that stops a UI built from memory
+# (docs/UI-EXACTNESS.md). Corpus-free and ~1s, so it costs nothing.
+#
+# `ci/check-ui.sh` runs these too, plus the corpus value comparison. Keeping
+# them in both is deliberate: the one that always runs must never be the one
+# that can be skipped.
+# ---------------------------------------------------------------------------
+echo "=== ui-facts: every UI value declared and cited ==="
+node --test tools/ui-facts/ui-facts.test.mjs
+node tools/ui-facts/main.mjs .
+
+echo "=== doc cross-references resolve ==="
+node tools/ui-facts/check-links.mjs .
+
 found=0
 for tsconfig in src/*/tsconfig.json; do
   [ -e "$tsconfig" ] || continue
