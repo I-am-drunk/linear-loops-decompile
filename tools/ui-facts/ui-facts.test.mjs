@@ -345,3 +345,19 @@ test(`a NESTED stylesheet-named file still demands a declaration`, () => {
   assert.equal(r.code, 1);
   assert.match(r.out, /declares no UI/);
 });
+
+test(`leg 5 fires on a PERCENTAGE value (#327 inline review)`, () => {
+  // `\b` after `75%` never matched — the next char is `;`, and neither is a
+  // word character — so leg 5 skipped every percentage silently. A value
+  // living only as a differently-scoped custom property should be caught.
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/ui-facts.json': JSON.stringify({
+      facts: [{ name: 'sidebar nav width', value: '75%', cite: 'style-x.css' }],
+    }),
+    'src/p/style.css.ts': 'export const A = `.a{width:75%}`;',
+    'pipeline/corpus/style/style-x.css': ':root{--editor-h5-width:75%;}',
+  });
+  assert.equal(r.code, 1, 'a percentage borrowed from an unrelated token must fail');
+  assert.match(r.out, /editor-h5-width/);
+});

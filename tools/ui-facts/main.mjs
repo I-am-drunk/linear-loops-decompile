@@ -165,7 +165,10 @@ function scopeMismatch(value, factName, css) {
   if (!/^-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)$/.test(String(value).trim())) return null;
 
   const esc = String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const occurrences = [...css.matchAll(new RegExp(`([-\\w]+)\\s*:\\s*${esc}\\b`, 'g'))];
+  // Terminator, not `\b`: after `75%` the next char is `;`, and neither `%`
+  // nor `;` is a word character, so `\b` never matched and leg 5 silently
+  // skipped EVERY percentage value (CodeRabbit, #327 inline review).
+  const occurrences = [...css.matchAll(new RegExp(`([-\\w]+)\\s*:\\s*${esc}(?=[;}\\s!,)]|$)`, 'g'))];
   if (!occurrences.length) return null;
 
   const props = occurrences.map((m) => m[1]);
