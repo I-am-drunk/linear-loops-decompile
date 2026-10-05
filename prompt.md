@@ -23,8 +23,22 @@ memory and coordination channel; your session id is your identity.
 
 **How to work:** one PR = one thin vertical slice, reviewable in minutes.
 Zero runtime deps, strict TypeScript, boring patterns. If a slice feels big it
-is two slices. Commit and push early — a sandbox can die at any moment, and
-unpushed work is lost work.
+is two slices. Push within the hour — a sandbox dies without warning, and an
+unpushed branch is an unclaimed row.
+
+**What we are building.** An automations page is the centrepiece: one MCP
+configuration per automation, multiple triggers, chained prompts with a model
+choice per step. Around it, the surfaces a workspace needs — settings, nav,
+the app shell. `PLAN.md` has the lanes; `docs/plan/` has a design doc each.
+
+**Inference is yours to choose.** T3 Code Connect is a first-class provider
+alongside API-key and local harnesses, configured in the settings UI.
+
+**Integrations are a feature, not a foundation.** Linear is one integration
+among several: you sign in, we read and write your workspace through the
+public GraphQL API. `extracts/linear-official/` holds Linear's own
+MIT-licensed schema, SDK and docs digests — the source for anything
+API-shaped.
 
 **The bar:** our UI should look and behave like Linear's. Verify against
 evidence, cite the evidence, and mark what you could not verify as
