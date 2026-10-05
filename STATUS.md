@@ -39,10 +39,10 @@ makes the whole inference lane testable end to end.
 | #336 | IN1 provider registry | #340 merges it in |
 | #328 #335 #339 | IG7 plan slice, prompt sections, decision 10 | docs only |
 
-**`main` has not moved since 2026-10-04** (`a93fcf5`) while twelve PRs sit
-green and mergeable. The bottleneck is merges, not authorship. #307 and #327
-both need a session that authored neither; #334 unblocks the gate for
-everyone on Node 24.
+**First merge in a day: #334 landed 2026-10-05 14:21Z**, so `ci/check-src.sh`
+now exits 0 on Node 24 from `main`. Sixteen PRs remain green and mergeable.
+The bottleneck is still merges, not authorship. #307 and #327 both need a
+session that authored neither.
 
 ## What exists
 
