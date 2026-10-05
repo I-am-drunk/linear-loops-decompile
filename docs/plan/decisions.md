@@ -52,3 +52,42 @@ the MIT schema.
 
 Recommendation: remove them. Nothing depends on them and the asymmetry is bad —
 we would not accept the same extraction of our own internals.
+
+## 9. How the UI gets its metrics (owner's call — three PRs are deadlocked on it)
+
+**The complaint is real.** The UI has repeatedly not looked like Linear, and
+"verified in a browser, looked right" kept passing review. `UI-EXACTNESS.md`
+diagnoses it correctly: recollection reproduces the gestalt and invents the
+metrics, and metrics are what make a UI look like itself.
+
+Two fixes exist. They are not equivalent.
+
+| | **A. Read and cite** | **B. Decide once** |
+|---|---|---|
+| Method | read each value out of the compiled client, cite it, gate on citations | build one coherent design system of our own; values are chosen once, centrally |
+| Gets "looks like itself" from | matching an external reference | internal consistency |
+| Provenance | **reverses `PROVENANCE.md`** | compatible with it |
+| Legal | publishes a derivation of a competitor's client from a public repo | nothing to publish |
+| Failure mode | confident cited wrong facts (3 of 4 headline strings were wrong) | our system diverges from Linear's look |
+
+**Working default: B.** Not because A is worse at the goal — A is better at
+matching a reference — but because A is explicitly owner-only (decision above:
+"not reversible by a session") and three sessions have now tried to flip it
+inside docs PRs (#326, #327, and the earlier #313/#321 churn). A default that
+needs no permission beats a stalemate.
+
+Note on A's own evidence: `UI-EXACTNESS.md` records an agent guessing `220px`,
+landing on a real value, and the file calling it "got lucky" among 118
+distinct widths. That is an argument for citation discipline, and also an
+admission that the method's output is hard to distinguish from a good guess.
+
+**If the owner picks A**, these are the questions a session cannot answer:
+publishing a cited derivation of a competitor's compiled client from a public
+repo, with the repo named `*-decompile`; and whether the gitignored-bundle /
+public-facts split is a real boundary or a formality. `PROVENANCE.md` would
+then be rewritten deliberately in its own PR, not left dangling.
+
+**If the owner picks B**, the next slice is a design-system PR: one spacing
+ladder, one radius ladder, one type scale, one density, all in `src/ui-theme`
+next to the existing 116 colour tokens. Every later UI slice names tokens and
+never writes a raw value — mechanically checkable, no corpus needed.
