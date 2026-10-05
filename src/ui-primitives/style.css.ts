@@ -32,4 +32,26 @@ export const PRIMITIVES_CSS = `
 .btn[data-size="medium"] { height: 28px; min-width: 28px; font-size: 0.75rem;   padding: 0 10px; }
 .btn[data-size="normal"] { height: 32px; min-width: 32px; font-size: 0.8125rem; padding: 0 12px; }
 .btn[data-size="large"]  { height: 44px; min-width: 32px; font-size: 0.8125rem; padding: 0 18px; }
+
+.input {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  padding-block: 6px;
+  padding-inline: 12px;
+  border-radius: 5px;
+  font-family: var(--t-font-regular);
+  font-size: 0.8125rem;
+  font-feature-settings: "calt" 0;
+  color: var(--t-label-base);
+  background: var(--t-bg-base);
+  border: 1px solid var(--t-bg-border);
+  transition: border .15s;
+}
+
+/* No :focus rule. None of Input's 95 classes carries one, and the chunk has
+   no focus reference at all — the focus ring lives elsewhere (ThemeHelper
+   publishes a focusShadow, which is the likely home). Writing one here
+   would be invented, so the field is deliberately focus-unstyled until it is
+   read out of the corpus. */
 `.trimStart();

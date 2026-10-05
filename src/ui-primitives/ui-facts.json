@@ -115,6 +115,26 @@
       "name": "input font-size",
       "value": "0.8125rem",
       "cite": "style-*.css --sx-11lpf43 in the var group sx-18yeszy (ThemeProvider's __varGroupHash__), key `inputFontSize`. Agrees with generateTheme's own literal, so both layers concur \u2014 unlike the radius."
+    },
+    {
+      "name": "input appearance",
+      "value": "none",
+      "cite": "Input.CX9538jp.js \u2014 class sx-jyslct on the `inputBase` style object, resolved via pipeline/sx.sh. Dereferenced: the class is on inputBase, the input's own base styles, not a wrapper."
+    },
+    {
+      "name": "input transition",
+      "value": "border .15s",
+      "cite": "Input.CX9538jp.js \u2014 class sx-1e1sxwh on the `inputBase` style object, resolved via pipeline/sx.sh. Dereferenced: the class is on inputBase, the input's own base styles, not a wrapper."
+    },
+    {
+      "name": "input font-feature-settings",
+      "value": "\"calt\" 0",
+      "cite": "Input.CX9538jp.js \u2014 class sx-14bywn9 on the `inputBase` style object, resolved via pipeline/sx.sh. Dereferenced: the class is on inputBase, the input's own base styles, not a wrapper."
+    },
+    {
+      "name": "input border",
+      "value": "1px solid var(--t-bg-border)",
+      "cite": "ThemeHelper.CeMKYPhf.js \u2014 `inputBorder: `1px solid ${color.bgBorder}``, the same theme object the other input metrics come from. The colour is the bgBorder token, so it is published by src/ui-theme rather than hardcoded. 1px is on the gate's FREE list, so this citation is voluntary \u2014 recorded because it was verified."
     }
   ]
 }

@@ -63,3 +63,23 @@ test("every dimension in a .btn rule is cited by a button-named fact", () => {
     }
   }
 });
+
+/**
+ * A backtick inside a `...` stylesheet literal terminates it, and Node's type
+ * stripping reports the failure at a confusing offset — it cost me two debug
+ * cycles across SH1 and SH2, both times from writing `focus` in a CSS comment.
+ * The gate cannot see it (the file will not parse, so nothing imports it).
+ */
+test("the stylesheet literal contains no stray backticks", () => {
+  const src = fs.readFileSync(
+    new URL("./style.css.ts", import.meta.url),
+    "utf8",
+  );
+  const ticks = (src.match(/`/g) ?? []).length;
+  assert.equal(
+    ticks,
+    2,
+    `expected exactly the literal's open and close backticks, found ${ticks}` +
+      " — a backtick inside the CSS body breaks the module",
+  );
+});

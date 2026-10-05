@@ -29,3 +29,22 @@ export const INPUT_PADDING_INLINE = "12px";
 
 /** font-size, from --sx-11lpf43 (authored `.8125rem`). */
 export const INPUT_FONT_SIZE = "0.8125rem";
+
+/**
+ * `appearance: none` — class sx-jyslct on `inputBase`. Strips the platform
+ * control chrome, which is what makes the other metrics visible at all.
+ */
+export const INPUT_APPEARANCE = "none";
+
+/**
+ * `transition: border .15s` — class sx-1e1sxwh on `inputBase`. The focus
+ * border animates; nothing else does.
+ */
+export const INPUT_TRANSITION = "border .15s";
+
+/**
+ * `font-feature-settings: "calt" 0` — class sx-14bywn9 on `inputBase`.
+ * Contextual alternates OFF. Inter ligates sequences like `->` by default,
+ * which is wrong in a field holding an identifier or a URL.
+ */
+export const INPUT_FONT_FEATURE_SETTINGS = `"calt" 0`;
