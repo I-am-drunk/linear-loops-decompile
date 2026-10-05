@@ -51,7 +51,7 @@ has_jq_expr() { # has_jq_expr <dir> <node-eval-expr-over-p>
 # that can be skipped.
 # ---------------------------------------------------------------------------
 echo "=== ui-facts: every UI value declared and cited ==="
-node --test tools/ui-facts/ui-facts.test.mjs tools/ui-facts/check-links.test.mjs
+node --test tools/ui-facts/ui-facts.test.mjs tools/ui-facts/check-links.test.mjs tools/ui-facts/strip-comments.test.mjs
 node tools/ui-facts/main.mjs .
 
 echo "=== doc cross-references resolve ==="

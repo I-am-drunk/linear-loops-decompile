@@ -21,6 +21,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { stripComments } from './strip-comments.mjs';
 
 const ROOT = process.argv[2] ?? '.';
 const errors = [];
@@ -59,6 +60,8 @@ const CORPUS_CSS = (() => {
  * gate then checks it thoroughly.
  */
 const SOURCE_RE = /\.(css|ts|tsx|js|jsx|mjs)$/;
+
+
 
 function declaresUi(dir) {
   if (fs.existsSync(path.join(dir, 'ui-facts.json'))) return true;
@@ -251,8 +254,19 @@ for (const pkg of uiPackages()) {
     const text = fs.readFileSync(file, 'utf8');
     const lines = text.split('\n');
 
+    // Track whether we are inside a /* */ block. The old check only skipped a
+    // line that STARTS with a comment marker, so the second and later lines of
+    // a block comment were scanned as CSS — writing "the 220px case" in prose
+    // failed the gate for a value the file does not use. False positives, not
+    // misses, but they teach agents to delete the explanation rather than the
+    // value, which is backwards.
+    let inBlock = false;
+
     lines.forEach((line, n) => {
-      if (/^\s*(\/\/|\*|\/\*)/.test(line)) return; // comments are prose
+      const { code, stillInBlock } = stripComments(line, inBlock);
+      inBlock = stillInBlock;
+      if (!code.trim()) return; // nothing but comment/whitespace on this line
+      line = code;
 
       for (const m of line.matchAll(COLOUR_RE)) {
         errors.push(
