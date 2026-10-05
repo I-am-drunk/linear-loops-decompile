@@ -5,17 +5,26 @@
     {
       "name": "main page margin",
       "value": "8px",
-      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `mainPageMargin`."
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `mainPageMargin`.",
+      "scope": [
+        ".content"
+      ]
     },
     {
       "name": "main content border radius",
       "value": "12px",
-      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `mainContentBorderRadius`."
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `mainContentBorderRadius`.",
+      "scope": [
+        ".content"
+      ]
     },
     {
       "name": "sidebar padding",
       "value": "12px",
-      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `sidebarPadding`."
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `sidebarPadding`.",
+      "scope": [
+        ".sidebar"
+      ]
     },
     {
       "name": "sidebar primary button size",
