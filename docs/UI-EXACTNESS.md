@@ -128,10 +128,13 @@ fails the PR.
 {
   "surface": "app-shell",
   "facts": [
-    { "name": "sidebar width", "value": "220px",
-      "cite": "style-*.css .sx-1abc234, on the sidebar container in PageSidebarContainer" },
+    { "name": "main page margin", "value": "8px",
+      "cite": "ActionMenuBackdrop.*.js - the layout constants object `K`, key `mainPageMargin`" },
     { "name": "content max width", "value": "80ch",
-      "cite": "LayoutConstants.stylex.*.js contentMaxWidth" }
+      "cite": "LayoutConstants.stylex.*.js - the module is one object exported as `t`, key `contentMaxWidth`" },
+    { "name": "sidebar nav row height", "value": "UNVERIFIED",
+      "label": "UNVERIFIED",
+      "cite": "Not found: no sidebar row height in the layout constants, and the sidebar-link rules are state-based colour selectors with no height literal. Property omitted from the CSS." }
   ]
 }
 ```
@@ -209,9 +212,17 @@ That is a real raise — it turns an easy mistake into a deliberate lie, and a
 reviewer can spot-check any row in one command. It is not a proof of
 correctness.
 
-**The leg that does prove values** is the corpus-gated one: it re-reads each
-cited value and compares. Run it locally before you ship, and if you are
-reviewing a UI PR, run it rather than trusting the green tick:
+**The corpus-gated leg is narrower than it sounds.** Leg 5 does not re-read
+every citation and compare — it fires only when EVERY occurrence of a value in
+the stylesheet is a custom-property definition whose name shares no word with
+the fact's own name. That is the one case where "it is in the stylesheet" is
+demonstrably not evidence. Leg 6 (`scope`) checks the element, when a fact
+declares one.
+
+**So a green gate does not mean the citations were verified.** Nothing
+mechanical can dereference a cite string for you; that is the reviewer's job
+and step 3 above is how. Run the gate anyway — it catches the uncited and the
+mis-scoped — but read the citations yourself:
 
 ```bash
 bash ci/check-ui.sh      # needs pipeline/corpus — see step 1
