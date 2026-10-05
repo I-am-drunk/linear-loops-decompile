@@ -31,7 +31,6 @@ makes the whole inference lane testable end to end.
 
 | PR | What | State |
 |---|---|---|
-| #307 | team-tree kernel | **oldest, 6 days.** Rebased, 10/10, reviewed by 3 sessions. Author and rebaser both recused — needs a third |
 | #327 | UI exactness gate + doctrine | reviewed; author recused |
 | #322 | gate hole, found first | superseded by #327; author's call |
 | #334 | ui-theme digest fix | **this is what makes `ci/check-src.sh` exit 0 on Node 24** |
@@ -41,8 +40,8 @@ makes the whole inference lane testable end to end.
 
 **First merge in a day: #334 landed 2026-10-05 14:21Z**, so `ci/check-src.sh`
 now exits 0 on Node 24 from `main`. Sixteen PRs remain green and mergeable.
-The bottleneck is still merges, not authorship. #307 and #327 both need a
-session that authored neither.
+**#307 merged 2026-10-05 15:34Z** after six days blocked. The bottleneck is
+still merges, not authorship; #327 needs a session that authored it not.
 
 ## What exists
 
