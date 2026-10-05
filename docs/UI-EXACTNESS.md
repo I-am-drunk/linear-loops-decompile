@@ -17,19 +17,23 @@ generator. It then invented every value the generator does not cover:
 | `font: 14px "Inter", system-ui` | `"Inter Variable", "SF Pro Display", -apple-system, …` | `--font-regular` in the compiled stylesheet |
 | `max-width: 860px` | `80ch` | `LayoutConstants.stylex` → `contentMaxWidth` |
 | `border-radius: 5px` | a 2/3/6/8px ladder (5px is its rarest) | 57 radius declarations in the stylesheet |
-| sidebar `220px`, from memory | `220px` exists — but on a **tab-bar placeholder**, not the sidebar | `.sx-16grhtn`, in `LinearLayout`'s hidden-tab filler |
+| sidebar `220px`, from memory | `220px` is a **tab** width | `.sx-16grhtn` is `kzqmXN` on `LinearLayout`'s `tab` style object; `LinearLayout` has no sidebar style key at all |
 
 That last row is the important one, and it is worse than a near-miss. The
 stylesheet holds **118 distinct width values**, so 220px was always likely to
-appear somewhere. It does — on a hidden-tab filler in the tab bar. The agent
-reported this as a lucky hit; it was not. **It was the right number attached
-to the wrong thing**, which a screenshot can never reveal and which only
-reading the component exposes.
+appear somewhere. It does — as a **tab** width. The agent reported it as a
+lucky hit; it was not. **It is the right number for a different component**
+that happens to share a width.
 
-A right answer with no citation is indistinguishable from a wrong one, so the
-gate treats both as failures. And a citation you have not dereferenced is not
-a citation — step 2 below (find the component) exists precisely so you attach
-the value to the element that actually uses it.
+**This is the shape of error that gets approved.** A reviewer checking the
+citation the shallow way — run `sx.sh`, see `width:220px`, confirm 220px is in
+the stylesheet, approve — passes it. The grep proves the value is *declared*,
+never that it is declared for *your element*. Only dereferencing the class
+into the component's JSX catches it, which is why step 3 below says to do
+exactly that.
+
+So: a right answer with no citation is indistinguishable from a wrong one, and
+a citation you have not dereferenced is barely better than none.
 
 The agent then wrote "verified in a browser" in its PR, having taken a
 screenshot and judged it plausible. The owner looked at the same screenshot
@@ -85,8 +89,17 @@ bash pipeline/sx.sh sx-16grhtn sx-11iknt3
 #   sx-11iknt3 => .sx-11iknt3{padding-left:6px}
 ```
 
-Always check WHICH element uses the class — grep the class back into the chunk
-and read its surrounding JSX. That is how the 220px error above was caught.
+**Always dereference: grep the class back into the chunk and read its JSX.**
+Classes live in style objects keyed by component part, so the object name tells
+you what the value is FOR:
+
+```bash
+LC_ALL=C grep -oa 'kzqmXN:.sx-16grhtn' pipeline/corpus/client/LinearLayout.*.js
+#   -> found on the `tab:{...}` style object, not a sidebar one
+```
+
+That is how the 220px error above was caught, and skipping this step is how it
+would have shipped a second time.
 
 That is the whole technique. Values are one grep away, which is what makes
 guessing inexcusable rather than merely sloppy.
