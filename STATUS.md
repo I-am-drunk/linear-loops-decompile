@@ -16,11 +16,11 @@ rather than left implicit.
 
 | Lane | Next slice | State |
 |---|---|---|
-| ST settings | ST4 Integrations section | ST1+ST2 #337, ST3 #340 open |
-| AU automations | AU3 triggers · AU4 prompts | AU1 #338, AU2 #341 open |
-| IN inference | IN2 OpenAI-compatible adapter | IN1 #336 open |
-| IG integrations | IG1 integration interface | open |
-| MCP mcp | MCP1 registry model | open |
+| ST settings | ST6 chrome (Workspace/Account/Automations) | ST1–ST5 #337 #340 #347 #348 open |
+| AU automations | the runner (fires triggers, runs chains, writes runs) | AU1–AU7 #338 #341 #346 #350 #352 #355 #356 open |
+| IN inference | IN3 Anthropic · IN4 T3 Code Connect | IN1 #336, IN2 #343 open |
+| IG integrations | IG2 Linear sign-in | IG1 #344 open |
+| MCP mcp | MCP2 client (stdio + Streamable HTTP) | MCP1 #345 open |
 | SH shell | — | the settings shell (#337) renders standalone |
 
 **ST4, ST5, AU3 and AU4 are assembly** over the five row patterns (#337) and
