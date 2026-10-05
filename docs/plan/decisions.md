@@ -52,3 +52,37 @@ the MIT schema.
 
 Recommendation: remove them. Nothing depends on them and the asymmetry is bad —
 we would not accept the same extraction of our own internals.
+
+## 10. Cursor's automations layout (owner's call — a session should not settle it)
+
+The lane brief asks for Cursor's automations layout on our page. AU1 (#338)
+was built from `docs/plan/automations.md`, the open MCP specification and our
+own corpus instead. Recording why, because the directive is unmet and the
+owner should know that rather than discover it.
+
+**What exists.** The sibling `cursor-decompile` repo has a 1.2 GB local
+corpus and three partial fact files. It stopped on 2026-10-04 and its README
+says why.
+
+**Why it stopped.** Seven extractors, one brief ("facts only, never paste
+vendor code"). Six declined independently: the rule shaped the format while
+the brief asked for the substance, and gitignoring the bundle while
+publishing its distillation protects the container, not the content.
+
+**It also produced wrong facts.** The one completed extraction audited the
+queue and found 3 of 4 headline strings wrong: `All Automations` is a radio
+item in a runs filter, not the list header; `Add Automation` is never
+rendered; there is no trigger-summary or last-run cell.
+
+**Working default: build the capability set, not the layout.** Everything the
+owner named is reachable from open sources — MCP per automation from the
+published specification, cron from POSIX/Vixie, chained prompts with per-step
+models from our own provider registry. `docs/plan/automations.md` already
+marks the Cursor comparisons `UNVERIFIED` and says the design stands without
+them.
+
+**This is NOT settled by #321.** That deleted one doc about our own Linear
+corpus method. Extraction of a second vendor's client is a different question
+with different exposure, and it is the owner's to answer. If they want it,
+`cursor-decompile/README.md` is the fullest record of what the method cost
+last time, and the decision should be taken with that in view.
