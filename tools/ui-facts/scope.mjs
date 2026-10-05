@@ -26,6 +26,34 @@ export function scopeCovers(scope, selector) {
 }
 
 /**
+ * Is this text plausibly a CSS selector, rather than a line of TypeScript
+ * that happens to open a brace?
+ *
+ * The gate scans `.ts` files (our stylesheets are template literals inside
+ * them), so the tracker meets code as well as CSS. Without this,
+ * `export const BUTTON_SIZES: Readonly<Record<...>> = {` was taken as a
+ * selector and every value in the object was reported as out-of-scope —
+ * four false positives, found by adopting leg 6 in src/ui-primitives.
+ *
+ * A selector starts with `.`, `#`, `[`, `:`, `*`, `&` or a bare tag name.
+ * Anything containing `=`, `(`, `>` outside a combinator position, or a
+ * reserved word is code. Conservative: unrecognised text yields no selector,
+ * which makes leg 6 skip rather than accuse.
+ */
+const CODE_WORDS = /\b(export|const|let|var|function|return|if|for|while|class|interface|type|new|await|async)\b/;
+
+export function looksLikeSelector(head) {
+  if (head === '' || head.startsWith('@')) return false;
+  if (CODE_WORDS.test(head)) return false;
+  // `=` is legal INSIDE an attribute selector (`[data-size="small"]`), so
+  // only reject it outside brackets — that is assignment, i.e. code.
+  // Rejecting `=` outright killed every attribute selector; caught by the
+  // existing tracker test rather than by reading this back.
+  if (/[=(]/.test(head.replace(/\[[^\]]*\]/g, ''))) return false;
+  return /^[.#[:*&]|^[a-zA-Z][a-zA-Z0-9-]*\b/.test(head);
+}
+
+/**
  * Track the enclosing selector across lines of a stylesheet.
  *
  * Deliberately not a CSS parser. It handles the one shape our stylesheet
@@ -42,7 +70,7 @@ export function selectorTracker() {
     // A selector is text before the first { on a line that opens a block.
     if (opens > 0 && depth === 0) {
       const head = line.slice(0, line.indexOf('{')).trim();
-      if (head !== '' && !head.startsWith('@')) selector = head;
+      if (looksLikeSelector(head)) selector = head;
     }
     const before = selector;
     depth += opens - closes;

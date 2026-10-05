@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { scopeCovers, selectorTracker } from './scope.mjs';
+import { scopeCovers, selectorTracker, looksLikeSelector } from './scope.mjs';
 
 test('scopeCovers matches a selector containing the scope verbatim', () => {
   assert.equal(scopeCovers(['.btn'], '.btn'), true);
@@ -52,4 +52,33 @@ test('the tracker ABSTAINS inside an at-rule rather than guessing', () => {
   const next = selectorTracker();
   assert.equal(next('@media (min-width: 700px) {'), '');
   assert.equal(next('  .x { width: 10px; }'), '');
+});
+
+// --- looksLikeSelector (#360 follow-up) ---------------------------------
+// The gate scans .ts files, so the tracker meets code as well as CSS. Both
+// cases below are real failures found by running it, not hypotheticals.
+
+test('a TypeScript declaration is not a selector', () => {
+  assert.equal(
+    looksLikeSelector('export const BUTTON_SIZES: Readonly<Record<A, B>> ='),
+    false,
+  );
+  assert.equal(looksLikeSelector('function f()'), false);
+  assert.equal(looksLikeSelector('const x ='), false);
+});
+
+test('an attribute selector IS a selector, despite containing =', () => {
+  // Rejecting `=` outright killed every attribute selector.
+  assert.equal(looksLikeSelector('.btn[data-size="small"]'), true);
+  assert.equal(looksLikeSelector('[data-open=true]'), true);
+});
+
+test('ordinary selectors still pass', () => {
+  for (const s of ['.btn', '.doc h1', '.doc ul, .doc ol', 'html, body', '*']) {
+    assert.equal(looksLikeSelector(s), true, s);
+  }
+});
+
+test('an at-rule is not a selector', () => {
+  assert.equal(looksLikeSelector('@media (min-width: 700px)'), false);
 });
