@@ -20,7 +20,14 @@ function run(files) {
     fs.writeFileSync(p, body);
   }
   try {
-    const out = execFileSync('node', [CHECKER, dir], { encoding: 'utf8' });
+    // stdio: stderr PIPED, not inherited — see the same note in
+    // check-links.test.mjs. Seven of these fixtures deliberately fail, and
+    // inherited stderr printed seven "ui-facts: FAIL" banners into the CI log
+    // next to the ✔ that asserts them (issue #351). e.stderr still gets them.
+    const out = execFileSync('node', [CHECKER, dir], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
     return { code: 0, out };
   } catch (e) {
     return { code: e.status, out: (e.stdout ?? '') + (e.stderr ?? '') };
@@ -221,4 +228,20 @@ test('leg 5 ignores non-dimensional values (font stacks live in tokens)', () => 
     }),
   });
   assert.equal(r.code, 0, r.out);
+});
+
+// --- issue #351 regression ------------------------------------------------
+// Seven fixtures here deliberately fail. With stderr INHERITED, each printed
+// a "ui-facts: FAIL" banner into ci/check-src.sh's log beside the ✔ that
+// asserts it. See the longer note in check-links.test.mjs; the option is
+// pinned by reading run()'s source because e.stderr is filled either way, so
+// output alone cannot tell piped from inherited.
+test('run() pipes child stderr — else fixtures leak into the CI log (#351)', () => {
+  const src = fs.readFileSync(new URL(import.meta.url), 'utf8');
+  const body = src.slice(src.indexOf('function run('), src.indexOf('test('));
+  assert.match(
+    body,
+    /stdio:\s*\[[^\]]*['"]pipe['"]\s*\]/,
+    'run() must pass stdio with stderr piped',
+  );
 });

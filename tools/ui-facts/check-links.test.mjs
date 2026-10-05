@@ -20,7 +20,19 @@ function run(files) {
     fs.writeFileSync(p, body);
   }
   try {
-    return { code: 0, out: execFileSync('node', [CHECKER, dir], { encoding: 'utf8' }) };
+    // stdio: stderr PIPED, not inherited. execFileSync forwards a child's
+    // stderr to the parent AND captures it in e.stderr, so without this the
+    // fixtures' deliberate "check-links: FAIL" banners print into
+    // ci/check-src.sh's log beside the ✔ that asserts them — and the log stops
+    // being greppable for real failures (issue #351). The assertions below
+    // read e.stderr, which piping fills, so nothing is lost.
+    return {
+      code: 0,
+      out: execFileSync('node', [CHECKER, dir], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      }),
+    };
   } catch (e) {
     return { code: e.status, out: (e.stdout ?? '') + (e.stderr ?? '') };
   } finally {
@@ -77,3 +89,23 @@ test('WITH a corpus, a real chunk passes and a bogus one FAILS', () => {
   assert.match(bad.out, /Stale\.OLDHASH1\.js` does not exist/);
 });
 
+
+// --- issue #351 regression ------------------------------------------------
+// The fixtures above deliberately fail. With stderr INHERITED, each one
+// printed a "check-links: FAIL" banner into ci/check-src.sh's log beside the
+// ✔ that asserts it, so the log could not be triaged by grepping for FAIL.
+//
+// execFileSync both captures a child's stderr in e.stderr AND forwards it to
+// the parent; piping stops the forwarding without losing the capture, which
+// is why run() above sets stdio. This test reads run()'s own source and
+// requires that option to still be there — asserting on output cannot
+// distinguish piped from inherited, because e.stderr is filled either way.
+test('run() pipes child stderr — else fixtures leak into the CI log (#351)', () => {
+  const src = fs.readFileSync(new URL(import.meta.url), 'utf8');
+  const body = src.slice(src.indexOf('function run('), src.indexOf('test('));
+  assert.match(
+    body,
+    /stdio:\s*\[[^\]]*['"]pipe['"]\s*\]/,
+    'run() must pass stdio with stderr piped',
+  );
+});
