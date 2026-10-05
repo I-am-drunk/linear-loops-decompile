@@ -30,17 +30,17 @@
     {
       "name": "sidebar min width",
       "value": "192px",
-      "cite": "ContextualMenuActions.BF8iy9S9.js - X2=192, in the sidebar constant cluster. Dereferenced: w=Math.max(X2,Math.min(titleBarClusterWidth,330)) -> T=Math.max(store.sidebarWidth,w) -> re=l?330:T -> width:de, de=Rg(re). Floor of the left nav width; collapse threshold is X2/4."
+      "cite": "ContextualMenuActions.BF8iy9S9.js - X2=192, in the sidebar constant cluster. Dereferenced: w=Math.max(X2,Math.min(titleBarClusterWidth,330)) -> T=Math.max(store.sidebarWidth,w) -> re=l?330:T -> width:de, de=Rg(re). Floor of the left nav width; collapse threshold is X2/4. TIER: minified local, not a named key \u2014 the identifier (X2/xtn) justifies nothing by itself, so this rests entirely on the dereference chain above. Weaker than a named-constant citation; not consumed by style.css.ts yet."
     },
     {
       "name": "sidebar max width",
       "value": "330px",
-      "cite": "ContextualMenuActions.BF8iy9S9.js - the 330 in Math.min(titleBarClusterWidth,330) and in re=l?330:T, same width:de element. Ceiling of the left nav width, and the width of the floating/overlay branch."
+      "cite": "ContextualMenuActions.BF8iy9S9.js - the 330 in Math.min(titleBarClusterWidth,330) and in re=l?330:T, same width:de element. Ceiling of the left nav width, and the width of the floating/overlay branch. TIER: minified local, not a named key \u2014 the identifier (X2/xtn) justifies nothing by itself, so this rests entirely on the dereference chain above. Weaker than a named-constant citation; not consumed by style.css.ts yet."
     },
     {
       "name": "sidebar-to-content gap",
       "value": "16px",
-      "cite": "ContextualMenuActions.BF8iy9S9.js - xtn=16, declared beside X2=192. Used as ae=-re-xtn, the offscreen x-offset of a hidden sidebar of width re, so it is the gap the sidebar must clear."
+      "cite": "ContextualMenuActions.BF8iy9S9.js - xtn=16, declared beside X2=192. Used as ae=-re-xtn, the offscreen x-offset of a hidden sidebar of width re, so it is the gap the sidebar must clear. TIER: minified local, not a named key \u2014 the identifier (X2/xtn) justifies nothing by itself, so this rests entirely on the dereference chain above. Weaker than a named-constant citation; not consumed by style.css.ts yet."
     },
     {
       "name": "content max width",
