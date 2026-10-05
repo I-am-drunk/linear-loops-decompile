@@ -22,6 +22,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { stripComments } from './strip-comments.mjs';
+import { scopeCovers, selectorTracker } from './scope.mjs';
 
 const ROOT = process.argv[2] ?? '.';
 const errors = [];
@@ -219,6 +220,10 @@ for (const pkg of uiPackages()) {
 
   // --- leg 4: citations --------------------------------------------------
   const declared = new Set();
+  // Leg 6 (#360): value -> the scopes allowed to use it. Only populated from
+  // facts that declare a `scope`, so a package with none opts out entirely.
+  const scopedValues = new Map();
+  let anyScope = false;
   for (const [i, r] of rows.entries()) {
     const where = `${name}/ui-facts.json[${i}]`;
     if (!r || typeof r !== 'object') { errors.push(`${where}: not an object`); continue; }
@@ -234,6 +239,26 @@ for (const pkg of uiPackages()) {
     }
     if (!unverified) for (const m of String(r.value).matchAll(VALUE_RE)) declared.add(m[0]);
 
+    // Collect declared scopes. A `scope` must be a non-empty array of
+    // strings; anything else is a mistake worth naming, not ignoring.
+    if (!unverified && r.scope !== undefined) {
+      const bad = !Array.isArray(r.scope) || r.scope.length === 0
+        || r.scope.some((s) => typeof s !== 'string' || s.trim() === '');
+      if (bad) {
+        errors.push(
+          `${where} (${r.name}): "scope" must be a non-empty array of\n` +
+          `    selector strings, e.g. ["\\u002ebtn"]. Omit it to opt out of leg 6.`,
+        );
+      } else {
+        anyScope = true;
+        for (const m of String(r.value).matchAll(VALUE_RE)) {
+          const list = scopedValues.get(m[0]) ?? [];
+          list.push(...r.scope);
+          scopedValues.set(m[0], list);
+        }
+      }
+    }
+
     // --- leg 5: does the citation SUPPORT the claim? (corpus-gated) -------
     if (!unverified && CORPUS_CSS) {
       const props = scopeMismatch(r.value, r.name, CORPUS_CSS);
@@ -248,6 +273,28 @@ for (const pkg of uiPackages()) {
     }
   }
 
+  /**
+   * Leg 6 (#360): a cited value used in a selector its fact does not cover.
+   *
+   * Opt-in: silent unless some fact in this package declares a `scope`.
+   * Abstains when the tracker could not name a selector (nested at-rules),
+   * because a leg that guesses wrong is worse than one that skips.
+   */
+  function checkScope(pkgName, file, lineNo, value, selector) {
+    if (!anyScope) return;
+    if (selector === '') return;
+    const allowed = scopedValues.get(value);
+    if (allowed === undefined) return; // this value's facts declare no scope
+    if (scopeCovers(allowed, selector)) return;
+    errors.push(
+      `${pkgName}/${file}:${lineNo + 1}: \`${value}\` is used in \`${selector}\`,\n` +
+      `    but every fact declaring it is scoped to ${allowed.map((s) => `\`${s}\``).join(', ')}.\n` +
+      `    A value being cited SOMEWHERE is not evidence for THIS element —\n` +
+      `    that is how a 6px button gap passed, justified by the input padding.\n` +
+      `    Read the value for this element, or add this selector to the\n` +
+      `    fact's "scope" if it genuinely shares it.`,
+    );
+  }
   // --- legs 2 and 3: the CSS itself -------------------------------------
   for (const f of cssFiles(pkg)) {
     const file = path.join(pkg, f);
@@ -261,12 +308,16 @@ for (const pkg of uiPackages()) {
     // misses, but they teach agents to delete the explanation rather than the
     // value, which is backwards.
     let inBlock = false;
+    const nextSelector = selectorTracker();
 
     lines.forEach((line, n) => {
       const { code, stillInBlock } = stripComments(line, inBlock);
       inBlock = stillInBlock;
       if (!code.trim()) return; // nothing but comment/whitespace on this line
       line = code;
+      // Feed the tracker the comment-stripped line, so a selector mentioned
+      // in prose cannot be mistaken for a real rule.
+      const selector = nextSelector(line);
 
       for (const m of line.matchAll(COLOUR_RE)) {
         errors.push(
@@ -279,12 +330,16 @@ for (const pkg of uiPackages()) {
 
       for (const m of line.matchAll(VALUE_RE)) {
         const v = m[0];
-        if (FREE.has(v) || declared.has(v)) continue;
-        errors.push(
-          `${name}/${f}:${n + 1}: \`${v}\` is not in ui-facts.json.\n` +
-          `    Either cite it (read it out of the corpus: bash pipeline/sx.sh <class>)\n` +
-          `    or delete the property. An uncited value is a guess.`,
-        );
+        if (FREE.has(v)) continue;
+        if (!declared.has(v)) {
+          errors.push(
+            `${name}/${f}:${n + 1}: \`${v}\` is not in ui-facts.json.\n` +
+            `    Either cite it (read it out of the corpus: bash pipeline/sx.sh <class>)\n` +
+            `    or delete the property. An uncited value is a guess.`,
+          );
+          continue;
+        }
+        checkScope(name, f, n, v, selector);
       }
     });
   }

@@ -245,3 +245,76 @@ test('run() pipes child stderr — else fixtures leak into the CI log (#351)', (
     'run() must pass stdio with stderr piped',
   );
 });
+
+// --- leg 6 (#360): declared scope ---------------------------------------
+
+test('leg 6 is inert when no fact declares a scope', () => {
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/style.css.ts': 'export const C = `.btn{gap:6px}`;',
+    'src/p/ui-facts.json': JSON.stringify({
+      facts: [{ name: 'input padding', value: '6px', cite: 'x' }],
+    }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
+
+test('leg 6 FAILS a value used outside its declared scope', () => {
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/style.css.ts':
+      'export const C = `\n.btn { gap: 6px; }\n.input { padding-block: 6px; }\n`;',
+    'src/p/ui-facts.json': JSON.stringify({
+      facts: [
+        { name: 'input padding', value: '6px', scope: ['.input'], cite: 'x' },
+      ],
+    }),
+  });
+  assert.equal(r.code, 1, 'a 6px button gap cited to the input must fail');
+  assert.match(r.out, /is used in `\.btn`/);
+  assert.match(r.out, /scoped to `\.input`/);
+});
+
+test('leg 6 allows the same value in a selector its own fact covers', () => {
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/style.css.ts':
+      'export const C = `\n.btn { gap: 6px; }\n.input { padding-block: 6px; }\n`;',
+    'src/p/ui-facts.json': JSON.stringify({
+      facts: [
+        { name: 'input padding', value: '6px', scope: ['.input'], cite: 'x' },
+        { name: 'button gap', value: '6px', scope: ['.btn'], cite: 'y' },
+      ],
+    }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
+
+test('leg 6 ignores values whose facts declare no scope, even in a scoped package', () => {
+  // Partial adoption: one fact scoped, another not. The unscoped value must
+  // not be accused, or adopting scope on one row would force it on all.
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/style.css.ts':
+      'export const C = `\n.btn { gap: 6px; }\n.other { width: 42px; }\n`;',
+    'src/p/ui-facts.json': JSON.stringify({
+      facts: [
+        { name: 'button gap', value: '6px', scope: ['.btn'], cite: 'x' },
+        { name: 'unscoped thing', value: '42px', cite: 'y' },
+      ],
+    }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
+
+test('a malformed scope is named, not silently ignored', () => {
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/style.css.ts': 'export const C = `.btn{gap:6px}`;',
+    'src/p/ui-facts.json': JSON.stringify({
+      facts: [{ name: 'button gap', value: '6px', scope: '.btn', cite: 'x' }],
+    }),
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /"scope" must be a non-empty array/);
+});
