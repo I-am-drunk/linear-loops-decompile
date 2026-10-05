@@ -18,12 +18,19 @@ generator. It then invented every value the generator does not cover:
 | `max-width: 860px` | `80ch` | `LayoutConstants.stylex` → `contentMaxWidth` |
 | `border-radius: 5px` | a 2/3/6/8px ladder (5px is its rarest) | 57 radius declarations in the stylesheet |
 | sidebar `220px`, from memory | `220px` is a **tab** width | `.sx-16grhtn` is `kzqmXN` on `LinearLayout`'s `tab` style object; `LinearLayout` has no sidebar style key at all |
+| `gap: 6px` on a button | Button declares **no gap** in any of its 107 classes | `6px` is the INPUT padding — a real value for a different element, and the gate passed it |
 
-That last row is the important one, and it is worse than a near-miss. The
-stylesheet holds **118 distinct width values**, so 220px was always likely to
-appear somewhere. It does — as a **tab** width. The agent reported it as a
-lucky hit; it was not. **It is the right number for a different component**
-that happens to share a width.
+The last two rows are the important ones, and they are worse than a
+near-miss. The stylesheet holds **118 distinct width values**, so 220px was
+always likely to appear somewhere. It does — as a **tab** width. The agent
+reported it as a lucky hit; it was not. **It is the right number for a
+different component** that happens to share a width.
+
+The gap row is the same error, committed later by the agent who wrote this
+file, in the package built to prevent it. Spacing is where it is likeliest:
+231 spacing declarations over only 38 distinct values, the top eight
+(`12px 8px 6px 4px 2px 16px 1px 24px`) covering 58% of them. Guess a spacing
+value and you will probably hit a real one.
 
 **This is the shape of error that gets approved.** A reviewer checking the
 citation the shallow way — run `sx.sh`, see `width:220px`, confirm 220px is in
@@ -34,6 +41,13 @@ exactly that.
 
 So: a right answer with no citation is indistinguishable from a wrong one, and
 a citation you have not dereferenced is barely better than none.
+
+The gate now has a leg for exactly this (`scope`, leg 6): declare the
+selectors a fact may justify, and a value used outside them fails. It is
+opt-in per fact, because the gate cannot infer scope — your selector is
+`.btn`, the fact is "button border radius", and a word-matching rule flagged
+13 of 38 correct values when tried. Declaring the scope is the cheap half of
+dereferencing; it does not replace reading the element.
 
 The agent then wrote "verified in a browser" in its PR, having taken a
 screenshot and judged it plausible. The owner looked at the same screenshot
@@ -141,6 +155,27 @@ differences — `src/ui-theme` is 13/13 on Node 22 and 10/13 on Node 24
 (issue #333). The algorithm is exact; its 17th significant digit is a property
 of the engine. Still far better than hand-picked values, but a byte-comparison
 here pins the runtime as well as the code.
+
+A second caveat, and this one bites in practice: "reproduced from the
+generator" is exact for what `generateTheme` **returns**, which is not always
+what a component **consumes**. Where a StyleX var group publishes the same
+key, that group wins.
+
+`theme.inputBorderRadius` is `8px`. Linear's inputs render at `5px`:
+`ThemeProvider.*.js` publishes a var group (`__varGroupHash__` `sx-18yeszy`)
+whose `--sx-ykavoc` is `5px`, consumed by `.sx-1mecoeu{border-radius}`, which
+sits on the `inputBase` style object in `Input.*.js`. The other four input
+metrics agree across both layers, which is what makes the radius easy to miss.
+
+`src/ui-theme` is correct to return 8px — its goldens are **executed from the
+corpus generator**, so they record what the function genuinely computes. I
+filed that as a bug (#354), changed it to 5px, and broke 9 of 13 tests; the
+red suite was the signal, not an obstacle. The fix is to read the component's
+value and cite the var group, not to edit the generator.
+
+So: a theme field is exact evidence about the theme. For "what does this
+element render with", dereference to the element — the same rule as every
+other value in this document.
 
 ## Can't find a value?
 
