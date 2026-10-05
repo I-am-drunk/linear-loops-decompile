@@ -318,3 +318,30 @@ test('a malformed scope is named, not silently ignored', () => {
   assert.equal(r.code, 1);
   assert.match(r.out, /"scope" must be a non-empty array/);
 });
+
+// --- nested files (CodeRabbit inline review on #327) ---------------------
+// Both discovery paths read only immediate directory entries, so a nested
+// UI source file escaped value scanning entirely and a nested
+// stylesheet-named file did not trigger the declaration check. Found in my
+// own gate, on the PR that is the root of the whole UI stack.
+
+test(`a NESTED uncited value is caught, not skipped`, () => {
+  const r = run({
+    'src/p/package.json': '{"name":"p","ui":true}',
+    'src/p/ui-facts.json': JSON.stringify({ facts: [{ name: 'x', value: '4px', cite: 'c' }] }),
+    'src/p/style.css.ts': 'export const A = `.a{gap:4px}`;',
+    'src/p/nested/style.css.ts': 'export const B = `.b{gap:777px}`;',
+  });
+  assert.equal(r.code, 1, 'a nested uncited value must fail');
+  assert.match(r.out, /nested\/style\.css\.ts/);
+  assert.match(r.out, /777px/);
+});
+
+test(`a NESTED stylesheet-named file still demands a declaration`, () => {
+  const r = run({
+    'src/q/package.json': '{"name":"q"}',
+    'src/q/deep/style.css.ts': 'export const C = `.c{gap:9px}`;',
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /declares no UI/);
+});

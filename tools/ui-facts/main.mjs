@@ -74,10 +74,18 @@ function declaresUi(dir) {
   }
 }
 
-function cssFiles(dir) {
-  return fs.readdirSync(dir).filter(
-    (f) => SOURCE_RE.test(f) && !/\.test\.[a-z]+$/.test(f),
-  );
+function cssFiles(dir, prefix = ``) {
+  const out = [];
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === `node_modules` || e.name === `dist` || e.name === `golden`) continue;
+    const rel = prefix === `` ? e.name : `${prefix}/${e.name}`;
+    if (e.isDirectory()) {
+      out.push(...cssFiles(path.join(dir, e.name), rel));
+    } else if (SOURCE_RE.test(e.name) && !/\.test\.[a-z]+$/.test(e.name)) {
+      out.push(rel);
+    }
+  }
+  return out;
 }
 
 /** A UI package is any src/* dir that declares it ships UI. */
@@ -108,8 +116,8 @@ function undeclaredUiPackages() {
     .map((d) => path.join(src, d))
     .filter((d) => fs.statSync(d).isDirectory())
     .filter((d) => !declaresUi(d))
-    .filter((d) => fs.readdirSync(d).some(
-      (f) => STYLESHEET_NAME_RE.test(f) && !/\.test\.[a-z]+$/.test(f),
+    .filter((d) => cssFiles(d).some(
+      (f) => STYLESHEET_NAME_RE.test(path.basename(f)) && !/\.test\.[a-z]+$/.test(f),
     ));
 }
 
