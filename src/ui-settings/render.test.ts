@@ -85,3 +85,45 @@ test(`no colour literal anywhere in the stylesheet`, async () => {
   assert.equal(literals, null, `colour literals: ${literals?.join(`, `)}`);
   assert.ok(SETTINGS_CSS.includes(`var(--t-bgBase)`));
 });
+
+// --- accessible names (CodeRabbit inline review on #337) -----------------
+// renderRow put the <label> in a SIBLING div from the control, with no
+// `for` — so wrapping did not associate them either, and every control had
+// no accessible name. This is the settings shell's row primitive, so ST3,
+// ST4 and ST5 all inherit whatever it does.
+
+test(`a natively-labelable control is addressed by the label's for`, () => {
+  const rows: Row[] = [
+    { kind: `text`, id: `r.a`, label: `Base URL`, value: `` },
+    { kind: `select`, id: `r.b`, label: `Model`, value: `x`, options: [{ value: `x`, label: `X` }] },
+  ];
+  for (const row of rows) {
+    const html = renderRow(row);
+    assert.match(html, new RegExp(`for="${row.id.replace(`.`, `\\.`)}\\.ctl"`), row.kind);
+    assert.match(html, new RegExp(`id="${row.id.replace(`.`, `\\.`)}\\.ctl"`), row.kind);
+  }
+});
+
+test(`a button-based control carries the label as its accessible name`, () => {
+  const html = renderRow({ kind: `toggle`, id: `r.c`, label: `Ask first`, on: false });
+  assert.match(html, /aria-labelledby="r\.c\.lbl"/);
+  assert.match(html, /id="r\.c\.lbl"/);
+});
+
+test(`an action button keeps its verb as the name and the label as description`, () => {
+  // "Set" and "Connect" ARE the accessible name — the row label is context,
+  // so describedby rather than labelledby. Replacing the name with "API key"
+  // would lose the action.
+  const cred = renderRow({ kind: `credential`, id: `r.d`, label: `API key`, configured: false });
+  assert.match(cred, /aria-describedby="r\.d\.lbl"/);
+  assert.doesNotMatch(cred, /aria-labelledby/);
+
+  const conn = renderRow({ kind: `connection`, id: `r.e`, label: `Anthropic`, state: `checking` });
+  assert.match(conn, /aria-describedby="r\.e\.lbl"/);
+});
+
+test(`ids are escaped — a row id reaches an attribute`, () => {
+  const html = renderRow({ kind: `text`, id: `a"b`, label: `X`, value: `` });
+  assert.doesNotMatch(html, /id="a"b/);
+  assert.match(html, /&quot;/);
+});

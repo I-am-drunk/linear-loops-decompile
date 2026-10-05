@@ -39,6 +39,21 @@ const CONNECTION_LABEL: Record<ConnectionState, string> = {
   checking: `Checking…`,
 };
 
+/** Row kinds whose control a `<label for>` can address natively. */
+const NATIVE_LABEL = new Set([`select`, `text`]);
+
+/**
+ * The id a row's control carries, so the row label can point at it.
+ *
+ * `toggle`, `credential` and `connection` render buttons rather than a
+ * natively-labelable control, so those get `aria-labelledby` pointing back at
+ * the label instead — see renderRow. Either way the control has an
+ * accessible name, which it did not before: the label sat in a SIBLING div,
+ * so wrapping did not associate them either.
+ */
+const ctlId = (rowId: string): string => `${rowId}.ctl`;
+const lblId = (rowId: string): string => `${rowId}.lbl`;
+
 /** The control half of a row. One case per pattern, no fallthrough. */
 function control(row: Row): string {
   const off = row.disabled ? ` disabled` : ``;
@@ -47,16 +62,16 @@ function control(row: Row): string {
       return `<button type="button" class="s-toggle" role="switch" ${attr(
         `aria-checked`,
         String(row.on),
-      )} ${attr(`data-row`, row.id)}${off}><span class="s-knob"></span></button>`;
+      )} ${attr(`aria-labelledby`, lblId(row.id))} ${attr(`data-row`, row.id)}${off}><span class="s-knob"></span></button>`;
     case `select`:
-      return `<select class="s-select" ${attr(`data-row`, row.id)}${off}>${row.options
+      return `<select class="s-select" ${attr(`id`, ctlId(row.id))} ${attr(`data-row`, row.id)}${off}>${row.options
         .map(
           (o) =>
             `<option ${attr(`value`, o.value)}${o.value === row.value ? ` selected` : ``}>${esc(o.label)}</option>`,
         )
         .join(``)}</select>`;
     case `text`:
-      return `<input type="text" class="s-input" ${attr(`value`, row.value)} ${attr(
+      return `<input type="text" class="s-input" ${attr(`id`, ctlId(row.id))} ${attr(`value`, row.value)} ${attr(
         `placeholder`,
         row.placeholder ?? ``,
       )} ${attr(`data-row`, row.id)}${off}>`;
@@ -64,7 +79,7 @@ function control(row: Row): string {
       // No input element: a credential is never pre-filled, because a
       // pre-filled password field is a value travelling outward.
       return `<span class="s-cred">${credentialDisplay(row.configured, row.hint)}</span>` +
-        `<button type="button" class="s-btn" ${attr(`data-row`, row.id)} ${attr(
+        `<button type="button" class="s-btn" ${attr(`aria-describedby`, lblId(row.id))} ${attr(`data-row`, row.id)} ${attr(
           `data-act`,
           row.configured ? `replace` : `set`,
         )}${off}>${row.configured ? `Replace` : `Set`}</button>`;
@@ -73,7 +88,7 @@ function control(row: Row): string {
       // class name without escaping — the type is the guarantee.
       return `<span class="s-badge s-${row.state}">${CONNECTION_LABEL[row.state]}</span>` +
         `${row.detail ? `<span class="s-detail">${esc(row.detail)}</span>` : ``}` +
-        `<button type="button" class="s-btn" ${attr(`data-row`, row.id)} ${attr(
+        `<button type="button" class="s-btn" ${attr(`aria-describedby`, lblId(row.id))} ${attr(`data-row`, row.id)} ${attr(
           `data-act`,
           row.state === `connected` ? `disconnect` : `connect`,
         )}${off}>${row.state === `connected` ? `Disconnect` : `Connect`}</button>`;
@@ -84,7 +99,7 @@ export function renderRow(row: Row): string {
   const desc = row.description ? `<p class="s-rowdesc">${esc(row.description)}</p>` : ``;
   return (
     `<div class="s-row${row.disabled ? ` s-off` : ``}" ${attr(`data-id`, row.id)}>` +
-    `<div class="s-rowtext"><label class="s-rowlabel">${esc(row.label)}</label>${desc}</div>` +
+    `<div class="s-rowtext"><label class="s-rowlabel" ${attr(`id`, lblId(row.id))}${NATIVE_LABEL.has(row.kind) ? ` ${attr(`for`, ctlId(row.id))}` : ``}>${esc(row.label)}</label>${desc}</div>` +
     `<div class="s-rowctl">${control(row)}</div>` +
     `</div>`
   );
