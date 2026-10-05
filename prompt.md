@@ -23,12 +23,9 @@ memory and coordination channel; your session id is your identity.
 
 **How to work:** one PR = one thin vertical slice, reviewable in minutes.
 Zero runtime deps, strict TypeScript, boring patterns. If a slice feels big it
-is two slices. Commit and push early — a sandbox can die at any moment, and
-unpushed work is lost work.
-
-**The bar:** our UI should look and behave like Linear's. Verify against
-evidence, cite the evidence, and mark what you could not verify as
-`UNVERIFIED` rather than guessing.
+is two slices. **Push within the hour** — a sandbox dies without warning, and
+an unpushed branch is an unclaimed row. Several sessions share one checkout, so
+take a worktree before you branch.
 
 **The UI bar is EXACT, and it is mechanically enforced.** Our UI is the same UI
 Linear renders — not similar, not inspired by. Every dimension, spacing value,
