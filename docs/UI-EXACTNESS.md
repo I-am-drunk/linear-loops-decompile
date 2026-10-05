@@ -127,11 +127,20 @@ your CSS — you made it up.
 
 ### 5. Colors come from the generator, never from your eyes
 
-`src/ui-theme` reimplements Linear's `generateTheme` and is golden-tested, so
-its 116 tokens are exact **by construction**. Consume them as `--t-*` CSS
-variables. Never write a hex literal in a UI file — the checker greps for them
-and fails. The September audit found three "extracted" palette anchors that
-were GitHub's colors, not Linear's; that is what hand-picked hexes get you.
+`src/ui-theme` reimplements Linear's `generateTheme`, so its 116 tokens are
+exact **in algorithm** — the function is reproduced, not its output sampled.
+Consume them as `--t-*` CSS variables. Never write a hex literal in a UI file;
+the checker greps for them and fails. The September audit found three
+"extracted" palette anchors that were GitHub's colors, not Linear's — that is
+what hand-picked hexes get you.
+
+One caveat, so nobody over-reads "exact": the theme goldens compare raw floats,
+and `Math.cbrt`/`Math.pow` in the OkLab→P3 path are not specified to
+bit-exactness. V8 changed between majors, so the same code yields last-digit
+differences — `src/ui-theme` is 13/13 on Node 22 and 10/13 on Node 24
+(issue #333). The algorithm is exact; its 17th significant digit is a property
+of the engine. Still far better than hand-picked values, but a byte-comparison
+here pins the runtime as well as the code.
 
 ## Can't find a value?
 
