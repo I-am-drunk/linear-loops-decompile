@@ -90,9 +90,13 @@ What it does:
    is invalid or changes that structure, the pipeline preserves the raw bytes
    verbatim and reports a `raw-fallback`. Cached `pretty/` trees receive the
    same checks before reuse and rebuild if any artifact is invalid.
-4. Analyzes the corpus into `analysis/*.json`, and regenerates the committed
-   `extracts/models.md` + `extracts/graphql-ops.md` catalogs (facts only —
-   names and shapes, never Linear's code).
+4. Analyzes the corpus into the gitignored `corpus/analysis/` (run.sh sets
+   `EXTRACTS_DIR` there). It does **not** refresh the committed
+   `extracts/models.md` + `extracts/graphql-ops.md` catalogs — so after a
+   corpus refresh those stay as they were, and a contributor reading them is
+   reading the previous crawl. To regenerate them, run `analyze.mjs` with
+   `EXTRACTS_DIR` pointing at `extracts/` and review the diff; they are
+   committed facts (names and shapes, never Linear's code).
 
 ## Where things live (this is the whole point)
 
