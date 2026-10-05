@@ -1,0 +1,6 @@
+{
+  "name": "integrations-linear",
+  "private": true,
+  "type": "module",
+  "description": "Linear integration (IG2+): OAuth2 + PAT sign-in, write-only token record, refresh scheduling. Built from extracts/linear-official/docs-site/oauth.md. See docs/plan/integrations.md."
+}
