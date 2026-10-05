@@ -1,46 +1,45 @@
 # linear-loops-decompile
 
-A self-hosted, original reimplementation of Linear's UI, with a
-workflow-automation page at its centre. You run it on your own server and
-connect your own Linear account.
+A self-hosted workflow-automation app with a Linear-style interface. You run it
+on your own server and connect your own Linear account.
 
 New here? Read `prompt.md` — it is the whole onboarding.
 
 ## What we are building
 
-**Linear's UI, ours.** Sidebar, navigation, theme, settings, the surfaces a
-workspace actually uses. It should look and feel like Linear.
+**A Linear-family interface, ours.** Sidebar, navigation, theme, settings, the
+surfaces a workspace actually uses. Dark first, dense, quiet, keyboard-driven,
+built from our own design system in `src/ui-theme`.
 
-**An automations page on Cursor's layout.** The centrepiece is a workflow
-automation surface built on Cursor's automations layout rather than Linear's
-Loops layout (owner's directive). What we build: one MCP configuration per
-automation, multiple triggers, chained prompts with per-step model choice.
-`docs/plan/automations.md` records which of those are established facts about
-either product and which are simply what we want.
+**The automations page is the centrepiece.** One MCP configuration per
+automation, multiple triggers, chained prompts with a model choice per step —
+the capability set the owner asked for, in our own layout.
+`docs/plan/automations.md` separates what we know about either product from
+what is simply what we want.
 
 **Integrations as a feature, not a thesis.** Linear is one integration among
 several — you sign in, we read and write your workspace through the public
 API. It is not the product's foundation. `docs/plan/integrations.md`.
 
 **Inference you choose.** T3 Code Connect is a first-class provider alongside
-API-key and local harnesses, configured in a Linear-style settings UI.
+API-key and local harnesses, configured in the settings UI.
 `docs/plan/inference.md`.
 
 ## Provenance
 
-Read `docs/PROVENANCE.md` before any extraction work. Short version: this repo
-is public, so we build from open specifications, public documentation, and the
-product as a user sees it. Reading a shipped bundle locally to understand
-behavior is fine. Publishing a byte-fidelity transcription of its internals is
-not, and "facts, not code" does not change that. The rule exists because the
+Read `docs/PROVENANCE.md` before any extraction work. This repo is public, so
+we commit our own code only. We build from open
+specifications, public documentation, and the product as a user sees it.
+Publishing a byte-fidelity transcription of a shipped client's internals is
+out, and "facts, not code" does not change that. The rule exists because the
 old method was both a legal exposure and a source of confidently wrong facts —
 that history is in `docs/LEARNINGS.md`.
 
 ## Status
 
-Rearchitected 2026-10-04: scope widened from Loops-only to the whole Linear
-UI, the automations page re-based on Cursor's layout, and the
-decompile-and-publish method retired. Board: `STATUS.md`. Plan: `PLAN.md`.
+Rearchitected 2026-10-04: scope widened from the Loops page alone to the whole
+app, and the decompile-and-publish method retired in favour of building from
+open specs. Board: `STATUS.md`. Plan: `PLAN.md`.
 
 ## Repo map
 
@@ -51,7 +50,7 @@ decompile-and-publish method retired. Board: `STATUS.md`. Plan: `PLAN.md`.
 | `PLAN.md` | the lanes and their slices |
 | `STATUS.md` | the board |
 | `docs/PROVENANCE.md` | where facts may come from |
-| `docs/LEARNINGS.md` | 121 issues and 300+ thread comments, distilled |
+| `docs/LEARNINGS.md` | what three eras taught; read before proposing process |
 | `docs/plan/` | one design doc per lane |
 | `src/` | our code |
 | `extracts/linear-official/` | Linear's own MIT-licensed schema, SDK and docs digests |

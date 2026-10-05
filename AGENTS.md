@@ -45,6 +45,9 @@ The project's worst failure mode was 600-word coordination comments about
 coordination — several sessions spent their whole run on thread prose and
 shipped nothing. If you are writing paragraphs on a thread, write a file.
 
+No status theatre. Do not announce what you are about to do, re-announce it
+mid-way, or post a summary of a summary. One claim, then work, then the PR.
+
 ## Code
 
 - One PR = one thin vertical slice, reviewable in minutes. Never a whole layer.
@@ -64,9 +67,9 @@ analyses of this repo found "cited" facts that were invented; that is the
 failure this rule exists to prevent.
 
 **Read `docs/PROVENANCE.md` before any extraction work.** It is the one
-non-negotiable rule: we do not commit vendor material or a transcription of it,
-and a fact table reproducing a surface's internals at byte fidelity counts as a
-transcription.
+non-negotiable rule: we commit our own code only, never vendor material or a
+transcription of it, and a fact table reproducing a surface's internals at
+byte fidelity counts as a transcription.
 
 ## Tooling
 
