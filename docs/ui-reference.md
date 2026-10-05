@@ -8,8 +8,12 @@ theme-token family of the parity harness (issue #162).
 
 ## Sources (regenerate after each corpus refresh)
 
-- `pipeline/corpus/client/lightThemeRefresh.DyWCsE3P.js` +
-  `ThemeHelper.CeMKYPhf.js`: Linear does NOT ship a static theme table — themes
+Filenames below glob the content hash (`lightThemeRefresh.*.js`), because
+Linear rotates those on redeploy — see issue #329. Cite the export name, not
+the hash.
+
+- `pipeline/corpus/client/lightThemeRefresh.*.js` +
+  `ThemeHelper.*.js`: Linear does NOT ship a static theme table — themes
   are GENERATED at runtime by `generateTheme({ base, accent, contrast,
   colorFormat })` from OKLCH-style `[lightness, chroma, hue]` triples.
   `rootPreReactTheme.DBv2K1Bx.js` picks dark vs light by the `dark` class on
@@ -27,8 +31,9 @@ theme-token family of the parity harness (issue #162).
   values. Values are facts; generator code stays in the vault, never committed.
   The exact reimplementation of `generateTheme` (audit Finding 1
   recommendation) can be verified token-for-token against these tables.
-- `pipeline/corpus/style/style-p6hK3mv7.css`: the compiled app
-  stylesheet (566,143 bytes) for font stacks and global rules;
+- `pipeline/corpus/style/*.css`: the compiled app
+  stylesheet (566,143 bytes in the 2026-10-04 crawl) for font stacks and
+  global rules;
   note it declares the `--sx-*` theme custom properties EMPTY — values are
   injected at runtime from the generated theme, which is why hand-mining the
   CSS produced wrong anchors.

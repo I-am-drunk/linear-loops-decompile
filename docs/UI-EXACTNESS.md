@@ -68,8 +68,8 @@ Linear compiles styles to atomic classes (`sx-16grhtn`). The chunk tells you
 which classes a component uses; the stylesheet tells you what they mean.
 
 ```bash
-# every class a component uses
-LC_ALL=C grep -oaE 'sx-[a-z0-9]+' pipeline/corpus/client/LinearLayout.BBj6JEjr.js | sort -u
+# every class a component uses — glob the hash, never type it
+LC_ALL=C grep -oaE 'sx-[a-z0-9]+' pipeline/corpus/client/LinearLayout.*.js | sort -u
 
 # what any class actually declares
 bash pipeline/sx.sh sx-16grhtn sx-11iknt3
@@ -96,12 +96,18 @@ one cannot pass `ci/check-ui.sh`** — not "should not", cannot; the gate exits
   "surface": "app-shell",
   "facts": [
     { "name": "sidebar width", "value": "220px",
-      "cite": "style-p6hK3mv7.css .sx-16grhtn (used by LinearLayout.BBj6JEjr.js)" },
+      "cite": "style/*.css .sx-16grhtn (used by client/LinearLayout.*.js)" },
     { "name": "content max width", "value": "80ch",
-      "cite": "LayoutConstants.stylex.CMWJ5GGG.js contentMaxWidth" }
+      "cite": "client/LayoutConstants.stylex.*.js contentMaxWidth" }
   ]
 }
 ```
+
+**Cite the export name and glob the hash.** Those `.BBj6JEjr.` segments are
+content hashes Linear rotates on redeploy (issue #329), so a citation that
+pins one reads as "not found" against next week's corpus even though the
+value never moved. `LinearLayout.*.js` plus the class or export name is both
+honest and durable.
 
 Every value in your CSS appears here. If a value is not in here, delete it
 from your CSS — you made it up.
