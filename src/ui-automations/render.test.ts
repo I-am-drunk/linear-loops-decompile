@@ -97,14 +97,14 @@ test(`delete is the only action marked dangerous`, () => {
 });
 
 test(`no colour literal anywhere in the stylesheet`, async () => {
-  const { AUTOMATIONS_CSS } = await import("./style.ts");
+  const { AUTOMATIONS_CSS } = await import("./style.css.ts");
   const bad = AUTOMATIONS_CSS.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g);
   assert.equal(bad, null, `colour literals: ${bad?.join(`, `)}`);
   assert.ok(AUTOMATIONS_CSS.includes(`var(--t-labelBase)`));
 });
 
 test(`the SPACE ladder is shared with ui-settings, not re-invented`, async () => {
-  const [auto, settings] = await Promise.all([import("./style.ts"), import("../ui-settings/style.ts")]);
+  const [auto, settings] = await Promise.all([import("./style.css.ts"), import("../ui-settings/style.css.ts")]);
   // One ladder across the app is what makes surfaces look related; a second
   // copy would drift. Assert the import is live rather than duplicated.
   assert.ok(auto.AUTOMATIONS_CSS.includes(`padding:${settings.SPACE.md} ${settings.SPACE.lg}`));

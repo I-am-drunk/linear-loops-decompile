@@ -1,0 +1,106 @@
+{
+  "surface": "automations-list",
+  "note": "Values read from the corpus. Ladder rungs are cited in ../ui-settings/ui-facts.json; this file cites what is specific to this surface.",
+  "facts": [
+    {
+      "name": "SPACE.xs",
+      "value": "4px",
+      "cite": "style-p6hK3mv7.css .sx-1jnr06f{gap:4px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "SPACE.sm",
+      "value": "6px",
+      "cite": "style-p6hK3mv7.css .sx-11iknt3{padding-left:6px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "SPACE.md",
+      "value": "8px",
+      "cite": "style-p6hK3mv7.css .sx-167g77z{gap:8px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "SPACE.lg",
+      "value": "12px",
+      "cite": "style-p6hK3mv7.css .sx-10dr8xq{padding-block:12px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "SPACE.xl",
+      "value": "16px",
+      "cite": "style-p6hK3mv7.css .sx-1hr3lfm{padding-inline:16px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "SPACE.xxl",
+      "value": "24px",
+      "cite": "style-p6hK3mv7.css .sx-1665zp3{gap:24px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "RADIUS.md",
+      "value": "3px",
+      "cite": "style-p6hK3mv7.css: 12 border-radius:3px declarations; second most frequent radius"
+    },
+    {
+      "name": "RADIUS.lg",
+      "value": "8px",
+      "cite": "style-p6hK3mv7.css .sx-1i9j6mr{border-radius:8px} (used by SettingsList.DcdYNrAZ.js); 11 declarations"
+    },
+    {
+      "name": "RADIUS.sm",
+      "value": "2px",
+      "cite": "style-p6hK3mv7.css: 14 border-radius:2px declarations; most frequent radius"
+    },
+    {
+      "name": "2px micro-gap",
+      "value": "2px",
+      "cite": "style-p6hK3mv7.css .sx-195vfkc{gap:2px} and .sx-1dbijih{row-gap:2px} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "body font-size",
+      "value": ".8125rem",
+      "cite": "style-p6hK3mv7.css font-size:.8125rem (5 declarations, = 13px at 16px root)"
+    },
+    {
+      "name": "small font-size",
+      "value": ".75rem",
+      "cite": "style-p6hK3mv7.css .sx-167xe44{font-size:.75rem} (used by AutomationRunsPage.B4BlrXdr.js)"
+    },
+    {
+      "name": "line-height 18px",
+      "value": "18px",
+      "cite": "style-p6hK3mv7.css .sx-d4r4e8{line-height:18px}"
+    },
+    {
+      "name": "prose max-width",
+      "value": "76ch",
+      "cite": "style-p6hK3mv7.css .sx-1os57wd{max-width:76ch}. Corrected from an invented 42ch; LayoutConstants.stylex.CMWJ5GGG.js contentMaxWidth is 80ch, so ch-based measure is the real idiom."
+    },
+    {
+      "name": "state column width",
+      "value": "72px",
+      "cite": "style-p6hK3mv7.css .sx-ni59qk{width:72px}"
+    },
+    {
+      "name": "heading font-size",
+      "value": ".9375rem",
+      "cite": "style-p6hK3mv7.css .sx-v6h07y{font-size:.9375rem} and .sx-13m4q85 (= 15px; most frequent font-size in the stylesheet)"
+    },
+    {
+      "name": "line-height 20px",
+      "value": "20px",
+      "cite": "style-p6hK3mv7.css .sx-1fc57z9{line-height:20px}"
+    },
+    {
+      "name": "focus outline-offset",
+      "value": "-1px",
+      "cite": "style-p6hK3mv7.css outline-offset:-1px; the inset-focus idiom, also .sx-1jz8bvi{inset:-1px}"
+    },
+    {
+      "name": "page max-width",
+      "value": "900px",
+      "cite": "style-p6hK3mv7.css .sx-1dtb55y{max-width:900px}"
+    },
+    {
+      "name": "page-title font-size",
+      "value": "1.125rem",
+      "cite": "style-p6hK3mv7.css .sx-fd0w6u{font-size:1.125rem} (= 18px at 16px root)"
+    }
+  ]
+}
