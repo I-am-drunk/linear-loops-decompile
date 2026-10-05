@@ -8,8 +8,8 @@ theme-token family of the parity harness (issue #162).
 
 ## Sources (regenerate after each corpus refresh)
 
-- `pipeline/corpus/client/lightThemeRefresh.DyWCsE3P.js` +
-  `ThemeHelper.CeMKYPhf.js`: Linear does NOT ship a static theme table — themes
+- corpus chunks `lightThemeRefresh` + `ThemeHelper` (hashes rotate per
+  deploy — grep the name, never cite the hash): Linear does NOT ship a static theme table — themes
   are GENERATED at runtime by `generateTheme({ base, accent, contrast,
   colorFormat })` from OKLCH-style `[lightness, chroma, hue]` triples.
   `rootPreReactTheme.DBv2K1Bx.js` picks dark vs light by the `dark` class on

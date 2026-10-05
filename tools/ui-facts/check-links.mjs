@@ -50,6 +50,10 @@ for (const doc of DOCS) {
     for (const m of line.matchAll(PATH_RE)) {
       const ref = m[1];
       if (ref.includes('*') || ref.endsWith('/')) continue;      // globs, dirs
+      // The corpus is gitignored and its chunk hashes rotate on every Linear
+      // deploy, so a corpus path is never checkable here and pinning one is
+      // itself the bug. Cite the export NAME, not the hashed filename.
+      if (/^pipeline\/corpus\//.test(ref)) continue;
       if (fs.existsSync(path.join(ROOT, ref))) continue;
       // A bare dir reference is fine if the dir exists.
       if (fs.existsSync(path.join(ROOT, path.dirname(ref)))) {
