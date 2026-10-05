@@ -145,6 +145,13 @@ const GENERIC_WORDS = new Set([
 ]);
 
 function scopeMismatch(value, factName, css) {
+  // Only dimensional values. A font stack, colour or keyword legitimately
+  // lives as a custom property — `--font-regular` IS how you consume Linear's
+  // font stack, so flagging it was a false positive on a correct citation
+  // (caught reviewing PR #337). Leg 5 is about a NUMBER borrowed from a
+  // differently-scoped token, which is the case that misleads.
+  if (!/^-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)$/.test(String(value).trim())) return null;
+
   const esc = String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const occurrences = [...css.matchAll(new RegExp(`([-\\w]+)\\s*:\\s*${esc}\\b`, 'g'))];
   if (!occurrences.length) return null;

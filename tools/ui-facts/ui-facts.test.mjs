@@ -207,3 +207,18 @@ test('leg 5 is skipped without a corpus, not silently passed as checked', () => 
   });
   assert.equal(r.code, 0, r.out);
 });
+
+test('leg 5 ignores non-dimensional values (font stacks live in tokens)', () => {
+  // False positive caught reviewing #337: `--font-regular` IS how you consume
+  // Linear's font stack, so flagging it rejected a correct citation. Leg 5 is
+  // about a NUMBER borrowed from a differently-scoped token.
+  const stack = '"Inter Variable", -apple-system, sans-serif';
+  const r = run({
+    'pipeline/corpus/style/style-abc123.css': `--font-regular:${stack};`,
+    'src/ui/style.css.ts': `export const C = \`.a{font-family:${stack}}\``,
+    'src/ui/ui-facts.json': JSON.stringify({
+      facts: [{ name: 'font stack', value: stack, cite: '--font-regular' }],
+    }),
+  });
+  assert.equal(r.code, 0, r.out);
+});
