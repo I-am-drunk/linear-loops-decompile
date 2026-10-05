@@ -5,7 +5,8 @@ Updated in the same PR as the work it describes.
 **Phase: rearchitecture, 2026-10-04.** Scope widened from Loops-only to the
 whole Linear UI; the automations page re-based on Cursor's layout; Linear
 demoted to one integration; T3 Code Connect a first-class inference provider;
-and the UI exactness bar made mechanical (`docs/UI-EXACTNESS.md` + CI).
+and the UI exactness bar given a mechanical gate (`docs/UI-EXACTNESS.md`;
+still local-only, issue #331).
 
 ## Lanes
 

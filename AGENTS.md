@@ -66,8 +66,10 @@ failure this rule exists to prevent.
 **Read `docs/UI-EXACTNESS.md` before touching any UI file.** The bar is
 EXACT: our UI is the same UI Linear renders. Every dimension, spacing value,
 radius, font stack and copy string is read from the corpus and cited in
-`ui-facts.json`. `ci/check-ui.sh` fails a UI package that ships no facts, and
-CI fails the PR. There is no path to merge a UI slice built from memory.
+`ui-facts.json`. `ci/check-ui.sh` fails a UI package that ships no facts.
+Run it yourself and run it on anything you review — there is no CI job doing
+it for you yet (issue #331), so a UI slice built from memory merges unless a
+human stops it.
 
 Commit only our own code — never Linear's bundles or source. Extracted facts
 are what we commit; the corpus stays in gitignored `pipeline/corpus/`.

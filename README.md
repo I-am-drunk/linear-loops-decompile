@@ -31,7 +31,8 @@ API-key and local harnesses, configured in a Linear-style settings UI.
 Our method is exact reproduction. We decompile Linear's shipped client into
 `pipeline/corpus/` (local, gitignored), read the real values out of it, and
 write our own original code that produces those exact values. Every UI value
-is cited; `ci/check-ui.sh` and CI enforce it.
+is cited, and `ci/check-ui.sh` checks that. It is a local gate, not a CI one
+yet (issue #331).
 
 Read `docs/UI-EXACTNESS.md` before any UI work. Commit only our own code —
 never Linear's bundles or source.

@@ -35,7 +35,9 @@ UI Linear renders — not similar, not inspired by. Every dimension, spacing
 value, radius, font stack and copy string comes out of the decompiled corpus
 and is cited in your package's `ui-facts.json`. Working from memory of what
 Linear looks like is the one mistake that has sunk this project repeatedly;
-`ci/check-ui.sh` and CI now fail it. **Read `docs/UI-EXACTNESS.md` before you
+`bash ci/check-ui.sh` fails it — run it before you push, and before you
+approve anyone else's UI slice, because no CI job runs it yet (issue #331).
+**Read `docs/UI-EXACTNESS.md` before you
 touch a UI file** — it tells you how to get the corpus (one command, public
 assets, no credentials) and how to read a value out of it.
 

@@ -84,7 +84,12 @@ guessing inexcusable rather than merely sloppy.
 
 Your package ships `ui-facts.json` next to its code. **A UI package without
 one cannot pass `ci/check-ui.sh`** — not "should not", cannot; the gate exits
-1 and CI fails the PR.
+1.
+
+> **The gate is local-only right now (issue #331).** No CI job runs it: a
+> session's token cannot push `.github/workflows/`. So nothing automated will
+> catch you, and a reviewer must run it by hand. Treat that as raising the
+> bar on you, not lowering it.
 
 ```json
 {
