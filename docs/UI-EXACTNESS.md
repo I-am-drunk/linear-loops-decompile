@@ -192,3 +192,16 @@ What `ui-facts` checks:
 
 Legs 1–4 need no corpus and run on every PR in CI as a required check. The
 corpus-gated leg re-reads each cited value and compares it; run that locally.
+
+## Where CI runs these
+
+Inside `ci/check-src.sh`, which `.github/workflows/typecheck.yml` executes as
+the **required** check — so the legs run on every PR. `ci/check-ui.sh` runs
+them too; the leg that always runs must not be the one that can be skipped.
+
+A dedicated `ui-exactness` workflow is written but **parked** at
+`docs/ci-ui-exactness.yml.txt`: the agent token carries no `workflow` scope and
+cannot create files under `.github/workflows/` (issue #331). Enforcement is
+live regardless, via the required check above. To split the legs into their own
+named job, move that file to `ui-exactness.yml` under `.github/workflows/`.
+
