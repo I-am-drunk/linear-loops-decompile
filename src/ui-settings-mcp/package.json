@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-mcp",
+  "private": true,
+  "type": "module",
+  "description": "The MCP servers settings section (ST5): one connection row per server from src/mcp, with the plan's five states, over the row patterns in src/ui-settings. Mapping only. See docs/plan/mcp.md."
+}
