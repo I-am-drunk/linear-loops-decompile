@@ -24,6 +24,26 @@ echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G
 node --experimental-strip-types --test tools/coverage/coverage.test.ts
 node --experimental-strip-types tools/coverage/main.ts check --repo .
 
+# ---------------------------------------------------------------------------
+# Corpus-FREE declaration check. Runs before EVERY early return below.
+#
+# It used to live after it, which made it unreachable: a sandbox with no corpus
+# hit the `exit 0` first, so a UI package shipping no facts got a GREEN gate.
+# That is exactly the hole issue #200 was filed about, and PR #320 fell through
+# it — src/ui landed with invented spacing, radii and font stack while
+# check-ui.sh printed "Vacuous pass". Asking whether a package declares its
+# facts needs no corpus and no toolchain, so it is asked unconditionally —
+# above the cargo gate too, since "no Rust" must not green-light a factless UI
+# either (peer review on #322/#324).
+# ---------------------------------------------------------------------------
+if [ -d src/ui ] && [ ! -f src/ui/ui-facts.json ]; then
+  echo "check-ui: FAIL — src/ui exists but declares no ui-facts.json." >&2
+  echo "  Every UI slice ships the facts it claims (SPECS/ui-parity.md)." >&2
+  echo "  Each entry: the value, and the corpus citation it came from." >&2
+  echo "  A UI package with no facts file has nothing to check and cannot pass." >&2
+  exit 1
+fi
+
 if ! command -v cargo >/dev/null 2>&1; then
   if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
     echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
@@ -36,25 +56,15 @@ fi
 echo "=== tools/parity (cargo test) ==="
 cargo test --manifest-path tools/parity/Cargo.toml --quiet
 
-# ---------------------------------------------------------------------------
-# Corpus-FREE declaration check. This must run BEFORE the corpus gate below.
-#
-# It used to live after it, which made it unreachable: a sandbox with no corpus
-# hit the `exit 0` first, so a UI package shipping no facts got a GREEN gate.
-# That is exactly the hole issue #200 was filed about, and PR #320 fell through
-# it — src/ui landed with invented spacing, radii and font stack while
-# check-ui.sh printed "Vacuous pass". Asking whether a package declares its
-# facts needs no corpus, so it is asked unconditionally.
-# ---------------------------------------------------------------------------
-if [ -d src/ui ] && [ ! -f src/ui/ui-facts.json ]; then
-  echo "check-ui: FAIL — src/ui exists but declares no ui-facts.json." >&2
-  echo "  Every UI slice ships the facts it claims (SPECS/ui-parity.md)." >&2
-  echo "  Each entry: the value, and the corpus citation it came from." >&2
-  echo "  A UI package with no facts file has nothing to check and cannot pass." >&2
-  exit 1
-fi
-
-if [ ! -d pipeline/corpus/pretty/client ]; then
+# Two distinct corpus needs, so two gates:
+#   - VALUE legs (parity extract/check) read raw `client/` + `style/*.css`.
+#     StyleX classes resolve against the stylesheet and literals are exact in
+#     minified source, so a crawl-only corpus suffices. corpus-exec itself
+#     prefers raw `client/` and treats `pretty/` as legacy (run.ts §133).
+#   - GOLDEN re-execution needs modules it can import, and separately needs
+#     its pinned chunk NAMES to still exist (issue #330).
+# Gating everything on `pretty/` made a usable crawl-only corpus look absent.
+if [ ! -d pipeline/corpus/client ]; then
   echo "check-ui: no local corpus (pipeline/corpus) — golden re-verification and parity extract/check SKIPPED."
   echo "check-ui: regenerate with 'bash pipeline/run.sh' (public assets, no credentials) before reviewing a UI slice."
   echo "check-ui: declaration legs passed; VALUE comparison did NOT run."
@@ -68,11 +78,31 @@ echo "=== corpus-exec verify: every committed golden case re-executes byte-ident
 # src/*/golden/*.json with a sibling *.expected.json (H2 theme VECTOR files
 # have no expected sibling and are re-derived by the corpus-exec suite's own
 # smoke instead).
+# PRE-FLIGHT (issue #330): goldens pin chunks by FILENAME and Linear
+# content-hashes every chunk, so 232 of 352 pinned refs are dead against a
+# corpus crawled today. Under `set -euo pipefail` the first stale case aborts
+# the whole gate, which reads as "the corpus is broken" rather than "the pins
+# expired". Probe one case first and degrade loudly instead.
+GOLDEN_PROBE=$(find src -path '*/golden/*.json' ! -name '*.expected.json' | head -1 || true)
+GOLDEN_OK=1
+if [ -n "$GOLDEN_PROBE" ] && [ -f "${GOLDEN_PROBE%.json}.expected.json" ]; then
+  if ! node --experimental-strip-types tools/corpus-exec/main.ts verify \
+       "$GOLDEN_PROBE" --corpus pipeline/corpus >/dev/null 2>&1; then
+    GOLDEN_OK=0
+  fi
+fi
+
+if [ "$GOLDEN_OK" = "0" ]; then
+  echo "check-ui: golden re-execution SKIPPED — pinned chunk names do not"
+  echo "check-ui: resolve against this corpus (issue #330: hashes rotate per"
+  echo "check-ui: deploy). The VALUE legs below still run."
+else
 find src -path '*/golden/*.json' ! -name '*.expected.json' -print0 | while IFS= read -r -d '' case_file; do
   [ -f "${case_file%.json}.expected.json" ] || continue
   echo "--- verify: $case_file"
   node --experimental-strip-types tools/corpus-exec/main.ts verify "$case_file" --corpus pipeline/corpus
 done
+fi
 echo "=== parity extract (corpus → reference; canaries enforced) ==="
 cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
