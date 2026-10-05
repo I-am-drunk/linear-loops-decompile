@@ -1,0 +1,7 @@
+{
+  "name": "ui-nodes",
+  "private": true,
+  "type": "module",
+  "ui": true,
+  "description": "SH3: the shared node + markdown render tier. Renders untrusted model output, so escaping and link-scheme safety are the load-bearing parts."
+}

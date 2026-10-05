@@ -90,4 +90,11 @@ export const CORPUS_VARS: Array<[string, string]> = [
       '"Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", ' +
       '"Helvetica Neue", "Linear Thai", sans-serif',
   ],
+  [
+    // --font-monospace in the compiled stylesheet. Needed by the node tier's
+    // code blocks (SH3); same provenance as the regular stack above.
+    "--t-font-monospace",
+    '"Berkeley Mono", "SFMono Regular", Consolas, "Liberation Mono", Menlo, ' +
+      "Courier, monospace",
+  ],
 ];
