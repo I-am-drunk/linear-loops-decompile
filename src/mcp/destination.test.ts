@@ -104,3 +104,58 @@ test(`isForbiddenAddress is exported for MCP2 to re-check every resolved address
   assert.equal(isForbiddenAddress(`169.254.169.254`), `link-local (cloud metadata)`);
   assert.equal(isForbiddenAddress(`93.184.216.34`), undefined);
 });
+
+// --- bypass regressions (CodeRabbit inline review + variant probe) --------
+// Each host below reaches loopback, this-network or RFC1918 and was ALLOWED
+// before this fix. The method that found them: probe VARIANTS of a host the
+// guard already blocks, not more examples of what it was written for.
+
+test(`the .localhost tree is loopback, per RFC 6761`, () => {
+  // getent hosts foo.localhost -> ::1
+  for (const h of [`localhost`, `LOCALHOST`, `localhost.`, `foo.localhost`, `a.b.localhost`]) {
+    assert.equal(isForbiddenAddress(h), `loopback`, h);
+  }
+});
+
+test(`non-canonical numeric host forms are refused, not decoded`, () => {
+  // All four are accepted as 127.0.0.1 by inet_aton-style parsers and by
+  // browsers. Refusing the FORM is smaller to reason about than decoding it.
+  for (const h of [`127.1`, `0x7f000001`, `2130706433`, `0`]) {
+    assert.equal(isForbiddenAddress(h), `non-canonical address form`, h);
+  }
+});
+
+test(`expanded and mapped IPv6 spellings are canonicalized first`, () => {
+  // forbiddenV6 compares against `::1` and a hex-tail mapped form, so these
+  // two spellings missed. checkDestination only caught the mapped one
+  // because url.hostname had already rewritten it -- a DIRECT caller, which
+  // MCP2 is instructed to be, got no such help.
+  assert.equal(isForbiddenAddress(`0:0:0:0:0:0:0:1`), `loopback`);
+  assert.equal(isForbiddenAddress(`::ffff:10.0.0.1`), `rfc1918`);
+  assert.equal(isForbiddenAddress(`::ffff:a00:1`), `rfc1918`);
+});
+
+test(`legitimate public hosts are still allowed`, () => {
+  // The direction that breaks deployments. `0xygen` and `123abc` are the
+  // cases that matter: the non-canonical-numeric pattern must be anchored so
+  // it cannot swallow a hostname that merely STARTS with 0x or digits.
+  for (const h of [
+    `mcp.example.com`,
+    `api.githubusercontent.com`,
+    `a1.example.co.uk`,
+    `8.8.8.8`,
+    `203.0.113.7`,
+    `2606:4700::1111`,
+    `my-server.internal.example.com`,
+    `0xygen.example.com`,
+    `123abc.example.com`,
+  ]) {
+    assert.equal(isForbiddenAddress(h), undefined, h);
+  }
+});
+
+test(`a bearer-authed .localhost URL is refused end to end`, () => {
+  const v = checkDestination(`https://foo.localhost/mcp`, { kind: `bearer` }, {});
+  assert.equal(v.ok, false);
+  assert.equal(v.ok === false && v.reason, `forbiddenRange`);
+});
