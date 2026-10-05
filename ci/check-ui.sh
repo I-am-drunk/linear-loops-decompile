@@ -24,23 +24,14 @@ echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G
 node --experimental-strip-types --test tools/coverage/coverage.test.ts
 node --experimental-strip-types tools/coverage/main.ts check --repo .
 
-if ! command -v cargo >/dev/null 2>&1; then
-  if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
-    echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
-    exit 1
-  fi
-  echo "check-ui: cargo not found — install Rust (https://rustup.rs) to run the parity gate. Vacuous pass (set CHECK_UI_STRICT=1 to make this a failure; reviewers merging UI slices should run with a toolchain)."
-  exit 0
-fi
-
-echo "=== tools/parity (cargo test) ==="
-cargo test --manifest-path tools/parity/Cargo.toml --quiet
-
 # ---------------------------------------------------------------------------
-# Corpus-FREE declaration check. This must run BEFORE the corpus gate below.
+# Corpus-FREE, TOOLCHAIN-FREE declaration check. It runs before BOTH early
+# returns below — the cargo one and the corpus one.
 #
-# It used to live after it, which made it unreachable: a sandbox with no corpus
-# hit the `exit 0` first, so a UI package shipping no facts got a GREEN gate.
+# It has been unreachable twice for the same reason: it sat after an `exit 0`.
+# First after the corpus gate, so a sandbox with no corpus green-lit a factless
+# UI package. Moving it above that still left it after the `cargo not found`
+# return, so a sandbox with no Rust green-lit the same package.
 # That is exactly the hole issue #200 was filed about, and PR #320 fell through
 # it — src/ui landed with invented spacing, radii and font stack while
 # check-ui.sh printed "Vacuous pass". Asking whether a package declares its
@@ -53,6 +44,20 @@ if [ -d src/ui ] && [ ! -f src/ui/ui-facts.json ]; then
   echo "  A UI package with no facts file has nothing to check and cannot pass." >&2
   exit 1
 fi
+
+if ! command -v cargo >/dev/null 2>&1; then
+  if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
+    echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
+    exit 1
+  fi
+  echo "check-ui: cargo not found — parity test/extract/check SKIPPED (install Rust: https://rustup.rs)."
+  echo "check-ui: declaration legs passed; VALUE comparison did NOT run."
+  echo "check-ui: set CHECK_UI_STRICT=1 to make a missing toolchain a failure."
+  exit 0
+fi
+
+echo "=== tools/parity (cargo test) ==="
+cargo test --manifest-path tools/parity/Cargo.toml --quiet
 
 if [ ! -d pipeline/corpus/pretty/client ]; then
   echo "check-ui: no local corpus (pipeline/corpus) — golden re-verification and parity extract/check SKIPPED."
@@ -78,7 +83,7 @@ cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
 # The FAIL case for a factless src/ui is handled corpus-free above.
 if [ ! -f src/ui/ui-facts.json ]; then
-  echo "check-ui: no src/ui package — extraction healthy, nothing to check yet. Vacuous pass."
+  echo "check-ui: no src/ui package — extraction healthy, no declared facts to compare."
   exit 0
 fi
 
