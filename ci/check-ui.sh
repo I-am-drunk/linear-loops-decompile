@@ -83,9 +83,15 @@ echo "=== corpus-exec verify: every committed golden case re-executes byte-ident
 # corpus crawled today. Under `set -euo pipefail` the first stale case aborts
 # the whole gate, which reads as "the corpus is broken" rather than "the pins
 # expired". Probe one case first and degrade loudly instead.
-GOLDEN_PROBE=$(find src -path '*/golden/*.json' ! -name '*.expected.json' | head -1 || true)
+# Pick the first case that actually HAS an .expected sibling. Taking the first
+# case outright could land on one without a sibling, leave GOLDEN_OK=1, and
+# run the full loop unprobed (peer review, sess a3).
+GOLDEN_PROBE=""
+for c in $(find src -path '*/golden/*.json' ! -name '*.expected.json' | sort); do
+  if [ -f "${c%.json}.expected.json" ]; then GOLDEN_PROBE="$c"; break; fi
+done
 GOLDEN_OK=1
-if [ -n "$GOLDEN_PROBE" ] && [ -f "${GOLDEN_PROBE%.json}.expected.json" ]; then
+if [ -n "$GOLDEN_PROBE" ]; then
   if ! node --experimental-strip-types tools/corpus-exec/main.ts verify \
        "$GOLDEN_PROBE" --corpus pipeline/corpus >/dev/null 2>&1; then
     GOLDEN_OK=0

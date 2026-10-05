@@ -17,12 +17,19 @@ generator. It then invented every value the generator does not cover:
 | `font: 14px "Inter", system-ui` | `"Inter Variable", "SF Pro Display", -apple-system, …` | `--font-regular` in the compiled stylesheet |
 | `max-width: 860px` | `80ch` | `LayoutConstants.stylex` → `contentMaxWidth` |
 | `border-radius: 5px` | a 2/3/6/8px ladder (5px is its rarest) | 57 radius declarations in the stylesheet |
-| sidebar `220px`, from memory | `220px` | `.sx-16grhtn` — **it got lucky** |
+| sidebar `220px`, from memory | `220px` exists — but on a **tab-bar placeholder**, not the sidebar | `.sx-16grhtn`, in `LinearLayout`'s hidden-tab filler |
 
-That last row is the important one. The stylesheet holds **118 distinct width
-values**. Guessing and landing on a real one is a coin flip, not parity. A
-right answer with no citation is indistinguishable from a wrong one, so the
-gate treats both as failures.
+That last row is the important one, and it is worse than a near-miss. The
+stylesheet holds **118 distinct width values**, so 220px was always likely to
+appear somewhere. It does — on a hidden-tab filler in the tab bar. The agent
+reported this as a lucky hit; it was not. **It was the right number attached
+to the wrong thing**, which a screenshot can never reveal and which only
+reading the component exposes.
+
+A right answer with no citation is indistinguishable from a wrong one, so the
+gate treats both as failures. And a citation you have not dereferenced is not
+a citation — step 2 below (find the component) exists precisely so you attach
+the value to the element that actually uses it.
 
 The agent then wrote "verified in a browser" in its PR, having taken a
 screenshot and judged it plausible. The owner looked at the same screenshot
@@ -74,9 +81,12 @@ LC_ALL=C grep -oaE 'sx-[a-z0-9]+' pipeline/corpus/client/LinearLayout.*.js | sor
 
 # what any class actually declares
 bash pipeline/sx.sh sx-16grhtn sx-11iknt3
-#   sx-16grhtn => .sx-16grhtn{width:220px}
+#   sx-16grhtn => .sx-16grhtn{width:220px}      <- on a tab-bar filler, NOT the sidebar
 #   sx-11iknt3 => .sx-11iknt3{padding-left:6px}
 ```
+
+Always check WHICH element uses the class — grep the class back into the chunk
+and read its surrounding JSX. That is how the 220px error above was caught.
 
 That is the whole technique. Values are one grep away, which is what makes
 guessing inexcusable rather than merely sloppy.
@@ -92,7 +102,7 @@ fails the PR.
   "surface": "app-shell",
   "facts": [
     { "name": "sidebar width", "value": "220px",
-      "cite": "style-*.css .sx-16grhtn (used by LinearLayout.*.js)" },
+      "cite": "style-*.css .sx-1abc234, on the sidebar container in PageSidebarContainer" },
     { "name": "content max width", "value": "80ch",
       "cite": "LayoutConstants.stylex.*.js contentMaxWidth" }
   ]
@@ -121,6 +131,37 @@ A missing border is an obvious gap someone fixes. An invented 5px radius is a
 lie that survives review, because it looks fine.
 
 Partial surfaces are fine and expected. Invented ones are not.
+
+## What a green checker does and does not prove
+
+Be precise about this, because "the gate passed" is how invented UI shipped
+last time.
+
+**Legs 1–4 are corpus-free by design.** They cannot tell whether a citation is
+true — only whether one exists. A fact row with `"cite": "vibes"` passes all
+four legs and exits 0. A peer session confirmed this by trying four ways to
+smuggle invented UI through, including abusing the `UNVERIFIED` escape hatch;
+the only one that worked was writing a false citation.
+
+So green means something narrower than "the values are right":
+
+> **Invention now requires forging a citation instead of just typing a
+> number.**
+
+That is a real raise — it turns an easy mistake into a deliberate lie, and a
+reviewer can spot-check any row in one command. It is not a proof of
+correctness.
+
+**The leg that does prove values** is the corpus-gated one: it re-reads each
+cited value and compares. Run it locally before you ship, and if you are
+reviewing a UI PR, run it rather than trusting the green tick:
+
+```bash
+bash ci/check-ui.sh      # needs pipeline/corpus — see step 1
+```
+
+If you are reviewing and cannot run it, say so in your review instead of
+approving on the corpus-free legs alone.
 
 ## Run the gate before you push
 
