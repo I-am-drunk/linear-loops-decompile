@@ -23,28 +23,16 @@ node --experimental-strip-types --test tools/corpus-exec/corpus-exec.test.ts
 echo "=== coverage ledger (node --test + check; corpus-free, never vacuous — G2) ==="
 node --experimental-strip-types --test tools/coverage/coverage.test.ts
 node --experimental-strip-types tools/coverage/main.ts check --repo .
-
-if ! command -v cargo >/dev/null 2>&1; then
-  if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
-    echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
-    exit 1
-  fi
-  echo "check-ui: cargo not found — install Rust (https://rustup.rs) to run the parity gate. Vacuous pass (set CHECK_UI_STRICT=1 to make this a failure; reviewers merging UI slices should run with a toolchain)."
-  exit 0
-fi
-
-echo "=== tools/parity (cargo test) ==="
-cargo test --manifest-path tools/parity/Cargo.toml --quiet
-
 # ---------------------------------------------------------------------------
-# Corpus-FREE declaration check. This must run BEFORE the corpus gate below.
+# Corpus-FREE declaration checks. These run BEFORE *both* early returns.
 #
-# It used to live after it, which made it unreachable: a sandbox with no corpus
-# hit the `exit 0` first, so a UI package shipping no facts got a GREEN gate.
-# That is exactly the hole issue #200 was filed about, and PR #320 fell through
-# it — src/ui landed with invented spacing, radii and font stack while
-# check-ui.sh printed "Vacuous pass". Asking whether a package declares its
-# facts needs no corpus, so it is asked unconditionally.
+# There are two `exit 0`s below — one for a missing Rust toolchain, one for a
+# missing corpus — and a declaration check placed after either is unreachable
+# in exactly the situation a fresh sandbox is in. A factless UI package then
+# gets a GREEN gate. That is the hole issue #200 was filed about; PR #320 fell
+# through the corpus one, and PR #324's review caught that the cargo one was
+# still open. Asking whether a package declares its facts needs neither a
+# corpus nor a toolchain, so it is asked first and unconditionally.
 # ---------------------------------------------------------------------------
 echo "=== ui-facts: every UI value declared and cited (corpus-free) ==="
 node --test tools/ui-facts/ui-facts.test.mjs
@@ -62,6 +50,21 @@ if [ -d src/ui ] && [ ! -f src/ui/ui-facts.json ]; then
   echo "  A UI package with no facts file has nothing to check and cannot pass." >&2
   exit 1
 fi
+
+if ! command -v cargo >/dev/null 2>&1; then
+  if [ "${CHECK_UI_STRICT:-0}" = "1" ]; then
+    echo "check-ui: FAIL — cargo not found and CHECK_UI_STRICT=1 (install Rust: rustup + gcc; see tools/parity/README.md)." >&2
+    exit 1
+  fi
+  echo "check-ui: cargo not found — declaration legs passed; the parity VALUE legs did NOT run."
+  echo "check-ui: install Rust (https://rustup.rs) to run them, or set CHECK_UI_STRICT=1 to make this a failure."
+  echo "check-ui: a reviewer merging a UI slice should run with a toolchain."
+  exit 0
+fi
+
+echo "=== tools/parity (cargo test) ==="
+cargo test --manifest-path tools/parity/Cargo.toml --quiet
+
 
 # Two different corpus needs, so two separate gates:
 #   - VALUE legs (parity extract/check) read raw `client/` + `style/*.css`.
@@ -94,7 +97,7 @@ cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
 # The FAIL case for a factless src/ui is handled corpus-free above.
 if [ ! -f src/ui/ui-facts.json ]; then
-  echo "check-ui: no src/ui package — extraction healthy, nothing to check yet. Vacuous pass."
+  echo "check-ui: no src/ui package — extraction healthy; there is no UI slice to compare yet."
   exit 0
 fi
 
