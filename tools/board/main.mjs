@@ -30,7 +30,8 @@ export function renderBoard(board) {
   ];
   for (const pr of board.pullRequests) {
     const counts = board.feedback ? [pr.comments.length, pr.reviews.length, pr.inline.length].join('/') : 'not fetched';
-    const base = pr.parent ? '#' + pr.parent + ' (' + cell(pr.base) + ')' : cell(pr.base);
+    const base = pr.parent ? '#' + pr.parent + ' (' + cell(pr.base) + ')'
+      : cell(pr.base) + (pr.parentCandidates.length > 1 ? ' (ambiguous: ' + pr.parentCandidates.map((n) => '#' + n).join(', ') + ')' : '');
     lines.push('| ' + link(pr) + ' | ' + cell(pr.title) + (pr.draft ? ' (draft)' : '') + ' | ' + base + ' | ' + pr.sha.slice(0, 8) + ' | ' + counts + ' |');
   }
   if (!board.pullRequests.length) lines.push('No open PRs.');
@@ -89,14 +90,18 @@ export async function loadBoard({ repo = DEFAULT_REPO, feedback = false, api = g
   const pulls = await api(root + '/pulls?state=open&sort=created&direction=asc&per_page=100');
   const issues = (await api(root + '/issues?state=open&sort=created&direction=asc&per_page=100'))
     .filter((issue) => !issue.pull_request);
-  const parents = new Map(pulls.map((pr) => [pr.head.ref, pr.number]));
+  const branchKey = (side) => side.repo?.full_name
+    ? side.repo.full_name.toLowerCase() + ':' + side.ref : null;
   pulls.sort((a, b) => a.created_at.localeCompare(b.created_at) || a.number - b.number);
   const pullRequests = await mapLimited(pulls, async (pr) => {
+    const baseKey = branchKey(pr.base);
+    const candidates = pulls.filter((other) => other.number !== pr.number && baseKey !== null && branchKey(other.head) === baseKey);
     const result = {
       number: pr.number, title: pr.title, url: pr.html_url, draft: pr.draft,
       createdAt: pr.created_at, updatedAt: pr.updated_at,
       base: pr.base.ref, head: pr.head.ref, sha: pr.head.sha,
-      parent: parents.get(pr.base.ref) ?? null,
+      parent: candidates.length === 1 ? candidates[0].number : null,
+      parentCandidates: candidates.map((other) => other.number),
     };
     if (feedback) {
       result.comments = await api(root + '/issues/' + pr.number + '/comments?per_page=100');

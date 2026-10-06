@@ -18,7 +18,8 @@ test('GitHub CLI pagination keeps later pages and never accepts an error object'
 function pull(number, base, date) {
   return { number, title: 'PR ' + number, html_url: 'https://example.com/' + number,
     created_at: date, updated_at: date, draft: false,
-    head: { ref: 'branch-' + number, sha: 'abc12345' }, base: { ref: base } };
+    head: { ref: 'branch-' + number, sha: 'abc12345', repo: { full_name: 'o/r' } },
+    base: { ref: base, repo: { full_name: 'o/r' } } };
 }
 
 function fixture() {
@@ -70,4 +71,22 @@ test('default mode labels unfetched feedback and validates CLI options', async (
   assert.throws(() => parseArgs(['--repo']), /incomplete/);
   assert.throws(() => parseArgs(['--typo']), /Unknown/);
   await assert.rejects(loadBoard({ repo: '../oops/extra', api }), /owner\/name/);
+});
+
+test('fork parents and ambiguous branches cannot invent a stack', async () => {
+  const { api } = fixture();
+  const fork = pull(11, 'main', '2026-10-01');
+  fork.head = { ref: 'main', sha: 'abc12345', repo: { full_name: 'contributor/r' } };
+  const deleted = pull(14, 'main', '2026-10-01');
+  deleted.head.repo = null;
+  const duplicate = pull(16, 'release', '2026-10-01');
+  duplicate.head.ref = 'branch-12';
+  const pulls = [fork, pull(12, 'main', '2026-10-01'), pull(13, 'branch-12', '2026-10-01'), deleted, duplicate];
+  const board = await loadBoard({ repo: 'o/r', api: (path) => path.includes('/pulls?') ? pulls : api(path) });
+  assert.equal(board.pullRequests.find((pr) => pr.number === 11).parent, null);
+  assert.equal(board.pullRequests.find((pr) => pr.number === 12).parent, null);
+  const child = board.pullRequests.find((pr) => pr.number === 13);
+  assert.equal(child.parent, null);
+  assert.deepEqual(child.parentCandidates, [12, 16]);
+  assert.match(renderBoard(board), /ambiguous: #12, #16/);
 });

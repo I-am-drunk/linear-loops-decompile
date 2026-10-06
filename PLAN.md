@@ -28,7 +28,7 @@ acceptance task, not a reason to block independent API/local-provider work.
 
 ## Landing order
 
-1. Resolve and land the UI gate chain, including #374, before calling UI facts enforced.
+1. The UI declaration gate landed in #327, including #374. Keep it green and verify citations against their sources.
 2. Land independent roots before dependents. Keep existing branches and credit;
    a passing package test does not make a stacked PR independently mergeable.
 3. Wire one vertical flow through server, storage and UI. The missing runtime

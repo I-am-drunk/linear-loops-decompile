@@ -7,6 +7,7 @@ Keep their reviewed code; add these narrow slices in dependency order.
 | Slice | Owner | Acceptance |
 |---|---|---|
 | SH4 composition | #314 | One start command serves shell, assets and routes; direct navigation works |
+| SH5 citation binding | #314 | With a working surface, bind source locators to element/property and reject known wrong-target mutations; retain manual evidence review |
 | ST7 settings persistence | #315 | Save a provider preference, reload, test connection; responses reveal no key |
 | AU8 application/store | #318 | Create/edit/publish a versioned automation; reload restores it; invalid commands fail |
 | AU9 manual executor | #318 | Run a published version once with a selected provider; persist ordered events and terminal state |

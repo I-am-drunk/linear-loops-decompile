@@ -2,8 +2,7 @@
 # ci/check-src.sh — typecheck + test every package under src/, package-driven.
 #
 # Each src/<pkg>/ with a tsconfig.json is checked with ITS OWN tsconfig (the
-# package is the source of truth for its compiler options — see work/LANDING.md
-# §Conventions for the two legal import-extension styles). Runs the package's
+# package is the source of truth for its compiler options). Runs the package's
 # own `npm test` when it declares one; otherwise:
 #   - packages with a tsconfig.build.json (`.js`-extension, compile-first style)
 #     are emitted to dist/ and the emitted *.test.js are run;
@@ -18,6 +17,8 @@
 # packages yet (passes vacuously with a notice).
 
 set -euo pipefail
+
+node --test tools/board/board.test.mjs
 
 TSC_VERSION="5.9"
 TYPES_NODE_VERSION="22"
