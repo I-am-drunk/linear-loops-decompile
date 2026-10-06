@@ -1,110 +1,18 @@
 # Learnings
 
-Distilled from 121 issues, issue #225 (244 comments), issue #295 (66), and
-three eras of this repo. The threads are archived; this file is what they were
-for. Read it once and you can skip them.
+Audit: 137 issues and 1,274 comment narratives through 2026-10-06 22:14 UTC. All 121 older issues are already closed. The [issue index](history/issues.md) preserves individual dispositions; the [coverage manifest](history/audit-2026-10-06.json) pins the reviewed snapshots. Embedded source attachments were not re-audited as implementations.
 
-## The eras, briefly
-
-| Era | What happened | Why it ended |
+| Lesson | Practice | Sources |
 |---|---|---|
-| Swarm (to 2026-09-27) | ~26k LOC, M0–M5, tests green | Built to plausibility with no evidence. Archived at tag `archive/v0-swarm-era`. |
-| Rebuild / harness (09-27 → 09-28) | Pipeline, feature matrix, parity harness, golden-test harness | The UI shell failed its own exactness audit and was deleted. Harness outlived it. |
-| Assembly (09-28 → 09-30) | 60/40 UI-vs-harness split; ~16 golden-backed chunks; research shards | Ran out of sessions mid-stride. `main` sat untouched from 09-30 to 10-04. |
-| Rearchitecture (10-04) | This. Whole-Linear-UI scope, Cursor-style automations page, provenance rule | — |
+| Own tests are not reference proof | Early UI passed its own tests while inventing palette, routes and model behavior. Keep original infrastructure; verify UI and semantics against independent evidence. | [#157](https://github.com/I-am-drunk/linear-loops-decompile/issues/157), [#164](https://github.com/I-am-drunk/linear-loops-decompile/issues/164) |
+| Check the source, not only the citation | The docs drop contained redirects; formatting changed valid strings; incomplete clones caused false findings. Verify bytes, inventory, source scope and actual execution. | [#183](https://github.com/I-am-drunk/linear-loops-decompile/issues/183), [#231](https://github.com/I-am-drunk/linear-loops-decompile/issues/231), [#250](https://github.com/I-am-drunk/linear-loops-decompile/issues/250), [#162](https://github.com/I-am-drunk/linear-loops-decompile/issues/162) |
+| Count defined units | Routes, chunks, exports, fixtures and working views are different units. The old denominator mixed them and omitted work. Timestamp the inventory; do not turn a stale percentage into a forecast. | [#295](https://github.com/I-am-drunk/linear-loops-decompile/issues/295) |
+| Separate client facts from server guarantees | Tracking does not prove billing; a public type does not prove a supported root operation; concurrent client calls do not prove database atomicity. The first-party chat billing experiment was never delivered. | [#14](https://github.com/I-am-drunk/linear-loops-decompile/issues/14), [#295](https://github.com/I-am-drunk/linear-loops-decompile/issues/295) |
+| Keep internal and external protocols distinct | Our descriptor/pairing/WebSocket design is original infrastructure. Its tests do not establish external T3 Code Connect compatibility; keep that as an explicit evidence gap. | [#21](https://github.com/I-am-drunk/linear-loops-decompile/issues/21), [#33](https://github.com/I-am-drunk/linear-loops-decompile/issues/33), [#48](https://github.com/I-am-drunk/linear-loops-decompile/issues/48), [#50](https://github.com/I-am-drunk/linear-loops-decompile/issues/50) |
+| Probe behavior the happy path misses | Use the same observation driver on both implementations. Preserve serialization types, pin ambient assumptions and report renderer errors. Covered-case agreement missed a wrong flat-sort branch. | [#225](https://github.com/I-am-drunk/linear-loops-decompile/issues/225), [#295](https://github.com/I-am-drunk/linear-loops-decompile/issues/295) |
+| Wire the consumer before claiming completion | A registry is not an invocation policy; a renderer is not a working page; a helper is not a wired callback. Verify real OAuth state, tool grants, approvals, persistence and transport boundaries. | [#59](https://github.com/I-am-drunk/linear-loops-decompile/issues/59), [#295](https://github.com/I-am-drunk/linear-loops-decompile/issues/295), [#370](https://github.com/I-am-drunk/linear-loops-decompile/issues/370) |
+| Keep exactness claims narrow | The repaired gate validates declared selector scopes. Adoption by every package and proof that each value belongs to the claimed property remain separate SH work. A green gate is not universal visual parity. | [#360](https://github.com/I-am-drunk/linear-loops-decompile/issues/360) |
+| Keep useful infrastructure and verify integration | Retain header-driven rate handling, durable idempotency, sequence replay, late usage accounting and a shared editor/transcript renderer. Historical delivery claims still need current consumer checks. | [#26](https://github.com/I-am-drunk/linear-loops-decompile/issues/26), [#38](https://github.com/I-am-drunk/linear-loops-decompile/issues/38), [#57](https://github.com/I-am-drunk/linear-loops-decompile/issues/57), [#114](https://github.com/I-am-drunk/linear-loops-decompile/issues/114), [#183](https://github.com/I-am-drunk/linear-loops-decompile/issues/183), [#295](https://github.com/I-am-drunk/linear-loops-decompile/issues/295) |
+| Make coordination observable | One concise lane claim, one slice, a push within an hour, and oldest-first review. Check all issue and inline feedback. Retire rosters, negotiated lease windows, duplicate planning threads and silence-as-approval proposals. | [#21](https://github.com/I-am-drunk/linear-loops-decompile/issues/21), [#59](https://github.com/I-am-drunk/linear-loops-decompile/issues/59), [#225](https://github.com/I-am-drunk/linear-loops-decompile/issues/225), [#314](https://github.com/I-am-drunk/linear-loops-decompile/issues/314) |
 
-## What actually went wrong, three times
-
-**1. Building breadth before evidence.** The swarm era shipped a working
-product that matched nothing. Lesson kept: a slice names its evidence or it
-does not ship.
-
-**2. Then evidence became the product.** The correction overshot. Nine of ten
-sessions ended up building the apparatus that proves exactness — parity
-harness, corpus executor, coverage ledger, golden manifests, review recipes
-for reviewing the recipes — while the thing a user could open stayed empty.
-After three days the meter read *78 chunks · 16 golden · 62 GAP*: months of
-runway to finish proving, and no product. The owner's 60/40 directive (#295)
-was aimed exactly here and arrived late.
-
-**3. Reviewing UI by eye let invented work through, fifty times.** Agents
-built shells from a recollection of Linear rather than from the corpus,
-screenshotted them, judged them plausible, and shipped. Colors were right —
-they come from the golden-backed generator. Every dimension the generator does
-not cover was made up. Linear's stylesheet holds 118 distinct width values, so
-guessing a real one is a coin flip. Fixed mechanically rather than by
-exhortation: `docs/UI-EXACTNESS.md` plus `tools/ui-facts`, wired into the
-required CI check. Related: a fact queue where 3 of 4 headline strings were
-wrong, each written from a guess *about* an artifact and then cited — a
-citation is necessary, not sufficient.
-
-## Coordination: what the thread taught
-
-The 100+-comment mega-thread was named "horrible coordination" by the owner,
-correctly. Measured failures:
-
-- **Simultaneous claims.** 2026-10-04 13:55–13:57Z: four sessions claimed "the
-  rearchitecture" within 23 seconds, each having read a tail that predated the
-  others. None had landed anything 100 minutes later. Earliest-claim-wins
-  cannot arbitrate ties it cannot see.
-- **Claims are not work.** Both 03:21Z and 03:40Z claims went 10 hours with
-  zero pushes. A claim is a lock, and an unpushed lock starves the queue.
-- **Reclaim windows kept being renegotiated** (2h for research, ~40min
-  proposed for micro-claims, 10h de-facto precedent) in thread prose, so no
-  session could tell which applied.
-- **Coordination overhead exceeded the work.** 600-word claim comments
-  announcing timed backstops for reviews of review protocols. Several sessions
-  spent their entire run coordinating.
-
-Rules that earned their place (now in `AGENTS.md`):
-
-1. **Push within the hour, or you hold nothing.** Durability is the branch,
-   not the claim. Unpushed is unclaimed, full stop — this replaces every
-   negotiated window.
-2. **Claims are ≤5 lines**: lane, scope, session id. Findings go in files and
-   PRs. Never thread prose.
-3. **One lane issue per workstream**, not one thread for everything and not
-   one issue per claim (that mistake produced ~70 junk issues).
-4. **Review before you author** when the queue is non-empty.
-5. **Oldest PR first.** Recency bias starved #307 for days behind two silent
-   claims.
-
-## Technical findings worth keeping
-
-- **Loop chat and normal AI chat are the same substrate**; Loops is the
-  credit-metered wrapper. Zero GraphQL subscriptions — streaming rides the
-  sync queue. (#14, KNOWLEDGE §8.)
-- **Trigger entities are PascalCase model values** (`Issue`, `Project`,
-  `Document`, `Initiative`, `Team`, `Release`, `Cycle`, `Schedule`, `Chat`) —
-  not a `schedule|chat|event` type with a separate event field. Encoding the
-  wrong model killed two PRs.
-- **Rate limiting is header-driven**, never hardcoded: `RATELIMITED` can
-  arrive on HTTP 400, and exhausted-window resets (request/endpoint/
-  complexity) must each be honored separately. `src/server/linear-client.ts`
-  implements this and is worth keeping.
-- **The node-render pipeline is shared** by the loop editor and the runs
-  transcript. It is not deferrable as "editor, later."
-- **Two monster chunks** (`ContextualMenuActions`, `Issue`) should be consumed
-  through narrow facades, never reimplemented whole.
-- **Prettifiers are not compilers.** js-beautify silently corrupted 3 chunks
-  into invalid JS, one of them the model layer. Any formatter in a reading
-  path needs a parse-or-fall-back gate and a byte-preservation check.
-- **Verify a corpus before trusting it.** A stale partial clone produced a
-  false "507 chunks missing" alarm and a false "zero drift" pass. Full clone,
-  count check, then trust.
-
-## Carried-forward owner decisions
-
-From `docs/remap/owner-decisions.md`, still open and still relevant: credit
-meter out vs reimplemented (self-hosted has no Linear billing); notification
-deep-link routes; run retention policy; and — now the live one — **MCP tool
-support**, which the Cursor-style automations page makes central rather than
-optional. Our answer: build an MCP client from the open specification, as
-`docs/plan/` describes.
-
-## What survives from the old eras
-
-Kept: `src/server` (transport, boot, settings RPCs, rate-budget client),
-`src/model`, the ~16 golden-backed presentation kernels, `pipeline/`,
-`tools/coverage`. Retired: the 60/40 meter as a progress measure, the
-"EXACT REPRODUCTION" bar, the mega-thread, and the runner/MCP/PAT machinery.
+The current goal is the whole Linear UI with Cursor's automation layout. Earlier Loops-only scope, effort ratios, forecasts and claims that exact reproduction was retired are historical. Preserve source-backed findings; do not inherit their obsolete product constraints or unsupported certainty.

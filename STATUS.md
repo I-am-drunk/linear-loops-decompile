@@ -1,48 +1,23 @@
-# STATUS
+# Status
 
-Updated in the same PR as the work it describes.
+As of 2026-10-06, the delivery target is **one working automation**, followed by
+whole-Linear UI coverage. Read PLAN.md for order and the live board for work:
 
-**Phase: rearchitecture, 2026-10-04.** Scope widened from Loops-only to the
-whole Linear UI; the automations page re-based on Cursor's layout; Linear
-demoted to one integration; T3 Code Connect a first-class inference provider;
-and the UI exactness bar made mechanical (`docs/UI-EXACTNESS.md` + CI).
+```sh
+node tools/board/main.mjs --feedback
+```
 
-## Lanes
+| Area | Evidence-backed state |
+|---|---|
+| Main | Server/transport, model, theme and presentation kernels exist |
+| Product UI | Feature packages exist on PR branches; no composed app is delivered on main |
+| Execution | Persistence, scheduler, executor and UI wiring need explicit slices |
+| Exactness | #327 merged: required declaration checks run in CI; actual reference comparisons remain necessary |
+| T3 Code Connect | Existing adapter is a prototype over our protocol; interoperability is unverified |
+| Linear | Public-API client exists; sign-in and integration packages await wiring and verification |
+| Cursor | Separate reference repo exists; exact authenticated layout capture remains unverified |
 
-| Lane | Next slice | State |
-|---|---|---|
-| SH shell | SH1 router + theme + nav | open |
-| ST settings | ST1 settings shell | open |
-| IN inference | IN1 provider registry | open |
-| IG integrations | IG1 integration interface | open |
-| AU automations | AU1 list page | blocked on SH1 |
-| MCP mcp | MCP1 registry model | open |
+A PR, package or green mock test is not a delivered user flow. Update this file
+when a merged slice changes these statements; do not copy a static PR queue here.
 
-`SH1` is the unblocker — every UI lane waits on it. Take that first.
-
-## Open PRs
-
-| PR | What | State |
-|---|---|---|
-| #313 | this rearchitecture | open for review |
-| #307 | team-tree presentation kernel | flat-leg fix applied at `bbc57d4`; needs one reviewer (fix author recused) |
-| #312 | review-recipe docs | close as superseded; its raw-vs-pretty rule carried into `pipeline/README.md` with credit |
-
-Merged 2026-10-04: **#308** config seam kernel — first commit on `main` in five
-days. All three open PRs predate the rearchitecture; the kernels survive it,
-#312's recipe does not (it presumed transcription PRs are the norm).
-
-## What exists
-
-Server: transport (`src/connect`), boot + static + store + audit
-(`src/server`), settings RPCs, Linear GraphQL client with a header-driven rate
-budget. Model layer (`src/model`). Theme (`src/ui-theme`, token-generated).
-~16 presentation kernels under `src/ui-*`. Analysis harness (`pipeline/`,
-`tools/`).
-
-**No UI shell.** Zero routes render. That is the gap milestone 1 closes.
-
-## History
-
-`docs/LEARNINGS.md` — three eras, 121 issues and 300+ thread comments
-distilled. Read it before proposing a process change; most have been tried.
+History and outstanding risks: docs/LEARNINGS.md and docs/history/issues.md.
