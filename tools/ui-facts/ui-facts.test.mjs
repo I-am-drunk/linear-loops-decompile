@@ -9,8 +9,9 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const CHECKER = new URL('./main.mjs', import.meta.url).pathname;
+const CHECKER = fileURLToPath(new URL('./main.mjs', import.meta.url));
 
 function run(files, prepare) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'uifacts-'));
@@ -79,6 +80,75 @@ test('a fully declared stylesheet PASSES', () => {
   });
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /every value declared and cited/);
+});
+
+test('uppercase and exponent CSS dimensions cannot bypass declarations', () => {
+  for (const [value, canonical] of [['777PX', '777px'], ['1e3px', '1000px']]) {
+    const r = run({
+      'src/ui/style.css': `.a{width:${value}}`,
+      'src/ui/ui-facts.json': JSON.stringify({ facts: [{ name: 'x', value: 'n/a', cite: 'fixture' }] }),
+    });
+    assert.equal(r.code, 1, r.out);
+    assert.match(r.out, new RegExp('`' + canonical + '` is not in'));
+  }
+});
+
+test('equivalent numbers and units share declarations and scopes', () => {
+  for (const value of ['4.0px', '+4PX', '4e0px']) {
+    const r = run({
+      'src/ui/style.css': `.a{width:${value}}`,
+      'src/ui/ui-facts.json': JSON.stringify({
+        facts: [{ name: 'width', value: '4px', cite: 'fixture', scope: ['.a'] }],
+      }),
+    });
+    assert.equal(r.code, 0, r.out);
+  }
+  const bad = run({
+    'src/ui/style.css': '.other{width:4.0PX}',
+    'src/ui/ui-facts.json': JSON.stringify({
+      facts: [{ name: 'width', value: '+4px', cite: 'fixture', scope: ['.a'] }],
+    }),
+  });
+  assert.equal(bad.code, 1, bad.out);
+  assert.match(bad.out, /is used in `\.other`/);
+});
+
+test('identifier suffixes are not dimensions, but negative values still need citation', () => {
+  const facts = JSON.stringify({ facts: [{ name: 'width', value: '4px', cite: 'fixture' }] });
+  const ok = run({
+    'src/ui/style.css': '.a{--offset-777px:var(--other);width:var(--offset-777px)}',
+    'src/ui/ui-facts.json': facts,
+  });
+  assert.equal(ok.code, 0, ok.out);
+  const bad = run({
+    'src/ui/style.css': '.a{margin-left:-4px}',
+    'src/ui/ui-facts.json': facts,
+  });
+  assert.equal(bad.code, 1, bad.out);
+  assert.match(bad.out, /`-4px` is not in/);
+});
+
+test('leg 5 compares equivalent numeric spellings against the corpus', () => {
+  const r = run({
+    'pipeline/corpus/style/style-fixture.css': '--editor-h5-font-size:.875rem;',
+    'src/ui/style.css': '.h{font-size:0.875REM}',
+    'src/ui/ui-facts.json': JSON.stringify({
+      facts: [{ name: 'settings heading size', value: '+0.875rem', cite: 'fixture' }],
+    }),
+  });
+  assert.equal(r.code, 1, r.out);
+  assert.match(r.out, /does not support the claim/);
+});
+
+test('URL slashes cannot hide an uncited CSS value later on the line', () => {
+  for (const url of ['https://example.com/image', '//example.com/image', '"https://example.com/image"']) {
+    const r = run({
+      'src/ui/style.css.ts': `export const C = \`.a{background:url(${url});width:777px}\``,
+      'src/ui/ui-facts.json': JSON.stringify({ facts: [{ name: 'x', value: 'n/a', cite: 'fixture' }] }),
+    });
+    assert.equal(r.code, 1, r.out);
+    assert.match(r.out, /`777px` is not in/);
+  }
 });
 
 test('colour literals FAIL even when declared', () => {

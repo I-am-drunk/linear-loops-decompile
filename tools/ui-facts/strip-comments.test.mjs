@@ -18,6 +18,20 @@ test('a // comment is cut, code before it kept', () => {
   assert.equal(r.stillInBlock, false);
 });
 
+test('quoted strings and CSS URLs preserve comment-looking data', () => {
+  for (const line of [
+    '.x{background:url(https://example.com/image);width:777px}',
+    '.x{background:url( //example.com/image );width:777px}',
+    '.x{background:URL("https://example.com/image");width:777px}',
+    'const text = "/* data */ // data"; .x{width:777px}',
+    String.raw`const text = "escaped \" // data"; .x{width:777px}`,
+  ]) {
+    assert.deepEqual(strip(line), { code: line, stillInBlock: false });
+  }
+  assert.equal(strip('.x{background:url(https://example.com)} // prose 220px').code,
+    '.x{background:url(https://example.com)} ');
+});
+
 test('an unclosed /* opens a block and blanks the rest', () => {
   const r = strip('code; /* prose 220px');
   assert.equal(r.code, 'code; ');

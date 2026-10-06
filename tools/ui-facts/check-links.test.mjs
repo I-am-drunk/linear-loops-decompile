@@ -9,8 +9,9 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const CHECKER = new URL('./check-links.mjs', import.meta.url).pathname;
+const CHECKER = fileURLToPath(new URL('./check-links.mjs', import.meta.url));
 
 function run(files) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'chklinks-'));
@@ -52,6 +53,20 @@ test('a pointer to a real file PASSES', () => {
     'ci/check-ui.sh': '#!/bin/sh\n',
   });
   assert.equal(r.code, 0, r.out);
+});
+
+test('nested archive and corpus docs are checked; root historical directories are skipped', () => {
+  for (const dir of ['docs/archive', 'docs/corpus']) {
+    const bad = run({ [`${dir}/live.md`]: 'Read `docs/missing.md`.' });
+    assert.equal(bad.code, 1, bad.out);
+    assert.match(bad.out, /missing\.md` does not exist/);
+  }
+  const ok = run({
+    'archive/old.md': 'Read `docs/missing.md`.',
+    'corpus/vendor.md': 'Read `docs/missing.md`.',
+    'pipeline/corpus/vendor.md': 'Read `docs/missing.md`.',
+  });
+  assert.equal(ok.code, 0, ok.out);
 });
 
 test('HISTORICAL RECORD opts a doc out of checking', () => {
