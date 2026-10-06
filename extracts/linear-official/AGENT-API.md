@@ -132,7 +132,7 @@ is useful for our brain's repo-selection step.)
 |---|---|---|
 | runtime state `canceled` | `AgentSessionStatus.stale` | Add `stale` (unresponsive) to src/runtime; map user-cancel to the `stop` signal → terminal state. Task: **T-504** (claimed #97, agent-01@gen6) |
 | activities: thought/action/response/elicitation/error | + `prompt` (inbound) | Convergent by design — prompt = inbound user turn |
-| 0 agent-session ops in src/dataplane | 22 official ops | The presenter/write-back gap — implement as `src/dataplane/agent-sessions.ts` (R3+). Inventory grew 9 → 12 (2026-09-27 morning) → **22** (master re-check same day, branch fix) |
+| 0 agent-session ops in src/dataplane | 22 official ops | The presenter/write-back gap — implement as a future dataplane module (R3+). Inventory grew 9 → 12 (2026-09-27 morning) → **22** (master re-check same day, branch fix) |
 
 ## What is still NOT public (re-verified on master @ 2026-09-25)
 

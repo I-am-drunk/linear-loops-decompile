@@ -26,15 +26,16 @@ API. It is not the product's foundation. `docs/plan/integrations.md`.
 API-key and local harnesses, configured in a Linear-style settings UI.
 `docs/plan/inference.md`.
 
-## Provenance
+## Method
 
-Read `docs/PROVENANCE.md` before any extraction work. Short version: this repo
-is public, so we build from open specifications, public documentation, and the
-product as a user sees it. Reading a shipped bundle locally to understand
-behavior is fine. Publishing a byte-fidelity transcription of its internals is
-not, and "facts, not code" does not change that. The rule exists because the
-old method was both a legal exposure and a source of confidently wrong facts —
-that history is in `docs/LEARNINGS.md`.
+Our method is exact reproduction. `pipeline/run.sh` decompiles Linear's
+shipped client into gitignored `pipeline/corpus/` (public assets, no
+credentials); we read the real values out of it and write our own original code
+that produces those exact values. Every UI value is cited in its package's
+`ui-facts.json`, and CI fails the PR if it is not.
+
+**Read `docs/UI-EXACTNESS.md` before any UI work.** Commit only our own code,
+never Linear's bundles or source.
 
 ## Status
 
@@ -50,7 +51,7 @@ decompile-and-publish method retired. Board: `STATUS.md`. Plan: `PLAN.md`.
 | `AGENTS.md` | how to work here |
 | `PLAN.md` | the lanes and their slices |
 | `STATUS.md` | the board |
-| `docs/PROVENANCE.md` | where facts may come from |
+| `docs/UI-EXACTNESS.md` | **read before any UI work** — how to get a value and cite it |
 | `docs/LEARNINGS.md` | 121 issues and 300+ thread comments, distilled |
 | `docs/plan/` | one design doc per lane |
 | `src/` | our code |
