@@ -1,0 +1,71 @@
+{
+  "surface": "app-shell",
+  "note": "SH1. Every dimension read from pipeline/corpus and cited to the element that uses it. Citations name the style-object or constant key, never just the class, because a class can be shared across unrelated components (see docs/UI-EXACTNESS.md).",
+  "facts": [
+    {
+      "name": "main page margin",
+      "value": "8px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `mainPageMargin`."
+    },
+    {
+      "name": "main content border radius",
+      "value": "12px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `mainContentBorderRadius`."
+    },
+    {
+      "name": "sidebar padding",
+      "value": "12px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `sidebarPadding`."
+    },
+    {
+      "name": "sidebar primary button size",
+      "value": "28px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `sidebarPrimaryButtonSize`."
+    },
+    {
+      "name": "list header height",
+      "value": "36px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep -P '[{,]mainPageMargin:\\d+' returns exactly one chunk); key `listHeaderHeight`."
+    },
+    {
+      "name": "sidebar min width",
+      "value": "192px",
+      "cite": "ContextualMenuActions.BF8iy9S9.js - X2=192, in the sidebar constant cluster. Dereferenced: w=Math.max(X2,Math.min(titleBarClusterWidth,330)) -> T=Math.max(store.sidebarWidth,w) -> re=l?330:T -> width:de, de=Rg(re). Floor of the left nav width; collapse threshold is X2/4. TIER: minified local, not a named key \u2014 the identifier (X2/xtn) justifies nothing by itself, so this rests entirely on the dereference chain above. Weaker than a named-constant citation; not consumed by style.css.ts yet."
+    },
+    {
+      "name": "sidebar max width",
+      "value": "330px",
+      "cite": "ContextualMenuActions.BF8iy9S9.js - the 330 in Math.min(titleBarClusterWidth,330) and in re=l?330:T, same width:de element. Ceiling of the left nav width, and the width of the floating/overlay branch. TIER: minified local, not a named key \u2014 the identifier (X2/xtn) justifies nothing by itself, so this rests entirely on the dereference chain above. Weaker than a named-constant citation; not consumed by style.css.ts yet."
+    },
+    {
+      "name": "sidebar-to-content gap",
+      "value": "16px",
+      "cite": "ContextualMenuActions.BF8iy9S9.js - xtn=16, declared beside X2=192. Used as ae=-re-xtn, the offscreen x-offset of a hidden sidebar of width re, so it is the gap the sidebar must clear. TIER: minified local, not a named key \u2014 the identifier (X2/xtn) justifies nothing by itself, so this rests entirely on the dereference chain above. Weaker than a named-constant citation; not consumed by style.css.ts yet."
+    },
+    {
+      "name": "content max width",
+      "value": "80ch",
+      "cite": "LayoutConstants.stylex.CMWJ5GGG.js - the whole module is one object, exported as `t`; key `contentMaxWidth`. A ch unit, not px: it tracks the font, which is why a px guess cannot match it."
+    },
+    {
+      "name": "scrollable content padding",
+      "value": "48px",
+      "cite": "LayoutConstants.stylex.CMWJ5GGG.js - the whole module is one object, exported as `t`; key `scrollablePaddingDocumentDefault` (laptop 40, inbox 40, phone 12 are siblings in the same object)."
+    },
+    {
+      "name": "regular font stack",
+      "value": "\"Inter Variable\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
+      "cite": "style-*.css - the `--font-regular` custom property. A font stack living in a token is its canonical home, not a misattribution (see PR #337 review)."
+    },
+    {
+      "name": "desktop tab strip height",
+      "value": "42px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep for `{mainPageMargin:` returns exactly one chunk); key `desktopTabsHeight`."
+    },
+    {
+      "name": "desktop tab height",
+      "value": "26px",
+      "cite": "ActionMenuBackdrop.DI_SiGMW.js - the layout constants object `K`, the only definition of these keys in the corpus (grep for `{mainPageMargin:` returns exactly one chunk); key `desktopTabHeight`."
+    }
+  ]
+}

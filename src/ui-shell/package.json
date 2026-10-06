@@ -1,0 +1,7 @@
+{
+  "name": "ui-shell",
+  "private": true,
+  "type": "module",
+  "ui": true,
+  "description": "SH1: the app shell — nav chrome and content frame. Every dimension read from the corpus and cited in ui-facts.json."
+}
