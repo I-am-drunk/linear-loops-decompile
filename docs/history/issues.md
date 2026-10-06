@@ -145,4 +145,3 @@ Snapshot: 2026-10-06 22:14 UTC. Narratives across all 137 issue bodies and 1,274
 Post-snapshot update, verified against main 268b81c: #327 merged; #322 closed as superseded; #362/#373 closed after confirming their heads are ancestors of main. Issues #331/#351/#354/#360 closed. All 121 historical issues now carry the `era:archived` label; their source text remains intact.
 
 The #360 fix covers declared selector scopes. Package adoption (including #361) and general property/citation-target proof remain separate SH followups. Four live findings remain: #329, #365, #368 and #370. The timestamped audit counts above are unchanged.
-

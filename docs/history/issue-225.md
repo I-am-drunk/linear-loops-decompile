@@ -18,4 +18,3 @@ Closed thread; body and all 250 comments reviewed. These are retained findings a
 Coverage counts must name their unit and source version: routes, chunks, exports and rendered behaviors are different denominators. Import scans missed backtick lazy imports; matrix grammar dropped valid references. Details and corrections continue in the #295 synthesis.
 
 The thread retired claims to #314–#319. Its final claim that all learnings were preserved is historical prose: the cited digest was subsequently removed. This audit restores original summaries and source links, not that removed transcription.
-
