@@ -54,15 +54,15 @@ export function renderBoard(board) {
 }
 
 export function parsePages(text) {
-  const pages = JSON.parse(text);
-  if (!Array.isArray(pages) || !pages.every(Array.isArray)) {
+  const pages = text.trim().split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
+  if (!pages.length || !pages.every(Array.isArray)) {
     throw new Error('Expected paginated GitHub arrays; refusing an incomplete board');
   }
   return pages.flat();
 }
 
 export async function githubPages(endpoint, run = execute) {
-  const { stdout } = await run('gh', ['api', '--paginate', '--slurp', endpoint], {
+  const { stdout } = await run('gh', ['api', '--paginate', '--jq', '@json', endpoint], {
     encoding: 'utf8', maxBuffer: 32 * 1024 * 1024,
   });
   return parsePages(stdout);

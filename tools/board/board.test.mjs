@@ -5,13 +5,13 @@ import { githubPages, loadBoard, parseArgs, parsePages, renderBoard } from './ma
 test('GitHub CLI pagination keeps later pages and never accepts an error object', async () => {
   const values = await githubPages('repos/o/r/issues?per_page=100', async (command, args) => {
     assert.equal(command, 'gh');
-    assert.deepEqual(args, ['api', '--paginate', '--slurp', 'repos/o/r/issues?per_page=100']);
-    return { stdout: JSON.stringify([Array.from({ length: 100 }, (_, i) => i), [100, 101]]) };
+    assert.deepEqual(args, ['api', '--paginate', '--jq', '@json', 'repos/o/r/issues?per_page=100']);
+    return { stdout: JSON.stringify(Array.from({ length: 100 }, (_, i) => i)) + '\n' + JSON.stringify([100, 101]) };
   });
   assert.equal(values.length, 102);
   assert.equal(values.at(-1), 101);
   assert.throws(() => parsePages('{"message":"rate limited"}'), /incomplete board/);
-  assert.throws(() => parsePages('[[],{"message":"bad page"}]'), /incomplete board/);
+  assert.throws(() => parsePages('[]\n{"message":"bad page"}'), /incomplete board/);
   await assert.rejects(githubPages('x', async () => { throw new Error('auth failed'); }), /auth failed/);
 });
 
