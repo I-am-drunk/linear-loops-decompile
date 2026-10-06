@@ -20,8 +20,8 @@ function run(files, prepare) {
     fs.mkdirSync(path.dirname(p), { recursive: true });
     fs.writeFileSync(p, body);
   }
-  // `prepare` can mutate the fixture after it is written -- chmod for the
-  // unreadable-corpus case, which no file-contents map can express.
+  // `prepare` can mutate the fixture after it is written -- a directory for
+  // the unreadable-corpus case, which no file-contents map can express.
   if (prepare) prepare(dir);
   try {
     // stdio: stderr PIPED, not inherited — see the same note in
@@ -448,7 +448,12 @@ test(`an unreadable corpus fails loudly instead of skipping leg 5`, () => {
       'src/p/style.css.ts': 'export const A = `.a{gap:4px}`;',
       'pipeline/corpus/style/style-x.css': ':root{--a:4px}',
     },
-    (dir) => fs.chmodSync(path.join(dir, 'pipeline/corpus/style/style-x.css'), 0o000),
+    (dir) => {
+      // EISDIR also fails as root, which can read a chmod(0) regular file.
+      const file = path.join(dir, 'pipeline/corpus/style/style-x.css');
+      fs.unlinkSync(file);
+      fs.mkdirSync(file);
+    },
   );
   assert.equal(r.code, 1, 'an unreadable corpus must fail');
   assert.match(r.out, /cannot read the corpus stylesheet/);
