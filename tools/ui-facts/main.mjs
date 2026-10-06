@@ -134,7 +134,15 @@ function undeclaredUiPackages() {
 
 
 /** Values whose exactness is visible: lengths, not counts or keywords. */
-const VALUE_RE = /(-?\d*\.?\d+)(px|rem|em|ch|vh|vw|%)/g;
+const NUMBER_SOURCE = '[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:e[+-]?\\d+)?';
+const UNIT_SOURCE = 'px|rem|em|ch|vh|vw|%';
+// CSS numbers and units, not a numeric suffix inside an identifier. Units are
+// ASCII case-insensitive and equivalent number spellings have one value.
+// Source: https://www.w3.org/TR/css-syntax-3/#consume-a-numeric-token
+const VALUE_RE = new RegExp(
+  `(?<![\\w.+-])(${NUMBER_SOURCE})(${UNIT_SOURCE})(?![\\w-])`, 'gi',
+);
+const dimensionValue = (m) => `${Number(m[1])}${m[2].toLowerCase()}`;
 
 /**
  * Values that carry no design information and would be pure noise to cite.
@@ -173,13 +181,16 @@ function scopeMismatch(value, factName, css) {
   // font stack, so flagging it was a false positive on a correct citation
   // (caught reviewing PR #337). Leg 5 is about a NUMBER borrowed from a
   // differently-scoped token, which is the case that misleads.
-  if (!/^-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)$/.test(String(value).trim())) return null;
-
-  const esc = String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const text = String(value).trim();
+  const dimensions = [...text.matchAll(VALUE_RE)];
+  if (dimensions.length !== 1 || dimensions[0][0] !== text) return null;
+  const canonical = dimensionValue(dimensions[0]);
   // Terminator, not `\b`: after `75%` the next char is `;`, and neither `%`
   // nor `;` is a word character, so `\b` never matched and leg 5 silently
   // skipped EVERY percentage value (CodeRabbit, #327 inline review).
-  const occurrences = [...css.matchAll(new RegExp(`([-\\w]+)\\s*:\\s*${esc}(?=[;}\\s!,)]|$)`, 'g'))];
+  const occurrences = [...css.matchAll(new RegExp(
+    `([-\\w]+)\\s*:\\s*(${NUMBER_SOURCE})(${UNIT_SOURCE})(?=[;}\\s!,)]|$)`, 'gi',
+  ))].filter((m) => dimensionValue([m[0], m[2], m[3]]) === canonical);
   if (!occurrences.length) return null;
 
   const props = occurrences.map((m) => m[1]);
@@ -259,7 +270,7 @@ for (const pkg of uiPackages()) {
         `    and leave the property out of the CSS.`,
       );
     }
-    if (!unverified) for (const m of String(r.value).matchAll(VALUE_RE)) declared.add(m[0]);
+    if (!unverified) for (const m of String(r.value).matchAll(VALUE_RE)) declared.add(dimensionValue(m));
 
     // Collect declared scopes. A `scope` must be a non-empty array of
     // strings; anything else is a mistake worth naming, not ignoring.
@@ -274,9 +285,10 @@ for (const pkg of uiPackages()) {
       } else {
         anyScope = true;
         for (const m of String(r.value).matchAll(VALUE_RE)) {
-          const list = scopedValues.get(m[0]) ?? [];
+          const value = dimensionValue(m);
+          const list = scopedValues.get(value) ?? [];
           list.push(...r.scope);
-          scopedValues.set(m[0], list);
+          scopedValues.set(value, list);
         }
       }
     }
@@ -351,7 +363,7 @@ for (const pkg of uiPackages()) {
       }
 
       for (const m of line.matchAll(VALUE_RE)) {
-        const v = m[0];
+        const v = dimensionValue(m);
         if (FREE.has(v)) continue;
         if (!declared.has(v)) {
           errors.push(

@@ -48,7 +48,7 @@ fi
 # return too — same reason as the declaration check: the leg that always runs
 # must not be the one that can be skipped.
 echo "=== ui-facts: every UI value declared and cited ==="
-node --test tools/ui-facts/ui-facts.test.mjs tools/ui-facts/check-links.test.mjs
+node --test tools/ui-facts/*.test.mjs
 node tools/ui-facts/main.mjs .
 
 echo "=== doc cross-references resolve ==="
@@ -91,44 +91,32 @@ echo "=== corpus-exec verify: every committed golden case re-executes byte-ident
 # src/*/golden/*.json with a sibling *.expected.json (H2 theme VECTOR files
 # have no expected sibling and are re-derived by the corpus-exec suite's own
 # smoke instead).
-# PRE-FLIGHT (issue #330): goldens pin chunks by FILENAME and Linear
-# content-hashes every chunk, so 232 of 352 pinned refs are dead against a
-# corpus crawled today. Under `set -euo pipefail` the first stale case aborts
-# the whole gate, which reads as "the corpus is broken" rather than "the pins
-# expired". Probe one case first and degrade loudly instead.
-# Pick the first case that actually HAS an .expected sibling. Taking the first
-# case outright could land on one without a sibling, leave GOLDEN_OK=1, and
-# run the full loop unprobed (peer review, sess a3).
-GOLDEN_PROBE=""
-for c in $(find src -path '*/golden/*.json' ! -name '*.expected.json' | sort); do
-  if [ -f "${c%.json}.expected.json" ]; then GOLDEN_PROBE="$c"; break; fi
-done
-GOLDEN_OK=1
-if [ -n "$GOLDEN_PROBE" ]; then
-  if ! node --experimental-strip-types tools/corpus-exec/main.ts verify \
-       "$GOLDEN_PROBE" --corpus pipeline/corpus >/dev/null 2>&1; then
-    GOLDEN_OK=0
-  fi
-fi
-
-if [ "$GOLDEN_OK" = "0" ]; then
-  echo "check-ui: golden re-execution SKIPPED — pinned chunk names do not"
-  echo "check-ui: resolve against this corpus (issue #330: hashes rotate per"
-  echo "check-ui: deploy). The VALUE legs below still run."
-else
-find src -path '*/golden/*.json' ! -name '*.expected.json' -print0 | while IFS= read -r -d '' case_file; do
+# Only an absent pinned chunk may be skipped after a corpus refresh (#330).
+# CLI contract: 0=match, 1=mismatch, 2=tooling (tools/corpus-exec/main.ts).
+# Retain other failures while running all remaining golden and value checks.
+GOLDEN_FAILED=0
+GOLDEN_PASSED=0
+GOLDEN_SKIPPED=0
+while IFS= read -r -d '' case_file; do
   [ -f "${case_file%.json}.expected.json" ] || continue
   echo "--- verify: $case_file"
-  # Guarded: the probe above only proved the FIRST case resolves. A later
-  # case can still throw `chunk not found in corpus` (hashes rotate per
-  # deploy, #330), and under `set -e` that would abort the gate before the
-  # VALUE legs run — reporting a rotated pin as a broken corpus.
-  if ! node --experimental-strip-types tools/corpus-exec/main.ts verify \
-       "$case_file" --corpus pipeline/corpus; then
-    echo "check-ui: STALE PIN in $case_file — skipped, value legs still run."
+  if golden_output=$(node --experimental-strip-types tools/corpus-exec/main.ts verify "$case_file" --corpus pipeline/corpus 2>&1); then
+    printf '%s\n' "$golden_output"
+    GOLDEN_PASSED=$((GOLDEN_PASSED + 1))
+  else
+    golden_status=$?
+    printf '%s\n' "$golden_output" >&2
+    golden_last_line=${golden_output##*$'\n'}
+    if [ "$golden_status" -eq 2 ] && [[ "$golden_last_line" == 'corpus-exec: chunk not found in corpus: '* ]]; then
+      echo "check-ui: SKIPPED $case_file — pinned chunk absent (#330); value legs still run."
+      GOLDEN_SKIPPED=$((GOLDEN_SKIPPED + 1))
+    else
+      echo "check-ui: FAIL — golden verification exited $golden_status: $case_file" >&2
+      GOLDEN_FAILED=1
+    fi
   fi
-done
-fi
+done < <(find src -path '*/golden/*.json' ! -name '*.expected.json' -print0 | sort -z)
+echo "check-ui: golden re-execution: $GOLDEN_PASSED passed, $GOLDEN_SKIPPED skipped."
 echo "=== parity extract (corpus → reference; canaries enforced) ==="
 cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 
@@ -136,7 +124,7 @@ cargo run --quiet --manifest-path tools/parity/Cargo.toml -- extract
 if [ ! -f src/ui/ui-facts.json ]; then
   echo "check-ui: no src/ui package — extraction healthy; there is no UI to"
   echo "check-ui: compare yet, so the value legs had nothing to do."
-  exit 0
+  exit "$GOLDEN_FAILED"
 fi
 
 echo "=== parity check ==="
@@ -145,4 +133,8 @@ cargo run --quiet --manifest-path tools/parity/Cargo.toml -- check \
   --improvements tools/parity/policy/improvements.json \
   --report parity-report.md
 
+if [ "$GOLDEN_FAILED" -ne 0 ]; then
+  echo "check-ui: FAIL — golden verification failed; value legs completed." >&2
+  exit 1
+fi
 echo "ci/check-ui.sh: OK"

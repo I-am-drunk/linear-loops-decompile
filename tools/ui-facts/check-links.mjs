@@ -23,7 +23,9 @@ const DOCS = [];
     // archive/ is a historical record and SHOULD cite files that are gone;
     // rewriting its paths would falsify what it found. .claude/ holds scratch
     // worktrees that mirror the tree, so its docs are duplicates.
-    if (['node_modules', '.git', 'corpus', 'archive', '.claude'].includes(e.name)) continue;
+    if (['node_modules', '.git', '.claude'].includes(e.name)) continue;
+    if (depth === 0 && ['corpus', 'archive'].includes(e.name)) continue;
+    if (path.relative(ROOT, path.join(dir, e.name)) === path.join('pipeline', 'corpus')) continue;
     const p = path.join(dir, e.name);
     if (e.isDirectory()) walk(p, depth + 1);
     else if (/\.md$/.test(e.name)) DOCS.push(p);
