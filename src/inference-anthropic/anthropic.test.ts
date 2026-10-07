@@ -132,6 +132,7 @@ test(`malformed or cyclic pagination fails instead of returning a partial catalo
   const pages = [
     { data: [{ id: `one` }], has_more: true },
     { data: [], has_more: true, last_id: `one` },
+    { data: [{ id: `one` }], has_more: true, last_id: String.fromCharCode(0xd800) },
     { data: [{ id: `one` }], has_more: `yes`, last_id: `one` },
     { data: [{ id: `one` }], has_more: true, last_id: `one` },
   ];

@@ -204,7 +204,11 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
         return fail({ kind: `unavailable`, provider: id, detail: `/v1/models returned invalid pagination` });
       }
       cursors.add(cursor);
-      path = `/v1/models?after_id=${encodeURIComponent(cursor)}`;
+      try {
+        path = `/v1/models?after_id=${encodeURIComponent(cursor)}`;
+      } catch {
+        return fail({ kind: `unavailable`, provider: id, detail: `/v1/models returned an invalid cursor` });
+      }
     }
   }
 
