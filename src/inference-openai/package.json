@@ -1,0 +1,6 @@
+{
+  "name": "inference-openai",
+  "private": true,
+  "type": "module",
+  "description": "OpenAI-compatible Provider implementation (IN2): /models and /chat/completions. Covers OpenRouter, LiteLLM, vLLM, together and local servers. See docs/plan/inference.md."
+}
