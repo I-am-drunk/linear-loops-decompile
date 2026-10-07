@@ -98,15 +98,13 @@ const activeMounts = new WeakMap<Elementish, Mounted>();
 let nextMountId = 0;
 
 export function mountSettings(host: Elementish, opts: MountOptions): Mounted {
-  activeMounts.get(host)?.dispose();
   const namespace = `settings-${nextMountId++}`;
   let disposed = false;
   let current = opts.current;
   let page = opts.page;
 
-  const paint = (): void => {
-    host.innerHTML = renderShell(opts.items, current, page, namespace);
-  };
+  // Render first: a failed replacement must preserve the active mount.
+  const initialMarkup = renderShell(opts.items, current, page, namespace);
 
   const handle = (event: EventLike): void => {
     if (disposed || event.defaultPrevented) return;
@@ -135,16 +133,14 @@ export function mountSettings(host: Elementish, opts: MountOptions): Mounted {
     if (translated && wanted.includes(translated.kind)) opts.onEvent?.(translated);
   };
 
-  host.addEventListener(`click`, handle);
-  host.addEventListener(`change`, handle);
-  paint();
-
   const mounted: Mounted = {
     update(next): void {
       if (disposed) return;
-      if (next.current !== undefined) current = next.current;
-      if (next.page !== undefined) page = next.page;
-      paint();
+      const nextCurrent = next.current ?? current;
+      const nextPage = next.page ?? page;
+      host.innerHTML = renderShell(opts.items, nextCurrent, nextPage, namespace);
+      current = nextCurrent;
+      page = nextPage;
     },
     dispose(): void {
       if (disposed) return;
@@ -154,6 +150,10 @@ export function mountSettings(host: Elementish, opts: MountOptions): Mounted {
       if (activeMounts.get(host) === mounted) activeMounts.delete(host);
     },
   };
+  host.innerHTML = initialMarkup;
+  activeMounts.get(host)?.dispose();
+  host.addEventListener(`click`, handle);
+  host.addEventListener(`change`, handle);
   activeMounts.set(host, mounted);
   return mounted;
 }

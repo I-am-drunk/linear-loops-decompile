@@ -157,6 +157,41 @@ test("replacing and disposing a mount releases its handlers and updates", () => 
   assert.equal(h.html(), rendered);
 });
 
+test("failed initial rendering does not retain callbacks", () => {
+  const h = host();
+  const seen: string[] = [];
+  assert.throws(() => mountSettings(h, {
+    items: [{ id: String.fromCharCode(55296), title: "Invalid" }],
+    current: "inf", page: PAGE, onEvent: () => seen.push("failed"),
+  }), URIError);
+  const mounted = mountSettings(h, { items: ITEMS, current: "inf", page: PAGE,
+    onEvent: () => seen.push("active") });
+  const toggle = node({ "data-row": "t1", "aria-checked": "false" });
+  h.fire("click", toggle);
+  assert.deepEqual(seen, ["active"]);
+  mounted.dispose();
+  h.fire("click", toggle);
+  assert.deepEqual(seen, ["active"]);
+});
+
+test("failed replacement preserves the previous page and mount", () => {
+  const h = host();
+  const seen: string[] = [];
+  const mounted = mountSettings(h, { items: ITEMS, current: "inf", page: PAGE,
+    onEvent: () => seen.push("previous") });
+  const before = h.html();
+  assert.throws(() => mountSettings(h, {
+    items: [{ id: String.fromCharCode(55296), title: "Invalid" }],
+    current: "igs", page: PAGE, onEvent: () => seen.push("failed"),
+  }), URIError);
+  assert.equal(h.html(), before);
+  h.fire("click", node({ "data-row": "t1", "aria-checked": "false" }));
+  assert.deepEqual(seen, ["previous"]);
+  mounted.update({ current: "igs", page: { id: "igs", title: "Integrations", sections: [] } });
+  assert.ok(h.html().includes("Integrations"));
+  mounted.dispose();
+});
+
 test("separate mounts use distinct IDs and keep them stable on update", () => {
   const a = host(), b = host();
   const first = mountSettings(a, { items: ITEMS, current: "inf", page: PAGE });
