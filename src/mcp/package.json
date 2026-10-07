@@ -1,0 +1,6 @@
+{
+  "name": "mcp",
+  "private": true,
+  "type": "module",
+  "description": "MCP server registry model + destination-safety kernel (MCP1). Built from the open Model Context Protocol specification; no client or transport here (MCP2). See docs/plan/mcp.md."
+}
