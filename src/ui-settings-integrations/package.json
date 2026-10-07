@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-integrations",
+  "private": true,
+  "type": "module",
+  "description": "The Integrations settings section (ST4): one connection row per integration from src/integrations, over the row patterns in src/ui-settings. Mapping only. See docs/plan/integrations.md."
+}
