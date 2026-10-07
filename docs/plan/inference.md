@@ -20,18 +20,13 @@ automation — and, with prompt chaining, per chain step.
 
 ## T3 Code Connect
 
-Pairing-based rather than key-based: the server pairs with a Code Connect
-environment and gets a scoped session token, so no long-lived API key sits in
-our database. The pairing exchange and the channel are **`wss:` only** — the
-transport sends the token in its first frame after the socket opens, so a
-`ws:` URL would put it on the wire in cleartext. IN4 rejects a non-TLS URL
-rather than warning about it. The transport pattern already exists in this repo
-(`src/connect`, `SPECS/t3-connect.md`) — descriptor fetch, pairing exchange,
-scoped token, WebSocket channel. The provider adapter wraps that channel in the
-registry's interface.
+Required as a first-class provider, with pairing and model configuration in
+Linear-style settings. The current adapter is a prototype over our own
+transport; compatibility with a real T3 environment is **UNVERIFIED**.
 
-Settings for it: environment label, pairing state, the models it offers, and a
-reachability test.
+`docs/plan/t3-code-connect.md` records the inspected T3 protocol, the mismatch
+in PR #359, and the live pairing/turn/reconnect acceptance criteria. Do not
+promote mocked RPC responses into a compatibility claim.
 
 ## Credentials
 
@@ -61,6 +56,6 @@ unbuilt, and not blocking anything.
 | IN1 | provider interface + registry + settings CRUD |
 | IN2 | OpenAI-compatible adapter (unblocks everything with one key) |
 | IN3 | Anthropic adapter |
-| IN4 | T3 Code Connect adapter over `src/connect` |
+| IN4 | versioned T3 Code Connect bridge; real pairing, turn, cancel and replay |
 | IN5 | per-automation and per-chain-step selection |
 | IN6 | cost accounting into run records |

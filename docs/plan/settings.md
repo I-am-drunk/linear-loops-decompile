@@ -1,49 +1,40 @@
 # Settings
 
-Linear's settings UI is the visual model, because the owner likes how it looks
-and it is a genuinely good pattern: a left nav of sections, a single-column
-content area with a page title, and grouped rows where each row is a label, a
-description, and one control on the right.
+Reproduce Linear's settings navigation, typography, spacing, controls and
+interaction states from verified reference evidence. Read
+[UI-EXACTNESS](../UI-EXACTNESS.md) before implementation. A generic sidebar and
+rows do not establish parity. Record the reference version, route and state.
 
-We build that pattern as our own components. It is a layout idiom — nav plus
-titled sections plus labelled rows — not a transcription.
+Our provider and integration controls use these verified patterns. Product
+configuration below is our design; it is not a claim about Linear's features.
 
-## Sections
-
-| Section | Contains |
+| Section | Configuration |
 |---|---|
-| Workspace | name, logo, deployment URL |
-| Account | the signed-in user, theme |
-| **Inference** | provider list, add/edit/test — `inference.md` |
-| **Integrations** | connected services, connect/disconnect — `integrations.md` |
-| **MCP servers** | the workspace server registry — `mcp.md` |
-| Automations | workspace defaults: timezone, retention, concurrency |
-| Members | users, if the deployment has more than one |
+| Workspace / Account | Identity, theme and deployment preferences |
+| Inference | Add/edit/test providers, including T3 Code Connect; model defaults |
+| Integrations | Connect/status/disconnect, including Linear OAuth |
+| MCP servers | Server registry, authentication and connection status |
+| Automations | Timezone, retention and concurrency defaults |
 
-Inference, Integrations and MCP servers are the three that matter; the rest are
-chrome we need for the shell to feel complete.
+Credentials are write-only through the settings API. Responses expose presence
+and status, never secret values. Preferences must survive reload. Connection,
+expiry, validation and unavailable-provider states need explicit behavior.
 
-## Row patterns
-
-Five, and everything is one of them: **toggle**, **select**, **text input**,
-**credential** (write-only, shows presence and a masked hint, never the value),
-and **connection** (status badge plus a connect/disconnect/test action).
-
-Getting these five right early means every later settings page is assembly.
-
-## Theme
-
-Dark and light, token-driven. Tokens are defined once and consumed by
-component; no component hardcodes a color. The existing `src/ui-theme` module
-generates the token set and is golden-tested — it carries over.
-
-## Slices
+Use the existing theme module where its output matches the target component.
+Generator defaults are not always rendered values; check the documented
+StyleX distinction. Reuse verified rows for toggles, selections, text inputs,
+credential entry and connection status without inventing their dimensions.
 
 | Slice | Scope | Depends on |
 |---|---|---|
-| ST1 | settings shell: nav, page frame, section routing | app shell |
-| ST2 | the five row patterns as components | ST1 |
+| ST1 | Settings frame, navigation and routing | SH1 |
+| ST2 | Evidence-backed row/control patterns | ST1 |
 | ST3 | Inference section | ST2, IN1 |
-| ST4 | Integrations section | ST2, IG1 |
-| ST5 | MCP servers section | ST2, MCP1 |
-| ST6 | Workspace / Account / Automations sections | ST2 |
+| ST4 | Integration section | ST2, IG1 |
+| ST5 | MCP section | ST2, MCP1 |
+| ST6 | Workspace, account and automation defaults | ST2 |
+| ST7 | Application wiring: save, reload, test connection, secret-safe responses | SH4, ST3 |
+
+Later workspace/team/administration sections remain in the
+[whole-UI roadmap](surfaces.md); the first automation is a delivery milestone,
+not a permanent limit on settings coverage.
