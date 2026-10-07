@@ -1,3 +1,9 @@
+<!-- HISTORICAL RECORD -->
+
+> Dated Linear reference notes, not the current application contract.
+> The product scope and runtime boundaries are in [target-architecture.md](target-architecture.md).
+> Recheck each reference claim before using it; our UI/server transport does not establish T3 Code interoperability.
+
 # SPEC — Loops domain
 
 Behavioral spec for OUR reimplementation, derived from decompiling Linear 1.32.4

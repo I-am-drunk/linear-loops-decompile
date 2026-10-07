@@ -85,3 +85,61 @@ test(`no colour literal anywhere in the stylesheet`, async () => {
   assert.equal(literals, null, `colour literals: ${literals?.join(`, `)}`);
   assert.ok(SETTINGS_CSS.includes(`var(--t-bgBase)`));
 });
+
+// --- accessible names (CodeRabbit inline review on #337) -----------------
+// renderRow put the <label> in a SIBLING div from the control, with no
+// `for` — so wrapping did not associate them either, and every control had
+// no accessible name. This is the settings shell's row primitive, so ST3,
+// ST4 and ST5 all inherit whatever it does.
+
+test(`a natively-labelable control is addressed by the label's for`, () => {
+  const rows: Row[] = [
+    { kind: `text`, id: `r.a`, label: `Base URL`, value: `` },
+    { kind: `select`, id: `r.b`, label: `Model`, value: `x`, options: [{ value: `x`, label: `X` }] },
+  ];
+  for (const row of rows) {
+    const html = renderRow(row);
+    assertReferencesResolve(html);
+  }
+});
+
+test(`a button-based control carries the label as its accessible name`, () => {
+  const html = renderRow({ kind: `toggle`, id: `r.c`, label: `Ask first`, on: false });
+  assertReferencesResolve(html);
+});
+
+test(`an action button keeps its verb as the name and the label as description`, () => {
+  // "Set" and "Connect" ARE the accessible name — the row label is context,
+  // so describedby rather than labelledby. Replacing the name with "API key"
+  // would lose the action.
+  const cred = renderRow({ kind: `credential`, id: `r.d`, label: `API key`, configured: false });
+  assertReferencesResolve(cred);
+  assert.doesNotMatch(cred, /aria-labelledby/);
+
+  const conn = renderRow({ kind: `connection`, id: `r.e`, label: `Anthropic`, state: `checking` });
+  assertReferencesResolve(conn);
+});
+
+test(`ids are escaped — a row id reaches an attribute`, () => {
+  const html = renderRow({ kind: `text`, id: `a"b`, label: `X`, value: `` });
+  assert.doesNotMatch(html, /id="a"b/);
+  assert.match(html, /&quot;/);
+});
+
+function assertReferencesResolve(html: string): void {
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  assert.equal(new Set(ids).size, ids.length, "duplicate element IDs");
+  const refs = [...html.matchAll(/\s(?:for|aria-labelledby|aria-describedby)="([^"]+)"/g)];
+  assert.ok(refs.length > 0, "no control references");
+  for (const match of refs) {
+    for (const id of match[1]!.split(/\s+/)) assert.ok(ids.includes(id), `unresolved ID: ${id}`);
+  }
+}
+
+test("labels resolve with whitespace IDs, repeated rows and distinct roots", () => {
+  const row: Row = { kind: "toggle", id: "same id\t\ud800", label: "Enable", on: false };
+  const page = { id: "p", title: "Page", sections: [
+    { id: "a", title: "A", rows: [row] }, { id: "b", title: "B", rows: [row] },
+  ] };
+  assertReferencesResolve(renderShell([], "p", page, "one") + renderShell([], "p", page, "two"));
+});
