@@ -42,12 +42,16 @@ export type OpenAiConfig = {
   fetchImpl: FetchLike;
   /** Override the token-cap field for a compatible gateway; see README.md. */
   tokenLimitField?: `max_tokens` | `max_completion_tokens`;
+  /** Total request and body deadline in milliseconds; defaults to 120,000. */
+  timeoutMs?: number;
   /** Price per million tokens, when the operator knows it. */
   pricing?: Record<ModelId, { inputPerMTok: number; outputPerMTok: number }>;
 };
 
 /** Trailing slashes here produce `//models`, which some gateways 404. */
 const root = (baseUrl: string): string => baseUrl.replace(/\/+$/, ``);
+const isTokenCount = (value: unknown): value is number =>
+  typeof value === `number` && Number.isSafeInteger(value) && value >= 0;
 
 /**
  * Parse JSON without throwing into the caller.
@@ -83,6 +87,7 @@ function cents(tokens: number, perMTok: number): number {
 export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
   const id = cfg.id ?? `openai-compatible`;
   const base = root(cfg.baseUrl);
+  const timeoutMs = cfg.timeoutMs === undefined ? 120_000 : cfg.timeoutMs;
   let endpoint: URL | undefined;
   try { endpoint = new URL(base); } catch { /* Report invalid config through call(). */ }
   // OpenAI documents max_tokens as incompatible with o-series models.
@@ -103,6 +108,9 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
     cfg.pricing?.[model];
 
   const costOf = (model: ModelId, usage: Usage): CostEstimate => {
+    if (usage.known === false || !isTokenCount(usage.inputTokens) || !isTokenCount(usage.outputTokens)) {
+      return { cents: 0, known: false };
+    }
     const p = priceFor(model);
     if (!p) return { cents: 0, known: false };
     return {
@@ -115,43 +123,60 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
   async function call(path: string, init?: { method: string; body: string }): Promise<Outcome<unknown>> {
     if (!endpoint || ![`http:`, `https:`].includes(endpoint.protocol)
       || endpoint.username || endpoint.password
+      || !Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 2_147_483_647
       || (cfg.apiKey && endpoint.protocol !== `https:`)) {
       return fail({ kind: `unconfigured`, provider: id });
     }
-    let res: Awaited<ReturnType<FetchLike>>;
+    const controller = new AbortController();
+    let deadlineTimer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<never>((_resolve, reject) => {
+      deadlineTimer = setTimeout(() => {
+        const error = new Error(`request deadline exceeded after ${timeoutMs}ms`);
+        controller.abort(error);
+        reject(error);
+      }, timeoutMs);
+    });
     try {
-      res = await cfg.fetchImpl(`${base}${path}`, { headers: headers(), redirect: `error`, ...(init ?? {}) });
-    } catch (e) {
-      // DNS failure, refused connection, TLS error: the provider is not
-      // reachable, which the plan requires we record rather than throw.
-      return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
-    }
+      let res: Awaited<ReturnType<FetchLike>>;
+      try {
+        res = await Promise.race([
+          cfg.fetchImpl(`${base}${path}`, { headers: headers(), redirect: `error`, signal: controller.signal, ...(init ?? {}) }),
+          deadline,
+        ]);
+      } catch (e) {
+        // DNS failure, refused connection, TLS error: the provider is not
+        // reachable, which the plan requires we record rather than throw.
+        return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
+      }
 
-    let text = ``;
-    try {
-      text = await res.text();
-    } catch (e) {
-      if (res.ok) return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
-      // Preserve a known rejection even if its error body is interrupted.
-    }
-    if (res.ok) {
-      const value = parse(text);
-      return value === undefined
-        ? fail({ kind: `unavailable`, provider: id, detail: `invalid JSON response` })
-        : ok(value);
-    }
+      let text = ``;
+      try {
+        text = await Promise.race([res.text(), deadline]);
+      } catch (e) {
+        if (res.ok) return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
+        // Preserve a known rejection even if its error body is interrupted.
+      }
+      if (res.ok) {
+        const value = parse(text);
+        return value === undefined
+          ? fail({ kind: `unavailable`, provider: id, detail: `invalid JSON response` })
+          : ok(value);
+      }
 
-    if (res.status === 429) {
-      return fail({ kind: `rateLimited`, provider: id });
+      if (res.status === 429) {
+        return fail({ kind: `rateLimited`, provider: id });
+      }
+      if (res.status === 401 || res.status === 403) {
+        return fail({ kind: `unconfigured`, provider: id });
+      }
+      // 4xx is about the request; 5xx is about the provider's health. Only the
+      // latter should let the registry try a fallback.
+      return res.status >= 500
+        ? fail({ kind: `unavailable`, provider: id, detail: safeDetail(errorDetail(res.status, text)) })
+        : fail({ kind: `rejected`, provider: id, detail: safeDetail(errorDetail(res.status, text)) });
+    } finally {
+      clearTimeout(deadlineTimer);
     }
-    if (res.status === 401 || res.status === 403) {
-      return fail({ kind: `unconfigured`, provider: id });
-    }
-    // 4xx is about the request; 5xx is about the provider's health. Only the
-    // latter should let the registry try a fallback.
-    return res.status >= 500
-      ? fail({ kind: `unavailable`, provider: id, detail: safeDetail(errorDetail(res.status, text)) })
-      : fail({ kind: `rejected`, provider: id, detail: safeDetail(errorDetail(res.status, text)) });
   }
 
   async function models(): Promise<Outcome<Model[]>> {
@@ -213,10 +238,12 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
       }
 
       const u = asRecord(root_?.[`usage`]);
-      const num = (v: unknown): number => (typeof v === `number` ? v : 0);
+      const input = u?.[`prompt_tokens`];
+      const output = u?.[`completion_tokens`];
       const usage: Usage = {
-        inputTokens: num(u?.[`prompt_tokens`]),
-        outputTokens: num(u?.[`completion_tokens`]),
+        inputTokens: isTokenCount(input) ? input : 0,
+        outputTokens: isTokenCount(output) ? output : 0,
+        ...(!isTokenCount(input) || !isTokenCount(output) ? { known: false } : {}),
       };
 
       // `length` means the cap truncated the answer; a caller that treats it
