@@ -1,131 +1,99 @@
-/**
- * Automations list rendering (AU1).
- *
- * Same contract as src/ui-settings: data in, HTML string out, every
- * interpolated value escaped. Automation names, model ids, tool names and
- * creator names are all user- or integration-supplied and all land in markup.
- */
-
+/** Cursor desktop list. References and remaining gaps: UI-REFERENCE.md. */
 import { esc } from "../ui-settings/render.ts";
-import type { AutomationSummary, ListQuery, RunStatus } from "./model.ts";
-import { listFor } from "./model.ts";
-
+import type { AutomationSummary, ListQuery } from "./model.ts";
+import { listPage } from "./model.ts";
 const attr = (name: string, value: string): string => `${name}="${esc(value)}"`;
-
-const STATUS_LABEL: Record<RunStatus, string> = {
-  queued: `Queued`,
-  running: `Running`,
-  succeeded: `Succeeded`,
-  failed: `Failed`,
-  cancelled: `Cancelled`,
-};
-
-/** Row actions, per docs/plan/automations.md. Delete confirms. */
+export const DESCRIPTION = `Automate repetitive tasks with always-on agents and configure Cursor's built-in agents for your team.`;
 export const ROW_ACTIONS = [
-  { act: `edit`, label: `Edit` },
+  { act: `edit`, label: `Edit Details` },
   { act: `duplicate`, label: `Duplicate` },
   { act: `copyJson`, label: `Copy as JSON` },
   { act: `delete`, label: `Delete`, confirm: true },
 ] as const;
+export type RenderOptions = { openMenuFor?: string };
 
-function tools(names: readonly string[]): string {
-  if (names.length === 0) return `<span class="a-dim">No tools</span>`;
-  // Two chips plus a count: a long tool list would otherwise set the row
-  // height and push the actions off the end.
-  const shown = names.slice(0, 2).map((t) => `<span class="a-chip">${esc(t)}</span>`).join(``);
-  const rest = names.length - 2;
-  return shown + (rest > 0 ? `<span class="a-chip a-more">+${rest}</span>` : ``);
+/** Render into the host's overlay, outside the clipped table. */
+export function renderRowActions(id: string): string {
+  return `<div class="a-menu" role="menu" aria-label="Row actions">` +
+    ROW_ACTIONS.map((x) => (`confirm` in x ? `<div role="separator"></div>` : ``) +
+      `<button type="button" role="menuitem" ${attr(`data-id`, id)} ${attr(`data-act`, x.act)}` +
+      (`confirm` in x ? ` class="a-danger"` : ``) + `>${x.label}</button>`).join(``) + `</div>`;
 }
 
-function lastRun(a: AutomationSummary): string {
-  if (!a.lastRun) return `<span class="a-dim">Never run</span>`;
-  const { status, at } = a.lastRun;
-  return `<span class="a-badge a-${status}">${STATUS_LABEL[status]}</span>` +
-    `<span class="a-dim">${esc(at)}</span>`;
+function actions(a: AutomationSummary, open: boolean): string {
+  return `<div class="a-cell a-actions">` +
+    `<button type="button" class="a-menu-trigger" data-act="menu" ${attr(`data-id`, a.id)} ` +
+    `aria-label="More actions" aria-haspopup="menu" aria-expanded="${open}">` +
+    `<span aria-hidden="true">⋯</span></button></div>`;
 }
 
-export function renderRow(a: AutomationSummary): string {
-  return (
-    `<div class="a-row${a.enabled ? `` : ` a-disabled`}" ${attr(`data-id`, a.id)}>` +
-    `<div class="a-main">` +
-    `<a class="a-name" ${attr(`href`, `#/automations/${a.id}`)}>${esc(a.name)}</a>` +
-    `<div class="a-meta">${esc(a.model)} · ${esc(a.createdBy)} · ` +
-    `${a.triggerCount} ${a.triggerCount === 1 ? `trigger` : `triggers`}</div>` +
-    `</div>` +
-    `<div class="a-tools">${tools(a.tools)}</div>` +
-    `<div class="a-run">${lastRun(a)}</div>` +
-    `<div class="a-state">${a.enabled ? `Enabled` : `Disabled`}</div>` +
-    `<div class="a-actions">` +
-    ROW_ACTIONS.map(
-      (x) =>
-        `<button type="button" class="a-act${`confirm` in x ? ` a-danger` : ``}" ` +
-        `${attr(`data-id`, a.id)} ${attr(`data-act`, x.act)}>${x.label}</button>`,
-    ).join(``) +
-    `</div>` +
-    `</div>`
-  );
+export function renderRow(a: AutomationSummary, options: RenderOptions = {}): string {
+  const name = a.name || `Untitled`;
+  const date = a.access === `limited` ? `—` : a.createdAtLabel ?? `—`;
+  const tools = esc([...new Set(a.tools)].join(`, `));
+  return `<div class="a-row" ${attr(`data-id`, a.id)}>` +
+    `<button type="button" class="a-rowlink" data-act="edit" ${attr(`data-id`, a.id)} ` +
+    `${attr(`aria-label`, `Edit ${name}`)}>` +
+    `<span class="a-cell a-name">${esc(name)}</span>` +
+    `<span class="a-cell a-author"><span class="a-author-meta">` +
+    `<span class="a-author-name">${esc(a.createdBy || `-`)}</span>` +
+    `<span class="a-date">${esc(date)}</span></span></span>` +
+    `<span class="a-cell a-status"><span class="a-status-label">${a.enabled ? `Active` : `Inactive`}</span></span>` +
+    `<span class="a-cell a-tools">${tools || `-`}</span></button>` +
+    actions(a, options.openMenuFor === a.id) + `</div>`;
 }
 
-/**
- * Two different empty states, because they are different problems.
- *
- * No automations at all is an onboarding moment: title, description, one
- * button. A query that matched nothing is a dead end the user can back out
- * of, so it offers "Clear filters" and must NOT offer "New automation" —
- * suggesting creation when ten automations exist behind a filter is wrong.
- */
-export function renderEmpty(filtered: boolean): string {
-  if (filtered) {
-    return (
-      `<div class="a-empty"><h2 class="a-emptyh">No matches</h2>` +
-      `<p class="a-emptyp">No automation matches this search or filter.</p>` +
-      `<button type="button" class="a-primary" data-act="clearFilters">Clear filters</button></div>`
-    );
-  }
-  return (
-    `<div class="a-empty"><h2 class="a-emptyh">No automations yet</h2>` +
-    `<p class="a-emptyp">An automation runs a prompt when something happens — on a schedule, ` +
-    `on an event from a connected service, or when you press run.</p>` +
-    `<button type="button" class="a-primary" data-act="create">New automation</button></div>`
-  );
+/** DL15–16: search-empty is only a label; ordinary empty includes creation. */
+export function renderEmpty(searchActive: boolean): string {
+  const content = searchActive ? `<div class="a-emptyh">No Results Found</div>` :
+    `<div class="a-emptyh">No Automations Yet</div>` +
+    `<div class="a-emptyp">${esc(DESCRIPTION)}</div>` +
+    `<button type="button" class="a-empty-create" data-act="create">New Automation</button>`;
+  return `<div class="a-empty">${content}</div>`;
 }
 
-function toolbar(q: ListQuery, allTools: readonly string[]): string {
-  const opt = (v: string, label: string, sel: boolean): string =>
-    `<option ${attr(`value`, v)}${sel ? ` selected` : ``}>${esc(label)}</option>`;
-  const state = q.enabled === undefined ? `all` : q.enabled ? `on` : `off`;
-  return (
-    `<div class="a-bar">` +
-    `<input type="search" class="a-search" data-act="search" ` +
-    `${attr(`value`, q.search ?? ``)} placeholder="Search automations" aria-label="Search automations">` +
-    `<select class="a-filter" data-act="filterEnabled" aria-label="Automation status">` +
-    opt(`all`, `All`, state === `all`) + opt(`on`, `Enabled`, state === `on`) +
-    opt(`off`, `Disabled`, state === `off`) +
-    `</select>` +
-    `<select class="a-filter" data-act="filterTool" aria-label="Tool">` +
-    opt(``, `Any tool`, q.tool === undefined) +
-    (q.tool !== undefined && !allTools.includes(q.tool)
-      ? opt(q.tool, `${q.tool} (unavailable)`, true) : ``) +
-    allTools.map((t) => opt(t, t, q.tool === t)).join(``) +
-    `</select>` +
-    `<button type="button" class="a-primary" data-act="create">New automation</button>` +
-    `</div>`
-  );
+function toolbar(q: ListQuery): string {
+  return `<div class="a-bar"><div class="a-filters"><div class="a-tabs" role="tablist" aria-label="Automation filters">` +
+    ([`mine`, `team`] as const).map((tab) =>
+      `<button type="button" role="tab" data-act="tab" data-tab="${tab}" ` +
+      `aria-selected="${(q.tab ?? `mine`) === tab}">${tab === `mine` ? `Mine` : `Team`}</button>`).join(``) +
+    `</div></div><div class="a-toolbar-actions">` +
+    `<button type="button" class="a-all-runs" data-act="allRuns">All Runs</button>` +
+    `<div class="a-search-wrap"><div class="a-search-group"><input type="text" autocomplete="off" class="a-search" data-act="search" ` +
+    `${attr(`value`, q.search ?? ``)} placeholder="Search..." aria-label="Search...">` +
+    ((q.search ?? ``).trim() ? `<button type="button" data-act="clearSearch" aria-label="Clear search">×</button>` : ``) +
+    `</div></div></div></div>`;
 }
 
-/** Every tool name present, sorted, for the filter dropdown. */
-export const toolsOf = (items: readonly AutomationSummary[]): string[] =>
-  [...new Set(items.flatMap((a) => a.tools))].sort((x, y) => (x < y ? -1 : x > y ? 1 : 0));
+function table(items: readonly AutomationSummary[], options: RenderOptions): string {
+  return `<div class="a-table"><div class="a-headrow">` +
+    `<span class="a-cell a-name">Name</span><span class="a-cell a-author">Created By</span>` +
+    `<span class="a-cell a-status">Status</span><span class="a-cell a-tools">Tools</span>` +
+    `<span class="a-cell a-actions"></span></div>` +
+    `<div class="a-rows">${items.map((a) => renderRow(a, options)).join(``)}</div></div>`;
+}
 
-export function renderList(items: readonly AutomationSummary[], q: ListQuery = {}): string {
-  const shown = listFor(items, q);
-  const body = shown.length === 0
-    // `filtered` keys off the UNFILTERED set, so a query that hides every row
-    // still gets the dead-end state rather than the onboarding one.
-    ? renderEmpty(items.length > 0)
-    : `<div class="a-rows">${shown.map(renderRow).join(``)}</div>`;
-  return (
-    `<div class="a-page"><h1 class="a-h1">Automations</h1>` +
-    toolbar(q, toolsOf(items)) + body + `</div>`
-  );
+function pagination(page: number, pages: number, total: number): string {
+  if (pages <= 1) return ``;
+  const first = (page - 1) * 25 + 1;
+  const last = Math.min(page * 25, total);
+  const number = (value: number): string => esc(value.toLocaleString());
+  return `<div class="a-pagination"><span>${number(first)}–${number(last)} of ${number(total)}</span>` +
+    `<div class="a-page-controls"><button type="button" class="a-page-arrow" data-act="page" data-page="${page - 1}" ` +
+    `aria-label="Previous page"${page === 1 ? ` disabled` : ``}>‹</button>` +
+    `<span>${number(page)} / ${number(pages)}</span>` +
+    `<button type="button" class="a-page-arrow" data-act="page" data-page="${page + 1}" aria-label="Next page"` +
+    `${page === pages ? ` disabled` : ``}>›</button></div></div>`;
+}
+
+export function renderList(items: readonly AutomationSummary[], q: ListQuery = {}, options: RenderOptions = {}): string {
+  const result = listPage(items, q);
+  const content = result.total === 0 ? renderEmpty((q.search ?? ``).trim() !== ``) :
+    `<div class="a-list">${table(result.items, options)}${pagination(result.page, result.pages, result.total)}</div>`;
+  return `<div class="a-page"><div class="a-chunks">` +
+    `<header class="a-pagehead"><div class="a-title-row"><div class="a-title-group"><h1 class="a-h1">Automations</h1></div>` +
+    `<div class="a-title-actions"><button class="a-create" type="button" data-act="create">New Automation</button></div></div>` +
+    `<div class="a-content-row"><p class="a-description">${esc(DESCRIPTION)}</p></div></header>` +
+    `<div class="a-body"><section class="a-toolbar-section" aria-label="Automations">${toolbar(q)}${content}</section></div>` +
+    `</div></div>`;
 }

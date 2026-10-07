@@ -2,7 +2,7 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { listFor, matches, sortAutomations, type AutomationSummary } from "./model.ts";
+import { listFor, listPage, matches, sortAutomations, type AutomationSummary } from "./model.ts";
 
 const a = (over: Partial<AutomationSummary> & { id: string; name: string }): AutomationSummary => ({
   enabled: true, model: `gpt-4o`, createdBy: `tj`, tools: [], triggerCount: 1, ...over,
@@ -16,15 +16,15 @@ test(`enabled rows sort before disabled, regardless of name`, () => {
   assert.deepEqual(out.map((x) => x.name), [`Zulu`, `Alpha`]);
 });
 
-test(`names collate naturally: "Deploy 2" before "Deploy 10"`, () => {
+test(`equal enabled states keep source order instead of sorting names`, () => {
   const out = sortAutomations([a({ id: `1`, name: `Deploy 10` }), a({ id: `2`, name: `Deploy 2` })]);
-  assert.deepEqual(out.map((x) => x.name), [`Deploy 2`, `Deploy 10`]);
+  assert.deepEqual(out.map((x) => x.name), [`Deploy 10`, `Deploy 2`]);
 });
 
-test(`equal names tiebreak on id so order does not shift between renders`, () => {
+test(`duplicate names retain incoming order without an id tiebreak`, () => {
   const once = sortAutomations([a({ id: `b`, name: `Same` }), a({ id: `a`, name: `Same` })]);
   const twice = sortAutomations([a({ id: `a`, name: `Same` }), a({ id: `b`, name: `Same` })]);
-  assert.deepEqual(once.map((x) => x.id), [`a`, `b`]);
+  assert.deepEqual(once.map((x) => x.id), [`b`, `a`]);
   assert.deepEqual(twice.map((x) => x.id), [`a`, `b`]);
 });
 
@@ -34,56 +34,64 @@ test(`sortAutomations does not mutate its input`, () => {
   assert.deepEqual(input.map((x) => x.name), [`Z`, `A`]);
 });
 
-test(`search covers name, model, creator and tool names`, () => {
+test(`search covers name and creator but not hidden model or tool fields`, () => {
   const row = a({ id: `1`, name: `Nightly`, model: `claude-opus`, createdBy: `sam`, tools: [`github`] });
-  for (const q of [`nightly`, `opus`, `sam`, `github`]) {
-    assert.equal(matches(row, { search: q }), true, `missed: ${q}`);
+  for (const q of [`nightly`, `sam`]) {
+    assert.equal(matches(row, { tab: `team`, search: q }), true, `missed: ${q}`);
   }
-  assert.equal(matches(row, { search: `nothing` }), false);
+  assert.equal(matches(row, { tab: `team`, search: `nothing` }), false);
+  assert.equal(matches(row, { tab: `team`, search: `opus` }), false);
+  assert.equal(matches(row, { tab: `team`, search: `github` }), false);
 });
 
-test(`search is accent- and case-insensitive`, () => {
+test(`search folds case while preserving accents`, () => {
   const row = a({ id: `1`, name: `Déploy Staging` });
-  assert.equal(matches(row, { search: `deploy` }), true);
-  assert.equal(matches(row, { search: `DEPLOY` }), true);
+  assert.equal(matches(row, { tab: `team`, search: `deploy` }), false);
+  assert.equal(matches(row, { tab: `team`, search: `DEPLOY` }), false);
+  assert.equal(matches(row, { tab: `team`, search: `DÉPLOY` }), true);
 });
 
-test(`multiple terms narrow — all must match, in any field`, () => {
+test(`a trimmed search is one substring within a single field`, () => {
   const row = a({ id: `1`, name: `Nightly build`, createdBy: `sam` });
-  assert.equal(matches(row, { search: `nightly sam` }), true);
-  assert.equal(matches(row, { search: `nightly alex` }), false);
+  assert.equal(matches(row, { tab: `team`, search: ` nightly BUILD ` }), true);
+  assert.equal(matches(row, { tab: `team`, search: `nightly sam` }), false);
+  assert.equal(matches(row, { tab: `team`, search: `nightly alex` }), false);
 });
 
 test(`blank and whitespace-only searches match everything`, () => {
   const row = a({ id: `1`, name: `Anything` });
-  assert.equal(matches(row, { search: `` }), true);
-  assert.equal(matches(row, { search: `   ` }), true);
-  assert.equal(matches(row, {}), true);
+  assert.equal(matches(row, { tab: `team`, search: `` }), true);
+  assert.equal(matches(row, { tab: `team`, search: `   ` }), true);
+  assert.equal(matches(row, { tab: `team`,}), true);
 });
 
-test(`the enabled filter has three states: on, off, and undefined=both`, () => {
-  const on = a({ id: `1`, name: `On`, enabled: true });
-  const off = a({ id: `2`, name: `Off`, enabled: false });
-  assert.deepEqual(listFor([on, off], { enabled: true }).map((x) => x.id), [`1`]);
-  assert.deepEqual(listFor([on, off], { enabled: false }).map((x) => x.id), [`2`]);
-  assert.equal(listFor([on, off], {}).length, 2);
+test(`Mine requires an identified owner and excludes limited access`, () => {
+  const own = a({ id: `1`, name: `Own`, createdById: 7 });
+  const others = a({ id: `2`, name: `Other`, createdById: 8 });
+  const limited = a({ id: `3`, name: `Limited`, createdById: 7, access: `limited` });
+  assert.deepEqual(listFor([own, others, limited], { viewerId: 7 }).map(x => x.id), [`1`]);
+  assert.deepEqual(listFor([own]), []);
+  assert.equal(listFor([own, others, limited], { tab: `team` }).length, 3);
 });
 
-test(`the tool filter is exact, not substring — "git" must not match "github"`, () => {
-  const row = a({ id: `1`, name: `X`, tools: [`github`] });
-  assert.equal(matches(row, { tool: `github` }), true);
-  // A substring tool filter would silently widen a user's explicit choice.
-  assert.equal(matches(row, { tool: `git` }), false);
+test(`hidden full-access records are omitted from both tabs`, () => {
+  const hidden = a({ id: `1`, name: `Hidden`, hidden: true, createdById: 7 });
+  assert.deepEqual(listFor([hidden], { tab: `team` }), []);
+  assert.deepEqual(listFor([hidden], { viewerId: 7 }), []);
 });
 
-test(`filters compose with search`, () => {
-  const rows = [
-    a({ id: `1`, name: `Nightly`, enabled: true, tools: [`github`] }),
-    a({ id: `2`, name: `Nightly`, enabled: false, tools: [`github`] }),
-    a({ id: `3`, name: `Weekly`, enabled: true, tools: [`slack`] }),
-  ];
-  assert.deepEqual(
-    listFor(rows, { search: `nightly`, enabled: true, tool: `github` }).map((x) => x.id),
-    [`1`],
-  );
+test(`pagination uses 25 rows and clamps invalid host input`, () => {
+  const rows = Array.from({ length: 52 }, (_, i) => a({ id: String(i), name: `Row ${i}` }));
+  const one = listPage(rows, { tab: `team` });
+  const two = listPage(rows, { tab: `team`, page: 2 });
+  assert.equal(one.items.length, 25);
+  assert.equal(two.items[0]?.id, `25`);
+  assert.equal(two.pages, 3);
+  assert.deepEqual(listPage(rows, { tab: `team`, page: 99 }).items.map(x => x.id), [`50`, `51`]);
+  for (const page of [NaN, Infinity, -1, 0, 1.5]) {
+    assert.equal(listPage(rows, { tab: `team`, page }).page, 1);
+  }
+  const narrowed = listPage(rows, { tab: `team`, page: 3, search: `Row 51` });
+  assert.equal(narrowed.page, 1);
+  assert.equal(narrowed.items[0]?.id, `51`);
 });

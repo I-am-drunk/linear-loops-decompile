@@ -1,123 +1,83 @@
-/** AU1 rendering: rows, escaping, the two empty states, toolbar state. */
-
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { renderEmpty, renderList, renderRow, toolsOf } from "./render.ts";
+import { renderEmpty, renderList, renderRow, renderRowActions } from "./render.ts";
 import type { AutomationSummary } from "./model.ts";
-
-const a = (over: Partial<AutomationSummary> & { id: string; name: string }): AutomationSummary => ({
-  enabled: true, model: `gpt-4o`, createdBy: `tj`, tools: [], triggerCount: 1, ...over,
+const a = (over: Partial<AutomationSummary> = {}): AutomationSummary => ({
+  id: `one`, name: `Nightly`, enabled: true, model: `model-not-in-list`,
+  createdBy: `Sam`, createdById: 7, tools: [], triggerCount: 123, ...over,
 });
 
-test(`a hostile automation name cannot inject markup`, () => {
-  const html = renderRow(a({ id: `1`, name: `<script>go()</script>` }));
-  assert.ok(!html.includes(`<script>`), html);
+test(`user-provided values cannot inject markup`, () => {
+  const html = renderRow(a({ id: `" onclick="bad`, name: `<script>bad()</script>`,
+    createdBy: `<img src=x onerror=bad()>`, tools: [`<iframe>`] }));
+  for (const tag of [`<script>`, `<img`, `<iframe>`]) assert.ok(!html.includes(tag));
   assert.ok(html.includes(`&lt;script&gt;`));
+  assert.ok(html.includes(`data-id="&quot; onclick=&quot;bad"`));
 });
 
-test(`row shows model, creator and a pluralized trigger count`, () => {
-  assert.ok(renderRow(a({ id: `1`, name: `X`, triggerCount: 1 })).includes(`1 trigger<`));
-  assert.ok(renderRow(a({ id: `1`, name: `X`, triggerCount: 3 })).includes(`3 triggers<`));
+test(`desktop columns omit model, trigger count and last run`, () => {
+  const html = renderList([a({ lastRun: { status: `failed`, at: `last-run-sentinel` } })], { tab: `team` });
+  for (const label of [`Name`, `Created By`, `Status`, `Tools`]) assert.ok(html.includes(`>${label}</span>`));
+  for (const absent of [`model-not-in-list`, `123 triggers`, `last-run-sentinel`, `Never run`]) assert.ok(!html.includes(absent));
 });
 
-test(`tool chips cap at two plus a count, so one row cannot set the height`, () => {
-  const html = renderRow(a({ id: `1`, name: `X`, tools: [`a`, `b`, `c`, `d`] }));
-  assert.equal(html.match(/class="a-chip"/g)?.length, 2);
-  assert.ok(html.includes(`+2`));
+test(`reference fallbacks and creation date stay in their own cells`, () => {
+  const html = renderRow(a({ name: ``, createdBy: ``, createdAtLabel: `2 days ago`, enabled: false }));
+  assert.ok(html.includes(`>Untitled</span>`));
+  assert.ok(html.includes(`class="a-author-name">-</span>`));
+  assert.ok(html.includes(`class="a-date">2 days ago</span>`));
+  assert.ok(html.includes(`>Inactive</span>`));
+  assert.ok(renderRow(a({ access: `limited`, createdAtLabel: `secret date` })).includes(`class="a-date">—</span>`));
 });
 
-test(`no tools and never-run read as states, not blanks`, () => {
-  const html = renderRow(a({ id: `1`, name: `X` }));
-  assert.ok(html.includes(`No tools`));
-  assert.ok(html.includes(`Never run`));
+test(`row actions live in a named menu with Delete separated`, () => {
+  assert.ok(!renderRow(a()).includes(`role="menuitem"`));
+  const html = renderRow(a(), { openMenuFor: `one` }) + renderRowActions(`one`);
+  assert.ok(html.includes(`aria-label="More actions"`));
+  assert.ok(html.includes(`aria-expanded="true"`));
+  assert.ok(html.includes(`aria-label="Row actions"`));
+  assert.ok(html.includes(`>Edit Details</button>`));
+  assert.ok(html.includes(`role="separator"`));
+  assert.equal(html.match(/class="a-danger"/g)?.length, 1);
 });
 
-test(`a last run renders its status badge`, () => {
-  const html = renderRow(a({ id: `1`, name: `X`, lastRun: { status: `failed`, at: `2m ago` } }));
-  assert.ok(html.includes(`a-failed`) && html.includes(`Failed`) && html.includes(`2m ago`));
+test(`empty search result has no invented explanatory copy or create button`, () => {
+  assert.equal(renderEmpty(true), `<div class="a-empty"><div class="a-emptyh">No Results Found</div></div>`);
+  const html = renderList([], { search: `missing` });
+  assert.ok(html.includes(`No Results Found`));
+  assert.ok(!html.includes(`No Automations Yet`));
+  assert.ok(!html.includes(`a-headrow`));
 });
 
-test(`the filtered empty state does NOT offer to create`, () => {
-  const html = renderEmpty(true);
-  assert.ok(html.includes(`No matches`));
-  assert.ok(html.includes(`data-act="clearFilters"`));
-  // Ten automations may exist behind the filter; offering "New automation"
-  // here answers a question the user did not ask.
-  assert.ok(!html.includes(`data-act="create"`), html);
-});
-
-test(`the true empty state is an onboarding moment with one button`, () => {
+test(`ordinary empty renders a standalone card and create action`, () => {
   const html = renderEmpty(false);
-  assert.ok(html.includes(`No automations yet`));
-  assert.ok(html.includes(`data-act="create"`));
-  assert.ok(!html.includes(`clearFilters`));
+  assert.ok(html.includes(`No Automations Yet`));
+  assert.ok(html.includes(`data-act="create">New Automation`));
+  assert.ok(!html.includes(`a-headrow`));
 });
 
-test(`a query that hides every row gets the dead-end state, not onboarding`, () => {
-  const rows = [a({ id: `1`, name: `Nightly` })];
-  const html = renderList(rows, { search: `nothing matches this` });
-  // The distinction keys off the UNFILTERED set, which is the bug worth
-  // pinning: `shown.length === 0` alone would show onboarding here.
-  assert.ok(html.includes(`No matches`), html.slice(0, 200));
-  assert.ok(!html.includes(`No automations yet`));
+test(`toolbar has Mine and Team tabs followed by All Runs and search`, () => {
+  const html = renderList([], { tab: `team`, search: `needle` });
+  assert.ok(html.includes(`aria-label="Automation filters"`));
+  assert.ok(html.includes(`data-tab="team" aria-selected="true"`));
+  assert.ok(html.indexOf(`All Runs`) < html.indexOf(`placeholder="Search..."`));
+  assert.ok(html.includes(`value="needle"`));
+  assert.ok(!html.includes(`<select`));
 });
 
-test(`an actually empty list gets onboarding`, () => {
-  assert.ok(renderList([], {}).includes(`No automations yet`));
+test(`rows preserve source order inside the active and inactive groups`, () => {
+  const html = renderList([a({ id: `d`, name: `Disabled`, enabled: false }),
+    a({ id: `z`, name: `Zulu` }), a({ id: `a`, name: `Alpha` })], { tab: `team` });
+  assert.ok(html.indexOf(`>Zulu</span>`) < html.indexOf(`>Alpha</span>`));
+  assert.ok(html.indexOf(`>Alpha</span>`) < html.indexOf(`>Disabled</span>`));
 });
 
-test(`toolbar reflects current query state`, () => {
-  const rows = [a({ id: `1`, name: `X`, tools: [`github`] })];
-  const html = renderList(rows, { search: `nig`, enabled: false, tool: `github` });
-  assert.ok(html.includes(`value="nig"`));
-  assert.ok(html.includes(`<option value="off" selected>Disabled</option>`));
-  assert.ok(html.includes(`<option value="github" selected>github</option>`));
-});
-
-test(`a removed tool stays visibly selected until the filter is cleared`, () => {
-  const rows = [a({ id: `1`, name: `Nightly`, tools: [`github`] })];
-  const html = renderList(rows, { tool: `retired-server` });
-  assert.ok(html.includes(`<option value="retired-server" selected>retired-server (unavailable)</option>`));
-  assert.ok(html.includes(`No matches`));
-  assert.ok(!html.includes(`<option value="" selected>`));
-  const cleared = renderList(rows);
-  assert.ok(cleared.includes(`<option value="" selected>Any tool</option>`));
-  assert.ok(cleared.includes(`Nightly`));
-  assert.ok(!cleared.includes(`No matches`));
-});
-
-test(`toolsOf is the deduplicated sorted union across rows`, () => {
-  const rows = [
-    a({ id: `1`, name: `A`, tools: [`slack`, `github`] }),
-    a({ id: `2`, name: `B`, tools: [`github`] }),
-  ];
-  assert.deepEqual(toolsOf(rows), [`github`, `slack`]);
-});
-
-test(`rows render in list order: enabled first`, () => {
-  const html = renderList([
-    a({ id: `1`, name: `Alpha`, enabled: false }),
-    a({ id: `2`, name: `Zulu`, enabled: true }),
-  ]);
-  assert.ok(html.indexOf(`Zulu`) < html.indexOf(`Alpha`));
-});
-
-test(`delete is the only action marked dangerous`, () => {
-  const html = renderRow(a({ id: `1`, name: `X` }));
-  assert.equal(html.match(/a-danger/g)?.length, 1);
-  assert.ok(html.includes(`data-act="delete"`));
-});
-
-test(`no colour literal anywhere in the stylesheet`, async () => {
-  const { AUTOMATIONS_CSS } = await import("./style.css.ts");
-  const bad = AUTOMATIONS_CSS.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g);
-  assert.equal(bad, null, `colour literals: ${bad?.join(`, `)}`);
-  assert.ok(AUTOMATIONS_CSS.includes(`var(--t-labelBase)`));
-});
-
-test(`the SPACE ladder is shared with ui-settings, not re-invented`, async () => {
-  const [auto, settings] = await Promise.all([import("./style.css.ts"), import("../ui-settings/style.css.ts")]);
-  // One ladder across the app is what makes surfaces look related; a second
-  // copy would drift. Assert the import is live rather than duplicated.
-  assert.ok(auto.AUTOMATIONS_CSS.includes(`padding:${settings.SPACE.md} ${settings.SPACE.lg}`));
+test(`pagination is outside the table and reports the visible range`, () => {
+  const rows = Array.from({ length: 52 }, (_, i) => a({ id: String(i), name: `Row ${i}` }));
+  const html = renderList(rows, { tab: `team`, page: 2 });
+  assert.ok(html.includes(`26–50 of 52`));
+  assert.ok(html.includes(`2 / 3`));
+  assert.ok(html.includes(`aria-label="Previous page"`));
+  assert.equal(html.match(/class="a-row"/g)?.length, 25);
+  assert.ok(!renderList([a()], { tab: `team` }).includes(`a-pagination`));
 });

@@ -12,68 +12,57 @@ export type AutomationSummary = {
   id: string;
   name: string;
   enabled: boolean;
-  /** Model id as configured; a chain shows its first step's model. */
+  /** Retained for the editor; the desktop list has no model column. */
   model: string;
   createdBy: string;
+  createdById?: number;
+  /** Relative-time text supplied by the host. */
+  createdAtLabel?: string;
+  access?: `full` | `limited`;
+  hidden?: boolean;
   /** Tool/MCP server names this automation may call. */
   tools: string[];
-  /** How many triggers are attached; the row shows the count, not the detail. */
+  /** Editor data; neither triggers nor last run appear in this list variant. */
   triggerCount: number;
   lastRun?: { status: RunStatus; at: string };
 };
 
 export type ListQuery = {
-  /** Free text over name, model, creator and tool names. */
+  /** Trimmed, case-insensitive substring over name or creator (Cursor DL07). */
   search?: string;
-  /** `undefined` means both; the UI's third filter state. */
-  enabled?: boolean;
-  tool?: string;
+  tab?: `mine` | `team`;
+  viewerId?: number;
+  page?: number;
 };
 
-/**
- * Case- and accent-insensitive fold for matching.
- *
- * NFD + combining-mark strip means a search for "deploy" finds "déploy",
- * which is what a user typing ASCII expects. `toLocaleLowerCase` would fold
- * case but leave the accent.
- */
-const fold = (s: string): string =>
-  s.normalize(`NFD`).replace(/\p{M}/gu, ``).toLowerCase();
-
-/** Every field the search box is documented to cover. */
-const haystack = (a: AutomationSummary): string =>
-  fold([a.name, a.model, a.createdBy, ...a.tools].join(`\u0000`));
-
 export function matches(a: AutomationSummary, q: ListQuery): boolean {
-  if (q.enabled !== undefined && a.enabled !== q.enabled) return false;
-  if (q.tool !== undefined && !a.tools.includes(q.tool)) return false;
-  const needle = fold((q.search ?? ``).trim());
+  const full = a.access !== `limited`;
+  if (full && a.hidden) return false;
+  if ((q.tab ?? `mine`) === `mine` &&
+      (!full || q.viewerId === undefined || a.createdById !== q.viewerId)) return false;
+  const needle = (q.search ?? ``).trim().toLowerCase();
   if (needle === ``) return true;
-  // Every whitespace-separated term must match, so adding a word narrows.
-  return needle.split(/\s+/).every((t) => haystack(a).includes(t));
+  return a.name.toLowerCase().includes(needle) || a.createdBy.toLowerCase().includes(needle);
 }
 
-/**
- * Natural-numeric name collation: "Deploy 2" sorts before "Deploy 10".
- *
- * `Intl.Collator` with `numeric` does this and respects locale; the repo
- * already relies on exactly this behavior in src/team-tree.
- */
-const byName = new Intl.Collator(undefined, { numeric: true, sensitivity: `base` });
-
-/**
- * Enabled rows sort before disabled ones (docs/plan/automations.md), then by
- * name. A stable tiebreak on id keeps the order from shifting between
- * renders when two rows compare equal.
- */
+/** Cursor 3.23.12 DL08: stable enabled-first partition; retain incoming order. */
 export function sortAutomations(items: readonly AutomationSummary[]): AutomationSummary[] {
-  return [...items].sort((a, b) => {
-    if (a.enabled !== b.enabled) return a.enabled ? -1 : 1;
-    const n = byName.compare(a.name, b.name);
-    return n !== 0 ? n : (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
-  });
+  return [...items.filter((a) => a.enabled), ...items.filter((a) => !a.enabled)];
 }
 
 /** Filter then sort: the documented list for a given query. */
 export const listFor = (items: readonly AutomationSummary[], q: ListQuery = {}): AutomationSummary[] =>
   sortAutomations(items.filter((a) => matches(a, q)));
+
+/** Cursor DL08: twenty-five rows per page. Invalid host input resets to page one. */
+export const PAGE_SIZE = 25;
+
+export function listPage(items: readonly AutomationSummary[], q: ListQuery = {}): {
+  items: AutomationSummary[]; page: number; pages: number; total: number;
+} {
+  const filtered = listFor(items, q);
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const requested = q.page !== undefined && Number.isSafeInteger(q.page) && q.page > 0 ? q.page : 1;
+  const page = Math.min(requested, pages);
+  return { items: filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), page, pages, total: filtered.length };
+}
