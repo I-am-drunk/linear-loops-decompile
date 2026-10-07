@@ -7,8 +7,8 @@
  * than a message role, auth is an `x-api-key` header rather than a bearer,
  * and the API requires an `anthropic-version` header.
  *
- * Model listing uses GET /v1/models. No streaming yet; the contract allows
- * adding it without changing callers.
+ * Model listing uses GET /v1/models. This implements IN1's text-only,
+ * non-streaming contract; protocol sources and limits are in README.md.
  */
 
 import {
@@ -36,11 +36,15 @@ export type AnthropicConfig = {
   baseUrl?: string;
   apiKey?: string;
   fetchImpl: FetchLike;
+  /** Total operation deadline, including response bodies and model pages. */
+  timeoutMs?: number;
   /** Price per million tokens, when the operator knows it. */
   pricing?: Record<ModelId, { inputPerMTok: number; outputPerMTok: number }>;
 };
 
 const root = (baseUrl: string): string => baseUrl.replace(/\/+$/, ``);
+const isTokenCount = (value: unknown): value is number =>
+  typeof value === `number` && Number.isSafeInteger(value) && value >= 0;
 
 function parse(text: string): unknown {
   try {
@@ -56,7 +60,7 @@ const asRecord = (v: unknown): Record<string, unknown> | undefined =>
 function errorDetail(status: number, text: string): string {
   const err = asRecord(asRecord(parse(text))?.[`error`]);
   const msg = typeof err?.[`message`] === `string` ? err[`message`] : undefined;
-  return `HTTP ${status}${msg ? `: ${msg}` : text ? `: ${text.slice(0, 200)}` : ``}`;
+  return `HTTP ${status}${msg ? `: ${msg}` : text ? `: ${text}` : ``}`;
 }
 
 const cents = (tokens: number, perMTok: number): number =>
@@ -65,6 +69,11 @@ const cents = (tokens: number, perMTok: number): number =>
 export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
   const id = cfg.id ?? `anthropic`;
   const base = root(cfg.baseUrl ?? `https://api.anthropic.com`);
+  const timeoutMs = cfg.timeoutMs === undefined ? 120_000 : cfg.timeoutMs;
+  let endpoint: URL | undefined;
+  try { endpoint = new URL(base); } catch { /* Report invalid config through call(). */ }
+  const safeDetail = (text: string): string =>
+    (cfg.apiKey ? text.replaceAll(cfg.apiKey, `[redacted]`) : text).slice(0, 200);
 
   const headers = (): Record<string, string> => ({
     "content-type": `application/json`,
@@ -74,29 +83,74 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
     ...(cfg.apiKey ? { "x-api-key": cfg.apiKey } : {}),
   });
 
-  /** One request; network faults and HTTP statuses become typed failures. */
-  async function call(path: string, init?: { method: string; body: string }): Promise<Outcome<unknown>> {
-    let res: Awaited<ReturnType<FetchLike>>;
-    try {
-      res = await cfg.fetchImpl(`${base}${path}`, { headers: headers(), ...(init ?? {}) });
-    } catch (e) {
-      return fail({ kind: `unavailable`, provider: id, detail: String(e) });
+  /** One request; all model pages share the same monotonic deadline. */
+  async function call(
+    path: string,
+    init?: { method: string; body: string },
+    expiresAt = performance.now() + timeoutMs,
+  ): Promise<Outcome<unknown>> {
+    if (!endpoint || ![`http:`, `https:`].includes(endpoint.protocol)
+      || endpoint.username || endpoint.password
+      || endpoint.search || endpoint.hash
+      || !Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 2_147_483_647
+      || (cfg.apiKey && endpoint.protocol !== `https:`)) {
+      return fail({ kind: `unconfigured`, provider: id });
     }
-    const text = await res.text();
-    if (res.ok) return ok(parse(text));
-    if (res.status === 429) return fail({ kind: `rateLimited`, provider: id });
-    if (res.status === 401 || res.status === 403) return fail({ kind: `unconfigured`, provider: id });
-    // Same split as IN2: 4xx is about the request (no fallback), 5xx about
-    // the provider's health (fallback allowed). Anthropic also uses 529 for
-    // overloaded, which is >= 500 and so correctly lands in unavailable.
-    return res.status >= 500
-      ? fail({ kind: `unavailable`, provider: id, detail: errorDetail(res.status, text) })
-      : fail({ kind: `rejected`, provider: id, detail: errorDetail(res.status, text) });
+    const deadlineError = () => new Error(`request deadline exceeded after ${timeoutMs}ms`);
+    const remainingMs = expiresAt - performance.now();
+    if (remainingMs <= 0) {
+      return fail({ kind: `unavailable`, provider: id, detail: deadlineError().message });
+    }
+    const controller = new AbortController();
+    let deadlineTimer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<never>((_resolve, reject) => {
+      deadlineTimer = setTimeout(() => {
+        const error = deadlineError();
+        controller.abort(error);
+        reject(error);
+      }, remainingMs);
+    });
+    try {
+      let res: Awaited<ReturnType<FetchLike>>;
+      try {
+        res = await Promise.race([
+          cfg.fetchImpl(`${base}${path}`, { headers: headers(), redirect: `error`, signal: controller.signal, ...(init ?? {}) }),
+          deadline,
+        ]);
+      } catch (e) {
+        return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
+      }
+      let text = ``;
+      try {
+        text = await Promise.race([res.text(), deadline]);
+      } catch (e) {
+        if (res.ok) return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
+        // Keep a known rejection when only its error body is interrupted.
+      }
+      if (res.ok) {
+        const value = parse(text);
+        return value === undefined
+          ? fail({ kind: `unavailable`, provider: id, detail: `invalid JSON response` })
+          : ok(value);
+      }
+      if (res.status === 429) return fail({ kind: `rateLimited`, provider: id });
+      if (res.status === 401 || res.status === 403) return fail({ kind: `unconfigured`, provider: id });
+      // Same split as IN2: 4xx is about the request (no fallback), 5xx about
+      // the provider's health (fallback allowed). This includes 529 overloaded.
+      return res.status >= 500
+        ? fail({ kind: `unavailable`, provider: id, detail: safeDetail(errorDetail(res.status, text)) })
+        : fail({ kind: `rejected`, provider: id, detail: safeDetail(errorDetail(res.status, text)) });
+    } finally {
+      clearTimeout(deadlineTimer);
+    }
   }
 
   const priceFor = (model: ModelId) => cfg.pricing?.[model];
 
   const costOf = (model: ModelId, usage: Usage): CostEstimate => {
+    if (usage.known === false || !isTokenCount(usage.inputTokens) || !isTokenCount(usage.outputTokens)) {
+      return { cents: 0, known: false };
+    }
     const p = priceFor(model);
     if (!p) return { cents: 0, known: false };
     return {
@@ -116,27 +170,49 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
     return sys.length === 0 ? { messages: rest } : { system: sys.join(`\n\n`), messages: rest };
   }
 
-  return {
-    id,
-    label: cfg.label ?? `Anthropic`,
-    auth: `apiKey`,
-
-    async models(): Promise<Outcome<Model[]>> {
-      const got = await call(`/v1/models`);
+  async function models(): Promise<Outcome<Model[]>> {
+    const listed: Model[] = [];
+    const cursors = new Set<string>();
+    const expiresAt = performance.now() + timeoutMs;
+    let path = `/v1/models`;
+    while (true) {
+      const got = await call(path, undefined, expiresAt);
       if (!got.ok) return got;
-      const data = asRecord(got.value)?.[`data`];
+      const page = asRecord(got.value);
+      const data = page?.[`data`];
       if (!Array.isArray(data)) {
-        return fail({ kind: `rejected`, provider: id, detail: `/v1/models returned no data array` });
+        return fail({ kind: `unavailable`, provider: id, detail: `/v1/models returned no data array` });
       }
-      const models = data
+      if (data.some((item) => typeof asRecord(item)?.[`id`] !== `string`)) {
+        return fail({ kind: `unavailable`, provider: id, detail: `/v1/models returned an invalid model` });
+      }
+      listed.push(...data
         .map(asRecord)
         .filter((m): m is Record<string, unknown> => typeof m?.[`id`] === `string`)
         .map((m) => ({
           id: m[`id`] as string,
           label: typeof m[`display_name`] === `string` ? (m[`display_name`] as string) : (m[`id`] as string),
-        }));
-      return ok(models);
-    },
+        })));
+      // https://platform.claude.com/docs/en/api/models/list
+      const hasMore = page?.[`has_more`];
+      if (hasMore !== undefined && typeof hasMore !== `boolean`) {
+        return fail({ kind: `unavailable`, provider: id, detail: `/v1/models returned invalid pagination` });
+      }
+      if (!hasMore) return ok(listed);
+      const cursor = page?.[`last_id`];
+      if (typeof cursor !== `string` || !cursor || cursors.has(cursor) || data.length === 0) {
+        return fail({ kind: `unavailable`, provider: id, detail: `/v1/models returned invalid pagination` });
+      }
+      cursors.add(cursor);
+      path = `/v1/models?after_id=${encodeURIComponent(cursor)}`;
+    }
+  }
+
+  return {
+    id,
+    label: cfg.label ?? `Anthropic`,
+    auth: `apiKey`,
+    models,
 
     async chat(request: ChatRequest): Promise<Outcome<ChatResult>> {
       const { system, messages } = splitSystem(request.messages);
@@ -163,27 +239,42 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
       })) {
         return fail({ kind: `rejected`, provider: id, detail: `tool calls are unsupported by the text-only provider contract` });
       }
-      // Content is a list of blocks; concatenate the text ones. A reply with
-      // no text block is a rejection, not a crash on undefined.
-      const text = content
-        .map(asRecord)
-        .filter((b): b is Record<string, unknown> => b?.[`type`] === `text` && typeof b[`text`] === `string`)
-        .map((b) => b[`text`] as string)
-        .join(``);
-      if (text === `` && content.length === 0) {
-        return fail({ kind: `rejected`, provider: id, detail: `no content blocks in response` });
+      // Stop reasons: https://platform.claude.com/docs/en/api/messages/create
+      // A paused turn needs continuation that this text-only adapter cannot do.
+      const stop: ChatResult[`stop`] | undefined =
+        reason === `end_turn` || reason === `stop_sequence` ? `end`
+          : reason === `max_tokens` || reason === `model_context_window_exceeded` ? `length`
+            : reason === `refusal` ? `refusal`
+              : undefined;
+      if (stop === undefined) {
+        return fail({ kind: `rejected`, provider: id, detail: `unsupported or missing stop reason` });
       }
 
-      const u = asRecord(root_?.[`usage`]);
-      const num = (v: unknown): number => (typeof v === `number` ? v : 0);
-      const usage: Usage = { inputTokens: num(u?.[`input_tokens`]), outputTokens: num(u?.[`output_tokens`]) };
+      const blocks = content.map(asRecord);
+      if (blocks.some((b) => !b || (b[`type`] === `text`
+        ? typeof b[`text`] !== `string`
+        : b[`type`] !== `thinking` && b[`type`] !== `redacted_thinking`))) {
+        return fail({ kind: `rejected`, provider: id, detail: `unsupported or invalid content block` });
+      }
+      const textBlocks = blocks
+        .filter((b): b is Record<string, unknown> => b?.[`type`] === `text` && typeof b[`text`] === `string`);
+      if (textBlocks.length === 0) {
+        return fail({ kind: `rejected`, provider: id, detail: `no text content in response` });
+      }
+      const text = textBlocks.map((b) => b[`text`] as string).join(``);
 
-      // Anthropic's names differ from OpenAI's; map onto the shared enum so
-      // callers never see a vendor string. `max_tokens` is the truncation.
-      const stop: ChatResult[`stop`] =
-        reason === `max_tokens` ? `length`
-          : reason === `refusal` ? `refusal`
-            : `end`;
+      const u = asRecord(root_?.[`usage`]);
+      const input = u?.[`input_tokens`];
+      const output = u?.[`output_tokens`];
+      // Cache categories have separate rates; the two-rate contract cannot
+      // report a known cost when they are used (README's prompt-caching source).
+      const cacheUsage = [u?.[`cache_creation_input_tokens`], u?.[`cache_read_input_tokens`]]
+        .some((value) => value != null && value !== 0);
+      const usage: Usage = {
+        inputTokens: isTokenCount(input) ? input : 0,
+        outputTokens: isTokenCount(output) ? output : 0,
+        ...(!isTokenCount(input) || !isTokenCount(output) || cacheUsage ? { known: false } : {}),
+      };
       return ok({ content: text, usage, stop });
     },
 
@@ -199,12 +290,13 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
     cost: costOf,
 
     async reachable(): Promise<Outcome<true>> {
-      const got = await call(`/v1/models`);
+      const got = await models();
       return got.ok ? ok(true as const) : fail(got.error);
     },
 
     credential(): CredentialStatus {
       if (!cfg.apiKey) return { configured: false };
+      if (cfg.apiKey.length <= 4) return { configured: true };
       return { configured: true, hint: `…${cfg.apiKey.slice(-4)}` };
     },
   };
