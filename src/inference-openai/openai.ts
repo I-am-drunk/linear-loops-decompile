@@ -29,6 +29,7 @@ export type FetchLike = (url: string, init?: {
   headers?: Record<string, string>;
   body?: string;
   signal?: AbortSignal;
+  redirect?: `error`;
 }) => Promise<{ ok: boolean; status: number; text(): Promise<string> }>;
 
 export type OpenAiConfig = {
@@ -39,6 +40,8 @@ export type OpenAiConfig = {
   /** Omitted for a local server that needs none. */
   apiKey?: string;
   fetchImpl: FetchLike;
+  /** Override the token-cap field for a compatible gateway; see README.md. */
+  tokenLimitField?: `max_tokens` | `max_completion_tokens`;
   /** Price per million tokens, when the operator knows it. */
   pricing?: Record<ModelId, { inputPerMTok: number; outputPerMTok: number }>;
 };
@@ -64,12 +67,12 @@ function parse(text: string): unknown {
 const asRecord = (v: unknown): Record<string, unknown> | undefined =>
   v && typeof v === `object` && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
 
-/** Error text a provider sent, trimmed to something a log can hold. */
+/** Error text a provider sent; the caller redacts it before truncating. */
 function errorDetail(status: number, text: string): string {
   const body = asRecord(parse(text));
   const err = asRecord(body?.[`error`]);
   const msg = typeof err?.[`message`] === `string` ? err[`message`] : undefined;
-  return `HTTP ${status}${msg ? `: ${msg}` : text ? `: ${text.slice(0, 200)}` : ``}`;
+  return `HTTP ${status}${msg ? `: ${msg}` : text ? `: ${text}` : ``}`;
 }
 
 /** Per-million-token price to integral cents, per the CostEstimate contract. */
@@ -80,6 +83,14 @@ function cents(tokens: number, perMTok: number): number {
 export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
   const id = cfg.id ?? `openai-compatible`;
   const base = root(cfg.baseUrl);
+  let endpoint: URL | undefined;
+  try { endpoint = new URL(base); } catch { /* Report invalid config through call(). */ }
+  // OpenAI documents max_tokens as incompatible with o-series models.
+  // https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create
+  const tokenLimitField = cfg.tokenLimitField ?? (endpoint?.origin === `https://api.openai.com`
+    && endpoint.pathname === `/v1` ? `max_completion_tokens` : `max_tokens`);
+  const safeDetail = (text: string): string =>
+    (cfg.apiKey ? text.replaceAll(cfg.apiKey, `[redacted]`) : text).slice(0, 200);
 
   const headers = (): Record<string, string> => ({
     "content-type": `application/json`,
@@ -102,17 +113,33 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
 
   /** One request, with network faults turned into typed failures. */
   async function call(path: string, init?: { method: string; body: string }): Promise<Outcome<unknown>> {
+    if (!endpoint || ![`http:`, `https:`].includes(endpoint.protocol)
+      || endpoint.username || endpoint.password
+      || (cfg.apiKey && endpoint.protocol !== `https:`)) {
+      return fail({ kind: `unconfigured`, provider: id });
+    }
     let res: Awaited<ReturnType<FetchLike>>;
     try {
-      res = await cfg.fetchImpl(`${base}${path}`, { headers: headers(), ...(init ?? {}) });
+      res = await cfg.fetchImpl(`${base}${path}`, { headers: headers(), redirect: `error`, ...(init ?? {}) });
     } catch (e) {
       // DNS failure, refused connection, TLS error: the provider is not
       // reachable, which the plan requires we record rather than throw.
-      return fail({ kind: `unavailable`, provider: id, detail: String(e) });
+      return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
     }
 
-    const text = await res.text();
-    if (res.ok) return ok(parse(text));
+    let text = ``;
+    try {
+      text = await res.text();
+    } catch (e) {
+      if (res.ok) return fail({ kind: `unavailable`, provider: id, detail: safeDetail(String(e)) });
+      // Preserve a known rejection even if its error body is interrupted.
+    }
+    if (res.ok) {
+      const value = parse(text);
+      return value === undefined
+        ? fail({ kind: `unavailable`, provider: id, detail: `invalid JSON response` })
+        : ok(value);
+    }
 
     if (res.status === 429) {
       return fail({ kind: `rateLimited`, provider: id });
@@ -123,42 +150,46 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
     // 4xx is about the request; 5xx is about the provider's health. Only the
     // latter should let the registry try a fallback.
     return res.status >= 500
-      ? fail({ kind: `unavailable`, provider: id, detail: errorDetail(res.status, text) })
-      : fail({ kind: `rejected`, provider: id, detail: errorDetail(res.status, text) });
+      ? fail({ kind: `unavailable`, provider: id, detail: safeDetail(errorDetail(res.status, text)) })
+      : fail({ kind: `rejected`, provider: id, detail: safeDetail(errorDetail(res.status, text)) });
+  }
+
+  async function models(): Promise<Outcome<Model[]>> {
+    const got = await call(`/models`);
+    if (!got.ok) return got;
+    const data = asRecord(got.value)?.[`data`];
+    if (!Array.isArray(data)) {
+      return fail({ kind: `unavailable`, provider: id, detail: `/models returned no data array` });
+    }
+    if (data.some((item) => typeof asRecord(item)?.[`id`] !== `string`)) {
+      return fail({ kind: `unavailable`, provider: id, detail: `/models returned an invalid model` });
+    }
+    const models = data
+      .map(asRecord)
+      .filter((m): m is Record<string, unknown> => typeof m?.[`id`] === `string`)
+      .map((m) => {
+        const mid = m[`id`] as string;
+        const ctx = m[`context_length`];
+        return {
+          id: mid,
+          label: mid,
+          ...(typeof ctx === `number` ? { contextTokens: ctx } : {}),
+        };
+      });
+    return ok(models);
   }
 
   return {
     id,
     label: cfg.label ?? `OpenAI-compatible`,
     auth: `apiKeyWithBaseUrl`,
-
-    async models(): Promise<Outcome<Model[]>> {
-      const got = await call(`/models`);
-      if (!got.ok) return got;
-      const data = asRecord(got.value)?.[`data`];
-      if (!Array.isArray(data)) {
-        return fail({ kind: `rejected`, provider: id, detail: `/models returned no data array` });
-      }
-      const models = data
-        .map(asRecord)
-        .filter((m): m is Record<string, unknown> => typeof m?.[`id`] === `string`)
-        .map((m) => {
-          const mid = m[`id`] as string;
-          const ctx = m[`context_length`];
-          return {
-            id: mid,
-            label: mid,
-            ...(typeof ctx === `number` ? { contextTokens: ctx } : {}),
-          };
-        });
-      return ok(models);
-    },
+    models,
 
     async chat(request: ChatRequest): Promise<Outcome<ChatResult>> {
       const body = JSON.stringify({
         model: request.model,
         messages: request.messages,
-        ...(request.maxTokens === undefined ? {} : { max_tokens: request.maxTokens }),
+        ...(request.maxTokens === undefined ? {} : { [tokenLimitField]: request.maxTokens }),
         ...(request.temperature === undefined ? {} : { temperature: request.temperature }),
       });
       const got = await call(`/chat/completions`, { method: `POST`, body });
@@ -216,12 +247,13 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
     cost: costOf,
 
     async reachable(): Promise<Outcome<true>> {
-      const got = await call(`/models`);
+      const got = await models();
       return got.ok ? ok(true as const) : fail(got.error);
     },
 
     credential(): CredentialStatus {
       if (!cfg.apiKey) return { configured: false };
+      if (cfg.apiKey.length <= 4) return { configured: true };
       // Last four only, so a log or screenshot leaks nothing usable.
       return { configured: true, hint: `…${cfg.apiKey.slice(-4)}` };
     },

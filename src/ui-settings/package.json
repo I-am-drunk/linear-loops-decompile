@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings",
+  "private": true,
+  "type": "module",
+  "description": "Settings shell + the five row patterns (ST1, ST2). Nav, page frame, section routing, and toggle/select/text/credential/connection rows. Token-driven; no component hardcodes a colour. See docs/plan/settings.md."
+}
