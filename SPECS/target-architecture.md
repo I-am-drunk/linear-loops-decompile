@@ -1,94 +1,58 @@
-# SPEC — Target architecture (the product)
+# Target architecture
 
-A self-hosted **Linear Loops-only** product: an original Loops UI and loops server,
-with the user's connected Linear account as the data plane and Linear's normal chat
-route as the primary brain. T3 connect is the transport between our UI and server.
+Build the whole Linear workspace UI with Cursor's automation layout,
+configurable inference and independent integrations. This is the target;
+STATUS.md distinguishes packages from delivered application flows.
 
-Scope is intentional: we reproduce Loops and only its necessary views. We do not
-reproduce Linear's general tracker, its navigation, or its Settings. Our sidebar has
-Loops, Loops-required views (Runs/Templates as they are built), and our Settings. See
-`SPECS/product-contract.md` for the binding scope test and credential boundary.
+| Boundary | Owns | Existing or planned home |
+|---|---|---|
+| Workspace UI | Routes, navigation, theme, settings and feature views | src/ui-* |
+| Application | Commands, validation, identity, persistence and composition | src/server |
+| Domain | Automation versions, triggers, runs and stable identifiers | src/model |
+| Execution | Scheduling, queue, turn lifecycle, cancellation and events | planned src/runtime |
+| Inference | Provider/model discovery, invocation, capability and usage mapping | src/inference* PRs |
+| Integrations | Entities, incoming events, audited actions and account state | src/integrations* PRs |
+| Tools | MCP transport, discovery, per-automation allowlist and approvals | src/mcp PRs |
 
-## Components
+Dependencies point inward: views call application commands; application and
+execution depend on domain types and injected ports; adapters implement those
+ports. The server is the composition root. UI code does not open provider
+connections or implement OAuth, and providers do not depend on Linear models.
+Keep current package paths while feature stacks land; move code only in a
+separate behavior-preserving slice, never by copying a competing implementation.
 
-```
-┌────────────────────────────┐        WSS JSON-RPC (T3 connect)        ┌──────────────────────────┐
-│ webui (React 19 + Vite)     │ ◀────────────────────────────────────▶ │ loops-server (Node 22+TS) │
-│  sidebar: Loops, Runs,      │                                          │  node:sqlite (state)      │
-│  Templates, our Settings    │                                          │  serves webui static too  │
-└───────────────────────────┘                                          └──────┬───────────────┘
-                                                                                │
-            ┌────────────────────────────┬───────────────────────────────┤
-            ▼                               ▼                                   ▼
-   src/dataplane (R5)                src/engine (R4)                    src/runtime (R6)
-   documented Linear API             cron (rrule) + webhook/poll        run state machine
-   api.linear.app/graphql            trigger+condition eval             turns/parts streaming
-   PAT or OAuth, rate budget         run queue, budgets,                context assembler
-   reads + audited write-back         idempotency                        Brain interface
-                                                                                     │
-                                                   src/linear-chat (R7, primary) ◀─┘
-                                                   user-session bridge to
-                                                   client-api + minimal sync reader
-                                                                                     │
-                                                   src/inference (fallback only)
-                                                   OpenRouter | OpenAI-compatible
-                                                   LiteLLM/vLLM/Ollama | Anthropic
-```
+## Data and credentials
 
-## Repo layout (target; milestone tags match the component diagram)
+Our store owns drafts, published versions, schedules, durable run/idempotency
+records, transcripts, settings and credential references. Each record is scoped
+to its workspace. Integrations supply external entities without becoming the
+automation model. Connecting Linear is optional for local runs.
 
-```
-src/
-  model/            domain types
-  connect/    (R3)  T3 transport (server+client; landed)
-  server/     (R3)  http+ws server, static serving, settings store, audit log (landed)
-  ui-theme/   (H2)  exact generateTheme reimplementation (landed, golden-backed)
-  ui-loops-icons/   golden-backed Loops icon reimplementations (G4)
-  engine/     (R4)  scheduler + triggers + queue
-  dataplane/  (R5)  documented Linear public-API client (PAT/OAuth)
-  runtime/    (R6)  runs + turns + parts streaming, Brain interface
-  linear-chat/(R7)  golden-goose user-session chat bridge (primary brain)
-  inference/  (R6)  fallback harness settings + adapters
-  ui/         (R4+) React app: Loops shell + loops features + our Settings
-```
+The server validates commands and resolves credentials. Settings returns
+presence/status hints, never secrets. OAuth callback state, token encryption,
+destination checks and tool approvals must run at their actual boundaries;
+interface comments are not enforcement. See #365 and #370.
 
-## Settings model (the three connection roles)
+## One execution path
 
-1. **Connect Linear account (public API)** — PAT (paste → verify via `viewer` query →
-   store write-only) or OAuth (device-flow placeholder). This connection derives orgs,
-   teams, projects, labels, and workflow states; it reads data and performs audited
-   write-back with public-API rate-budget visibility. It cannot call Linear chat.
-2. **Connect Linear chat session (primary brain)** — user-guided interactive sign-in
-   establishes a separately stored, write-only session bridge for the client API and
-   sync socket. It drives normal Linear AI chat for loop runs. Refresh/lifetime is an
-   E1-verified adapter concern, never silently conflated with public OAuth/PAT.
-3. **Fallback inference (optional)** — provider ∈ {openrouter, openai-compatible,
-   anthropic}; base URL, write-only key, default model, effort, extra headers. A test
-   button probes it. It exists only when the chat bridge is unavailable or deliberately
-   disabled; it is not presented as equivalent to the primary brain.
+A manual command, schedule or integration event produces a stable trigger id.
+Persist the run and its published automation version before dispatch. The
+executor resolves each step's provider/model, streams ordered events, checks
+per-automation tools and approval at invocation, and records terminal state.
+Only report success after required actions complete. Cancellation and restart
+recovery are part of this path. Full-history idempotency cannot be implemented
+by searching only the newest runs.
 
-## Data ownership
+The UI reads snapshots and subscribes from a durable event cursor. Reconnect
+must neither repeat actions nor hide output. Rendering packages and mocked
+provider tests alone do not verify this composition.
 
-- OUR SQLite: loops (config+versions), runs/turns/parts, settings, secrets (hashed refs),
-  audit events (append-only), idempotency keys, usage counters.
-- LINEAR (read via public-API dataplane): issues, projects, teams, comments, labels,
-  cycles, states.
-- LINEAR CHAT (via the distinct user-session bridge): normal-chat conversation/turn
-  activity used as the primary loop brain; session material is stored write-only.
-- Loop OUTPUT to Linear: comments / status changes / issue updates (configurable per loop;
-  every write is an audited, idempotent public-API command).
+## External protocols
 
-## Safety rails (house rules from hub project)
+`src/connect` is our UI/server transport, documented in SPECS/t3-connect.md.
+It does not establish compatibility with T3 Code. The provider bridge needs
+its own versioned protocol evidence and integration test; see
+docs/plan/t3-code-connect.md. Linear uses its public OAuth/GraphQL/webhook APIs.
+MCP uses the published protocol. These are independent adapters.
 
-- Approval gate for consequential Linear writes (per-loop: auto | require-approval).
-- Budgets: max runs/hour per loop, max tokens/cost per run, global daily cap.
-- Idempotency: run key = hash(loopId, triggerEventId); duplicate events never double-run.
-- Audit: append-only event log for every trigger, decision, brain call, write.
-- Failure surface: failed runs are first-class (visible, retryable, with error part).
-
-## Explicit non-goals (v1)
-
-Reusing or serving Linear's client code; reproducing Linear's tracker, general sidebar,
-or Linear Settings; replacing Linear as the tracker; multi-tenant SaaS; real OAuth
-apps (placeholders fine); mobile. A minimal original sync reader limited to the chat
-adapter is in scope; reimplementing the general LSE sync engine is not.
+Milestones and application slices: PLAN.md and docs/plan/delivery.md.

@@ -134,10 +134,6 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
         .map((m) => ({
           id: m[`id`] as string,
           label: typeof m[`display_name`] === `string` ? (m[`display_name`] as string) : (m[`id`] as string),
-          // The list endpoint declares neither context nor tool support, so
-          // neither is invented. Tool use IS supported by the Messages API,
-          // but claiming it per-model here would be a guess about the model.
-          tools: false,
         }));
       return ok(models);
     },
@@ -158,6 +154,15 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
 
       const root_ = asRecord(got.value);
       const content = Array.isArray(root_?.[`content`]) ? root_[`content`] : [];
+      const reason = root_?.[`stop_reason`];
+      // https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview
+      // A mixed text/tool reply still requires a tool turn that IN1 cannot carry.
+      if (reason === `tool_use` || content.some((value) => {
+        const type = asRecord(value)?.[`type`];
+        return type === `tool_use` || type === `server_tool_use`;
+      })) {
+        return fail({ kind: `rejected`, provider: id, detail: `tool calls are unsupported by the text-only provider contract` });
+      }
       // Content is a list of blocks; concatenate the text ones. A reply with
       // no text block is a rejection, not a crash on undefined.
       const text = content
@@ -175,12 +180,10 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
 
       // Anthropic's names differ from OpenAI's; map onto the shared enum so
       // callers never see a vendor string. `max_tokens` is the truncation.
-      const reason = root_?.[`stop_reason`];
       const stop: ChatResult[`stop`] =
         reason === `max_tokens` ? `length`
-          : reason === `tool_use` ? `tool`
-            : reason === `refusal` ? `refusal`
-              : `end`;
+          : reason === `refusal` ? `refusal`
+            : `end`;
       return ok({ content: text, usage, stop });
     },
 

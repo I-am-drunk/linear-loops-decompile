@@ -1,3 +1,9 @@
+<!-- HISTORICAL RECORD -->
+
+> Dated Linear reference notes, not the current application contract.
+> The product scope and runtime boundaries are in [target-architecture.md](target-architecture.md).
+> Recheck each reference claim before using it; our UI/server transport does not establish T3 Code interoperability.
+
 # SPEC — Agent runtime (conversations, sessions, activities)
 
 Derived from KNOWLEDGE.md §5 + §3. Two related models in Linear; we merge the best of both.
