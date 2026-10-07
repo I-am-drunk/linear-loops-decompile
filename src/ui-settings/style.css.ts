@@ -55,7 +55,7 @@ export const SETTINGS_CSS = `
 .s-knob { position: absolute; top: 50%; left: 3px; right: 13px; height: 14px; border-radius: 7px; transform: translateY(-50%); background: var(--t-controlPrimaryLabel); }
 .s-toggle[aria-checked=true] .s-knob { left: 13px; right: 3px; }
 .s-input, .s-select { font-family: inherit; font-size: .8125rem; height: 32px; padding: 6px 12px; border-radius: 5px; margin: 0; color: var(--t-labelTitle); }
-.s-input { appearance: none; background: var(--t-bgBase); border: var(--s-thin-pixel) solid var(--t-bgBorderSolid); outline-offset: -1px; }
+.s-input { appearance: none; background: var(--t-bgBase); border: var(--s-thin-pixel) solid var(--t-bgBorderSolidThin); outline-offset: -1px; }
 .s-select { padding-right: 24px; background: var(--t-controlSecondary); border: var(--s-thin-pixel) solid transparent; }
 .s-input:disabled, .s-select:disabled { color: var(--t-labelMuted); }
 .s-btn {

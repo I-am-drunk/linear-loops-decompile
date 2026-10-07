@@ -368,12 +368,12 @@
     },
     {
       "name": "Input and select colors",
-      "value": "labelTitle; labelMuted; bgBase; controlSecondary; bgBorderSolid",
+      "value": "labelTitle; labelMuted; bgBase; controlSecondary; bgBorderSolidThin",
       "scope": [
         ".s-input",
         ".s-select"
       ],
-      "cite": "client/Input.CX9538jp.js S.inputBase sx-hfnvfx/sx-1aspn76 uses labelTitle/disabled labelMuted; background resolves theme.inputBackground=bgBase. S.inputBorderHover uses bgBorderSolid; S.select overrides background to controlSecondary and border color to transparent."
+      "cite": "client/Input.CX9538jp.js S.inputBase sx-hfnvfx/sx-1aspn76 uses labelTitle/disabled labelMuted; background resolves theme.inputBackground=bgBase. S.inputBorderHover sx-8vmfhh uses --sx-w1p5jj, which client/ThemeProvider.BNrg3wTr.js maps to bgBorderSolidThin; S.select overrides background to controlSecondary and border color to transparent."
     },
     {
       "name": "Normal text button geometry",
