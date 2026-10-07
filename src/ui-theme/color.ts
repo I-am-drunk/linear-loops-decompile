@@ -189,7 +189,9 @@ export function rgbToLch(rgb: number[]): Lch {
 }
 
 function p3ToLch(p3: number[]): Lch {
-  return labToLch(xyzToLab(d65ToD50(linearP3ToXyz(srgbLinear(p3.map((v) => v * 255))))));
+  // The pinned converter passes parsed P3 channels through its 0–255
+  // transfer function as-is (ColorConverter.CVwFbLBP.js R -> $).
+  return labToLch(xyzToLab(d65ToD50(linearP3ToXyz(srgbLinear(p3)))));
 }
 
 /** LCH to sRGB [0-255] (corpus `lchToRgb`), with the exact-white special case. */

@@ -18,3 +18,19 @@ test("toggle colors match the reference converter in both themes and formats", (
     });
   }
 });
+
+test("P3 source colors preserve the pinned converter's channel scale", () => {
+  const color = {
+    bgBase: "color(display-p3 0.1 0.3 0.5)",
+    labelBase: "color(display-p3 0.8 0.7 0.2)",
+  };
+  const cases = [
+    [true, "lch(0.096% 0.059 224.634 / 1)", "lch(0.108% 0.04 192.127 / 1)"],
+    [false, "lch(0.119% 0.044 146.618 / 1)", "lch(0.131% 0.067 121.135 / 1)"],
+  ] as const;
+  for (const [isDark, off, hover] of cases) {
+    assert.deepEqual(settingsThemeVariables({ color, isDark }, "LCH"), {
+      "--s-toggle-track-off": off, "--s-toggle-track-hover": hover,
+    });
+  }
+});
