@@ -95,7 +95,7 @@ export function renderRow(row: Row, scope = "row"): string {
   return (
     `<div class="s-row${row.disabled ? ` s-off` : ``}" ${attr(`data-id`, row.id)}>` +
     `<div class="s-rowtext"><label class="s-rowlabel" ${attr(`id`, lblId(row.id, scope))}${NATIVE_LABEL.has(row.kind) ? ` ${attr(`for`, ctlId(row.id, scope))}` : ``}>${esc(row.label)}</label>${desc}</div>` +
-    `<div class="s-rowctl">${control(row, scope)}</div>` +
+    `<div class="s-rowctl${row.kind === "toggle" ? " s-toggle-ctl" : ""}">${control(row, scope)}</div>` +
     `</div>`
   );
 }
@@ -104,7 +104,7 @@ export function renderSection(section: Section, scope = "section"): string {
   const blurb = section.blurb ? `<p class="s-blurb">${esc(section.blurb)}</p>` : ``;
   return (
     `<section class="s-section" ${attr(`data-id`, section.id)}>` +
-    `<h2 class="s-h2">${esc(section.title)}</h2>${blurb}` +
+    `<div class="s-sectionhead"><h2 class="s-h2">${esc(section.title)}</h2>${blurb}</div>` +
     `<div class="s-rows">${section.rows.map((row, index) => renderRow(row, `${scope}/row/${index}`)).join(``)}</div>` +
     `</section>`
   );
@@ -115,24 +115,25 @@ export type NavItem = { id: string; title: string };
 /** Left nav. `current` gets aria-current, which is also the style hook. */
 export function renderNav(items: readonly NavItem[], current: string): string {
   return (
-    `<nav class="s-nav" aria-label="Settings">` +
+    `<nav class="s-nav" aria-label="Settings"><div class="s-navitems">` +
     items
       .map(
         (i) =>
           `<a class="s-navitem" ${attr("data-page", i.id)} ${attr(`href`, `#/settings/${encodeURIComponent(i.id)}`)}${
             i.id === current ? ` aria-current="page"` : ``
-          }>${esc(i.title)}</a>`,
+          }><span class="s-navtext">${esc(i.title)}</span></a>`,
       )
       .join(``) +
-    `</nav>`
+    `</div></nav>`
   );
 }
 
 export function renderPage(page: Page, scope = "page"): string {
   return (
-    `<div class="s-page"><h1 class="s-h1">${esc(page.title)}</h1>` +
+    `<div class="s-page"><div class="s-pagehead"><h1 class="s-h1">${esc(page.title)}</h1></div>` +
+    `<div class="s-pagegap" aria-hidden="true"></div><div class="s-sectionstack">` +
     page.sections.map((section, index) => renderSection(section, `${scope}/section/${index}`)).join(``) +
-    `</div>`
+    `</div></div>`
   );
 }
 
