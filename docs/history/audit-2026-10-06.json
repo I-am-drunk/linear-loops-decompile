@@ -1,0 +1,1253 @@
+{
+  "version": 1,
+  "method": "All issue/comment narratives reviewed for findings and corrections. Embedded source-code attachments were not re-audited as implementations; no new behavior or parity is certified.",
+  "snapshot": "2026-10-06 22:14 UTC",
+  "repository": "https://github.com/I-am-drunk/linear-loops-decompile",
+  "coverage": {
+    "issues": 137,
+    "comments": 1274,
+    "archived": 121,
+    "active_lane": 6,
+    "open_finding": 8,
+    "closed_finding": 2
+  },
+  "hashing": {
+    "bodySha256": "SHA-256 of UTF-8 issue body; null is empty text.",
+    "orderedCommentsSha256": "SHA-256 of canonical JSON array of {id,bodySha256}, ordered by created_at then id. Comment bodies use the same UTF-8 rule. JSON uses sorted keys, ensure_ascii=False and comma/colon separators without spaces."
+  },
+  "issues": [
+    {
+      "number": 1,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/1",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 125,
+      "bodySha256": "7f914677808045839be22784194aba5a4f666fcbf2e214dda8d5741c0ed0546b",
+      "orderedCommentsSha256": "e45badb40ebe766061321e7f40f4c27cdab9b82cdc29169e1f2c3e74183fb27b"
+    },
+    {
+      "number": 2,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/2",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 13,
+      "bodySha256": "fa7e58d85a1ab4966a670cecb3aa3266ae18d8ef4ffa2a10b7e4bb881488ed5f",
+      "orderedCommentsSha256": "3ccee1911a08277a641f48e557e2e9e646506c593f869e5eb08dfb3796907504"
+    },
+    {
+      "number": 3,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/3",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "23dfe246aee7f00bc516fe5f6189cb112a4ebbcba3435f2d8e7c37258e4843fc",
+      "orderedCommentsSha256": "1c4e42687b325a825846e1c27490f0b79734cb32399f4e6e0e7bf7f599f6bc99"
+    },
+    {
+      "number": 4,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/4",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "bf50dca72ac3abdc20fae3aa868c5d7a312a00dd4045adacfc7ea2b05411eb0a",
+      "orderedCommentsSha256": "4e319ed9119142b5a196dfaa0d450d347f8ab6d2484fa630ccd68cefa6b703d6"
+    },
+    {
+      "number": 5,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/5",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "53d93e0f70e18db3c4f062f74fa38a9c2e97e8a9f21d5fe2f5cb68b174cc5b5d",
+      "orderedCommentsSha256": "80f5c3c7b34ba35d63786584964812981bc13fe8f3e28895e987b387a8289be8"
+    },
+    {
+      "number": 6,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/6",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "d47b67e59fc061a06c0e335ef73047062100e4a2d2c240b1178522df481a1bee",
+      "orderedCommentsSha256": "dacac8f28597ffe17f158ccf453fab4670d9440e704e74cef4bbd6dab66a61b4"
+    },
+    {
+      "number": 7,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/7",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "0b52ca72e831c2e25b1073bf887f7aaf95c7c78d6f751a9b2c6dd70cc0b08810",
+      "orderedCommentsSha256": "c14e5aa55d0b1afb9278edf2dea4433da346f22826644456eab2a343c2e53a65"
+    },
+    {
+      "number": 8,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/8",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "9cc3903fa49c316fd31ea765ca075d1f3c5a65a7ea6d14996f46f87bbf46aeb2",
+      "orderedCommentsSha256": "2d77185d04707c57f485b5044e9aa19fcb46ee9f8119f1b488fd79687e6ec6e8"
+    },
+    {
+      "number": 9,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/9",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "91fee52dcc4c8889fa18c4a9bc1453fd7a535a2ac7c67a52dea9df1c234d5107",
+      "orderedCommentsSha256": "6b4f1f732da9084dddb129bd91e69dbbb5c0eace70de59b83ca5409a60a75959"
+    },
+    {
+      "number": 10,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/10",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "e61f6f5302b1f2247d7af6d2428abd84bb66ac69449891c282539cf737511132",
+      "orderedCommentsSha256": "2468de081ca23c83dcb36141fc9987052815bc4ac6e317aabf05ea73575799dd"
+    },
+    {
+      "number": 11,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/11",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "6865fe3907c790810caec1b92a9f0bd7df48bb2b479b0108f3bc9bcc8132467b",
+      "orderedCommentsSha256": "b8aa7bf3db38d613e44c06a233673fefcd5865092e873f385dbc667cfd5b2c47"
+    },
+    {
+      "number": 12,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/12",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "c3d8488d9200d422e1a25fe9cae7a66850c08a8f5eed353fce8a136ed67d9712",
+      "orderedCommentsSha256": "3cffc69c8b15e34559b52ca79267d02e9babc25376c2225a0d17f095f7efab61"
+    },
+    {
+      "number": 13,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/13",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "b40a8d859e4959f3a342925e23d5ec10a5017d2cd724312fd4aab3913f94db30",
+      "orderedCommentsSha256": "c70d2732aac626b216f5584f9879575dfc079f560a700070b04da4d3fd4bab45"
+    },
+    {
+      "number": 14,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/14",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 35,
+      "bodySha256": "67759dcab5aed7b9d8f4a453a7b67d9085c6ab140f6240c9a40476180e996f51",
+      "orderedCommentsSha256": "17947961c4a67666a6b29ea1ba453af83b5756e7f44cf993f74dfada1908cd85"
+    },
+    {
+      "number": 15,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/15",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "d7c6d9c15064e4ed7647f2e8556895f0a701eab0d713243aa574648316230f9d",
+      "orderedCommentsSha256": "2822b1ac65c16f7ecd1be0d9f93dfbdcd9ee56fdbc1d9935a06ca525705670dd"
+    },
+    {
+      "number": 16,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/16",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "8c9f98b6d7f4124fd41b4af7894c368c39a249706fbe52dcd89b9b6d0ad461d9",
+      "orderedCommentsSha256": "7c08ee0fac3f40f9eebb580aefec7162b8997d441d771ca066573ef0fc5300fb"
+    },
+    {
+      "number": 17,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/17",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "546c3125b86b6f7100b0c00200bd76edda7a43415d958ec7393940a0a7bb40c3",
+      "orderedCommentsSha256": "968d3bf268b9126864d07f9c896dfea0348530bebd118765ee86d26161c8643b"
+    },
+    {
+      "number": 18,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/18",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "eaf16f958e09505604e6b3adcc76dd3b3baf518245d60571697499fd932f576f",
+      "orderedCommentsSha256": "b43d5e62729f73028cb19d305dd6e358eab09c10bc5fdda7ff931adce79996fe"
+    },
+    {
+      "number": 19,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/19",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "45893ff3543b540afac4a73e276a1f12226b3de27eb5bf38b36d5b8ee0fd7a66",
+      "orderedCommentsSha256": "5288a205ed46b116700a4c150724da13288005f229dd440bb54be9fe21acefd6"
+    },
+    {
+      "number": 20,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/20",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "249ca902b419c2c8f75a0f2d5e94f092a5a3f72be5223d2a91c5c7f10d7f0ca1",
+      "orderedCommentsSha256": "f25673b434b9bfe2c70b3442bc2040068f7da16c3baf9bb204cbde19084d8291"
+    },
+    {
+      "number": 21,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/21",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 137,
+      "bodySha256": "79d6acc60823bc2a1dd05d51385e0dcda94a4e391111eead06a50dfa1e367be4",
+      "orderedCommentsSha256": "5cd4771115d6280c8d6d2833dccfee600ce8678e8eeed66b2d2cbbc6d5096ff7"
+    },
+    {
+      "number": 22,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/22",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "6e89e261ca5a3c5def33291757a90da55a1226f31d9151b24d141643569b5f8f",
+      "orderedCommentsSha256": "00b86cd5fc6e450220225bf077c18d2e7a985dafb3202a50bbd1e818ffc5fcc0"
+    },
+    {
+      "number": 23,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/23",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 8,
+      "bodySha256": "741c8fb97754bb692f7fa2b6f97e93e1c6ce307ac4a5c42c0ec84888da495458",
+      "orderedCommentsSha256": "10eb40d0b0409a07deff605b0af60ea04b221ede4bfd4bde9fbcc7f885d93ed4"
+    },
+    {
+      "number": 24,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/24",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "b2bf248594c728ae195c9ed5147e0765698ff6cc6d2c2714a6d9f42812ff83d7",
+      "orderedCommentsSha256": "d0cb0b3f11ba56d7add5a9c3d4975f27f76b88d001594020ddf690aec8e677bc"
+    },
+    {
+      "number": 25,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/25",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 12,
+      "bodySha256": "4ad32620088ab5a8c6843ae616a30457a1bad858ec831de08c0606cf528c4771",
+      "orderedCommentsSha256": "d1bec4272a05d8e60832e2d38dd96c12c4c7b4dc96eb2d911be0afd060074dbb"
+    },
+    {
+      "number": 26,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/26",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 28,
+      "bodySha256": "8bfd6b5014ee8570f3646d5c5831032480dea961d54eba5d11df0d31292216e9",
+      "orderedCommentsSha256": "01bf3ecf2431a572412e0a2d43a681c986dce7cc5409c91187a9d252a43c5ae8"
+    },
+    {
+      "number": 27,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/27",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "2cfcd4741341635800bc679da8cb3a3b03b9ff059a0c37a230f9a0426e959b6f",
+      "orderedCommentsSha256": "6e310acd35bc4f417fff86a65e981dba60a8a3f71717a8de97eeacde04513d22"
+    },
+    {
+      "number": 28,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/28",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "9f27feb9b27c9cd9cddab3e30205a05677059cdaece0319bcebac981e493f83b",
+      "orderedCommentsSha256": "573146bab40ee47c0fc1e8200ab579491fe6fd8ace858142c405dbbd2ec5de84"
+    },
+    {
+      "number": 29,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/29",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "272159ea7dc3b15461ab658efeec54f818235fd808aa0c76178358492798f5ff",
+      "orderedCommentsSha256": "1c13b2db8766ce92b99eb8bc42fc84901d403319958066d3e3b775af1d24159c"
+    },
+    {
+      "number": 30,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/30",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "b50616c70f47895672122a519d6ee8873bca82d0a834db74494c272b0da904a7",
+      "orderedCommentsSha256": "20b66decd50866b8a1b87f23dfedc9bc4894dc63d10fa3bdce2327dce2a92f15"
+    },
+    {
+      "number": 31,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/31",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 0,
+      "bodySha256": "851c021907eda1a8309f3d79f60082cd78e002eaaf71fb2b4a3e5ed81a0cb570",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 32,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/32",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "af232a848431406b1cbc8a7a984c3e6e8abf9f5639a31890ff88dba8b436632f",
+      "orderedCommentsSha256": "7e1bb106e1da340fdb05a3b732a8c9f195ec40dd8445919e64b89d10b5bd028f"
+    },
+    {
+      "number": 33,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/33",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "8b5607ba71e0393b8fa117c8abc74702790feffe06c106ab2c137efd6be80b9e",
+      "orderedCommentsSha256": "145cd252235f417403599a84491d01a6b4845beb72e5e50929b1d5169b36732f"
+    },
+    {
+      "number": 34,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/34",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "98ee464397a15ea491a7ead977c81d71ffaaab55b54bedf49b91aac2375c323b",
+      "orderedCommentsSha256": "b7c38cea8fc8c37492a25f2bb43f2b9e4422f79480675d677d31fc135140d077"
+    },
+    {
+      "number": 35,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/35",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "d1ce93ecd49b5b4ec3be684b6f7ec95507da2fcdd3e326dfd91f434379c28673",
+      "orderedCommentsSha256": "f597e43cdd822e34c86e895ed3c0427304b7494a938c34bfc785cb800c544ed7"
+    },
+    {
+      "number": 36,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/36",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "ad0f69435655e61724ce2cfcf8f3d0bc956a4c41042bb432c653b3ee2b0303bc",
+      "orderedCommentsSha256": "0ca0df76578993e987a0638079d1592316b8a16274c17bbe5441451d9054cc05"
+    },
+    {
+      "number": 37,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/37",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "c12628eb096e5007b64e78e039b0aac5431dcbefe25c01e3b98a350fe0304f40",
+      "orderedCommentsSha256": "08182b78bf5c63ebf87f4a313c0c3b7a15beccd628544ea94c8bc57cb7fb97f2"
+    },
+    {
+      "number": 38,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/38",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "925ec3d394dbec37bb19feaeeddafe93df58ebd4dd417fa77632f2eda36bdefe",
+      "orderedCommentsSha256": "3b4d061d028cf756b28413176e50d012cb56abaf5c52a1bb4cbeea1e9aeafbb5"
+    },
+    {
+      "number": 39,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/39",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "ac221a738e9f7a42a48c4386703527b80786bf7d080c1c0cc8afd87e0685080f",
+      "orderedCommentsSha256": "5c540f4f114589096293e89343c66c2b72b4157c2bd20922329c0ab706206913"
+    },
+    {
+      "number": 40,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/40",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "9964b7e11e067674e709227b0b32beab3eaaeccb08557b1192dca5166f844494",
+      "orderedCommentsSha256": "854942190dba7707613ecf4c6406d5b0311d0260ef38debef9f4c3c0ec49fb95"
+    },
+    {
+      "number": 41,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/41",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "706b5b983480b014304e11959dea7628fff7b68ca31faacb407126f17498d939",
+      "orderedCommentsSha256": "b16f5471e563f2e87eff20e151bbce8df612e7270a52166c25ff71988af17d5f"
+    },
+    {
+      "number": 42,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/42",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "2aae111d4c42e464dcf6de6bbd8818713ce217841f74662f4e10671eb70e1ab0",
+      "orderedCommentsSha256": "ddc41464c18726d4ef5b0bb1593019017977c4062a8b09daeecb4b66c560ccbd"
+    },
+    {
+      "number": 43,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/43",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "e1bb0013f892ca580d7d142c2cd503c9bdcaa1a152977ab3bb6c6784ab45487d",
+      "orderedCommentsSha256": "8220d51ac995c985f190f1ac05405251ae43ade473a4aedb982d138834221f9f"
+    },
+    {
+      "number": 44,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/44",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "d3736988c97b23ab09cb0fb3e0a8f6a5d9d1f8624f88a8af80ddc6b6a2b6b23c",
+      "orderedCommentsSha256": "af6567a065e67447af87b9c9a83e711d7bb2c89bb7390cb2ab4d1c19635cff24"
+    },
+    {
+      "number": 45,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/45",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "8314320c539956723d69f415ccf2e8f96eec5abbc730f07ef6cc02659d84e398",
+      "orderedCommentsSha256": "035c5dea0632e52c761658cdd69d2cb0453cd413455191851cf0bc97edac48e6"
+    },
+    {
+      "number": 46,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/46",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "7066d1f44052640bb41d50821a1a5ee40a9e5206b013b7c5232dd6ae9e639465",
+      "orderedCommentsSha256": "e43c57a07e8e24d067f6a0c61705babc15bc8e3ac981556924fc497c54154cdf"
+    },
+    {
+      "number": 48,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/48",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "19af95df1d69627022f44d83acd452d437102e3d896b792425f36a0f508a09b1",
+      "orderedCommentsSha256": "cc07b7e16d77ee1138062b79d9621c6c33d1c4c19f3e78b6dbb50cf8c72698f2"
+    },
+    {
+      "number": 50,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/50",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "2769bd08a0cecfbe8bef8c18df9ec7bdb0a95bf4699c9e2e4dd297d3a902a8ab",
+      "orderedCommentsSha256": "bca8284ecc8087f4706e37c752e3b40a4b43a54b7dc4792a265b731da9221ada"
+    },
+    {
+      "number": 52,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/52",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "d449e1f22e6e054fc7d306a55c54b2aa80a8147fcdfef7f10ed2f1c10856a553",
+      "orderedCommentsSha256": "4d4148a48a0719d901fdd6a9d89425b90b701587a239e2cd18ff7de53a3cff47"
+    },
+    {
+      "number": 53,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/53",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "e7914b4b4aa7c13f51fa92db961afe81c5b030e2b89b224a82a10cab97449595",
+      "orderedCommentsSha256": "a510d0a31d8e75b5d7c8431c0a9d220af684046df9c583b161501765a481cf58"
+    },
+    {
+      "number": 54,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/54",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "19b995b17b36bd898a07bb8a6f3a561b94cf5184c8cf4be5ab67492129ce5601",
+      "orderedCommentsSha256": "1dbff3cebeace7bc2b9d01a1f457c9b1fdc0d6595bd4492ab765a5470cb71b83"
+    },
+    {
+      "number": 55,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/55",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "fdbd160b94496c44dd7dd50be6be6242167f53bb2aaafd55b70b137777150a9d",
+      "orderedCommentsSha256": "4e0a523420fd8e3b43f0761d03434a1424951955770f2ff186c78901bf3eea75"
+    },
+    {
+      "number": 56,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/56",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "68758987fea1913cfb4b5260c15d66c0aa9a1cf5a720086af56769a5b2046963",
+      "orderedCommentsSha256": "4c7fec0e713aba0d3f6dc5f29ff0900050a3f7c2b891618adb65092d33ab72a9"
+    },
+    {
+      "number": 57,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/57",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "4c0fe870cac3c4dba684244ab5910293779ee2377bddcb8ed4f9a35fed160ba5",
+      "orderedCommentsSha256": "f2d86ae37eff931a7058e6e280d2bc6aee96424a75b243aa5569ff7b8dcb03d0"
+    },
+    {
+      "number": 58,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/58",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "a426ffb8eabc144fe24735ef66793a50ab583bfa490e1dcecd2aca2886700cb8",
+      "orderedCommentsSha256": "4179b10a7a4cb2ba22db06993d7984c386a587809ace04abc968a5fa5330b14a"
+    },
+    {
+      "number": 59,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/59",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 82,
+      "bodySha256": "962d8bac0fa477739cb35a9eda449b922a70186ba08b2a24d89fffb2790f5e89",
+      "orderedCommentsSha256": "7f1ec6b62392f04bbb783029c2bfe4add1e5142e4d6662fddafd1d26b9234114"
+    },
+    {
+      "number": 60,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/60",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "857d1294f4aa3347ccbda231fd65d85a1f28cf9a3b19e4342779b31478069650",
+      "orderedCommentsSha256": "cdbc2ea05b798e1a0e8bfa1801ed4a781327da7f596a07bc2bf1e5e3ea64663e"
+    },
+    {
+      "number": 74,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/74",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "631e6c50df226782f81563ee5a60e93f2db2706109ac2692303f054af7b412f0",
+      "orderedCommentsSha256": "59e564c64c077e411594b48ed40d3aa744716f67cea5d86b68bd46a408f7716a"
+    },
+    {
+      "number": 75,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/75",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "09fc9a10fe96b6f8c0d8e7de5b725ecde80bf2697b4105c6918e9effef302380",
+      "orderedCommentsSha256": "fff9825bc165a7dd2373a060285a4f9d9ff532d98c5a5d4d3168fb5410a7e592"
+    },
+    {
+      "number": 77,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/77",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "66ecd15a742447a005a35371dae6cb97e27180aef60d7aef695a24b8b491205b",
+      "orderedCommentsSha256": "3b5a1f93e589790b73065c582270aae0c9d671687569fe7460a4071428db2cbf"
+    },
+    {
+      "number": 85,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/85",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "0a10fe1dd7d7b6a7b031b0f76d04c994e1f2e569bedd0347f9bba23e18d85263",
+      "orderedCommentsSha256": "e79228456cde552e89f424aa129a44fedc6e55474efc519485eff13485853004"
+    },
+    {
+      "number": 86,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/86",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "a7aa2c1746970de4a2a578f39fc2e69028f97330559ab120ab78e4ffb805c320",
+      "orderedCommentsSha256": "c05d4f85e3a453036ddd832d19624c58c0f928c91a769b48614219f7e9b7942f"
+    },
+    {
+      "number": 87,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/87",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "4a1f57899500df19f742344f2f1dcc46ded38c51d7cd48c31808b55dcc5dde7e",
+      "orderedCommentsSha256": "033d1a28ad877cccd9061f0a7d170921b8c8f1ab636323b0bebea45b06bd4cd0"
+    },
+    {
+      "number": 88,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/88",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "7924563ad5f1ea1dc93f92f99550937816d3849bc8f746afedb66b68abb4de95",
+      "orderedCommentsSha256": "00338eb912ff3316a40d7d2146e75032a44241efdae911ff12763d943d805b04"
+    },
+    {
+      "number": 90,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/90",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "23d93b89e8d05373f914738d9e4712368cfabcd2e5e355559167c7365ff5ecce",
+      "orderedCommentsSha256": "0518e547bb347e7e958baadcab0c2997f2a42512a6ee8a93f76e96012062291c"
+    },
+    {
+      "number": 96,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/96",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "60be79fb361def9e49390b74654e03edbc056aae12c23fa9ef5305bbe5f3af77",
+      "orderedCommentsSha256": "d17b4be88f305710f28701ede781b6e321acdba23551c8b854f520fed6c61bec"
+    },
+    {
+      "number": 97,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/97",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "84a4bd2738a685b92d0162e8fd91145dfcb85612710611c864784f66c10a6218",
+      "orderedCommentsSha256": "8ebc640ea8641c4821fb644d6a5e6da10f383b21331d0a809e3e9d9783fde066"
+    },
+    {
+      "number": 99,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/99",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "a1d7075aa0445d73408f25323376f895a25e6a7067a91da36f792b775cee6ad3",
+      "orderedCommentsSha256": "7b557d0cdb7136d7b8c9405cec15b47d35c856191eebe444ea0ec427a457cc5d"
+    },
+    {
+      "number": 100,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/100",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "05a9be08e1467afadcf34613f6e1558c18d6d58cebfacec9248c88c6bdc13df8",
+      "orderedCommentsSha256": "af15d3ba6dd41c4232d7cd3e9fe79bcef40549b4c08dd01f3e1350057ee402e4"
+    },
+    {
+      "number": 103,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/103",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "3963417cd3eb49998c96ec4ca7489f5f54fc3b4f2730c9385dcc0b521540d4ef",
+      "orderedCommentsSha256": "fa9e66c9c5467c6b9d1276ca9a7b17868c792d2c9eaeb6f746e7cb9bddea3d6d"
+    },
+    {
+      "number": 105,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/105",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "19549fd6ac6ca48df56bcf2e998831f6b7cb49705791d8c8bf95ee3b84fdb76f",
+      "orderedCommentsSha256": "024facf10bb9b4a9ff15bfa43cb4ab200e906e2c2f9a80becca171fa856b3766"
+    },
+    {
+      "number": 108,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/108",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "69ff6506cdab37b2cc34695a9fbaea4658c11f33bb2e64bfeaeb72fa3f75aa3d",
+      "orderedCommentsSha256": "c60dd8d870640ce75ac4027f19497265eb8eb508d650386b737ad5c9ec28aaa5"
+    },
+    {
+      "number": 110,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/110",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "701fee3415e213bd2f50e15407d82a3bb8f89f8ed234a8ff37ba507c2cebb7d2",
+      "orderedCommentsSha256": "697212b58f5cdad6f8067cd0a0498215fb128817941dc565fe087298477eef56"
+    },
+    {
+      "number": 114,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/114",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 0,
+      "bodySha256": "f0356560498c2972f9d847b83fd69e868a0a33093edc0650145a8c3a799082ae",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 116,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/116",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "027f106246f83242a9a207e92418f7309a52cbd846b68715a2b15904d55bc6be",
+      "orderedCommentsSha256": "ae6e9b8f4066c5ada5d776e935c17f7bed5d16f6f873fc5e5a71897e9fb515d1"
+    },
+    {
+      "number": 117,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/117",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "f33175b6567117e53d916dcb48c501f81c33aa6741e12132c45e5af9da419480",
+      "orderedCommentsSha256": "31be56add850762daf93be39c8156c68361098c3d2b447e63e83ecff9cc5cbc6"
+    },
+    {
+      "number": 121,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/121",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "c166435998f2f3196856af86b0a11b3f9914f1c4df21c55dec813f7d69a22355",
+      "orderedCommentsSha256": "f8ddd1bf6e66763cfa05f852d3405c26916ba762c7bcbd73065995c376358dad"
+    },
+    {
+      "number": 122,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/122",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "65cf3ae57b5ba960186f55d686283cf46b1259c384dcec9d3587c0427fc94eee",
+      "orderedCommentsSha256": "798389adbbb6aaf7498566946aa84bf15c99f6bed7534ae6fdb1909c9e3dd20e"
+    },
+    {
+      "number": 126,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/126",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "c26e26ed290aa750401b812a82c4db291cef834f53747c63b576467400f987b5",
+      "orderedCommentsSha256": "ada126f4a00ff35b4b5d6530dd43ff225d4466a2b71ce8c5bfa9711ef9adb053"
+    },
+    {
+      "number": 130,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/130",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "c0f68b52f12e05d1f5d4b27462313d9a672c7dc02defc11613a72b6920283c13",
+      "orderedCommentsSha256": "9cab19c9741761180bc9e9d20ac7e67359aa08ec4f3e5d34492a79090f00b962"
+    },
+    {
+      "number": 132,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/132",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "4d0cc56c90f954755b4a7c0023e9e7ef23bb986cf242cafbb0fa802ddeb0ad26",
+      "orderedCommentsSha256": "e6adb0eeffb3e80da24174acbaf6e4efa58a44e934b6d431506135c89772a247"
+    },
+    {
+      "number": 145,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/145",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "03cf898399a4878cee7712a9dd0b5f22e7b74795d4d1eb4c09490edb91065aff",
+      "orderedCommentsSha256": "86ce0d1839c69ce517683c7920b2f717aa76cb89aa3ac7f96f65a7a2460d1cad"
+    },
+    {
+      "number": 146,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/146",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "60f30e7f31a63cf7c7632916b33b67fc902bd706c35b3309d3dcb975bcc7d60a",
+      "orderedCommentsSha256": "2dacfa9689a2961f0b5dcfa27936209462117ff3f57a92340463b90fdf3df66f"
+    },
+    {
+      "number": 148,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/148",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "9cf0248d9c7fb43aa36067ac9b59301b6f4fffe05fc9342ea33bb5038bf8b9b2",
+      "orderedCommentsSha256": "969178657e5a90c73df5426911a7a46fec3aa97b6dfceb356e61de9b8eea725b"
+    },
+    {
+      "number": 149,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/149",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "f38b81d6ca61fe70b54fab6f5c0dc1c28df7b087c7df505d3e9011915a10b761",
+      "orderedCommentsSha256": "e8b97e9f3cd4b3bcf22fee96accc0ddd0f02b5c5a470ff74d745e2af710df02f"
+    },
+    {
+      "number": 150,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/150",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "6df5f3281a93300d0f822e6041353a14026988ec802792db7769149d3662d12e",
+      "orderedCommentsSha256": "eb0896f529c55fe6de07599f144802664802199d4ffc2484d74f72f91eec3bb8"
+    },
+    {
+      "number": 151,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/151",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "5212b5afcc78a46c6240fd2553eb9fe419c0bd5a12310ebe7a7a96299b5da7d7",
+      "orderedCommentsSha256": "18d26db43772324ca32a880da40e168a0653fc1366149c31bf28adbb1e9f8b0e"
+    },
+    {
+      "number": 152,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/152",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "1cea28402577e314d2ce57ec80d1198c710fb8a9098dd6271d780bc157183b9b",
+      "orderedCommentsSha256": "0ce4f23ea0af31a9e1705537f5d1feaad8c1fe2de899286712367f16d1a4f681"
+    },
+    {
+      "number": 154,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/154",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "204899bca6feaaaf5800cb337276d8d5c0cc19a5f4f1e481752cb58eb2e735a6",
+      "orderedCommentsSha256": "909b1cca423a8f0e4be44db1edee4d6c9298a36eed962dc22e7f3d2c8c6920be"
+    },
+    {
+      "number": 156,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/156",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "3e45889b46b14518ebcb56099e5b63e9aa409c6d41765eec6004fed10260b129",
+      "orderedCommentsSha256": "27e88012ff89b532ea145b8a5f4ee0e443094521977870d4c26b6bd77ce66a36"
+    },
+    {
+      "number": 157,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/157",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 17,
+      "bodySha256": "ac48e08edced1916f9e1d53e636a021e0ff74610073b97eff261695da2e55eaf",
+      "orderedCommentsSha256": "efda0b6f8b2e197aaa958a97736a241ea15bbeaed5840508f3b4d7ec09b0c5be"
+    },
+    {
+      "number": 158,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/158",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "b33aa576fcea4ad847c67922bc4fc243b98917edfc651eabbcc443a759bd897c",
+      "orderedCommentsSha256": "c048d28329d6fc7983b222b8cbc0af004f3f12cad34d0436bf778a20b66b41a4"
+    },
+    {
+      "number": 159,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/159",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "43443cbbaf8cd3abb6e71145c746f60b9f7d7364704f798623037928bee24198",
+      "orderedCommentsSha256": "cd40e3023cebe4f7b0c2f0e2026815c42eecf75aa6a2edbb61aea873c8e80220"
+    },
+    {
+      "number": 162,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/162",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 22,
+      "bodySha256": "a5e38fa2fbcfbf3c0afde8dd2a36312e4400f3f8d3bd85f05e9b89db2807a857",
+      "orderedCommentsSha256": "1a8bed44e93fecef38ec2fbbdfcfba5c2c9aa2e2ccc2bd3201792b2e38c2a0b6"
+    },
+    {
+      "number": 164,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/164",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "a741a5229b6039e693ad086b453e6696099fc6a5237afe44d0eea44b3260387d",
+      "orderedCommentsSha256": "671f99c3187b37b0d85fc020f84d6c98d75544ec395bceaf8a10719330b398d8"
+    },
+    {
+      "number": 168,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/168",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "a49578cd70c691347da31c0a3dd418985a73bc3c56584d06da027dadd78d0b1b",
+      "orderedCommentsSha256": "3ceeb40e504a34aaa330170faa898f0e25edab6fdedc7f6bb948d0be15cdc4e4"
+    },
+    {
+      "number": 174,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/174",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 0,
+      "bodySha256": "9299b12521893f1c10811f4fbc796f13ea2ae1749880f98c0e7d12dae988c92d",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 175,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/175",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "454facf3c53d2bd0c481c50cb5ef2a28165d6aa1dd8bfac5e9666ab91c539efb",
+      "orderedCommentsSha256": "051a13efae92506f73508a22fc0f12e99be68eddd6eb60639925b6174c211a4a"
+    },
+    {
+      "number": 177,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/177",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "282d36376f33ae35802a26a3a90ca241bde7235f73659d13c36e917df3b48523",
+      "orderedCommentsSha256": "bbd87230d254823e2996e392ab0c32899efa52390d08b84a771e264cde57fb8b"
+    },
+    {
+      "number": 183,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/183",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "f9f2c7ea149f65c318c8fd729515c6fdf9ef9ef70831947de64bee8e98e0299a",
+      "orderedCommentsSha256": "dade6b02292e4d69d7131016660645009b17326a026f0eebc99d92a4cac0aa6b"
+    },
+    {
+      "number": 185,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/185",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 6,
+      "bodySha256": "a1f7bc4d16cda50f3d50b7777172086864af02a826b27470195fd206a5292f1a",
+      "orderedCommentsSha256": "6f3e4a655def04b9fee8031ee9e85807741653bccc7f52477a44646edbc64ea5"
+    },
+    {
+      "number": 193,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/193",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 0,
+      "bodySha256": "e3f7fcdc8d63f6bfc648b15adeefe8f8296136551dddcb15ef149f0f6346f286",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 200,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/200",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "5d11465b347ca4bfd3d89fcdfb65f431cd4ccaac40e0b05dc57edefc6db3aa62",
+      "orderedCommentsSha256": "3fd1eddb623fc006f50f16e7481b836f1d8849aec441065da84b142067c93a89"
+    },
+    {
+      "number": 205,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/205",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 0,
+      "bodySha256": "00e37b86961f7b0fd52b3ebc5de0bca5c7ba0efc93f28325c9e85ff395cb0650",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 206,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/206",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "0b28e56cac93aa212f1b2474237bffd6a5ea120a473d93c9cb6c763185e7d35f",
+      "orderedCommentsSha256": "bd6599a2ab3116f6115a5e3b1c1838c579103c3eece261d5c9e96c70a6858024"
+    },
+    {
+      "number": 207,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/207",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "c58397e550122902e7342cc1941a6b6fe6d9361842adc906bc7c9154295ba2dc",
+      "orderedCommentsSha256": "7e4cb75da2e5ebe05200de79d6374a8096f71a449cc1d82b5876851133313b3b"
+    },
+    {
+      "number": 208,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/208",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "00eb39f48cd6af0a4781d754fa2961a98eaa8f6c6c5024ce684bb2fd45b43d7f",
+      "orderedCommentsSha256": "8e48232829c5d766f9613845ea6af9fed1ca5d0a0521e156f6b5c415629abc4f"
+    },
+    {
+      "number": 209,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/209",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "4b333be0e9b6b0b64d05592129030e01fb2975732d95d5499f75766e2a6165a8",
+      "orderedCommentsSha256": "7c9accaf0d4b38b473e73aede853a0f71de4e27d79cfccebfcf2a9543647d3d3"
+    },
+    {
+      "number": 213,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/213",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 7,
+      "bodySha256": "cdb164bb0640a90e597a232b1aef5e6c547d963e26f53f3aabb46febdeed1ee3",
+      "orderedCommentsSha256": "ec3530951a85c976c6cff972a51da257867611c882c7e6f2cb2105bd57fe195a"
+    },
+    {
+      "number": 218,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/218",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "fd80e800615d192cd4ade35a4869d6d3558b9ca900a0e14b6024917ad06e6df0",
+      "orderedCommentsSha256": "2bc7c9f9e00c4cb80616b5e1a92548b73e4c6048dc0b829d4a67d481d9a6fd5d"
+    },
+    {
+      "number": 220,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/220",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "a06d8c300f1e3e6a9708588bc80cf7bb65e26f3dc99e155c82a9777b30dfd91a",
+      "orderedCommentsSha256": "5c559bd1ae81bf8c62dd0b8242547c605671dbc40d6322ebd21030633d159dc9"
+    },
+    {
+      "number": 221,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/221",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 5,
+      "bodySha256": "e575c44575081ee0e78ea50608f97cac3736204094d9951b342115e415664b87",
+      "orderedCommentsSha256": "39d5e0e3121599b266df25f7555c9cc0a75758ff573136307c46dfbdf113bea6"
+    },
+    {
+      "number": 222,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/222",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 4,
+      "bodySha256": "8a552c05c4b61af2e495a4e9d60c40a524e4c3f69b5d09a409c28de2424f47ee",
+      "orderedCommentsSha256": "6f0541da4e30ad569d0add95a3e7efa85e93ff2a7e703e0a34682497330af018"
+    },
+    {
+      "number": 225,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/225",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 250,
+      "bodySha256": "2980072e3568d7fd7df1241f8c5da1f5c8ba2de6cf9c398084e4e2436397c144",
+      "orderedCommentsSha256": "d913c454676b689ab386eb1b22e981e8dd79fe21f2bbe1c9f9531b31af042d9f"
+    },
+    {
+      "number": 226,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/226",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "779948888f39f03bac06f89ad835d7b9328a768b783449462a271f6c62ea4efd",
+      "orderedCommentsSha256": "a29f1da882618acb31514522a49c74bd986a2afcb72765a33148614994cb8449"
+    },
+    {
+      "number": 228,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/228",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "9b80c6a304d81e497e20290017d4f4ee6e69087aff76080dd877f806011046ab",
+      "orderedCommentsSha256": "841779fb28c946c984959d988b6aa35e7c8b4c58cf80fa700de9f129e9a2c733"
+    },
+    {
+      "number": 231,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/231",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 2,
+      "bodySha256": "5cded4cffbed44efa4d35017c75d7d60d277d874db57ce4a64ae92fa2be0307f",
+      "orderedCommentsSha256": "8f13ce5f2d78426a24c6cc74bd7446effdd7e00451c7543d369f5bcede10a608"
+    },
+    {
+      "number": 238,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/238",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 0,
+      "bodySha256": "633b0fab7f6cfea8e3a0d850b877156105c637d1df689962eca329e3c7f3722c",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 241,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/241",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 3,
+      "bodySha256": "1b4a960b22ec8a47779d947b47aea91db0e0e2fd6c086e2faa243c01e4792e96",
+      "orderedCommentsSha256": "0897931cdeabf8678399f57bea2b10c9f349e5f008af57d8413d4da53efa34f8"
+    },
+    {
+      "number": 250,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/250",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 1,
+      "bodySha256": "bfe280978d7ce84eb9b20070853a5907e6ca1e2a7d68d43954a763190ed08e08",
+      "orderedCommentsSha256": "1ddff2a9b7e6977240089e07153f69d93d60c48b70c3a074ed8b8d0bb6fc545c"
+    },
+    {
+      "number": 295,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/295",
+      "state": "closed",
+      "disposition": "archived",
+      "comments": 67,
+      "bodySha256": "b55ea5336063a2f9bfa0f79541ac8c9b577c928c898f2dfa2f8bc7c41caaf18e",
+      "orderedCommentsSha256": "1514163a4aecc1f3c243a6c7b75e24d33865d1f435c94d72f22a38b6e456d6b0"
+    },
+    {
+      "number": 314,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/314",
+      "state": "open",
+      "disposition": "active_lane",
+      "comments": 46,
+      "bodySha256": "9792263bc1d4bff1cf907f37396f497b0a07be17e89e7482059d473498467c00",
+      "orderedCommentsSha256": "e4ca4483e58bdbb901bec9f65f21d209e17a7b09827577dfe9dca161eda75742"
+    },
+    {
+      "number": 315,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/315",
+      "state": "open",
+      "disposition": "active_lane",
+      "comments": 9,
+      "bodySha256": "5e6bdec1f6554cb8e6d45a3578f12fdef271be92282d64896fa3b09196eb335b",
+      "orderedCommentsSha256": "e800f3088ecb32f820ddb1583a43202f6f2a54e7dd05d786153a24a3e946b909"
+    },
+    {
+      "number": 316,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/316",
+      "state": "open",
+      "disposition": "active_lane",
+      "comments": 9,
+      "bodySha256": "44607ee6b869ddd68900b55aaed1fe49d148c9b154f2c6a6b67c9cb030bac161",
+      "orderedCommentsSha256": "3082173ca88497e533a27ae44d5c1e2272b06410caa60a6f4998088d6d443541"
+    },
+    {
+      "number": 317,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/317",
+      "state": "open",
+      "disposition": "active_lane",
+      "comments": 13,
+      "bodySha256": "290f6e0d035c4386bb1edc833a434680e96396b8c7b78bd7c335e1ffa96e4a1c",
+      "orderedCommentsSha256": "07508bc20105fc7736d568ff944ae53ebaa127ccfd2a40e8fed551cdc12bfca9"
+    },
+    {
+      "number": 318,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/318",
+      "state": "open",
+      "disposition": "active_lane",
+      "comments": 17,
+      "bodySha256": "f3e2e9aeb538e7248a984d1268880a52a0a4851ce49479cd8ad1e2ccd9d284bd",
+      "orderedCommentsSha256": "6d46e98fb484f724581e8c7c7d7da6c27d21c4e733cf68653cbb3883ed6f1e6c"
+    },
+    {
+      "number": 319,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/319",
+      "state": "open",
+      "disposition": "active_lane",
+      "comments": 4,
+      "bodySha256": "bd57337c022c1ffbd0ab701ebc487a816a5b88f55b406d4a645c65aed2e495bb",
+      "orderedCommentsSha256": "bf1adec7d0ad2c2eabc70ecf2505cc0b8ef2ea760835905d899b0cf9917c994e"
+    },
+    {
+      "number": 329,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/329",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 4,
+      "bodySha256": "d280b66a43c1baf55f48be4a22b2995053587245c7d3443d99f258c6f2cc2ebe",
+      "orderedCommentsSha256": "ad3a0ef72da8d589cc6221de4cf6ec62b908513bdb7544410181769f89d9c287"
+    },
+    {
+      "number": 330,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/330",
+      "state": "closed",
+      "disposition": "closed_finding",
+      "comments": 3,
+      "bodySha256": "7e66d9e3b584bd6e66f24c1558cf1d8587e34cb0fa27f31b5e7dba994a2ef846",
+      "orderedCommentsSha256": "b52c46ee0070fed45799c1ebca509e78c9d18fd84b247d0526c975b301e966f0"
+    },
+    {
+      "number": 331,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/331",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 2,
+      "bodySha256": "842ee544c97b4ce25a53036d360a4422ed73b70bfd34374453979c15f76ba04d",
+      "orderedCommentsSha256": "d9b36346cdb6ba05edb9bd665bf1f7d2395dc388cbf688aee2df80a2a699ca08"
+    },
+    {
+      "number": 333,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/333",
+      "state": "closed",
+      "disposition": "closed_finding",
+      "comments": 4,
+      "bodySha256": "62da7ac9c7f8380710e1e474ce926c779a2222f8458346407ffde41d1cc2b797",
+      "orderedCommentsSha256": "270bb5e0a928165ed8b9286e68238ad24df176930e689194278e9f203aed6cfc"
+    },
+    {
+      "number": 351,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/351",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 1,
+      "bodySha256": "3a52bb5961227375b006e86a589ab989db23107a2ab29c920bbfe1326c595395",
+      "orderedCommentsSha256": "6a456fae3f90b8bad77bb718eb78cccb444627bc42ab4baeb771502190393044"
+    },
+    {
+      "number": 354,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/354",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 2,
+      "bodySha256": "ff6e730440cb629eb89f89617ae8d9000c70cfda739e2e74f3f12a137aaafbd0",
+      "orderedCommentsSha256": "9cbe06c99bcb68aa8fd665fff59c20f34c216568004187e75181175cd179010a"
+    },
+    {
+      "number": 360,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/360",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 2,
+      "bodySha256": "ef02562791f5441734fb33a5263b0528f3c5ecbf944689754289d53d1f5a1cca",
+      "orderedCommentsSha256": "61be683ac4bc71ff41b60514c3cc2df10be50aed7af030c11274abac63383199"
+    },
+    {
+      "number": 365,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/365",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 0,
+      "bodySha256": "24543b38fbf31525a4b034103b5e2ed58cf54118c3f30eab5ed9c1c3ee432813",
+      "orderedCommentsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "number": 368,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/368",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 4,
+      "bodySha256": "5e56a36b41d446f54ee62e1e44eefb771006f8fde523ed7a4e6dc62cee223286",
+      "orderedCommentsSha256": "765b0bd6a325124e741ef81adda0488550766919f6d0a5ffb135303bc48ad7fc"
+    },
+    {
+      "number": 370,
+      "sourceUrl": "https://github.com/I-am-drunk/linear-loops-decompile/issues/370",
+      "state": "open",
+      "disposition": "open_finding",
+      "comments": 1,
+      "bodySha256": "726b3fa9154bcfcda6c71abf989123f2a7c9aa8e47eed424e03e2e5153b5a43e",
+      "orderedCommentsSha256": "46e67dfa8c4fdbedcf9d41ba7a9a8bcfff08180a1e286a4fe6c4c032a8988fd5"
+    }
+  ]
+}
