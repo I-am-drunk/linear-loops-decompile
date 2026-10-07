@@ -43,6 +43,11 @@ export type ChatRequest = {
 export type Usage = {
   inputTokens: number;
   outputTokens: number;
+  /**
+   * False when counts are absent or invalid; zeroes may be placeholders.
+   * Omitted means known for compatibility with existing adapters.
+   */
+  known?: boolean;
 };
 
 export type ChatResult = {

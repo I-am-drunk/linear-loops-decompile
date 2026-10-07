@@ -316,3 +316,87 @@ test(`native fetch does not follow an unchecked redirect`, async (t) => {
   assert.equal(got.ok === false && got.error.kind, `unavailable`);
   assert.deepEqual(seen, [`/v1/models`]);
 });
+
+test(`missing or invalid usage preserves text with unknown actual cost`, async () => {
+  const usages = [undefined, {}, { prompt_tokens: 12 }, { completion_tokens: 3 },
+    { prompt_tokens: -1, completion_tokens: 3 }, { prompt_tokens: 1.5, completion_tokens: 3 },
+    { prompt_tokens: 1, completion_tokens: Number.MAX_SAFE_INTEGER + 1 }];
+  for (const usage of usages) {
+    const p = provider({ ...PRICED, fetchImpl: async () => Response.json({ ...JSON.parse(CHAT_OK), usage }) });
+    const got = await p.chat({ model: `m`, messages: [] });
+    assert.ok(got.ok);
+    if (got.ok) {
+      assert.equal(got.value.content, `hello`);
+      assert.equal(got.value.usage.known, false);
+      assert.deepEqual(p.cost(`m`, got.value.usage), { known: false, cents: 0 });
+    }
+  }
+});
+
+test(`genuine zero usage is known and explicit unknown usage cannot be priced`, async () => {
+  const p = provider({ ...PRICED, fetchImpl: async () => Response.json({ ...JSON.parse(CHAT_OK),
+    usage: { prompt_tokens: 0, completion_tokens: 0 },
+  }) });
+  const got = await p.chat({ model: `m`, messages: [] });
+  assert.ok(got.ok);
+  if (got.ok) {
+    assert.deepEqual(got.value.usage, { inputTokens: 0, outputTokens: 0 });
+    assert.deepEqual(p.cost(`m`, got.value.usage), { known: true, cents: 0 });
+  }
+  assert.deepEqual(p.cost(`m`, { inputTokens: 100, outputTokens: 100, known: false }), { known: false, cents: 0 });
+});
+
+test(`invalid request deadlines fail configuration without dispatch`, async () => {
+  for (const timeoutMs of [0, -1, 0.5, NaN, Infinity, 2_147_483_648, null as unknown as number]) {
+    const s = stub({ body: `{"data":[]}` });
+    const p = provider({ timeoutMs, fetchImpl: s.fetchImpl });
+    for (const got of await Promise.all([p.models(), p.reachable(), p.chat({ model: `m`, messages: [] })])) {
+      assert.equal(got.ok === false && got.error.kind, `unconfigured`);
+    }
+    assert.deepEqual(s.calls, []);
+  }
+});
+
+test(`total deadline aborts native stalled headers and bodies, preserving a known rejection`, async (t) => {
+  const server = createServer((req, res) => {
+    if (req.url?.startsWith(`/headers/`)) return;
+    res.writeHead(req.url?.startsWith(`/reject/`) ? 400 : 200, { "content-type": `application/json` });
+    res.write(`{`);
+  });
+  t.after(() => new Promise<void>((resolve) => { server.closeAllConnections(); server.close(() => resolve()); }));
+  server.listen(0, `127.0.0.1`);
+  await once(server, `listening`);
+  const address = server.address();
+  assert.ok(address && typeof address !== `string`);
+  for (const [mode, kind] of [[`headers`, `unavailable`], [`body`, `unavailable`], [`reject`, `rejected`]]) {
+    let signal: AbortSignal | undefined;
+    const p = provider({ baseUrl: `http://127.0.0.1:${address.port}/${mode}`, timeoutMs: 200,
+      fetchImpl: (url, init) => { signal = init?.signal; return fetch(url, init); },
+    });
+    const got = await p.reachable();
+    assert.equal(got.ok === false && got.error.kind, kind);
+    assert.equal(signal?.aborted, true);
+  }
+});
+
+test(`a transport ignoring abort cannot keep the caller pending`, { timeout: 1000 }, async () => {
+  const transports: FetchLike[] = [
+    async () => new Promise(() => {}),
+    async () => ({ ok: true, status: 200, text: async () => new Promise(() => {}) }),
+  ];
+  for (const fetchImpl of transports) {
+    const got = await provider({ timeoutMs: 10, fetchImpl }).reachable();
+    assert.equal(got.ok === false && got.error.kind, `unavailable`);
+  }
+});
+
+test(`completed requests clear their deadline instead of aborting later`, async () => {
+  let signal: AbortSignal | undefined;
+  const p = provider({ timeoutMs: 100, fetchImpl: async (_url, init) => {
+    signal = init?.signal;
+    return Response.json({ data: [] });
+  } });
+  assert.equal((await p.models()).ok, true);
+  await new Promise((resolve) => setTimeout(resolve, 150));
+  assert.equal(signal?.aborted, false);
+});
