@@ -99,15 +99,13 @@ test(`a natively-labelable control is addressed by the label's for`, () => {
   ];
   for (const row of rows) {
     const html = renderRow(row);
-    assert.match(html, new RegExp(`for="${row.id.replace(`.`, `\\.`)}\\.ctl"`), row.kind);
-    assert.match(html, new RegExp(`id="${row.id.replace(`.`, `\\.`)}\\.ctl"`), row.kind);
+    assertReferencesResolve(html);
   }
 });
 
 test(`a button-based control carries the label as its accessible name`, () => {
   const html = renderRow({ kind: `toggle`, id: `r.c`, label: `Ask first`, on: false });
-  assert.match(html, /aria-labelledby="r\.c\.lbl"/);
-  assert.match(html, /id="r\.c\.lbl"/);
+  assertReferencesResolve(html);
 });
 
 test(`an action button keeps its verb as the name and the label as description`, () => {
@@ -115,15 +113,33 @@ test(`an action button keeps its verb as the name and the label as description`,
   // so describedby rather than labelledby. Replacing the name with "API key"
   // would lose the action.
   const cred = renderRow({ kind: `credential`, id: `r.d`, label: `API key`, configured: false });
-  assert.match(cred, /aria-describedby="r\.d\.lbl"/);
+  assertReferencesResolve(cred);
   assert.doesNotMatch(cred, /aria-labelledby/);
 
   const conn = renderRow({ kind: `connection`, id: `r.e`, label: `Anthropic`, state: `checking` });
-  assert.match(conn, /aria-describedby="r\.e\.lbl"/);
+  assertReferencesResolve(conn);
 });
 
 test(`ids are escaped — a row id reaches an attribute`, () => {
   const html = renderRow({ kind: `text`, id: `a"b`, label: `X`, value: `` });
   assert.doesNotMatch(html, /id="a"b/);
   assert.match(html, /&quot;/);
+});
+
+function assertReferencesResolve(html: string): void {
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  assert.equal(new Set(ids).size, ids.length, "duplicate element IDs");
+  const refs = [...html.matchAll(/\s(?:for|aria-labelledby|aria-describedby)="([^"]+)"/g)];
+  assert.ok(refs.length > 0, "no control references");
+  for (const match of refs) {
+    for (const id of match[1]!.split(/\s+/)) assert.ok(ids.includes(id), `unresolved ID: ${id}`);
+  }
+}
+
+test("labels resolve with whitespace IDs, repeated rows and distinct roots", () => {
+  const row: Row = { kind: "toggle", id: "same id\t\ud800", label: "Enable", on: false };
+  const page = { id: "p", title: "Page", sections: [
+    { id: "a", title: "A", rows: [row] }, { id: "b", title: "B", rows: [row] },
+  ] };
+  assertReferencesResolve(renderShell([], "p", page, "one") + renderShell([], "p", page, "two"));
 });

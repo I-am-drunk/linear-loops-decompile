@@ -40,38 +40,32 @@ const CONNECTION_LABEL: Record<ConnectionState, string> = {
 };
 
 /** Row kinds whose control a `<label for>` can address natively. */
-const NATIVE_LABEL = new Set([`select`, `text`]);
+const NATIVE_LABEL = new Set([`select`, `text`, `toggle`]);
 
-/**
- * The id a row's control carries, so the row label can point at it.
- *
- * `toggle`, `credential` and `connection` render buttons rather than a
- * natively-labelable control, so those get `aria-labelledby` pointing back at
- * the label instead — see renderRow. Either way the control has an
- * accessible name, which it did not before: the label sat in a SIBLING div,
- * so wrapping did not associate them either.
- */
-const ctlId = (rowId: string): string => `${rowId}.ctl`;
-const lblId = (rowId: string): string => `${rowId}.lbl`;
+/** IDs remain valid for whitespace, quotes and arbitrary row identifiers. */
+const idBase = (rowId: string, scope: string): string =>
+  "settings-" + encodeURIComponent(JSON.stringify([scope, rowId]));
+const ctlId = (rowId: string, scope: string): string => idBase(rowId, scope) + "-ctl";
+const lblId = (rowId: string, scope: string): string => idBase(rowId, scope) + "-lbl";
 
 /** The control half of a row. One case per pattern, no fallthrough. */
-function control(row: Row): string {
+function control(row: Row, scope: string): string {
   const off = row.disabled ? ` disabled` : ``;
   switch (row.kind) {
     case `toggle`:
-      return `<button type="button" class="s-toggle" role="switch" ${attr(
+      return `<button type="button" class="s-toggle" role="switch" ${attr("id", ctlId(row.id, scope))} ${attr(
         `aria-checked`,
         String(row.on),
-      )} ${attr(`aria-labelledby`, lblId(row.id))} ${attr(`data-row`, row.id)}${off}><span class="s-knob"></span></button>`;
+      )} ${attr(`aria-labelledby`, lblId(row.id, scope))} ${attr(`data-row`, row.id)}${off}><span class="s-knob"></span></button>`;
     case `select`:
-      return `<select class="s-select" ${attr(`id`, ctlId(row.id))} ${attr(`data-row`, row.id)}${off}>${row.options
+      return `<select class="s-select" ${attr(`id`, ctlId(row.id, scope))} ${attr(`data-row`, row.id)}${off}>${row.options
         .map(
           (o) =>
             `<option ${attr(`value`, o.value)}${o.value === row.value ? ` selected` : ``}>${esc(o.label)}</option>`,
         )
         .join(``)}</select>`;
     case `text`:
-      return `<input type="text" class="s-input" ${attr(`id`, ctlId(row.id))} ${attr(`value`, row.value)} ${attr(
+      return `<input type="text" class="s-input" ${attr(`id`, ctlId(row.id, scope))} ${attr(`value`, row.value)} ${attr(
         `placeholder`,
         row.placeholder ?? ``,
       )} ${attr(`data-row`, row.id)}${off}>`;
@@ -79,7 +73,7 @@ function control(row: Row): string {
       // No input element: a credential is never pre-filled, because a
       // pre-filled password field is a value travelling outward.
       return `<span class="s-cred">${credentialDisplay(row.configured, row.hint)}</span>` +
-        `<button type="button" class="s-btn" ${attr(`aria-describedby`, lblId(row.id))} ${attr(`data-row`, row.id)} ${attr(
+        `<button type="button" class="s-btn" ${attr(`aria-describedby`, lblId(row.id, scope))} ${attr(`data-row`, row.id)} ${attr(
           `data-act`,
           row.configured ? `replace` : `set`,
         )}${off}>${row.configured ? `Replace` : `Set`}</button>`;
@@ -88,29 +82,30 @@ function control(row: Row): string {
       // class name without escaping — the type is the guarantee.
       return `<span class="s-badge s-${row.state}">${CONNECTION_LABEL[row.state]}</span>` +
         `${row.detail ? `<span class="s-detail">${esc(row.detail)}</span>` : ``}` +
-        `<button type="button" class="s-btn" ${attr(`aria-describedby`, lblId(row.id))} ${attr(`data-row`, row.id)} ${attr(
+        `<button type="button" class="s-btn" ${attr(`aria-describedby`, lblId(row.id, scope))} ${attr(`data-row`, row.id)} ${attr(
           `data-act`,
           row.state === `connected` ? `disconnect` : `connect`,
         )}${off}>${row.state === `connected` ? `Disconnect` : `Connect`}</button>`;
   }
 }
 
-export function renderRow(row: Row): string {
+/** Pass a distinct scope when composing standalone rows into one document. */
+export function renderRow(row: Row, scope = "row"): string {
   const desc = row.description ? `<p class="s-rowdesc">${esc(row.description)}</p>` : ``;
   return (
     `<div class="s-row${row.disabled ? ` s-off` : ``}" ${attr(`data-id`, row.id)}>` +
-    `<div class="s-rowtext"><label class="s-rowlabel" ${attr(`id`, lblId(row.id))}${NATIVE_LABEL.has(row.kind) ? ` ${attr(`for`, ctlId(row.id))}` : ``}>${esc(row.label)}</label>${desc}</div>` +
-    `<div class="s-rowctl">${control(row)}</div>` +
+    `<div class="s-rowtext"><label class="s-rowlabel" ${attr(`id`, lblId(row.id, scope))}${NATIVE_LABEL.has(row.kind) ? ` ${attr(`for`, ctlId(row.id, scope))}` : ``}>${esc(row.label)}</label>${desc}</div>` +
+    `<div class="s-rowctl">${control(row, scope)}</div>` +
     `</div>`
   );
 }
 
-export function renderSection(section: Section): string {
+export function renderSection(section: Section, scope = "section"): string {
   const blurb = section.blurb ? `<p class="s-blurb">${esc(section.blurb)}</p>` : ``;
   return (
     `<section class="s-section" ${attr(`data-id`, section.id)}>` +
     `<h2 class="s-h2">${esc(section.title)}</h2>${blurb}` +
-    `<div class="s-rows">${section.rows.map(renderRow).join(``)}</div>` +
+    `<div class="s-rows">${section.rows.map((row, index) => renderRow(row, `${scope}/row/${index}`)).join(``)}</div>` +
     `</section>`
   );
 }
@@ -124,7 +119,7 @@ export function renderNav(items: readonly NavItem[], current: string): string {
     items
       .map(
         (i) =>
-          `<a class="s-navitem" ${attr(`href`, `#/settings/${i.id}`)}${
+          `<a class="s-navitem" ${attr("data-page", i.id)} ${attr(`href`, `#/settings/${encodeURIComponent(i.id)}`)}${
             i.id === current ? ` aria-current="page"` : ``
           }>${esc(i.title)}</a>`,
       )
@@ -133,15 +128,15 @@ export function renderNav(items: readonly NavItem[], current: string): string {
   );
 }
 
-export function renderPage(page: Page): string {
+export function renderPage(page: Page, scope = "page"): string {
   return (
     `<div class="s-page"><h1 class="s-h1">${esc(page.title)}</h1>` +
-    page.sections.map(renderSection).join(``) +
+    page.sections.map((section, index) => renderSection(section, `${scope}/section/${index}`)).join(``) +
     `</div>`
   );
 }
 
-/** Shell: nav beside the page. One string the mount can assign. */
-export function renderShell(items: readonly NavItem[], current: string, page: Page): string {
-  return `<div class="s-shell">${renderNav(items, current)}<main class="s-main">${renderPage(page)}</main></div>`;
+/** Shell: use distinct scopes when rendering multiple roots in one document. */
+export function renderShell(items: readonly NavItem[], current: string, page: Page, scope = "shell"): string {
+  return `<div class="s-shell">${renderNav(items, current)}<main class="s-main">${renderPage(page, scope)}</main></div>`;
 }
