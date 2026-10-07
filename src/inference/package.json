@@ -1,0 +1,6 @@
+{
+  "name": "inference",
+  "private": true,
+  "type": "module",
+  "description": "Provider interface + registry (IN1). One interface, several implementations: T3 Code Connect, Anthropic, OpenAI-compatible, local. No adapter ships here — see docs/plan/inference.md."
+}
