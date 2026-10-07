@@ -1,0 +1,865 @@
+{
+  "surface": "automations-list",
+  "reference": {
+    "version": "Cursor 3.23.12",
+    "facts": "https://github.com/I-am-drunk/cursor-decompile/blob/2d7c435c1c1b4c761fd9fc4c4c86221fe01f2ff3/facts/automations-desktop-list.md",
+    "automationSha256": "c9d093b36ee3d74603689aa90bb2f73fd2e4c0c3b3c45144a0bad4bbab2fcd3f",
+    "glassSha256": "b00e55478f16df05e10c6c5f18ab96c6a6563a28a1c9fa871758b04b2e06a29a"
+  },
+  "note": "Extracted desktop defaults, not an authenticated screenshot comparison. Color roles use the host Linear theme. Details: UI-REFERENCE.md.",
+  "facts": [
+    {
+      "name": "DL20 100%",
+      "value": "100%",
+      "cite": "Cursor 3.23.12 DL20 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-page"
+      ]
+    },
+    {
+      "name": "DL20 60rem",
+      "value": "60rem",
+      "cite": "Cursor 3.23.12 DL20 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-page"
+      ]
+    },
+    {
+      "name": "DL20 3rem",
+      "value": "3rem",
+      "cite": "Cursor 3.23.12 DL20 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-page"
+      ]
+    },
+    {
+      "name": "DL21 4rem",
+      "value": "4rem",
+      "cite": "Cursor 3.23.12 DL21 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-page"
+      ]
+    },
+    {
+      "name": "DL21 1.5rem",
+      "value": "1.5rem",
+      "cite": "Cursor 3.23.12 DL21 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-page"
+      ]
+    },
+    {
+      "name": "DL21 639px",
+      "value": "639px",
+      "cite": "Cursor 3.23.12 DL21 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256."
+    },
+    {
+      "name": "DL22 56px",
+      "value": "56px",
+      "cite": "Cursor 3.23.12 DL22 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-chunks",
+        ".a-body"
+      ]
+    },
+    {
+      "name": "DL23 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL23 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-toolbar-section",
+        ".a-bar"
+      ]
+    },
+    {
+      "name": "DL23 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL23 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-bar",
+        ".a-toolbar-actions"
+      ]
+    },
+    {
+      "name": "DL24 1px",
+      "value": "1px",
+      "cite": "Cursor 3.23.12 DL24 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-filters"
+      ]
+    },
+    {
+      "name": "DL24 160px",
+      "value": "160px",
+      "cite": "Cursor 3.23.12 DL24 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-wrap"
+      ]
+    },
+    {
+      "name": "DL24 120px",
+      "value": "120px",
+      "cite": "Cursor 3.23.12 DL24 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-wrap"
+      ]
+    },
+    {
+      "name": "DL25 100%",
+      "value": "100%",
+      "cite": "Cursor 3.23.12 DL25 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-table"
+      ]
+    },
+    {
+      "name": "DL25 4px",
+      "value": "4px",
+      "cite": "Cursor 3.23.12 DL25 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-table"
+      ]
+    },
+    {
+      "name": "DL25 6px",
+      "value": "6px",
+      "cite": "Cursor 3.23.12 DL25 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-table"
+      ]
+    },
+    {
+      "name": "DL25 1px",
+      "value": "1px",
+      "cite": "Cursor 3.23.12 DL25 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-table"
+      ]
+    },
+    {
+      "name": "DL25 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL25 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-table"
+      ]
+    },
+    {
+      "name": "DL26 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL26 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-headrow",
+        ".a-row"
+      ]
+    },
+    {
+      "name": "DL26 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL26 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-headrow",
+        ".a-row"
+      ]
+    },
+    {
+      "name": "DL26 1px",
+      "value": "1px",
+      "cite": "Cursor 3.23.12 DL26 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-headrow",
+        ".a-row"
+      ]
+    },
+    {
+      "name": "DL27 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL27 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-headrow"
+      ]
+    },
+    {
+      "name": "DL27 16px",
+      "value": "16px",
+      "cite": "Cursor 3.23.12 DL27 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-headrow"
+      ]
+    },
+    {
+      "name": "DL27 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL27 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-rows"
+      ]
+    },
+    {
+      "name": "DL27 20px",
+      "value": "20px",
+      "cite": "Cursor 3.23.12 DL27 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-rows"
+      ]
+    },
+    {
+      "name": "DL27 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL27 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-cell"
+      ]
+    },
+    {
+      "name": "DL27 2px",
+      "value": "2px",
+      "cite": "Cursor 3.23.12 DL27 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-cell"
+      ]
+    },
+    {
+      "name": "DL28 100px",
+      "value": "100px",
+      "cite": "Cursor 3.23.12 DL28 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-name",
+        ".a-author"
+      ]
+    },
+    {
+      "name": "DL28 40px",
+      "value": "40px",
+      "cite": "Cursor 3.23.12 DL28 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-actions"
+      ]
+    },
+    {
+      "name": "DL30 100%",
+      "value": "100%",
+      "cite": "Cursor 3.23.12 DL30 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-author-meta"
+      ]
+    },
+    {
+      "name": "DL30 6px",
+      "value": "6px",
+      "cite": "Cursor 3.23.12 DL30 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-author-meta"
+      ]
+    },
+    {
+      "name": "DL30 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL30 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-status-label"
+      ]
+    },
+    {
+      "name": "DL30 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL30 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-status-label"
+      ]
+    },
+    {
+      "name": "DL31 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL31 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-row::before"
+      ]
+    },
+    {
+      "name": "DL31 1px",
+      "value": "1px",
+      "cite": "Cursor 3.23.12 DL31 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-row::before"
+      ]
+    },
+    {
+      "name": "DL32 6px",
+      "value": "6px",
+      "cite": "Cursor 3.23.12 DL32 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-row:hover",
+        ".a-row:has(.a-rowlink:focus-visible)"
+      ]
+    },
+    {
+      "name": "DL32 2px",
+      "value": "2px",
+      "cite": "Cursor 3.23.12 DL32 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-row:hover",
+        ".a-row:has(.a-rowlink:focus-visible)"
+      ]
+    },
+    {
+      "name": "DL32 -2px",
+      "value": "-2px",
+      "cite": "Cursor 3.23.12 DL32 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-row:hover",
+        ".a-row:has(.a-rowlink:focus-visible)"
+      ]
+    },
+    {
+      "name": "DL33 1px",
+      "value": "1px",
+      "cite": "Cursor 3.23.12 DL33 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty"
+      ]
+    },
+    {
+      "name": "DL33 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL33 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty"
+      ]
+    },
+    {
+      "name": "DL33 32px",
+      "value": "32px",
+      "cite": "Cursor 3.23.12 DL33 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty"
+      ]
+    },
+    {
+      "name": "DL33 16px",
+      "value": "16px",
+      "cite": "Cursor 3.23.12 DL33 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty"
+      ]
+    },
+    {
+      "name": "DL34 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL34 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-emptyh",
+        ".a-emptyp"
+      ]
+    },
+    {
+      "name": "DL34 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL34 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-emptyh",
+        ".a-emptyp"
+      ]
+    },
+    {
+      "name": "DL34 28rem",
+      "value": "28rem",
+      "cite": "Cursor 3.23.12 DL34 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-emptyp"
+      ]
+    },
+    {
+      "name": "DL34 4px",
+      "value": "4px",
+      "cite": "Cursor 3.23.12 DL34 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-emptyp"
+      ]
+    },
+    {
+      "name": "DL34 16px",
+      "value": "16px",
+      "cite": "Cursor 3.23.12 DL34 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL35 4px",
+      "value": "4px",
+      "cite": "Cursor 3.23.12 DL35 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagination"
+      ]
+    },
+    {
+      "name": "DL35 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL35 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagination"
+      ]
+    },
+    {
+      "name": "DL35 10px",
+      "value": "10px",
+      "cite": "Cursor 3.23.12 DL35 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagination"
+      ]
+    },
+    {
+      "name": "DL35 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL35 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagination"
+      ]
+    },
+    {
+      "name": "DL35 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL35 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagination"
+      ]
+    },
+    {
+      "name": "DL36 100%",
+      "value": "100%",
+      "cite": "Cursor 3.23.12 DL36 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagehead"
+      ]
+    },
+    {
+      "name": "DL36 4px",
+      "value": "4px",
+      "cite": "Cursor 3.23.12 DL36 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagehead"
+      ]
+    },
+    {
+      "name": "DL36 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL36 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-pagehead"
+      ]
+    },
+    {
+      "name": "DL36 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL36 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-title-row"
+      ]
+    },
+    {
+      "name": "DL36 100%",
+      "value": "100%",
+      "cite": "Cursor 3.23.12 DL36 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-title-row"
+      ]
+    },
+    {
+      "name": "DL36 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL36 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-title-actions"
+      ]
+    },
+    {
+      "name": "DL37 17px",
+      "value": "17px",
+      "cite": "Cursor 3.23.12 DL37 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-h1"
+      ]
+    },
+    {
+      "name": "DL37 21px",
+      "value": "21px",
+      "cite": "Cursor 3.23.12 DL37 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-h1"
+      ]
+    },
+    {
+      "name": "DL37 .08px",
+      "value": ".08px",
+      "cite": "Cursor 3.23.12 DL37 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-h1"
+      ]
+    },
+    {
+      "name": "DL37 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL37 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-description"
+      ]
+    },
+    {
+      "name": "DL37 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL37 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-description"
+      ]
+    },
+    {
+      "name": "DL37 -.08px",
+      "value": "-.08px",
+      "cite": "Cursor 3.23.12 DL37 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-description"
+      ]
+    },
+    {
+      "name": "DL38 28px",
+      "value": "28px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL38 9999px",
+      "value": "9999px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL38 12px",
+      "value": "12px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL38 4px",
+      "value": "4px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL38 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL38 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL38 -.08px",
+      "value": "-.08px",
+      "cite": "Cursor 3.23.12 DL38 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL39 24px",
+      "value": "24px",
+      "cite": "Cursor 3.23.12 DL39 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL39 10px",
+      "value": "10px",
+      "cite": "Cursor 3.23.12 DL39 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-empty-create"
+      ]
+    },
+    {
+      "name": "DL40 2px",
+      "value": "2px",
+      "cite": "Cursor 3.23.12 DL40 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs"
+      ]
+    },
+    {
+      "name": "DL41 9999px",
+      "value": "9999px",
+      "cite": "Cursor 3.23.12 DL41 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs>button"
+      ]
+    },
+    {
+      "name": "DL41 5px",
+      "value": "5px",
+      "cite": "Cursor 3.23.12 DL41 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs>button"
+      ]
+    },
+    {
+      "name": "DL41 10px",
+      "value": "10px",
+      "cite": "Cursor 3.23.12 DL41 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs>button"
+      ]
+    },
+    {
+      "name": "DL41 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL41 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs>button"
+      ]
+    },
+    {
+      "name": "DL41 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL41 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs>button"
+      ]
+    },
+    {
+      "name": "DL41 -.08px",
+      "value": "-.08px",
+      "cite": "Cursor 3.23.12 DL41 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-tabs>button"
+      ]
+    },
+    {
+      "name": "DL42 100%",
+      "value": "100%",
+      "cite": "Cursor 3.23.12 DL42 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-group"
+      ]
+    },
+    {
+      "name": "DL42 28px",
+      "value": "28px",
+      "cite": "Cursor 3.23.12 DL42 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-group"
+      ]
+    },
+    {
+      "name": "DL42 6px",
+      "value": "6px",
+      "cite": "Cursor 3.23.12 DL42 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-group"
+      ]
+    },
+    {
+      "name": "DL42 4px",
+      "value": "4px",
+      "cite": "Cursor 3.23.12 DL42 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-group"
+      ]
+    },
+    {
+      "name": "DL42 8px",
+      "value": "8px",
+      "cite": "Cursor 3.23.12 DL42 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-group"
+      ]
+    },
+    {
+      "name": "DL42 1px",
+      "value": "1px",
+      "cite": "Cursor 3.23.12 DL42 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search-group"
+      ]
+    },
+    {
+      "name": "DL43 13px",
+      "value": "13px",
+      "cite": "Cursor 3.23.12 DL43 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search"
+      ]
+    },
+    {
+      "name": "DL43 18px",
+      "value": "18px",
+      "cite": "Cursor 3.23.12 DL43 at reference.facts (pinned above); artifact hashes: reference.automationSha256 and reference.glassSha256.",
+      "scope": [
+        ".a-search"
+      ]
+    },
+    {
+      "name": "Button root border",
+      "value": "1px",
+      "scope": [
+        ".a-create",
+        ".a-empty-create"
+      ],
+      "cite": "Cursor 3.23.12 G[4336278,4339420), Wwr.root/cBd.root, .ui-mkeg23 border-width:1px with solid transparent sides; G hash in reference below."
+    },
+    {
+      "name": "Uncaptured states",
+      "value": "UNVERIFIED",
+      "label": "UNVERIFIED",
+      "cite": "Authenticated layout, full menu/icon geometry, overview/templates and inherited font metrics: see UI-REFERENCE.md."
+    },
+    {
+      "name": "Header groups 8px",
+      "value": "8px",
+      "scope": [
+        ".a-title-group"
+      ],
+      "cite": "Cursor 3.23.12 G[14521630,14524200), NFe.titleGroup; G .ui-ehausa gap:8px."
+    },
+    {
+      "name": "Header content row 12px",
+      "value": "12px",
+      "scope": [
+        ".a-content-row"
+      ],
+      "cite": "Cursor 3.23.12 G[14521630,14524200), NFe.contentRow; G .ui-1oot3zn gap:12px and .ui-h8yej3 width:100%."
+    },
+    {
+      "name": "Header content row 100%",
+      "value": "100%",
+      "scope": [
+        ".a-content-row"
+      ],
+      "cite": "Cursor 3.23.12 G[14521630,14524200), NFe.contentRow; G .ui-1oot3zn gap:12px and .ui-h8yej3 width:100%."
+    },
+    {
+      "name": "All Runs small text Button 20px",
+      "value": "20px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "All Runs small text Button 4px",
+      "value": "4px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "All Runs small text Button 6px",
+      "value": "6px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "All Runs small text Button 1px",
+      "value": "1px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "All Runs small text Button 13px",
+      "value": "13px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "All Runs small text Button 18px",
+      "value": "18px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "All Runs small text Button -.08px",
+      "value": "-.08px",
+      "scope": [
+        ".a-all-runs"
+      ],
+      "cite": "Cursor 3.23.12 G[42131706,42131831) calls Button sm/text/secondary. G[4336278,4340700) supplies root, size, radius, padding and typography; .ui-1a6rlst height20, .ui-1e1y6u3 radius4, .ui-19bzwdx/.ui-v853mj padding6, .ui-pkkfsy gap6, .ui-mkeg23 border1."
+    },
+    {
+      "name": "Small ghost IconButton 20px",
+      "value": "20px",
+      "scope": [
+        ".a-menu-trigger",
+        ".a-page-arrow"
+      ],
+      "cite": "Cursor 3.23.12 A[7302494,7302536) and A[7263085,7264334) use the default sm ghost trigger; PaginationFooter A[7073346,7076450) uses the same size/variant. A[236693,237919) binds .ui-16bvwqk width20, .ui-1a6rlst height20, .ui-1e1y6u3 radius4; border0 and padding0, distinct from Button."
+    },
+    {
+      "name": "Small ghost IconButton 4px",
+      "value": "4px",
+      "scope": [
+        ".a-menu-trigger",
+        ".a-page-arrow"
+      ],
+      "cite": "Cursor 3.23.12 A[7302494,7302536) and A[7263085,7264334) use the default sm ghost trigger; PaginationFooter A[7073346,7076450) uses the same size/variant. A[236693,237919) binds .ui-16bvwqk width20, .ui-1a6rlst height20, .ui-1e1y6u3 radius4; border0 and padding0, distinct from Button."
+    },
+    {
+      "name": "Native form reset",
+      "value": "padding:0; margin:0",
+      "scope": [
+        ".a-search",
+        ".a-tabs>button",
+        ".a-all-runs",
+        ".a-menu-trigger",
+        ".a-page-arrow"
+      ],
+      "cite": "Cursor 3.23.12 G[15009478,15009552) in reset layer G[15009365,15009554); STYLES_CSS is injected by G[21412418,21412608). Scoped here to our controls."
+    },
+    {
+      "name": "Tabs native reset",
+      "value": "appearance:none; border-style:none; background:transparent",
+      "scope": [
+        ".a-tabs>button"
+      ],
+      "cite": "Cursor 3.23.12 A[7059901,7060523), dNr.base, binds .ui-jyslct / .ui-ng3xce / .ui-jbqb8w. G[15124620,15124692), G[15106156,15106185), G[15127900,15127940)."
+    },
+    {
+      "name": "Inner input reset",
+      "value": "flex:1; min-width:0; border:0; background:transparent; font-family:inherit",
+      "scope": [
+        ".a-search"
+      ],
+      "cite": "Cursor 3.23.12 InputChrome yDe.base A[7185746,7186184), used by Ky.Input A[7194092,7194800). G .ui-98rzlu/.ui-euugli/.ui-jbqb8w/.ui-jb2p0i; four zero-width/none border sides. Zero padding/margin comes from the separately cited reset layer."
+    }
+  ]
+}
