@@ -11,7 +11,7 @@
  */
 
 import type { AuthKind, CredentialStatus, Model, ProviderId } from "../inference/types.ts";
-import type { Row, Section } from "../ui-settings/rows.ts";
+import type { Page, Row, Section } from "../ui-settings/rows.ts";
 
 /** What the section needs to know about one provider. */
 export type ProviderView = {
@@ -19,6 +19,8 @@ export type ProviderView = {
   label: string;
   auth: AuthKind;
   credential: CredentialStatus;
+  /** Public endpoint snapshot; credentials are kept separate by the caller. */
+  baseUrl?: string;
   /** Absent until a reachability check has run. */
   reachable?: boolean;
   /** Empty until models have been fetched. */
@@ -34,14 +36,11 @@ export type ProviderView = {
  * `disconnected`, which would claim a failed check that never ran.
  */
 function connectionState(p: ProviderView): Row & { kind: `connection` } {
-  const state =
-    !p.credential.configured && p.auth !== `pairing`
-      ? `disconnected` as const
-      : p.reachable === undefined
-        ? `checking` as const
-        : p.reachable
-          ? `connected` as const
-          : `error` as const;
+  // A probe describes connectivity. Endpoint-only and compatible providers
+  // may legitimately have no key; credential presence cannot replace a probe.
+  const state = p.reachable === undefined
+    ? (p.auth === `apiKey` && !p.credential.configured ? `disconnected` : `checking`)
+    : (p.reachable ? `connected` : `error`);
 
   const detail =
     state === `connected` && p.models.length > 0
@@ -70,11 +69,9 @@ const CREDENTIAL_LABEL: Record<AuthKind, string> = {
 /**
  * Rows for one provider.
  *
- * Pairing providers get NO credential row. T3 Code Connect exchanges a scoped
- * token through `src/connect` and no long-lived key is ever stored, so a
- * "Set API key" control would invite the user to configure something that
- * does not exist. `docs/plan/inference.md` is explicit that this is the
- * point of pairing, not an implementation detail.
+ * Pairing providers use the connection action rather than an API-key field.
+ * This is our local auth-kind contract; external pairing behavior and token
+ * storage are provider-specific and require separate verification.
  */
 export function rowsForProvider(p: ProviderView): Row[] {
   const rows: Row[] = [connectionState(p)];
@@ -100,20 +97,28 @@ export function rowsForProvider(p: ProviderView): Row[] {
       id: `${p.id}.baseUrl`,
       label: `Base URL`,
       description: `OpenAI-compatible endpoint.`,
-      value: ``,
+      value: p.baseUrl ?? ``,
       placeholder: `https://api.example.com/v1`,
     });
   }
 
-  // The model select appears only once models are known. An empty select is
-  // a dead control that looks enabled; a missing one reads as "not yet".
-  if (p.models.length > 0) {
+  // Preserve the stored choice, including a model missing from discovery.
+  // A native select otherwise displays its first option as an invented default.
+  const selected = p.selectedModel ?? ``;
+  if (p.models.length > 0 || selected !== ``) {
+    const options = [
+      { value: ``, label: `No default model` },
+      ...p.models.map((m) => ({ value: m.id, label: m.label })),
+    ];
+    if (selected !== `` && !options.some((option) => option.value === selected)) {
+      options.push({ value: selected, label: `${selected} (not listed)` });
+    }
     rows.push({
       kind: `select`,
       id: `${p.id}.model`,
       label: `Default model`,
-      value: p.selectedModel ?? p.models[0]?.id ?? ``,
-      options: p.models.map((m) => ({ value: m.id, label: m.label })),
+      value: selected,
+      options,
     });
   }
 
@@ -126,13 +131,13 @@ export const sectionsFor = (providers: readonly ProviderView[]): Section[] =>
     id: p.id,
     title: p.label,
     ...(p.auth === `pairing`
-      ? { blurb: `Paired, not keyed — no credential is stored here.` }
+      ? { blurb: `Use the provider's pairing flow to connect.` }
       : {}),
     rows: rowsForProvider(p),
   }));
 
 /** The whole page, for the settings shell's `renderPage`. */
-export const inferencePage = (providers: readonly ProviderView[]) => ({
+export const inferencePage = (providers: readonly ProviderView[]): Page => ({
   id: `inference`,
   title: `Inference`,
   sections: sectionsFor(providers),

@@ -11,9 +11,7 @@ const p = (over: Partial<ProviderView> & { id: string }): ProviderView => ({
 const kinds = (v: ProviderView): string[] => rowsForProvider(v).map((r) => r.kind);
 
 test(`a pairing provider gets NO credential row`, () => {
-  // T3 Code Connect exchanges a scoped token; no long-lived key is stored.
-  // A "Set API key" control would invite configuring something that does
-  // not exist. docs/plan/inference.md treats this as the point of pairing.
+  // Our pairing auth kind uses the connection action, not an API-key field.
   assert.deepEqual(kinds(p({ id: `t3`, auth: `pairing` })), [`connection`]);
 });
 
@@ -98,7 +96,7 @@ test(`sections keep registry order and pairing gets an explanatory blurb`, () =>
     p({ id: `anthropic`, label: `Anthropic` }),
   ]);
   assert.deepEqual(out.map((s) => s.id), [`t3`, `anthropic`]);
-  assert.match(out[0]?.blurb ?? ``, /Paired, not keyed/);
+  assert.match(out[0]?.blurb ?? ``, /pairing flow/);
   assert.equal(out[1]?.blurb, undefined);
 });
 
@@ -107,4 +105,40 @@ test(`inferencePage is shaped for the settings shell`, () => {
   assert.equal(page.id, `inference`);
   assert.equal(page.title, `Inference`);
   assert.equal(page.sections.length, 1);
+});
+
+test(`keyless endpoints report their actual probe result`, () => {
+  for (const auth of [`baseUrl`, `apiKeyWithBaseUrl`] as const) {
+    for (const [reachable, expected] of [[undefined, `checking`], [true, `connected`], [false, `error`]] as const) {
+      const row = rowsForProvider(p({ id: `local`, auth,
+        ...(reachable === undefined ? {} : { reachable }),
+      }))[0];
+      assert.equal(row?.kind === `connection` && row.state, expected);
+    }
+  }
+});
+
+test(`the endpoint row retains the configured base URL`, () => {
+  const view = { ...p({ id: `local`, auth: `baseUrl` }), baseUrl: `http://localhost:11434/v1` };
+  const row = rowsForProvider(view).find((r) => r.kind === `text`);
+  assert.equal(row?.kind === `text` && row.value, view.baseUrl);
+});
+
+test(`an unselected model stays unselected until a choice is made`, () => {
+  const row = rowsForProvider(p({ id: `p`, models: [{ id: `first`, label: `First` }] }))
+    .find((r) => r.kind === `select`);
+  assert.ok(row?.kind === `select`);
+  assert.equal(row.value, ``);
+  assert.ok(row.options.some((option) => option.value === row.value));
+});
+
+test(`a saved model remains selectable when discovery no longer lists it`, () => {
+  for (const models of [[], [{ id: `other`, label: `Other` }]]) {
+    const row = rowsForProvider(p({ id: `p`, models, selectedModel: `saved-model` }))
+      .find((r) => r.kind === `select`);
+    assert.ok(row?.kind === `select`);
+    assert.equal(row.value, `saved-model`);
+    assert.ok(row.options.some((option) => option.value === row.value));
+    assert.ok(row.options.some((option) => option.value === ``), `the saved choice can be cleared`);
+  }
 });
