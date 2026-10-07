@@ -74,6 +74,18 @@ test(`toolbar reflects current query state`, () => {
   assert.ok(html.includes(`<option value="github" selected>github</option>`));
 });
 
+test(`a removed tool stays visibly selected until the filter is cleared`, () => {
+  const rows = [a({ id: `1`, name: `Nightly`, tools: [`github`] })];
+  const html = renderList(rows, { tool: `retired-server` });
+  assert.ok(html.includes(`<option value="retired-server" selected>retired-server (unavailable)</option>`));
+  assert.ok(html.includes(`No matches`));
+  assert.ok(!html.includes(`<option value="" selected>`));
+  const cleared = renderList(rows);
+  assert.ok(cleared.includes(`<option value="" selected>Any tool</option>`));
+  assert.ok(cleared.includes(`Nightly`));
+  assert.ok(!cleared.includes(`No matches`));
+});
+
 test(`toolsOf is the deduplicated sorted union across rows`, () => {
   const rows = [
     a({ id: `1`, name: `A`, tools: [`slack`, `github`] }),

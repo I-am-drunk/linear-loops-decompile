@@ -97,13 +97,15 @@ function toolbar(q: ListQuery, allTools: readonly string[]): string {
   return (
     `<div class="a-bar">` +
     `<input type="search" class="a-search" data-act="search" ` +
-    `${attr(`value`, q.search ?? ``)} placeholder="Search automations">` +
-    `<select class="a-filter" data-act="filterEnabled">` +
+    `${attr(`value`, q.search ?? ``)} placeholder="Search automations" aria-label="Search automations">` +
+    `<select class="a-filter" data-act="filterEnabled" aria-label="Automation status">` +
     opt(`all`, `All`, state === `all`) + opt(`on`, `Enabled`, state === `on`) +
     opt(`off`, `Disabled`, state === `off`) +
     `</select>` +
-    `<select class="a-filter" data-act="filterTool">` +
+    `<select class="a-filter" data-act="filterTool" aria-label="Tool">` +
     opt(``, `Any tool`, q.tool === undefined) +
+    (q.tool !== undefined && !allTools.includes(q.tool)
+      ? opt(q.tool, `${q.tool} (unavailable)`, true) : ``) +
     allTools.map((t) => opt(t, t, q.tool === t)).join(``) +
     `</select>` +
     `<button type="button" class="a-primary" data-act="create">New automation</button>` +
