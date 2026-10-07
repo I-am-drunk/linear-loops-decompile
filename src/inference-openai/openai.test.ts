@@ -2,6 +2,9 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { once } from "node:events";
+import { createServer } from "node:http";
+import { makeRegistry } from "../inference/registry.ts";
 import { makeOpenAiProvider, type FetchLike } from "./openai.ts";
 
 /** A fetch that records its calls and replays a scripted response. */
@@ -193,4 +196,123 @@ test(`empty tool metadata preserves text replies and refusal mapping`, async () 
     const got = await provider({ fetchImpl: stub({ body }).fetchImpl }).chat({ model: `m`, messages: [] });
     assert.equal(got.ok && got.value.stop, stop);
   }
+});
+
+test(`credentialed HTTP is rejected before every network operation`, async () => {
+  const s = stub({ body: `{"data":[]}` });
+  const p = provider({ baseUrl: `http://localhost:11434/v1`, apiKey: `test-secret`, fetchImpl: s.fetchImpl });
+  for (const result of await Promise.all([p.models(), p.reachable(), p.chat({ model: `m`, messages: [] })])) {
+    assert.deepEqual(result, { ok: false, error: { kind: `unconfigured`, provider: p.id } });
+  }
+  assert.deepEqual(s.calls, []);
+});
+
+test(`unauthenticated local HTTP remains usable`, async () => {
+  const p = provider({ baseUrl: `http://localhost:11434/v1`, fetchImpl: async (url, init) => {
+    assert.equal(url, `http://localhost:11434/v1/models`);
+    assert.equal(init?.headers?.[`authorization`], undefined);
+    return new Response(`{"data":[{"id":"local"}]}`);
+  } });
+  assert.deepEqual(await p.models(), { ok: true, value: [{ id: `local`, label: `local` }] });
+});
+
+const interruptedResponse = (status = 200): Response => new Response(new ReadableStream({
+  start(controller) { controller.error(new Error(`connection reset`)); },
+}), { status });
+
+test(`body read failures remain typed for models, chat and reachability`, async () => {
+  const p = provider({ fetchImpl: async () => interruptedResponse() });
+  for (const result of await Promise.all([p.models(), p.reachable(), p.chat({ model: `m`, messages: [] })])) {
+    assert.equal(result.ok === false && result.error.kind, `unavailable`);
+  }
+});
+
+test(`interrupted error bodies retain the known status and fallback policy`, async () => {
+  const cases = [[400, `rejected`], [401, `unconfigured`], [403, `unconfigured`], [429, `rateLimited`], [502, `unavailable`]] as const;
+  for (const [status, kind] of cases) {
+    const got = await provider({ fetchImpl: async () => interruptedResponse(status) }).reachable();
+    assert.equal(got.ok === false && got.error.kind, kind);
+  }
+});
+
+test(`invalid model responses and broken bodies allow a healthy fallback`, async () => {
+  const responses = [
+    () => new Response(`<html>Sign in</html>`),
+    () => Response.json({}),
+    () => Response.json({ data: [null, { id: 1 }] }),
+    () => interruptedResponse(),
+  ];
+  for (const response of responses) {
+    const registry = makeRegistry();
+    registry.register(provider({ id: `bad`, fetchImpl: async () => response() }));
+    registry.register(provider({ id: `good`, fetchImpl: stub({ body: `{"data":[{"id":"m"}]}` }).fetchImpl }));
+    const got = await registry.resolve([`bad`, `good`]);
+    assert.equal(got.ok && got.value.id, `good`);
+  }
+});
+
+test(`short keys never appear in credential hints`, () => {
+  for (const apiKey of [`a`, `ab`, `abc`, `abcd`]) {
+    assert.deepEqual(provider({ apiKey, fetchImpl: stub({}).fetchImpl }).credential(), { configured: true });
+  }
+});
+
+test(`provider and transport failures redact the configured key before bounding detail`, async () => {
+  const apiKey = `test-secret.*[12345678]`;
+  const message = `Invalid key: ${apiKey}; repeated ${apiKey}`;
+  const transports: FetchLike[] = [
+    async () => { throw new Error(message); },
+    async () => new Response(new ReadableStream({ start(c) { c.error(new Error(message)); } })),
+    async () => Response.json({ error: { message } }, { status: 400 }),
+    async () => new Response(`<html>${message}</html>`, { status: 503 }),
+    async () => Response.json({ error: { message: message.repeat(20) } }, { status: 500 }),
+  ];
+  for (const fetchImpl of transports) {
+    const got = await provider({ apiKey, fetchImpl }).models();
+    assert.ok(!got.ok && `detail` in got.error);
+    if (!got.ok && `detail` in got.error) {
+      assert.ok(!got.error.detail.includes(apiKey));
+      assert.ok(got.error.detail.includes(`[redacted]`));
+      assert.ok(got.error.detail.length <= 200);
+    }
+  }
+});
+
+test(`token caps follow endpoint defaults and explicit overrides`, async () => {
+  const cases = [
+    [`https://api.openai.com/v1`, undefined, `max_completion_tokens`],
+    [`https://api.openai.com/v1/`, `max_tokens`, `max_tokens`],
+    [`https://gateway.example/v1`, undefined, `max_tokens`],
+    [`https://gateway.example/v1`, `max_completion_tokens`, `max_completion_tokens`],
+  ] as const;
+  for (const [baseUrl, field, expected] of cases) {
+    const bodies: unknown[] = [];
+    const p = provider({ baseUrl, ...(field ? { tokenLimitField: field } : {}), fetchImpl: async (_url, init) => {
+      bodies.push(JSON.parse(init?.body ?? `{}`)); return new Response(CHAT_OK);
+    } });
+    await p.chat({ model: `o3`, messages: [], maxTokens: 20 });
+    await p.chat({ model: `o3`, messages: [] });
+    assert.deepEqual(bodies, [
+      { model: `o3`, messages: [], [expected]: 20 },
+      { model: `o3`, messages: [] },
+    ]);
+  }
+});
+
+test(`native fetch does not follow an unchecked redirect`, async (t) => {
+  const seen: string[] = [];
+  const server = createServer((req, res) => {
+    seen.push(req.url ?? ``);
+    if (req.url === `/v1/models`) { res.writeHead(302, { location: `/followed` }); res.end(); }
+    else { res.end(`{"data":[]}`); }
+  });
+  t.after(() => new Promise<void>((resolve) => { server.closeAllConnections(); server.close(() => resolve()); }));
+  server.listen(0, `127.0.0.1`);
+  await once(server, `listening`);
+  const address = server.address();
+  assert.ok(address && typeof address !== `string`);
+  const p = provider({ baseUrl: `http://127.0.0.1:${address.port}/v1`, fetchImpl: fetch });
+  const got = await p.reachable();
+  assert.equal(got.ok === false && got.error.kind, `unavailable`);
+  assert.deepEqual(seen, [`/v1/models`]);
 });
