@@ -1,6 +1,6 @@
 # Settings reference and coverage
 
-This is a partial implementation of Linear's default desktop settings primitives.
+This is a partial implementation of Linear's default settings primitives.
 It has not passed an authenticated same-state screenshot comparison. Exact corpus
 identities are in [ui-facts.json](ui-facts.json); hashes identify the reference
 snapshot without assuming an application release number.
@@ -44,6 +44,11 @@ models an untouched desktop preference with no larger platform minimum. Referenc
 Ttn also applies a platform minimum, a small-mode branch, and resizing; those
 behaviors are not implemented. The old fixed 220px tab-width citation is removed.
 
+At viewport widths up to 640px, the cited page margins, header spacer, section
+gap, paragraph line height and row horizontal spacing use their narrow overrides.
+Navigation gains the cited top padding when scroll timelines are supported.
+These adjustments do not implement the reference's complete mobile shell.
+
 ## Remaining gaps
 
 | Surface | Current limit |
@@ -52,7 +57,7 @@ behaviors are not implemented. The old fixed 220px tab-width citation is removed
 | Select | Native platform interaction/appearance remains. Custom Select menu, caret, and keyboard parity are unimplemented. |
 | Toggle | Our button with switch semantics draws verified resting dimensions. The reference uses a checkbox; hover expansion, timing, and extended hit area are omitted. |
 | Connection | Supporting text reuses Text mini. No matching pill badge was verified; badge padding, backgrounds, and radii are removed. |
-| Alternate layouts | Touch dimensions, mobile layout, full sidebar resizing, and scroll-timeline enhancements remain unimplemented. |
+| Alternate layouts | Touch dimensions, mobile shell, full sidebar resizing, and scroll-timeline effects beyond top padding remain unimplemented. A fixed desktop sidebar can overflow narrow viewports. |
 | Theme/focus | Host must provide the matching surface theme. Button overlay effects and input hover-border interpolation are omitted. |
 
 Before claiming visual parity, capture the authenticated reference with the same

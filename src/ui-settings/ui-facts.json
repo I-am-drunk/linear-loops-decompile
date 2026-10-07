@@ -1,7 +1,7 @@
 {
   "surface": "settings-primitives",
   "referenceDate": "2026-10-07",
-  "coverage": "Default desktop corpus facts; see UI-REFERENCE.md for omitted states and host requirements. No complete visual parity claimed.",
+  "coverage": "Default desktop primitives, verified spacing at max-width 640px, and navigation padding under scroll-timeline support; see UI-REFERENCE.md for omitted states and host requirements. No complete visual parity claimed.",
   "sources": [
     {
       "file": "style/style-p6hK3mv7.css",
@@ -104,7 +104,13 @@
       "scope": [
         ".s-navitems"
       ],
-      "cite": "client/MainSettingsLayout.DI0euztN.js $.content uses sx-1iorvi4/sx-jkvuk6 and sx-11of52c/sx-id5rln. Scroll-timeline enhancement is omitted."
+      "cite": "client/MainSettingsLayout.DI0euztN.js $.content uses sx-1iorvi4/sx-jkvuk6 and sx-11of52c/sx-id5rln for default vertical/horizontal padding."
+    },
+    {
+      "name": "Navigation padding when scroll timelines are supported",
+      "value": "26px",
+      "scope": [".s-navitems"],
+      "cite": "client/MainSettingsLayout.DI0euztN.js $.content sx-t6xblk; style-p6hK3mv7.css encloses padding-top26 in @supports (animation-timeline: auto), without a viewport condition. Other scroll-timeline effects remain omitted."
     },
     {
       "name": "Navigation outer link",
@@ -400,6 +406,36 @@
         ".s-badge"
       ],
       "cite": "DESIGN: our credential/status text reuses the verified Text mini typography from client/mixins.stylex.BUgiQC4g.js c.mini. This is not a claim that Linear renders these product labels or a pill badge."
+    },
+    {
+      "name": "Page outer margins at narrow widths",
+      "value": "22px 32px",
+      "scope": [".s-main"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.containerMargins sx-1gjfzc6/sx-o8fvo7; style-p6hK3mv7.css puts margin-inline22 and margin-bottom32 under @media (max-width:640px)."
+    },
+    {
+      "name": "Page header spacer at narrow widths",
+      "value": "24px",
+      "scope": [".s-pagegap"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.spacer sx-zwg4qy; style-p6hK3mv7.css sets height24 under @media (max-width:640px)."
+    },
+    {
+      "name": "Section stack at narrow widths",
+      "value": "24px",
+      "scope": [".s-sectionstack"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.settingsLayoutRows sx-o9f7l9; style-p6hK3mv7.css sets gap24 under @media (max-width:640px)."
+    },
+    {
+      "name": "Paragraph line height at narrow widths",
+      "value": "18px",
+      "scope": [".s-blurb"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.paragraph/fM.paragraph sx-eqzeqd; style-p6hK3mv7.css sets line-height18 under @media (max-width:640px)."
+    },
+    {
+      "name": "Boxed row spacing at narrow widths",
+      "value": "16px 12px",
+      "scope": [".s-row"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js mM.listItem sx-aeyjhy/sx-164mpto/sx-1aocyk; style-p6hK3mv7.css divides item padding-x and gap by 1.5 under @media (max-width:640px). mM.box supplies padding-x16 and gap12; vertical padding stays16."
     },
     {
       "name": "Full UI parity",

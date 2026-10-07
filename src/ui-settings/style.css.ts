@@ -69,6 +69,16 @@ export const SETTINGS_CSS = `
 .s-shell :focus-visible { outline: 1px solid var(--t-focusColor); }
 .s-navitem:focus-visible { outline-offset: -1px; }
 .s-toggle:focus-visible { outline-offset: 2px; }
+@media (max-width: 640px) {
+  .s-main { margin-inline: 22px; margin-bottom: 32px; }
+  .s-pagegap { height: 24px; }
+  .s-sectionstack { gap: 24px; }
+  .s-blurb { line-height: 18px; }
+  .s-row { padding-inline: calc(16px / 1.5); gap: calc(12px / 1.5); }
+}
+@supports (animation-timeline: auto) {
+  .s-navitems { padding-top: 26px; }
+}
 @media only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi) {
   .s-shell { --s-thin-pixel: .5px; }
 }
