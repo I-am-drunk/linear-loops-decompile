@@ -1,80 +1,60 @@
-# AGENTS.md — how to work here
+# Working rules
 
-Boot: `prompt.md` → `README.md` → this file → `STATUS.md`. Ten minutes.
+The product goal belongs in `prompt.md`. Boot: README.md → this file →
+STATUS.md → live PRs and lane tail. The repo is the durable coordination channel.
 
-## The loop
+## Claim and deliver
 
-1. **Pick** from `PLAN.md`. Check the lane issue for an existing claim.
-2. **Claim**: comment on the lane issue, **≤5 lines** — lane, scope, session id.
-   Then branch `<lane>-<slug>` from `main`.
-3. **Push within the hour.** Unpushed is unclaimed. This is the only staleness
-   rule; there are no negotiated windows. If a branch has no commits after an
-   hour, anyone may take the row.
-4. **Open the PR** — what, why, evidence — then move to your next task. Do not
-   sit on merges.
-5. **Review before you author** whenever the queue is non-empty. Oldest PR
-   first; recency bias starves the oldest, which is usually the one blocking a
-   dependent slice.
+1. Review the oldest unclaimed PR before authoring when the queue is nonempty.
+2. Pick one bounded slice from PLAN.md; read its lane tail and search all open PRs.
+3. Claim before branching: at most five lines naming slice, scope, session id,
+   branch and base. Re-read the tail; earliest claim wins. If beaten, take another slice.
+4. Branch `<lane>-<slug>` from current main. Declare a parent explicitly for a stack.
+5. Push within one hour. A claim without pushed commits after one hour is free;
+   a pushed branch or open PR must be inspected before proposing replacement work.
+6. Open a thin PR with what changed, why and evidence. Keep STATUS.md honest.
 
-One task per session. Earliest claim wins; if beaten, take another row.
+Use isolated worktrees or clones for parallel agents. Each agent owns disjoint
+files or a declared dependency. Never switch another session's shared checkout.
+One task per session; delegate bounded parts when the owner requests parallel work.
 
-## Merging
+## Review and merge
 
-- A PR needs **a peer review before merge whenever another session is around**
-  to give one. Self-merge only when you are verifiably the only session
-  running (`ListAgents`, or no peer activity on the lanes) and the gate passes
-  on a fresh clone. The reviewer may be the merger.
-- Beyond that: gate evidence, a clean provenance audit, and zero unaddressed
-  feedback.
-- **No merges with unaddressed feedback.** Addressed = fixed in code, or
-  answered on the thread with a reason. Silence is not addressing. Check both
-  issue comments and inline review comments.
-- No self-merges while a peer session is active. If you are verifiably alone,
-  self-merge once the gate passes on a fresh clone.
-- Formal GitHub approval is impossible here: every session shares one account
-  and GitHub returns 422 on self-approval (`.agents/skills/ship/SKILL.md`
-  §Before you merge). So verdicts are COMMENT reviews carrying evidence, and a
-  reviewer checks the comment text — issue comments AND inline review
-  comments — rather than looking for an APPROVED state that can never appear.
-- `main` is PR-only for everyone (server-side ruleset).
+Read issue comments, formal reviews and inline comments, including every page.
+Address feedback in code or reply with a reason. Zero unaddressed feedback is
+required. Reviews must check the cited evidence, not merely its existence.
 
-## Writing
+Run `bash ci/check-src.sh` on a fresh clone of the candidate. For UI changes,
+also follow docs/UI-EXACTNESS.md. Report exactly which checks ran and skipped.
 
-Short. Tables over prose. A claim is five lines; findings go in files and PRs.
-The project's worst failure mode was 600-word coordination comments about
-coordination — several sessions spent their whole run on thread prose and
-shipped nothing. If you are writing paragraphs on a thread, write a file.
+Main is PR-only. A separate session or delegated agent must review while peers
+are active; reviewers cannot approve changes they authored. Shared GitHub
+accounts use evidence-bearing COMMENT reviews because self-approval returns 422.
+Only self-merge when the available agent list and lane activity establish that
+you are alone, with a passing fresh-clone gate. The reviewer may merge.
 
-## Code
+Follow `.agents/skills/ship/SKILL.md`. Register worked-on PRs with the host's
+thread-linking tool when available; this does not replace GitHub coordination.
 
-- One PR = one thin vertical slice, reviewable in minutes. Never a whole layer.
-- Zero runtime deps, strict TypeScript, boring patterns. If a slice feels big it
-  is two slices.
-- We run `.ts` directly via Node type stripping, which forbids emit-requiring
-  syntax: **no parameter properties** (`constructor(private x)`), **no `enum`**,
-  **no namespaces**. Use explicit field assignments and const objects.
-- The gate is `bash ci/check-src.sh`.
+## Code and evidence
 
-## Evidence
+Strict TypeScript, zero runtime dependencies, ordinary patterns. Node 22.18+
+runs TypeScript directly: no parameter properties, enums or namespaces.
 
-Every behavioral claim names its source: an open specification, a page under
-`extracts/linear-official/`, or observed behavior. What you cannot verify is
-marked `UNVERIFIED` — not padded until it looks sourced. Two independent
-analyses of this repo found "cited" facts that were invented; that is the
-failure this rule exists to prevent.
+Read docs/UI-EXACTNESS.md before touching UI. Cite versioned evidence in each
+package's ui-facts.json; unknown values stay UNVERIFIED. Check actual rendered
+behavior as well as declarations. Commit our code and facts, never vendor
+bundles or source. The corpus stays in gitignored pipeline/corpus/.
 
-**Read `docs/PROVENANCE.md` before any extraction work.** It is the one
-non-negotiable rule: we do not commit vendor material or a transcription of it,
-and a fact table reproducing a surface's internals at byte fidelity counts as a
-transcription.
+## Communication
 
-## Tooling
+Use authenticated `gh` for GitHub; no Runner registration, GitHub MCP setup or
+shared-token files. Use `node tools/board/main.mjs --feedback` for the complete
+live queue. Read source comments before claiming or merging; counts are not verdicts.
 
-`gh`, already authenticated. No MCP, no PAT, no token files. For comment tails,
-`gh api "repos/:owner/:repo/issues/<N>/comments?per_page=100&page=<K>"`.
+Claims are at most five lines. Findings belong in files and PRs. Update lane
+issue bodies as indexes, not running essays. Close superseded work only after
+linking its replacement and preserving useful findings. Keep real defects open.
 
-## Product decisions
-
-Ask the owner when a decision is genuinely theirs — product scope, what a
-feature should do, money. Otherwise decide, write down what you decided and
-why, and keep moving. Open decisions live in `docs/plan/decisions.md`.
+Owner decisions live in docs/plan/decisions.md. Act on settled instructions;
+ask only for new scope, product behavior or spending decisions.

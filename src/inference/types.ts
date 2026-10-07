@@ -7,10 +7,12 @@
  *
  * A provider supplies three things and nothing else: the models it offers, a
  * chat call, and a cost estimate. Everything provider-specific (pairing,
- * API keys, base URLs) lives behind `configure` and never reaches a caller.
+ * API keys, base URLs) is held by each adapter; callers see credential status.
+ * This initial contract is text-only. Tool turns and streaming require
+ * matching request, response and adapter support before they are advertised.
  */
 
-/** How a provider authenticates. Pairing is T3 Code Connect's shape. */
+/** How an adapter authenticates; external protocol compatibility is separate. */
 export type AuthKind = `pairing` | `apiKey` | `apiKeyWithBaseUrl` | `baseUrl`;
 
 export type ProviderId = string;
@@ -23,8 +25,6 @@ export type Model = {
   label: string;
   /** Maximum context in tokens, when the provider declares one. */
   contextTokens?: number;
-  /** Whether this model accepts tool/function definitions. */
-  tools: boolean;
 };
 
 export type Message = {
@@ -49,7 +49,7 @@ export type ChatResult = {
   content: string;
   usage: Usage;
   /** Why generation stopped. `length` means the cap was hit. */
-  stop: `end` | `length` | `tool` | `refusal`;
+  stop: `end` | `length` | `refusal`;
 };
 
 /** Cost in cents, kept integral — floats accumulate error across a run. */

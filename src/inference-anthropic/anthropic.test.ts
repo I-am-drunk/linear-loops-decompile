@@ -52,7 +52,7 @@ test(`models uses display_name as the label when present, falls back to id`, asy
   assert.ok(got.ok);
   if (got.ok) {
     assert.deepEqual(got.value.map((m) => [m.id, m.label]), [[`claude-x`, `Claude X`], [`claude-y`, `claude-y`]]);
-    assert.ok(got.value.every((m) => m.tools === false), `tool support is never claimed per model`);
+    assert.ok(got.value.every((m) => !(`tools` in m)), `the text-only contract omits tool capabilities`);
   }
 });
 
@@ -129,4 +129,28 @@ test(`cost() is integral cents; estimate() hits no network and uses 1024 when ma
   assert.deepEqual(s.calls, [], `estimate must not call fetch`);
   // 1M input @ $3 = 300c; default 1024 output @ $15 ≈ 1.5c -> 2c rounded.
   assert.deepEqual(est, { cents: 302, known: true });
+});
+
+test(`a tool stop reason is rejected even with text or no content`, async () => {
+  for (const content of [[], [{ type: `text`, text: `I will call a tool.` }]]) {
+    const body = JSON.stringify({ content, stop_reason: `tool_use` });
+    const got = await provider({ id: `test-provider`, fetchImpl: stub({ body }).fetchImpl })
+      .chat({ model: `m`, messages: [] });
+    assert.equal(got.ok, false);
+    if (!got.ok) {
+      assert.equal(got.error.kind, `rejected`);
+      assert.equal(got.error.provider, `test-provider`);
+    }
+  }
+});
+
+test(`tool blocks are rejected before extracting any accompanying text`, async () => {
+  for (const type of [`tool_use`, `server_tool_use`]) {
+    const tool = { type, id: `tool-1`, name: `lookup`, input: {} };
+    for (const content of [[tool], [{ type: `text`, text: `Checking.` }, tool]]) {
+      const body = JSON.stringify({ content, stop_reason: `end_turn` });
+      const got = await provider({ fetchImpl: stub({ body }).fetchImpl }).chat({ model: `m`, messages: [] });
+      assert.equal(got.ok === false && got.error.kind, `rejected`);
+    }
+  }
 });

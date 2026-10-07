@@ -61,7 +61,7 @@ test(`the channel is dialled once with the url and token, then reused`, async ()
   assert.deepEqual(dials, [[`wss://connect.example/ws`, `tok-1234`]], `exactly one dial`);
 });
 
-test(`models maps id/label/contextTokens and claims tools ONLY when the channel says so`, async () => {
+test(`models maps id/label/contextTokens without advertising tool support`, async () => {
   const { ch } = channel({ "inference.models": { models: [
     { id: `a`, label: `A`, contextTokens: 200000, tools: true },
     { id: `b` },
@@ -69,8 +69,8 @@ test(`models maps id/label/contextTokens and claims tools ONLY when the channel 
   const got = await provider(dialTo(ch)).models();
   assert.ok(got.ok);
   if (got.ok) {
-    assert.deepEqual(got.value[0], { id: `a`, label: `A`, contextTokens: 200000, tools: true });
-    assert.deepEqual(got.value[1], { id: `b`, label: `b`, tools: false });
+    assert.deepEqual(got.value[0], { id: `a`, label: `A`, contextTokens: 200000 });
+    assert.deepEqual(got.value[1], { id: `b`, label: `b` });
   }
 });
 
@@ -126,4 +126,30 @@ test(`credential() is pairing presence plus the environment label — no key exi
   const { ch } = channel({});
   assert.deepEqual(provider(dialTo(ch), { environment: `tj-laptop` }).credential(), { configured: true, hint: `tj-laptop` });
   assert.deepEqual(makeConnectProvider({ url: `wss://x.example/ws`, dial: dialTo(ch) }).credential(), { configured: false });
+});
+
+test(`a tool stop is rejected with or without accompanying text`, async () => {
+  for (const reply of [{ stop: `tool` }, { content: `Checking.`, stop: `tool` }]) {
+    const { ch } = channel({ "inference.chat": reply });
+    const got = await provider(dialTo(ch), { id: `test-provider` }).chat({ model: `m`, messages: [] });
+    assert.equal(got.ok, false);
+    if (!got.ok) {
+      assert.equal(got.error.kind, `rejected`);
+      assert.equal(got.error.provider, `test-provider`);
+    }
+  }
+});
+
+test(`a tool payload cannot hide behind text and an end stop`, async () => {
+  const { ch } = channel({ "inference.chat": {
+    content: `Checking.`, stop: `end`, toolCalls: [{ id: `call-1`, name: `lookup`, args: {} }],
+  } });
+  const got = await provider(dialTo(ch)).chat({ model: `m`, messages: [] });
+  assert.equal(got.ok === false && got.error.kind, `rejected`);
+});
+
+test(`empty tool metadata preserves a text refusal`, async () => {
+  const { ch } = channel({ "inference.chat": { content: `Cannot comply.`, stop: `refusal`, toolCalls: [] } });
+  const got = await provider(dialTo(ch)).chat({ model: `m`, messages: [] });
+  assert.equal(got.ok && got.value.stop, `refusal`);
 });

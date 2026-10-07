@@ -133,8 +133,6 @@ export function makeConnectProvider(cfg: ConnectConfig): Provider {
           id: m[`id`] as string,
           label: typeof m[`label`] === `string` ? (m[`label`] as string) : (m[`id`] as string),
           ...(typeof m[`contextTokens`] === `number` ? { contextTokens: m[`contextTokens`] as number } : {}),
-          // The channel may declare tool support explicitly; absent, not claimed.
-          tools: m[`tools`] === true,
         })));
     },
 
@@ -147,6 +145,13 @@ export function makeConnectProvider(cfg: ConnectConfig): Provider {
       });
       if (!got.ok) return got;
       const r = asRecord(got.value);
+      const s = r?.[`stop`];
+      const toolCalls = r?.[`toolCalls`];
+      // This is the internal prototype envelope, not a verified T3 API.
+      // A mixed text/tool reply cannot be completed by the IN1 contract.
+      if (s === `tool` || (Array.isArray(toolCalls) && toolCalls.length > 0)) {
+        return fail({ kind: `rejected`, provider: id, detail: `tool calls are unsupported by the text-only provider contract` });
+      }
       const content = r?.[`content`];
       if (typeof content !== `string`) {
         return fail({ kind: `rejected`, provider: id, detail: `inference.chat returned no content` });
@@ -155,9 +160,8 @@ export function makeConnectProvider(cfg: ConnectConfig): Provider {
       const num = (v: unknown): number => (typeof v === `number` ? v : 0);
       const usage: Usage = { inputTokens: num(u?.[`inputTokens`]), outputTokens: num(u?.[`outputTokens`]) };
       // The channel speaks our enum directly; anything unrecognized is `end`.
-      const s = r?.[`stop`];
       const stop: ChatResult[`stop`] =
-        s === `length` || s === `tool` || s === `refusal` ? s : `end`;
+        s === `length` || s === `refusal` ? s : `end`;
       return ok({ content, usage, stop });
     },
 
