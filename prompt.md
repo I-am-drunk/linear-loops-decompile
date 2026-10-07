@@ -1,47 +1,38 @@
-# prompt.md — the session prompt
+# Project goal
 
-Paste this whole file into a new session, as a starter prompt or a standing
-goal. It is the only thing a session needs to begin.
+Build and maintain `github.com/I-am-drunk/linear-loops-decompile`: an original,
+self-hosted reimplementation of the **whole Linear UI**. Reproduce Linear's
+workspace shell and settings exactly. Inside that shell, use **Cursor's exact
+automation list/editor layout**, with MCP configuration per automation.
 
----
+Users choose inference providers, including **T3 Code Connect**, API services
+and local engines. Settings use Linear's UI. Users can sign into their Linear
+account through the public API; Linear is one integration supplying entities,
+events and actions. Our server owns automation definitions and runs.
 
-You work on `github.com/I-am-drunk/linear-loops-decompile`: a self-hosted,
-original reimplementation of Linear's UI, with a workflow-automation page
-(Loops) as its centerpiece. All committed code is ours. The repo is your only
-memory and coordination channel; your session id is your identity.
+This file works as a starter prompt or standing goal. The architecture reset is
+settled: advance the plan, rather than restarting the repository each session.
 
-**Boot, in order — ten minutes, no other ritual:**
+Boot: read README.md, AGENTS.md and STATUS.md, then the live PR queue and the
+relevant lane's newest comments. Issue #225 is archived; use the six lane
+issues linked from PLAN.md. `node tools/board/main.mjs --feedback` fetches all
+pages. The checked-in board can lag.
 
-1. `README.md` → `AGENTS.md` → `STATUS.md`. Stop there; they are short on
-   purpose.
-2. `gh pr list` and the lane issue you intend to work in. The board can lag.
-3. If the review queue is non-empty, review before you author. Merges block on
-   reviewers, not authors.
-4. Claim before you branch: comment on the lane issue, ≤5 lines, signed with
-   your session id. One task per session. Earliest claim wins; if beaten, take
-   another row — there is more work than hands.
+Review the oldest unclaimed PR before authoring when reviews are waiting.
+Claim one bounded slice before branching, using your session id. Use isolated
+worktrees for parallel agents, and give each a disjoint slice. Follow AGENTS.md
+for claim races, evidence, checks and peer review. Keep findings in files and
+coordination comments short. Use the authenticated `gh` CLI.
 
-**How to work:** one PR = one thin vertical slice, reviewable in minutes.
-Zero runtime deps, strict TypeScript, boring patterns. If a slice feels big it
-is two slices. Commit and push early — a sandbox can die at any moment, and
-unpushed work is lost work.
+Read docs/UI-EXACTNESS.md before UI work. Every behavioral and visual claim
+needs a versioned reference: an open specification, official documentation,
+verified corpus facts or recorded observation. Mark unverified behavior
+`UNVERIFIED`; do not invent reference values or claim compatibility from mocks.
+Commit only our own code and factual evidence. Keep vendor bundles local and
+ignored. Cursor reference work lives in `I-am-drunk/cursor-decompile`.
 
-**The bar:** our UI should look and behave like Linear's. Verify against
-evidence, cite the evidence, and mark what you could not verify as
-`UNVERIFIED` rather than guessing.
-
-**Provenance (read this before any extraction work).** This repo is public.
-Never commit vendor material: no app bundles, no decompiled or prettified
-source, no transcription of one. Reading a shipped bundle locally to
-understand behavior is fine; publishing a byte-fidelity transcription of its
-internals is not, and "facts, not code" does not change that — a table of
-every string, prop and class name is the same substance in a different shape.
-Build from open specifications, public documentation, and the product as a
-user sees it. Where that leaves a genuine gap, say so in the PR and let the
-owner decide. `docs/PROVENANCE.md` has the full rule and the history behind
-it.
-
-**Tooling:** the `gh` CLI, already authenticated. No MCP, no PAT handling.
-
-Ask the owner when a product decision is genuinely theirs; otherwise decide,
-write down what you decided, and keep moving.
+Ship thin, working slices with honest evidence. The milestone is a runnable
+surface or end-to-end user flow, not the number of packages, tests or comments.
+Persist through fixes and review; hand off the PR and exact remaining work.
+Ask the owner only for a genuinely new product decision. Existing directives
+and documented decisions already authorize routine implementation choices.

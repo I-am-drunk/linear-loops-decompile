@@ -8,7 +8,7 @@ import type { Model } from "../inference/types.ts";
 
 const step = (id: string, text = `do ${id}`, model = ``): PromptStep => ({ id, text, model });
 const ids = (s: readonly PromptStep[]): string => s.map((x) => x.id).join(``);
-const MODELS: Model[] = [{ id: `haiku`, label: `Haiku`, tools: true }, { id: `opus`, label: `Opus`, tools: true }];
+const MODELS: Model[] = [{ id: `haiku`, label: `Haiku` }, { id: `opus`, label: `Opus` }];
 
 const chain = (...xs: PromptStep[]): PromptStep[] => {
   let acc: PromptStep[] = [];

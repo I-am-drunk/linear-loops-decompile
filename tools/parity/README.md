@@ -16,7 +16,7 @@ cargo run -p parity --manifest-path tools/parity/Cargo.toml -- check
 # exit 0 = pass; exit 1 = undeclared deviations (see stdout + parity-report.md)
 ```
 
-`check` compares `src/ui/ui-facts.json` (your slice declares the facts it
+`check` compares a UI package's `ui-facts.json` (your slice declares the facts it
 ships: routes, copy strings, component containment, theme-token usage) against
 the reference. Paste `parity-report.md` into the PR as the parity evidence.
 
