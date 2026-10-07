@@ -1,9 +1,12 @@
-# KNOWLEDGE - verified by decompiling Linear 1.32.4 (2026-09-26)
+<!-- HISTORICAL RECORD -->
 
-Ground truth from the session that created this repo. Method: downloaded the macOS app,
-extracted the Electron asar, then crawled the ENTIRE production web client (1,550 chunks,
-29.2 MB) from static.linear.app and read the minified code directly. §=section; specs in
-`SPECS/` build on this. Nothing here is guesswork; where something is inference it says so.
+# Linear 1.32.4 reference notes (2026-09-26)
+
+These are dated research observations, not automatically verified facts or
+current product instructions. Later audits corrected several claims; consult
+[the learnings](docs/LEARNINGS.md) and [issue index](docs/history/issues.md), then
+reproduce the cited evidence before using a value or behavior. The original
+notes below remain available as leads. Current scope is in PLAN.md.
 
 ## §1. Desktop app (thin shell - no loops inside)
 

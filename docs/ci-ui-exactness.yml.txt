@@ -1,0 +1,69 @@
+# CI: the UI exactness gate.
+#
+# This exists because fifty agents built UIs from a recollection of Linear
+# instead of from the corpus, and a review process based on looking at
+# screenshots approved them. A screenshot cannot distinguish a measured value
+# from a lucky guess; this job can.
+#
+# Deliberately fast (~30s, no corpus, no Rust, no network) so it can be a
+# required check on every PR rather than something a reviewer runs sometimes.
+#
+# Run it locally before pushing:
+#     node tools/ui-facts/main.mjs .
+#     bash ci/check-ui.sh
+
+name: ui-exactness
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-exactness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  facts:
+    name: UI values are declared and cited
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: ui-facts self-tests
+        run: node --test tools/ui-facts/ui-facts.test.mjs
+
+      # The gate itself. Fails the PR when a UI package ships no
+      # ui-facts.json, uses a value it never declared, hard-codes a colour, or
+      # declares a fact with no citation.
+      - name: Every UI value is declared and cited
+        run: node tools/ui-facts/main.mjs .
+
+      # Corpus-free legs of the parity harness (golden runner + coverage
+      # ledger). The corpus-gated value comparison is a separate job below.
+      - name: Parity harness (corpus-free legs)
+        run: bash ci/check-ui.sh
+
+  no-stale-references:
+    name: Docs point at files that exist
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # A doc that cites a deleted file teaches the next agent a false
+      # procedure. This repo has shipped pointers to a vault repo, a deleted
+      # provenance doc, and a crawler log that was never emitted.
+      - name: Check doc cross-references
+        run: node tools/ui-facts/check-links.mjs .

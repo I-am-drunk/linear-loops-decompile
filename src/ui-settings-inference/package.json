@@ -1,0 +1,6 @@
+{
+  "name": "ui-settings-inference",
+  "private": true,
+  "type": "module",
+  "description": "The Inference settings section (ST3): provider rows assembled from src/inference over the credential and connection row patterns in src/ui-settings. See docs/plan/inference.md."
+}

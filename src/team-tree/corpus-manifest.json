@@ -1,0 +1,17 @@
+{
+  "source": "TEAM-TREE (#225 claim 2026-09-29, from the #295 TEAM-PICKER TREE KERNEL input): src/team-tree reimplements the O2 team-picker presentation namespace. Evidence: Issue.DRYymPCa.js exports ar (the O2 IIFE: sortTeams/sortTeamsForTree/sortTeamsForTreeByDivider/sortTeamsForTreeByGroup/labelForTeams/findClosestCommonParent, plus the settled sortByUserSortOrder which stays with the 00:54:08Z/R-T row and is NOT re-goldened here), executed from the RAW tree in drive mode over a 10-team forest with a deep grandchild, an injected (missing-from-input) ancestor, natural-collation siblings (Team 2 / Team 10), the selected partition, a ByDivider split, a ByGroup grid, the labelForTeams sizes 1/3/5/custom-max, and the findClosestCommonParent sibling/deep/self-child/disjoint/single grid. One stub at config.aM1_XCHx.js (the merged TYPE-LATTICE bootstrap seam, reused byte-identical); every other closure chunk executes REAL. Declared limit: the useIndentation:false leg delegates to sortTeams over store collections (ua.of(X, ...)) fixtures cannot satisfy — it is pinned derived-only in the module test, not in the golden. The clean module byte-matches the committed golden through the tagged-v2 serializer.",
+  "reimplements": [
+    {
+      "chunkPrefix": "Issue",
+      "exports": [
+        {
+          "minified": "ar",
+          "meaning": "the O2 team presentation namespace (raw sites e.sortTeamsForTree=a, e.sortTeamsForTreeByDivider=o, e.sortTeamsForTreeByGroup=s, e.labelForTeams=c, e.findClosestCommonParent=u; default sibling comparator = Decorators et over name: Intl.Collator numeric natural compare, null-last). Reimplemented as sortTeamsForTree/sortTeamsForTreeByDivider/sortTeamsForTreeByGroup/labelForTeams/findClosestCommonParent/compareByName",
+          "evidenceLine": "src/team-tree/team-tree.ts + golden test"
+        }
+      ],
+      "goldens": ["team-tree.grid"]
+    }
+  ],
+  "goldens": ["team-tree.grid"]
+}
