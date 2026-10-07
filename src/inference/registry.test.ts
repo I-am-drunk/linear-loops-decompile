@@ -13,7 +13,7 @@ function fake(id: string, live: Outcome<true> = ok(true as const)): Provider {
     id,
     label: id,
     auth: `apiKey`,
-    models: async () => ok([{ id: `m`, label: `M`, tools: false }]),
+    models: async () => ok([{ id: `m`, label: `M` }]),
     chat: async () => ok({ content: ``, usage: { inputTokens: 0, outputTokens: 0 }, stop: `end` as const }),
     estimate: () => ({ cents: 0, known: false }),
     cost: () => ({ cents: 0, known: false }),

@@ -8,6 +8,10 @@ Code Connect is a first-class option, not a special case.
 One interface, several implementations. A provider supplies: a list of models,
 a chat/completion call with streaming, and a cost estimate per call.
 
+IN1 delivers the initial text-only contract and registry. Streaming and complete
+tool turns still require request/result types, adapter support and execution
+tests before they can be advertised. MCP invocation policy is a separate boundary.
+
 | Provider | Auth | Notes |
 |---|---|---|
 | **T3 Code Connect** | pairing | the owner's own inference path; first-class |
