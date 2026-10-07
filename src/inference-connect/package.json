@@ -1,0 +1,6 @@
+{
+  "name": "inference-connect",
+  "private": true,
+  "type": "module",
+  "description": "T3 Code Connect Provider implementation (IN4): wraps src/connect's RpcClient channel. Pairing-based, wss: only; refuses non-TLS. See docs/plan/inference.md."
+}
