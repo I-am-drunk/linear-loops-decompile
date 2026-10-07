@@ -68,17 +68,17 @@ test(`the model select appears only once models are known`, () => {
   assert.ok(!kinds(p({ id: `a`, credential: { configured: true }, reachable: true })).includes(`select`));
   const withModels = p({
     id: `a`, credential: { configured: true }, reachable: true,
-    models: [{ id: `m1`, label: `M1`, tools: true }, { id: `m2`, label: `M2`, tools: false }],
+    models: [{ id: `m1`, label: `M1` }, { id: `m2`, label: `M2` }],
   });
   assert.ok(kinds(withModels).includes(`select`));
 });
 
 test(`model count shows on a connected provider, pluralized`, () => {
   const one = rowsForProvider(p({ id: `a`, credential: { configured: true }, reachable: true,
-    models: [{ id: `m`, label: `M`, tools: false }] }))[0];
+    models: [{ id: `m`, label: `M` }] }))[0];
   assert.equal(one?.kind === `connection` && one.detail, `1 model`);
   const two = rowsForProvider(p({ id: `a`, credential: { configured: true }, reachable: true,
-    models: [{ id: `m`, label: `M`, tools: false }, { id: `n`, label: `N`, tools: false }] }))[0];
+    models: [{ id: `m`, label: `M` }, { id: `n`, label: `N` }] }))[0];
   assert.equal(two?.kind === `connection` && two.detail, `2 models`);
 });
 

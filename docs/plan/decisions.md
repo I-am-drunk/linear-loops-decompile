@@ -1,54 +1,43 @@
-# Open decisions
+# Decisions and working defaults
 
-Owner-facing forks. Each has a working default so nothing blocks; a default
-holds until the owner says otherwise.
+Owner directives set the product target. Working defaults guide implementation
+until revised; they are not claims about shipped behavior or vendor policy.
 
-| # | Decision | Working default |
-|---|---|---|
-| 1 | Credit metering | **OUT.** Self-hosted has no Linear billing. Run cost comes from our own provider accounting. |
-| 2 | Run retention | **Configurable prune, default 90 days.** Runs are ours; unbounded growth is the only wrong answer. |
-| 3 | MCP tool support | **Our own server-side MCP client.** Settled by the Cursor-style layout — see `mcp.md`. |
-| 4 | Multi-user | **Single-user first.** The model carries a user id so multi-user is additive, but no invite flow in milestone one. |
-| 5 | Linear chat route as a provider | **Not built.** The owner has their own inference; this was never load-bearing and gated too much for too long. |
-| 6 | Notification deep links | **OUT.** Notifications live in Linear, which the owner keeps using. |
-| 7 | Collaborative draft editing | **OUT.** Single-editor drafts. |
+## Owner directives
 
-## Decided during the rearchitecture
+- Reimplement the whole Linear UI exactly with original code and verified
+  evidence; use Cursor's verified Automations layout for the Loops page.
+- Treat Linear as one integration with account sign-in. Make inference
+  configurable, including T3 Code Connect, through Linear-style settings.
+- Support MCP configuration per automation. Preserve useful findings in files
+  and coordinate through concise GitHub CLI claims and reviewed PRs.
 
-- **Provenance.** We do not publish byte-fidelity transcriptions of vendor
-  internals. `docs/PROVENANCE.md`. Not reversible by a session; raise it with
-  the owner if you think a case differs.
-- **The automations layout is Cursor's, not Linear's** — owner directive.
-- **Linear is one integration** — owner directive.
-- **Progress is measured in working surfaces**, not golden-chunk counts. The
-  old meter rewarded apparatus over product.
+UI values require citations and matching reference states. A passing facts
+declaration check alone does not prove visual parity.
 
-## 8. The pre-existing corpus-derived extracts (owner's call)
+## Preserved decision IDs
 
-`extracts/models.md` (3,427 lines), `extracts/graphql-ops.md` (380) and
-`extracts/config-endpoints.md` (175) enumerate Linear model fields, client
-GraphQL operations and client config endpoints, generated from the corpus and
-committed to this public repo.
+| # | Decision | Basis | Current direction |
+|---|---|---|---|
+| 1 | Credit metering | Working default | Record provider-reported run costs. Defer a product credit policy; infer no Linear pricing or shared-wallet behavior. |
+| 2 | Run retention | Working default | Configurable pruning, proposed default 90 days; document and test retention before enabling deletion. |
+| 3 | MCP tool support | Owner feature; implementation default | Per-automation bindings with our server-side MCP client; see [mcp.md](mcp.md). Layout alone does not specify execution policy. |
+| 4 | Multi-user | Working default | Single-user first; retain user identity in data contracts so later users do not require a new model. |
+| 5 | Linear chat route as a provider | Working default | Deferred. The configurable provider registry is primary. IG7 agent-session presentation is a separate integration; it does not supply or prove free inference. |
+| 6 | Notification deep links | Working default | Deferred within whole-UI scope. Revisit with captured routes, permissions and notification behavior. |
+| 7 | Collaborative draft editing | Working default | Single-editor drafts first. Collaboration remains future work requiring a defined persistence and conflict model. |
+| 8 | Legacy corpus-derived extracts | Open cleanup decision | Audit sources and consumers, then retain, archive or remove by relevance and provenance. Removal remains a proposal; unsupported rows stay UNVERIFIED. |
+| 9 | UI evidence method | Owner directive | Exact visual and behavioral parity from verified evidence; declaration checks support reference comparisons rather than replace them. |
+| 10 | Automation layout | Owner directive, carried from #339 | Cursor's exact layout inside Linear's shell; capture missing states before claiming parity. |
 
-Checked: a sample of operation names from `graphql-ops.md` is absent from the
-vendored public MIT schema. **`UNVERIFIED`**: whether *every* row across all
-three files is absent from the public surface — nobody has diffed them field
-by field, and `config-endpoints.md` has no public counterpart to diff against
-at all. So "these are internal, not public" is the working read rather than an
-established fact. It does not change the recommendation below, which does not
-rest on it.
+For #8, the tracked `extracts/models.md`, `extracts/graphql-ops.md` and
+`extracts/config-endpoints.md` are historical snapshots. The normal
+`pipeline/run.sh` invokes the analyzer with output under
+`pipeline/corpus/analysis`; it does not refresh those tracked files. A name in
+a snapshot or schema is not proof that a public operation is supported. Keep
+raw reference artifacts local and cite only facts needed for an implementation.
 
-`docs/PROVENANCE.md` forbids producing more of this. These three predate the
-rule, and deleting ~4,000 lines of prior work is the owner's decision rather
-than a session's — so: **nothing regenerates or extends them** (the pipeline
-step that refreshed them is removed), and they stay until the owner rules.
-
-Worth noting on each side. *For keeping*: an operation name plus its variable
-signature is wire-protocol shaped, and interoperability is the strongest case
-there is for reading someone's protocol. *For removing*: they are an
-enumeration of a competitor's internal API, published, and nothing in the
-current plan uses them — the plan reads the **public** API, for which we have
-the MIT schema.
-
-Recommendation: remove them. Nothing depends on them and the asymmetry is bad —
-we would not accept the same extraction of our own internals.
+Prompt chaining and per-step model selection are DESIGN proposals in
+[automations.md](automations.md), not additional owner directives. Judge
+progress by working, verified user flows; component counts do not establish
+completion. The broader scope and delivery order live in [PLAN.md](../../PLAN.md).

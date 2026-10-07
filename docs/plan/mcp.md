@@ -10,6 +10,9 @@ any vendor's client; MCP is a public standard and that is the whole point.
 
 ## Model
 
+The model and status names below are our design. The public MCP protocol does
+not verify Cursor layout or copy; UI controls need their own reference facts.
+
 A workspace keeps a **server registry**. An automation references servers from
 it and configures per-automation overrides.
 
@@ -34,26 +37,26 @@ AutomationTool   automationId · serverId · allowedTools[] | all · approval
 
 ## Two security rules, stated before anything is built
 
-Both come from the runner being the thing that connects: it has the filesystem
+Both come from the executor being the thing that connects: it has the filesystem
 and the network, and it runs on a schedule with nobody watching.
 
 **A stdio server is arbitrary code execution, so treat it as one.** The config
-holds a command the runner will execute. Therefore: only a workspace admin may
+holds a command the executor will execute. Therefore: only a workspace admin may
 register or edit a stdio server (an ordinary member may *use* one that exists);
-the command runs isolated from the runner — separate process, no inherited
+the command runs isolated from the executor — separate process, no inherited
 environment beyond an explicit allowlist, its own working directory, a wall
 clock limit; and a run records which server it invoked. A deployment that wants
 no local execution at all can disable the stdio transport outright.
 
 **Never send credentials in cleartext.** A remote server with any auth beyond
-`none` must be `https://`; the runner refuses to dispatch to `http://` with
+`none` must be `https://`; the executor refuses to dispatch to `http://` with
 credentials attached rather than warning about it. `http://` is permitted only
 for an unauthenticated server on a loopback address, which is the local-dev
 case this exception exists for.
 
 **A configurable URL the server fetches is an SSRF primitive.** TLS protects
-the credential in transit; it does nothing about *where* the runner is
-pointed. Since the runner sits inside the deployment's network, a remote entry
+the credential in transit; it does nothing about *where* the executor is
+pointed. Since the executor sits inside the deployment's network, a remote entry
 is a request to reach any address its host can:
 
 - **Destinations are deny-by-default.** Public unicast only. Private and
@@ -68,7 +71,7 @@ is a request to reach any address its host can:
 - The loopback exception above is **opt-in per deployment**, not the default,
   precisely because loopback is the most valuable SSRF target.
 - Registration is **admin-only for any non-allowlisted host**, matching the
-  stdio rule: a member may use entries that exist, not point the runner
+  stdio rule: a member may use entries that exist, not point the executor
   somewhere new.
 
 ## Connection status
@@ -97,12 +100,12 @@ Name matching is case-insensitive. Lists sort by name.
 
 ## Our server does the work
 
-The MCP client lives server-side, in our runner. Rationale: automations fire on
+The MCP client lives server-side, in our executor. Rationale: automations fire on
 a schedule with no browser open, so tool execution cannot depend on a client
-session. The UI configures; the runner connects, lists tools, invokes them, and
+session. The UI configures; the executor connects, lists tools, invokes them, and
 streams results into the run transcript.
 
-This resolves open decision #5 (MCP tool support), which previous sessions left
+This resolves decision #3 (MCP tool support), which previous sessions left
 to the owner across three options. The Cursor-style layout makes MCP central
 rather than optional, so option (b) — our own MCP client — is the only one that
 delivers the page we are building.
@@ -115,5 +118,5 @@ delivers the page we are building.
 | MCP2 | client: stdio + HTTP transports, handshake, `tools/list` |
 | MCP3 | status lattice + the five rendered states |
 | MCP4 | per-automation tool selection UI |
-| MCP5 | invocation in the runner + transcript streaming |
+| MCP5 | invocation in the executor + transcript streaming |
 | MCP6 | oauth2 auth flow |

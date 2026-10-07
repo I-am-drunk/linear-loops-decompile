@@ -1,0 +1,247 @@
+<!-- HISTORICAL RECORD -->
+
+Superseded harness design; retained for source history.
+
+# SPEC — the parity harness (`tools/parity`, Rust CLI)
+
+The bar (issue #20, user directive): our Loops UI is **the same UI** Linear's
+compiled client renders — structure, copy, theme, behavior — with explicit,
+reviewed room for our own improvements. The v0 archive proved what happens
+without a computed bar: a plausible-looking UI that is in fact invented. This
+tool makes sameness *computed*, per slice, per session, before every UI PR.
+
+Scope fence (#162 consult): `tools/parity` is the bar for **rendered UI**
+(matrix rows whose exactness is visible). Non-rendered rows — the run
+streaming vocabulary (official `AiConversation` type zoo), the send→stream
+contract, loop lifecycle semantics — name a different computed bar per row
+(the goose trace `docs/golden-goose-chat-route.md`, runtime fixtures). Every
+matrix row should eventually name its bar; parity covers the renderable ones.
+
+## Two tiers (user directive 2026-09-27, issue #220) — READ FIRST
+
+This spec now describes TWO layers with different authority:
+
+- **Tier 1 — the acceptance bar: hand-verified golden tests.** A clean-code
+  module is proven exact by executing the CORPUS code itself (vault-side, per
+  the #215 generateTheme pattern) on author-chosen inputs, committing the
+  computed outputs as golden manifests, and byte-diffing our module's output
+  against them in `parity check`. Every golden case is picked and verified BY
+  HAND against the corpus file it came from. This is what "exact" means.
+- **Tier 2 — drift canaries: the extract→compare families below.** The
+  grammar-extracted reference (routes/copy/structure/tokens/order/states/
+  primitive) is lossy and grammar-inferred: it catches regressions and corpus
+  drift cheaply, but it can NOT prove sameness — a surface can pass every
+  family and still not be the same UI. It is recon for authoring goldens and
+  the ~30-day drift alarm, never the acceptance bar.
+
+A UI slice is done when its modules carry Tier-1 goldens (green) AND Tier 2
+reports no undeclared drift. Tier 2 alone advances no matrix row. The
+golden-tier mechanics live in "The golden tier" section at the end; the
+extraction families below are retained as specified, at canary authority.
+
+## The one command (the most important thing, made perfect)
+
+```bash
+parity check            # ours (src/ui/ui-facts.json) vs the corpus reference
+```
+
+Exit 0 = the slice matches the reference within declared tolerances and
+declared improvements. Exit 1 = violations, with a Markdown report
+(`parity-report.md`) that pastes straight into the PR as evidence.
+
+## Fact model (Tier 2 — drift canaries; see "Two tiers")
+
+Per UI surface. Set families (compared as sets; missing/extra are deviations):
+
+1. **routes** — the Loops/agent route table (synthetic surface `app.routes`).
+   Extraction reads `analysis/routes.json` AND scans chunk bodies for
+   `` `/:orgKey/…` `` literals — the index is a floor, not a ceiling (#157
+   meta finding). The reference additionally carries per-route provenance
+   (`routeMeta`, issue #208): `declaredIn` (the chunk basenames holding the
+   literal) and a derived `role` — `registration` (the literal sits in the
+   `Root.*` route-table chunk: the app shell must route this URL), `matcher`
+   (a `match(route, pathname)` call site: this URL gates what a surface
+   renders — e.g. `/:orgKey/agent/:agentId`), or `both` (e.g.
+   `/:orgKey/loops/new`, a registered route that renders a DIALOG). Compare
+   is unchanged (paths as a set); role is informational until the primitive
+   family (H3, #207) consumes it. `ui-facts.json` never declares routeMeta.
+2. **copy** — user-visible strings, exact-compared (zero tolerance; copy is
+   the cheapest sameness). Extraction grammar: all three string-literal forms
+   (compiled JSX carries copy as `children:` props, backtick literals, and
+   props into shell components), filtered to sentence-case UI text. The
+   **canary list** (`policy/canaries.txt`) proves the grammar on every
+   extraction: a canary absent from the corpus = drift alarm; present but not
+   extracted = grammar regression. Both fail loudly — never a silent false
+   green. Placeholder grammar for dynamic strings (`{count}`, dates) is a
+   P2 item with the first dynamic-canary need.
+3. **structure** — component containment (import edges within a surface's
+   chunks).
+4. **tokens** — semantic theme-token names (surface `theme.tokens`).
+5. **bindings** — model fields the surface displays/edits (schema in P1;
+   extraction lands with the surface-crafting slices).
+6. **icons** — icon-set membership per slot (same ramp).
+7. **behavior** — "event → effect" facts (click X navigates Y) (same ramp).
+8. **states** — state-conditional visibility facts (empty/loading/disabled).
+   Extraction (H3 #213 slice 3): the compiled chunks carry state-gated copy
+   as literal ternaries with both arms as template strings
+   (`` cond ? `No matching loops` : `No loops yet` ``). The minifier erases
+   the gating variable's name, so the fact is the PAIR, never a guessed
+   state name: `alt:<truthy arm>|<falsy arm>`, both arms passing the copy
+   grammar (which drops class-name/expression ternaries). `states:` canary
+   lines (`states:<Surface>=alt:<a>|<b>`) pin the grammar per extraction.
+
+Plus two non-set facts:
+
+9. **order** — ordered presentation (sidebar items, column order), compared
+   as ONE whole-sequence fact ("a > b > c"); containment alone misses order.
+   Extraction (H3 #207): order is compiled into the bundle as array/object
+   literals whose source order IS the render order, so the grammars read
+   literal sequences, never inferred layout. Two corpus-proven grammars:
+   consecutive `` orderingKey: `k` `` header-cell props (list column order,
+   e.g. `AutomationsList`) and consecutive `` key:/name: `` pairs in one
+   options-array literal (filter/section order, e.g. `LoopsManagementPage`).
+   ≥2 items make a chain; per surface the longest chain wins; surfaces
+   without a proven chain stay uncovered (ramp rule). `order:` canaries
+   (`order:<Surface>=<a> > <b> > …`) pin the extracted chains per extraction.
+10. **primitive** — the surface's interaction primitive (dialog | page |
+    popover | drawer | …), exact-compared: a route can be exact while the
+    primitive is wrong. Extracted (#213 slice 1) from two unambiguous
+    compiled signals only: `pageMetadata` inside an `export { … }` list (the
+    routed-page chunk contract; import sites don't count, and the identifier
+    is word-boundary matched) → `page`; a ``role: `dialog``` JSX prop in
+    property position → `dialog`. No signal, or conflicting signals
+    across a surface's chunk builds → no fact (`onRequestClose` alone is NOT
+    a signal — openers like `AutomationNewButton` carry it too; unverifiable
+    stays unmarked, never guessed).
+
+**Ramp rule:** a family compares only where the reference carries facts for
+it. Empty-reference families print as "uncovered" report notes — the bar binds
+where we can measure; never false-red, never silent-green.
+
+## Theme: two layers (corrected by the #157 audits)
+
+- **Token VALUES are generated at runtime** by the corpus's own theme
+  generator (`ThemeHelper` + parametrizations; `--sx-*` vars ship EMPTY in the
+  compiled CSS). The extractor slice executes the generator offline in Node
+  (default dark: base [5.52,0.4,272], accent [47.92,59.30,288.42], contrast 27;
+  116 color + 18 shell tokens, content-hashed) and emits golden vectors.
+  Owned by sess_01a0e393-0683 (volunteered on #162) — DO NOT duplicate.
+- **Non-token values** (radii, shadows, layout metrics): the compiled
+  stylesheet is in the vault at `corpus/style/style-*.css` (same build).
+- P1 extracts token NAMES (done). Value comparison (#218, done): `parity
+  extract` reads the corpus-executed golden vectors (`src/ui-theme/golden/`,
+  `--goldens` overridable) and emits one synthetic surface per parametrization
+  × retina branch (`theme.values.darkDefault.retina0`, … — 8 on 1.32.4, 1,064
+  facts) whose tokens family carries exact `token=value` facts (116 colors +
+  scalar shell values incl. the input hash). Value surfaces ramp like
+  component surfaces (not mandatory synthetics); `value:` canaries pin the
+  wiring per extraction, and a corpus refresh that changes the theme fails
+  the canary — the theme leg of the ~30-day drift check. (Tier authority per
+  #220: these value surfaces are DRIFT CANARIES; the ACCEPTANCE bar for
+  src/ui-theme is its own golden tests executing the corpus generator —
+  already the G3 shape — plus the G2 golden leg when it lands.)
+
+## The range, for our improvements (declared, never ambient)
+
+- `tools/parity/policy/tolerances.json` — global bands; strict defaults
+  (copy/routes/names exact, ±1px spacing when rendered measuring lands).
+  Loosening is a PR decision.
+- `tools/parity/policy/improvements.json` — the ONLY sanctioned deviation
+  channel: `[{ surface, family, fact, reason, issue }]`. Unlisted deviation =
+  red — **including ours-only surfaces** (family `"surface"`, fact = the
+  surface name; an invented page is a deviation like any other). For
+  `missing` and `differs` deviations, `fact` is the REFERENCE-side value (for
+  `order`: the reference chain), so entries stay stable as our side evolves;
+  for `extra` facts and ours-only surfaces there is no reference side — `fact`
+  is the added value (the ours-side fact or the surface name). Stale entries (reference caught
+  up) self-flag in the report.
+
+## Commands and layers
+
+| Command | Layer | Needs | When |
+|---|---|---|---|
+| `parity extract` | corpus → `.parity/reference.json` (gitignored) | corpus (vault) | per corpus refresh |
+| `parity check` | static facts gate | reference + our facts | every UI PR (the gate) |
+| `parity scan` (P2) | derive our facts from src/ui | src/ui | when hand-maintaining hurts |
+| `parity render` (P2) | headless-Chrome DOM of our pages | a Chrome binary | per UI PR |
+| `parity snap` (P3) | live linear.app capture, local-only | user's Linear session | occasional calibration |
+| `parity shot` (P3) | pixel diff with tolerances | P3 capture | release-bar claims |
+
+## Toolchain and gate ops (peer asks, adopted)
+
+- Zero-dependency Rust, pinned via `tools/parity/rust-toolchain.toml`;
+  hand-rolled JSON bounded to our fact-file grammar with round-trip fuzz
+  tests (2,000 cases) + garbage rejection.
+- Runner sandboxes ship node but NO cargo: install once with
+  `curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal`
+  (+ `apt-get install -y gcc` for the linker). `ci/check-ui.sh` SKIPS with a
+  printed pointer when cargo is absent (peer-mandated fail-soft: the gate must
+  not red sessions that cannot install Rust; the vacuous pass is deliberate,
+  not a hole — UI PRs from cargo-capable sessions still run the full check).
+  `ci/check-src.sh` stays untouched: the gates red independently.
+- Gate modes, exactly: no cargo → skip with pointer · no corpus → vacuous ·
+  corpus, no `src/ui` → extract (canaries enforced), vacuous check ·
+  `src/ui` without `ui-facts.json` → **FAIL** (declared facts are part of the
+  slice) · facts present → full check.
+- Corpus guards in `extract` (#205; both loud exit-2 failures, no reference
+  written): **integrity** — every chunk `analysis/chunks.json` names must be
+  present in `pretty/client/` (a shortfall = partial/stale copy; full
+  `git clone` of the vault, #187); **unmatched surface** — a matrix component
+  matching zero chunks fails by name (never a silently omitted surface). The
+  #162 INFRA ALERT (1,043/1,550 stale copy → silent partial reference) is the
+  incident both guards close.
+
+## Repo fit and the legal line
+
+- Tool + policy + spec committed; generated artifacts (`.parity/`,
+  `parity-report.md`, captures) gitignored and deterministically regenerated.
+  Peer legal review (#162): condensed-facts references (routes, strings,
+  token names/values) do NOT cross the line; Linear's code and raw assets stay
+  vault-side. Screenshots/captures: local only, never committed (issue #20).
+- Matrix rows gain parity evidence by report paste; no auto-editing (YAGNI).
+
+## The golden tier (Tier 1 — the acceptance bar; issue #220)
+
+The unit of parity is the corpus chunk/function a clean `src/` module
+reimplements — not a fact family.
+
+1. **Golden manifests** — `src/<module>/golden/<case>.json`: author-chosen
+   inputs + expected outputs COMPUTED by executing the corpus code vault-side.
+   Committed goldens are values (facts), never Linear code; the legal line is
+   the same one #215's theme vectors already passed review under. Each case
+   names its corpus source (chunk + what was executed) and is verified by its
+   author against that file before commit — no auto-generated bar, ever.
+2. **`tools/corpus-exec`** (G1) — a vault-side Node runner that loads a
+   prettified chunk with a module map + stub registry, calls named exports on
+   the case inputs, and records outputs. It generalizes what H2 did ad hoc,
+   so authoring a golden is cheap. It lives in the public repo; it only runs
+   where the corpus is (never committed output beyond the value manifests).
+3. **`parity check` golden leg** (G2) — for every `src/` module with a
+   manifest, run OUR module on the manifest inputs and byte-diff outputs.
+   Mismatch = red. A `src/` module with no manifest = a loud "uncovered"
+   ledger line, never silence.
+4. **Coverage ledger** (G2) — per matrix-§A surface, every corpus chunk it
+   names is classified: `golden` (reimplemented + manifest) / `stubbed`
+   (deliberate, with reason + issue) / `GAP`. Printed in every check report:
+   the unextracted 90% of a chunk's behavior stays visible instead of
+   silently out of scope.
+5. **Rendered components** — same recipe one level up: render the corpus
+   component vault-side (React ships in the bundle), snapshot DOM/props;
+   render ours; diff. This supersedes the old P2 "scan/render" plan as the
+   path to "same UI" for JSX. First citizen: G4 (AutomationsList or
+   LoopsManagementPage).
+
+Slices: G0 spec (this section) · G1 corpus-exec · G2 manifest format + check
+leg + ledger · G3 generateTheme retrofit (its goldens exist; subsumes #218's
+wiring) · G4 first rendered-component golden. Claims on #220.
+
+## Failure modes it must kill (the why, from the v0 incident)
+
+- "Looks Linear-ish" invented UI → copy/structure/token/primitive gates.
+- Silent divergence across slices → every UI PR carries the report.
+- Improvements smuggled as parity → unlisted deviation = red.
+- Extraction regressions masquerading as parity → canaries fail the extract.
+- Grammar-lossy false confidence → Tier 2 is never the bar; acceptance is
+  golden execution of the corpus code (issue #220).
+- Reference rot → deterministic extract per corpus; 30-day drift check
+  regenerates; stale improvements self-flag.
