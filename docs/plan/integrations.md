@@ -68,6 +68,32 @@ definitions, drafts, runs, or memories. Those are ours by necessity, which is
 settled and reproduced independently three times. We are not a client for
 Linear's automations; we are our own product that integrates with Linear.
 
+## Optional Linear agent sessions (IG7)
+
+After IG5, expose our existing runs through Linear's agent-session UI when the
+user chooses that integration. Our Automations page remains primary; the same
+executor, provider choice and run records serve both views.
+
+The [Agent API digest](../../extracts/linear-official/AGENT-API.md), checked
+2026-09-27, is the starting evidence from #14 and #328. Recheck the current
+[agent docs](https://linear.app/developers/agents), schema and SDK before
+implementation: this preview surface has changed. The digest requires OAuth
+`actor=app` for an app user; mention/assignment permissions are separate.
+Old `app:mentionable` / `app:assignable` scope names conflict with later SDK
+descriptions of mentions/assignments capabilities. Verify the current contract.
+
+| Dated source contract to recheck | Integration acceptance |
+|---|---|
+| Session created/prompted events and `promptContext` | map inbound work and follow-ups to the shared run |
+| Status derives from emitted activities; activities are snapshots | map runtime events and read activity history |
+| Webhook acknowledgement within 5s; first thought within 10s | demonstrate progress handling at the actual boundary |
+| `externalUrls` link to our run view | verify links and current stale/unresponsive behavior |
+| Stop signal arrives on an inbound prompt | cancel shared execution, then confirm the result |
+| Plan updates replace the full array | publish complete plan snapshots |
+
+Billing, entitlements and any relationship to Linear AI credits remain
+UNVERIFIED. This integration does not establish free UI or free inference.
+
 ## Others
 
 The interface exists so the second integration is cheap. GitHub, Slack, and a
@@ -83,3 +109,4 @@ generic webhook are the obvious next three. None are in the first milestone.
 | IG4 | Linear: webhook receiver — HMAC, replay guard, dedupe |
 | IG5 | Linear: actions (comment, update) with audit |
 | IG6 | trigger/action catalog registration from integrations |
+| IG7 | Optional Linear agent-session presentation for the same runs, after IG5; recheck preview API/auth contract |
