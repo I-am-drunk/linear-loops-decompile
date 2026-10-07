@@ -1,146 +1,465 @@
 {
-  "surface": "settings-shell",
-  "note": "Every value in style.ts is read from the corpus and cited here. Corpus: pipeline/corpus (gitignored); stylesheet style-p6hK3mv7.css, 566143 bytes.",
+  "surface": "settings-primitives",
+  "referenceDate": "2026-10-07",
+  "coverage": "Default desktop primitives, verified spacing at max-width 640px, and navigation padding under scroll-timeline support; see UI-REFERENCE.md for omitted states and host requirements. No complete visual parity claimed.",
+  "sources": [
+    {
+      "file": "style/style-p6hK3mv7.css",
+      "sha256": "a7a84ade6bfbd06e75f552c2f245547f9de0d02a1b75538c0fd34154ce83350f"
+    },
+    {
+      "file": "client/ContextualMenuActions.BF8iy9S9.js",
+      "sha256": "430323364e36eb20f1fdb794737cbac1772c955c4923d91f87f648f4cc81a0e8"
+    },
+    {
+      "file": "client/AccountPreferencesSettingsPage.d0arPMFw.js",
+      "sha256": "45a157536e05f7a7a8bbd8a5b71f57e8ddc9e6f3e7963eddcd9e00062f9ee12f"
+    },
+    {
+      "file": "client/MainSettingsLayout.DI0euztN.js",
+      "sha256": "f2bed08c2d42eeb624c3cb4a45999cb18c3596e3391bb3d94347e940bcd7c04d"
+    },
+    {
+      "file": "client/Toggle.CZiT7Lh6.js",
+      "sha256": "7945b88e64322b70305ff8aa211f900f57d3baa876035603df6f77cfa9ac7f26"
+    },
+    {
+      "file": "client/Input.CX9538jp.js",
+      "sha256": "620a91e1a3e53962ad40f55f6b0d461cde4277f1778248811347ba11847acccf"
+    },
+    {
+      "file": "client/Button.DD4dEZh7.js",
+      "sha256": "13d70901479d1782adeabba59c52112f181b8a453bdc8cd865e8d63896fd2b6b"
+    },
+    {
+      "file": "client/Text.gv7OudGa.js",
+      "sha256": "c8a54ccabc2f583746fed40cbffc4da5b387ee11faba406aed4a664fe082d3c4"
+    },
+    {
+      "file": "client/mixins.stylex.BUgiQC4g.js",
+      "sha256": "9fc03b921bb2d167fe0ac1e195126bb88ab0de4a4a8de930f60a312d93f27628"
+    },
+    {
+      "file": "client/ThemeProvider.BNrg3wTr.js",
+      "sha256": "dbed779ea3300f378b229176d1ed0326d09ef16e81473ba5a4381ab5fbf8fa18"
+    },
+    {
+      "file": "client/RefreshManager.ZMmeoJHB.js",
+      "sha256": "973afae81242fc834d3b99c7c83830bfcf3f9fcba10c796eb8df5d331ff3e409"
+    },
+    {
+      "file": "client/ColorConverter.CVwFbLBP.js",
+      "sha256": "b08766ccc0d0bcaf964009b562a143c9bc75ac10bdbc82ade7f19bbddb841dd0"
+    }
+  ],
   "facts": [
     {
-      "name": "SPACE.xs",
-      "value": "4px",
-      "cite": "style-p6hK3mv7.css .sx-6wrskw{padding-left:4px} (used by AccountPreferencesSettingsPage.d0arPMFw.js); 29 padding declarations at 4px"
-    },
-    {
-      "name": "SPACE.sm",
-      "value": "6px",
-      "cite": "style-p6hK3mv7.css .sx-11iknt3{padding-left:6px} (used by SettingsList.DcdYNrAZ.js); .sx-10b6aqq{padding-bottom:6px}"
-    },
-    {
-      "name": "SPACE.md",
-      "value": "8px",
-      "cite": "style-p6hK3mv7.css .sx-167g77z{gap:8px} and .sx-1db2dqx{margin-right:8px} (SettingsList.DcdYNrAZ.js)"
-    },
-    {
-      "name": "SPACE.lg",
-      "value": "12px",
-      "cite": "style-p6hK3mv7.css .sx-c7ga6q{padding:12px} (AccountPreferencesSettingsPage.d0arPMFw.js); most frequent padding scalar, 49 declarations"
-    },
-    {
-      "name": "SPACE.xl",
-      "value": "16px",
-      "cite": "style-p6hK3mv7.css .sx-1tamke2{padding:16px} and .sx-1hr3lfm{padding-inline:16px} (AccountPreferencesSettingsPage.d0arPMFw.js)"
-    },
-    {
-      "name": "SPACE.xxl",
-      "value": "24px",
-      "cite": "style-p6hK3mv7.css .sx-1p5oq8j{padding-top:24px} and .sx-8e5d8q{padding-right:24px} (AccountPreferencesSettingsPage.d0arPMFw.js)"
-    },
-    {
-      "name": "RADIUS.sm",
-      "value": "2px",
-      "cite": "style-p6hK3mv7.css: most frequent radius in the stylesheet, 14 border-radius:2px declarations"
-    },
-    {
-      "name": "RADIUS.md",
-      "value": "3px",
-      "cite": "style-p6hK3mv7.css: second most frequent radius, 12 border-radius:3px declarations"
-    },
-    {
-      "name": "RADIUS.lg",
-      "value": "8px",
-      "cite": "style-p6hK3mv7.css .sx-1i9j6mr{border-radius:8px} (used by SettingsList.DcdYNrAZ.js); 11 declarations"
-    },
-    {
-      "name": "ROW_HEIGHT",
-      "value": "32px",
-      "cite": "style-p6hK3mv7.css .sx-10w6t97{height:32px} (used by SettingsList.DcdYNrAZ.js and AccountPreferencesSettingsPage.d0arPMFw.js)"
-    },
-    {
-      "name": "NAV_WIDTH",
-      "value": "220px",
-      "cite": "style-p6hK3mv7.css .sx-16grhtn{width:220px}; dereferenced to its users: LinearLayout.BBj6JEjr.js, AutomationRunsPage.B4BlrXdr.js, DebugRouter.hm9jVXTg.js"
-    },
-    {
-      "name": "font stack",
+      "name": "Global regular font stack",
       "value": "\"Inter Variable\", \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", \"Linear Thai\", sans-serif",
-      "cite": "style-p6hK3mv7.css --font-regular"
+      "scope": [
+        ".s-shell"
+      ],
+      "cite": "style-p6hK3mv7.css --font-regular; body/button/input/select font-family consumes this token. Font loading remains a host requirement."
     },
     {
-      "name": "body font-size",
-      "value": ".8125rem",
-      "cite": "style-p6hK3mv7.css font-size:.8125rem (5 declarations, = 13px at 16px root)"
+      "name": "Scoped box sizing and text resets",
+      "value": "border-box; margin/padding/border:0",
+      "scope": [
+        ".s-shell",
+        ".s-h1",
+        ".s-h2",
+        ".s-blurb",
+        ".s-rowdesc",
+        ".s-section"
+      ],
+      "cite": "style-p6hK3mv7.css universal box-sizing rule and html/body/text/section/fieldset reset. Applied within our shell only."
     },
     {
-      "name": "small font-size",
-      "value": ".75rem",
-      "cite": "style-p6hK3mv7.css font-size:.75rem (3 declarations, = 12px)"
+      "name": "Hairline density",
+      "value": "1px .5px 192dpi",
+      "scope": [
+        ".s-shell"
+      ],
+      "cite": "client/ThemeProvider.BNrg3wTr.js N() returns .5px or 1px using I: only screen and (min-device-pixel-ratio:2), only screen and (min-resolution:192dpi). CSS mirrors that initial density choice."
     },
     {
-      "name": "title font-size",
-      "value": ".9375rem",
-      "cite": "style-p6hK3mv7.css font-size:.9375rem (5 declarations, the most frequent, = 15px)"
+      "name": "Focus-visible outline",
+      "value": "1px",
+      "scope": [
+        ".s-shell :focus-visible"
+      ],
+      "cite": "style-p6hK3mv7.css :focus-visible consumes --focus-ring-outline; :root,.sx-10sn7k sets --focus-ring-width:1px; ThemeProvider focusColor."
     },
     {
-      "name": "page max-width",
-      "value": "640px",
-      "cite": "style-p6hK3mv7.css .sx-11gisft{max-width:640px}"
+      "name": "Default sidebar preference",
+      "value": "244px",
+      "scope": [
+        ".s-nav"
+      ],
+      "cite": "client/RefreshManager.ZMmeoJHB.js Q(244,2) decorates sidebarWidth; client/ContextualMenuActions.BF8iy9S9.js Ttn reads preference plus platform minimum. Only untouched desktop default with minimum <=244; host may override --s-sidebar-width."
     },
     {
-      "name": "toggle width",
-      "value": "28px",
-      "cite": "style-p6hK3mv7.css .sx-gd8bvy{width:28px}"
+      "name": "Navigation content padding",
+      "value": "4px 12px",
+      "scope": [
+        ".s-navitems"
+      ],
+      "cite": "client/MainSettingsLayout.DI0euztN.js $.content uses sx-1iorvi4/sx-jkvuk6 and sx-11of52c/sx-id5rln for default vertical/horizontal padding."
     },
     {
-      "name": "toggle height",
-      "value": "16px",
-      "cite": "style-p6hK3mv7.css .sx-lup9mm{height:16px}"
+      "name": "Navigation padding when scroll timelines are supported",
+      "value": "26px",
+      "scope": [".s-navitems"],
+      "cite": "client/MainSettingsLayout.DI0euztN.js $.content sx-t6xblk; style-p6hK3mv7.css encloses padding-top26 in @supports (animation-timeline: auto), without a viewport condition. Other scroll-timeline effects remain omitted."
     },
     {
-      "name": "toggle knob",
-      "value": "12px",
-      "cite": "style-p6hK3mv7.css .sx-smyaan{width:12px}"
+      "name": "Navigation outer link",
+      "value": "1px 8px 10px",
+      "scope": [
+        ".s-navitem"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js g2 -> v2.linkBase: sx-vijh9v/sx-1ty9z65 margin-block 1px, sx-1i9j6mr radius8; client/MainSettingsLayout.DI0euztN.js W -> G.link sx-1lqa7cf padding-left10."
     },
     {
-      "name": "pill radius",
-      "value": "999px",
-      "cite": "style-p6hK3mv7.css .sx-1e6avla{border-radius:999px}"
+      "name": "Navigation text box",
+      "value": "28px 8px 6px 9px",
+      "scope": [
+        ".s-navtext"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js v2.textBase: sx-ft8tb9 height28, sx-1i9j6mr radius8, sx-10dlkkm padding-right9; client/MainSettingsLayout.DI0euztN.js G.text sx-11iknt3 overrides left padding to6."
     },
     {
-      "name": "line-height 24px",
-      "value": "24px",
-      "cite": "style-p6hK3mv7.css .sx-1o2sk6j{line-height:24px}"
+      "name": "Navigation text typography",
+      "value": ".8125rem; 500; normal",
+      "scope": [
+        ".s-navtext"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js g2 -> _2 smallPlus; client/mixins.stylex.BUgiQC4g.js c.smallPlus sx-1srpx65/sx-11mg1s0/sx-ggjnk3."
     },
     {
-      "name": "line-height 20px",
-      "value": "20px",
-      "cite": "style-p6hK3mv7.css .sx-1fc57z9{line-height:20px}"
-    },
-    {
-      "name": "line-height 18px",
-      "value": "18px",
-      "cite": "style-p6hK3mv7.css .sx-d4r4e8{line-height:18px}"
-    },
-    {
-      "name": "line-height 16px",
-      "value": "16px",
-      "cite": "style-p6hK3mv7.css .sx-1d3mw78{line-height:16px}"
-    },
-    {
-      "name": "2px micro-offset",
-      "value": "2px",
-      "cite": "style-p6hK3mv7.css 21 padding declarations at 2px; .sx-1i6ynl5{padding:2px} family"
-    },
-    {
-      "name": "heading font-weight",
-      "value": "550",
-      "cite": "style-p6hK3mv7.css .sx-h88oxj{font-weight:550}. Corrected from an invented 510, which does not appear in the stylesheet at all."
-    },
-    {
-      "name": "page-title font-size",
-      "value": "1.125rem",
-      "cite": "style-p6hK3mv7.css .sx-fd0w6u{font-size:1.125rem} and .sx-x25i5n{font-size:1.125rem} (= 18px at 16px root)"
-    },
-    {
-      "name": "focus outline-offset",
+      "name": "Navigation focus inset",
       "value": "-1px",
-      "cite": "style-p6hK3mv7.css outline-offset:-1px; the inset-focus idiom, also .sx-1jz8bvi{inset:-1px}"
+      "scope": [
+        ".s-navitem:focus-visible"
+      ],
+      "cite": "client/MainSettingsLayout.DI0euztN.js G.link sx-onex52 uses calc(-1*var(--focus-ring-width)); root focus width1px."
+    },
+    {
+      "name": "Navigation active colors",
+      "value": "sidebarLinkBgActive; labelTitle",
+      "scope": [
+        ".s-navitem",
+        ".s-navtext"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js v2.active sx-4rafv8 and sx-1rfuerz; g2 passes labelTitle for active text; ThemeProvider maps both tokens."
+    },
+    {
+      "name": "Page outer margins",
+      "value": "40px 64px",
+      "scope": [
+        ".s-main"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js nM -> aM.containerMargins sx-a88ji7 margin-inline40, sx-16bybu0 margin-bottom64, sx-dj266r margin-top0; outer Flex aligns content center."
+    },
+    {
+      "name": "Constrained page width",
+      "value": "100% 640px",
+      "scope": [
+        ".s-page"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js nM defaults maxWidth=640; aM.content sx-h8yej3 width100%; contentMaxWidth -> sx-f68679 consumes the passed width."
+    },
+    {
+      "name": "Constrained page header",
+      "value": "16px 4px -.09rem",
+      "scope": [
+        ".s-pagehead"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js nM default header gap4; aM.headerConstrained sx-1hr3lfm padding-inline16, sx-t970qd padding-block0, sx-1fkb0mw text-indent-.09rem."
+    },
+    {
+      "name": "Page header spacer",
+      "value": "32px",
+      "scope": [
+        ".s-pagegap"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js nM renders $Ze after header; aM.spacer sx-10w6t97 height32, shrink0."
+    },
+    {
+      "name": "Section stack gap",
+      "value": "48px",
+      "scope": [
+        ".s-sectionstack"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js iM -> aM.settingsLayoutRows uses sx-1y9zxd1 gap48, display:flex and flex-direction:column."
+    },
+    {
+      "name": "Page title typography",
+      "value": "1.5rem 2rem -.01rem; 500",
+      "scope": [
+        ".s-h1"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js nM title uses Text title2; client/mixins.stylex.BUgiQC4g.js c.title2: sx-dyqlo0 font-size, sx-hacrq1 line-height, sx-1t2gnpy letter-spacing, sx-11mg1s0 weight."
+    },
+    {
+      "name": "Section title typography",
+      "value": ".9375rem 1.4375rem; 500",
+      "scope": [
+        ".s-h2"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js dM -> pQe uses Text regular plus fM.sectionTitle weight500; client/mixins.stylex.BUgiQC4g.js c.regular sx-v6h07y/sx-gu00eq."
+    },
+    {
+      "name": "Section description typography",
+      "value": ".8125rem 22px; 450",
+      "scope": [
+        ".s-blurb"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js dM uses Text small with fM.paragraph sx-19v9tvf line-height22; client/mixins.stylex.BUgiQC4g.js c.small sx-oxd7ts/sx-1nzvdvg."
+    },
+    {
+      "name": "Header-bearing section spacing",
+      "value": "16px 12px -12px",
+      "scope": [
+        ".s-section"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js dM gap16 default; fM.sectionWithHeader sx-z9dl7a padding-top12, sx-7wgvq7 margin-top-12; fM.fieldset resets."
+    },
+    {
+      "name": "Section heading group",
+      "value": "16px 2px",
+      "scope": [
+        ".s-sectionhead"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js dM heading group default gap2; fM.sectionHeader sx-nm25rq/sx-yfqnmn padding-left/right16."
+    },
+    {
+      "name": "Settings card radius",
+      "value": "10px",
+      "scope": [
+        ".s-rows"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js gM -> SM -> bQe -> mM.box sx-tr9pb5 sets item-radius10; four corner consumers apply it."
+    },
+    {
+      "name": "Settings card outline and shadow",
+      "value": "thinPixel; bgBorderFaintAlphaThin; shadowLow; bgBase",
+      "scope": [
+        ".s-rows"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js bQe default borderColor is bgBorderFaintAlphaThin. mM.box sx-1easrm0 is outline shadow plus ThemeProvider shadow.low; sx-1lmytr0 background is bgBase. Card theme must be bound separately if required by SM/Kg."
+    },
+    {
+      "name": "Boxed settings row geometry",
+      "value": "60px 16px 12px",
+      "scope": [
+        ".s-row"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js zM/LM -> DM -> bM -> mM.listItem; mM.box overrides item minimum60, padding-x/y16, gap12. Row uses flex, relative positioning, center alignment and space-between."
+    },
+    {
+      "name": "Inset row separator",
+      "value": "16px",
+      "scope": [
+        ".s-row:not(:last-child)::after"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js mM.box sx-zfakbe border-padding16, sx-xapuxa bottom0, sx-plz7jn thinPixel. CSS _list_4bcnq_7._border_4bcnq_38 non-last-child:after applies them."
+    },
+    {
+      "name": "Row title column gap",
+      "value": "3px",
+      "scope": [
+        ".s-rowtext"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js BM -> UM.settingsListItemTitle sx-1ed6fcf; display:flex, column, grow1, min-width0."
+    },
+    {
+      "name": "Row label typography",
+      "value": ".8125rem; 500; normal; labelTitle",
+      "scope": [
+        ".s-rowlabel"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js zM/LM use Text smallPlus; client/mixins.stylex.BUgiQC4g.js c.smallPlus sx-1srpx65/sx-11mg1s0/sx-ggjnk3. Text default color is labelTitle."
+    },
+    {
+      "name": "Row description typography",
+      "value": ".75rem; 450; normal; labelMuted",
+      "scope": [
+        ".s-rowdesc"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js zM/LM descriptions use Text mini color labelMuted; client/mixins.stylex.BUgiQC4g.js c.mini sx-167xe44/sx-1nzvdvg/sx-ggjnk3."
+    },
+    {
+      "name": "Row accessory gap",
+      "value": "4px",
+      "scope": [
+        ".s-rowctl"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js hM -> mM.accessory sx-1jnr06f; flex, shrink0, min-width0. Not a button-internal gap."
+    },
+    {
+      "name": "Toggle accessory right inset",
+      "value": "6px",
+      "scope": [
+        ".s-toggle-ctl"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js zM explicitly adds sx-1ug7bdz to hM; CSS padding-right6."
+    },
+    {
+      "name": "Disabled title and toggle opacity",
+      "value": ".5",
+      "scope": [
+        ".s-row.s-off .s-rowtext",
+        ".s-toggle:disabled"
+      ],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js BM applies UM.disabled sx-byyjgo to title column; client/Toggle.CZiT7Lh6.js toggleBase sx-ijokvz sets disabled opacity. Not whole-row opacity."
+    },
+    {
+      "name": "Normal toggle track",
+      "value": "30px 20px 72px",
+      "scope": [
+        ".s-toggle"
+      ],
+      "cite": "client/Toggle.CZiT7Lh6.js f defaults small=false; h.normal uses sx-1849jeq width30 and sx-1qx5ct2 height20; p.toggleBase sx-7odtlm radius72."
+    },
+    {
+      "name": "Normal resting toggle thumb",
+      "value": "50% -50% 3px 13px 14px 7px",
+      "scope": [
+        ".s-knob"
+      ],
+      "cite": "client/Toggle.CZiT7Lh6.js p.toggleBase positions after pseudo at top50% with translateY(-50%); h.normal supplies height14, radius7, off left3/right13. m.hover or m.disabled checked state swaps resting insets. Our span implements only resting states."
+    },
+    {
+      "name": "Toggle track and thumb colors",
+      "value": "bgBase; labelBase; controlPrimary; controlPrimaryLabel",
+      "scope": [
+        ".s-toggle",
+        ".s-knob"
+      ],
+      "cite": "client/Toggle.CZiT7Lh6.js f computes off/hover using ColorConverter.mixCss(bgBase,labelBase,isDark?.2:.4 or .3:.5); p.trackColors selects controlPrimary when checked. Thumb sx-w3xkew uses ThemeProvider controlPrimaryLabel. Host must bind settingsThemeVariables outputs."
+    },
+    {
+      "name": "Toggle focus offset",
+      "value": "2px",
+      "scope": [
+        ".s-toggle:focus-visible"
+      ],
+      "cite": "client/Toggle.CZiT7Lh6.js p.toggleBase sx-7s97pk focus-visible outline-offset2."
+    },
+    {
+      "name": "Desktop input and native select metrics",
+      "value": "32px 6px 12px 5px .8125rem",
+      "scope": [
+        ".s-input",
+        ".s-select"
+      ],
+      "cite": "client/Input.CX9538jp.js u()/f() use S.inputBase and inputHeightDesktop. ThemeProvider s var-group overrides radius5, padding-block6/inline12, size .8125rem; sx-10w6t97 height32. This is not the custom Select used by LM."
+    },
+    {
+      "name": "Text input focus inset",
+      "value": "-1px",
+      "scope": [
+        ".s-input"
+      ],
+      "cite": "client/Input.CX9538jp.js u() applies S.inputOutlineOffset sx-1g40iwv outside checkbox/radio; f() does not apply it to native select."
+    },
+    {
+      "name": "Native select right padding",
+      "value": "24px",
+      "scope": [
+        ".s-select"
+      ],
+      "cite": "client/Input.CX9538jp.js f() -> S.select sx-8e5d8q. Its custom caret is omitted; browser native appearance remains."
+    },
+    {
+      "name": "Input and select colors",
+      "value": "labelTitle; labelMuted; bgBase; controlSecondary; bgBorderSolidThin",
+      "scope": [
+        ".s-input",
+        ".s-select"
+      ],
+      "cite": "client/Input.CX9538jp.js S.inputBase sx-hfnvfx/sx-1aspn76 uses labelTitle/disabled labelMuted; background resolves theme.inputBackground=bgBase. S.inputBorderHover sx-8vmfhh uses --sx-w1p5jj, which client/ThemeProvider.BNrg3wTr.js maps to bgBorderSolidThin; S.select overrides background to controlSecondary and border color to transparent."
+    },
+    {
+      "name": "Normal text button geometry",
+      "value": "32px 12px 9999px .8125rem; 500; normal",
+      "scope": [
+        ".s-btn"
+      ],
+      "cite": "client/Button.DD4dEZh7.js u() default normal; x.normal height/min-width32 and font .8125rem; D.normal padding-inline12; v.base radius9999, block padding0, weight500, normal line-height, thinPixel transparent border."
+    },
+    {
+      "name": "Secondary button colors and disabled opacity",
+      "value": ".6; controlSecondary; labelBase; labelMuted",
+      "scope": [
+        ".s-btn"
+      ],
+      "cite": "client/Button.DD4dEZh7.js y.secondary uses controlSecondary/labelBase, disabled labelMuted; v.base sx-fqoyci disabled opacity .6. Overlay shadow/hover effects are omitted."
+    },
+    {
+      "name": "Supporting text uses the mini primitive",
+      "value": ".75rem; 450; normal; labelMuted",
+      "scope": [
+        ".s-cred",
+        ".s-detail",
+        ".s-badge"
+      ],
+      "cite": "DESIGN: our credential/status text reuses the verified Text mini typography from client/mixins.stylex.BUgiQC4g.js c.mini. This is not a claim that Linear renders these product labels or a pill badge."
+    },
+    {
+      "name": "Page outer margins at narrow widths",
+      "value": "22px 32px",
+      "scope": [".s-main"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.containerMargins sx-1gjfzc6/sx-o8fvo7; style-p6hK3mv7.css puts margin-inline22 and margin-bottom32 under @media (max-width:640px)."
+    },
+    {
+      "name": "Page header spacer at narrow widths",
+      "value": "24px",
+      "scope": [".s-pagegap"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.spacer sx-zwg4qy; style-p6hK3mv7.css sets height24 under @media (max-width:640px)."
+    },
+    {
+      "name": "Section stack at narrow widths",
+      "value": "24px",
+      "scope": [".s-sectionstack"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.settingsLayoutRows sx-o9f7l9; style-p6hK3mv7.css sets gap24 under @media (max-width:640px)."
+    },
+    {
+      "name": "Paragraph line height at narrow widths",
+      "value": "18px",
+      "scope": [".s-blurb"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js aM.paragraph/fM.paragraph sx-eqzeqd; style-p6hK3mv7.css sets line-height18 under @media (max-width:640px)."
+    },
+    {
+      "name": "Boxed row spacing at narrow widths",
+      "value": "16px 12px",
+      "scope": [".s-row"],
+      "cite": "client/ContextualMenuActions.BF8iy9S9.js mM.listItem sx-aeyjhy/sx-164mpto/sx-1aocyk; style-p6hK3mv7.css divides item padding-x and gap by 1.5 under @media (max-width:640px). mM.box supplies padding-x16 and gap12; vertical padding stays16."
+    },
+    {
+      "name": "Full UI parity",
+      "value": "UNVERIFIED",
+      "label": "UNVERIFIED",
+      "cite": "No authenticated same-state reference screenshot comparison. These are component-scoped extracted facts, not a completed visual parity result."
+    },
+    {
+      "name": "Native select replacement",
+      "value": "UNVERIFIED",
+      "label": "UNVERIFIED",
+      "cite": "LM uses custom Select via HQe/Wg. Our native select retains platform interaction/appearance; custom caret, menu geometry and focus behavior remain unimplemented."
+    },
+    {
+      "name": "Effects and alternate states",
+      "value": "UNVERIFIED",
+      "label": "UNVERIFIED",
+      "cite": "Hover expansion/timing, touch controls, mobile layout, responsive sidebar constraints and resize behavior are not implemented here."
+    },
+    {
+      "name": "Product copy and status badge",
+      "value": "UNVERIFIED",
+      "label": "UNVERIFIED",
+      "cite": "Provider/integration names, credential hints, action labels and connection-state copy are our product choices. No matching Linear pill badge has been verified; decorative badge CSS is omitted."
     }
   ]
 }

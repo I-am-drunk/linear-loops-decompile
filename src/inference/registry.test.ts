@@ -57,6 +57,7 @@ test(`resolve() returns the first reachable provider in order`, async () => {
 test(`resolve() with no ids is unconfigured`, async () => {
   const got = await makeRegistry().resolve([]);
   assert.equal(got.ok, false);
+  if (!got.ok) assert.equal(got.error.kind, `unconfigured`);
 });
 
 test(`a REJECTION is not retried elsewhere — fallback would launder it`, async () => {
