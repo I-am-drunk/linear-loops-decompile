@@ -1,6 +1,6 @@
 # Status
 
-As of 2026-10-06, the delivery target is **one working automation**, followed by
+As of 2026-10-07, the delivery target is **one working automation**, followed by
 whole-Linear UI coverage. Read PLAN.md for order and the live board for work:
 
 ```sh
@@ -10,7 +10,7 @@ node tools/board/main.mjs --feedback
 | Area | Evidence-backed state |
 |---|---|
 | Main | Server/transport, model, theme and presentation kernels exist |
-| Product UI | Feature packages exist on PR branches; no composed app is delivered on main |
+| Product UI | Settings frame and row primitives are available; no composed app is delivered on main |
 | Execution | Persistence, scheduler, executor and UI wiring need explicit slices |
 | Inference | Text-only provider contract and fallback registry; adapters remain on PR branches |
 | Exactness | #327 merged: required declaration checks run in CI; actual reference comparisons remain necessary |
