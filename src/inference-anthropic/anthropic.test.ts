@@ -304,6 +304,15 @@ test(`short keys have no hint and failure details redact keys before truncating`
   if (!got.ok && `detail` in got.error) assert.ok(!got.error.detail.includes(`test-secret`));
 });
 
+test(`invalid output caps cannot produce known estimates`, () => {
+  const s = stub({});
+  const p = provider({ fetchImpl: s.fetchImpl, ...PRICED });
+  for (const maxTokens of [-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.deepEqual(p.estimate({ model: `m`, messages: [], maxTokens }), { known: false, cents: 0 });
+  }
+  assert.deepEqual(s.calls, []);
+});
+
 test(`cost() is integral cents; estimate() hits no network and uses 1024 when maxTokens is absent`, () => {
   const s = stub({});
   const p = provider({ fetchImpl: s.fetchImpl, pricing: { m: { inputPerMTok: 3, outputPerMTok: 15 } } });

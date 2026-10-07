@@ -288,6 +288,7 @@ export function makeAnthropicProvider(cfg: AnthropicConfig): Provider {
       const chars = request.messages.reduce((n, m) => n + m.content.length, 0);
       const inputTokens = Math.ceil(chars / 4);
       const outputTokens = request.maxTokens ?? 1024;
+      if (!isTokenCount(outputTokens)) return { cents: 0, known: false };
       return { cents: cents(inputTokens, p.inputPerMTok) + cents(outputTokens, p.outputPerMTok), known: true };
     },
 
