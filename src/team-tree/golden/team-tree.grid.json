@@ -1,0 +1,15 @@
+{
+  "unit": "team-tree/team-tree",
+  "chunk": "Issue.DRYymPCa.js",
+  "stubs": {
+    "config.aM1_XCHx.js": {
+      "file": "config-bootstrap-stub.mjs",
+      "why": "the injected-config proxy chunk + environment bootstrap seam, byte-identical to the merged TYPE-LATTICE stub (PR #301) — the one seam that makes the model-layer chunk executable; the driven O2 statics are pure over their fixture arguments and read none of it. Interlock (PR #300 second review, carried on the boot-config §2 row): when this stub's prototype transcription shrinks to import src/proto-kernel, both copies shrink together."
+    }
+  },
+  "drive": {
+    "file": "team-tree-driver.mjs",
+    "exportMeaning": "export{O2 as ar} (Issue.DRYymPCa.js export map) — the team-picker presentation namespace: sortTeams (IIFE `e.sortTeams=i`), sortTeamsForTree (`e.sortTeamsForTree=a`), sortTeamsForTreeByDivider (`=o`), sortTeamsForTreeByGroup (`=s`), labelForTeams (`=c`), findClosestCommonParent (`=u`), plus sortByUserSortOrder (`=r` — the settled 00:54:08Z flat kernel, NOT re-goldened here). Default sibling comparator is the imported Decorators `et` class over `name` (Intl.Collator numeric natural compare, null-last)."
+  },
+  "notes": "TEAM-TREE (#225 claim 2026-09-29, from my #295 TEAM-PICKER TREE KERNEL input): pins the presentation semantics every loops team picker rides — min-input-index root-block ordering over natural-name sibling ordering (Team 2 < Team 10), missing-ancestor injection (structure-only: dropped from output, bumps hideAncestors not indentationLevel), the selected partition (selected block first, both tree-sorted), the useIndentation:false flat fallback, ByDivider's split-and-remark, ByGroup's first-appearance group order, labelForTeams' exact '+ N' suffix with NO space before '+' (raw-tree byte fact — the pretty projection inserts whitespace inside this template literal), and findClosestCommonParent's nearest-first walk over withAncestors incl. the null-on-disjoint contract. Fixtures are collection-shaped (children.orderBy delegates to the passed comparator's own orderElements, so the REAL Decorators E sorts) with root-first ancestors matching the corpus Team getter. Reuses the merged config-bootstrap seam; every other closure chunk executes REAL."
+}

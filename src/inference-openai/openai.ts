@@ -149,9 +149,6 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
             id: mid,
             label: mid,
             ...(typeof ctx === `number` ? { contextTokens: ctx } : {}),
-            // The wire format does not declare tool support, so claiming it
-            // either way would be inventing a fact. Assume none.
-            tools: false,
           };
         });
       return ok(models);
@@ -170,6 +167,15 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
       const root_ = asRecord(got.value);
       const choice = asRecord(Array.isArray(root_?.[`choices`]) ? root_[`choices`][0] : undefined);
       const message = asRecord(choice?.[`message`]);
+      const finish = choice?.[`finish_reason`];
+      const toolCalls = message?.[`tool_calls`];
+      // Tool fields: https://developers.openai.com/api/reference/resources/chat/subresources/completions
+      // Reject before reading text: a mixed reply cannot be completed by IN1.
+      if (finish === `tool_calls` || finish === `function_call`
+        || (Array.isArray(toolCalls) && toolCalls.length > 0)
+        || message?.[`function_call`] != null) {
+        return fail({ kind: `rejected`, provider: id, detail: `tool calls are unsupported by the text-only provider contract` });
+      }
       const content = message?.[`content`];
       if (typeof content !== `string`) {
         return fail({ kind: `rejected`, provider: id, detail: `no message content in response` });
@@ -184,12 +190,10 @@ export function makeOpenAiProvider(cfg: OpenAiConfig): Provider {
 
       // `length` means the cap truncated the answer; a caller that treats it
       // as a complete response ships a half sentence to the user.
-      const finish = choice?.[`finish_reason`];
       const stop: ChatResult[`stop`] =
         finish === `length` ? `length`
-          : finish === `tool_calls` ? `tool`
-            : finish === `content_filter` ? `refusal`
-              : `end`;
+          : finish === `content_filter` ? `refusal`
+            : `end`;
 
       return ok({ content, usage, stop });
     },

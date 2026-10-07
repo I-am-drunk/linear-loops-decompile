@@ -39,17 +39,17 @@ test(`models maps id, label and context length`, async () => {
   const got = await provider({ fetchImpl: s.fetchImpl }).models();
   assert.equal(got.ok, true);
   if (got.ok) {
-    assert.deepEqual(got.value[0], { id: `m`, label: `m`, contextTokens: 8192, tools: false });
+    assert.deepEqual(got.value[0], { id: `m`, label: `m`, contextTokens: 8192 });
     // No context_length declared -> the key is absent, not 0.
     assert.ok(!(`contextTokens` in (got.value[1] ?? {})));
   }
 });
 
-test(`tool support is never claimed — the wire format does not declare it`, async () => {
+test(`the text-only model contract omits tool capabilities`, async () => {
   const s = stub({ body: `{"data":[{"id":"m"}]}` });
   const got = await provider({ fetchImpl: s.fetchImpl }).models();
-  // Claiming tools:true would be inventing a fact about the model.
-  assert.equal(got.ok && got.value[0]?.tools, false);
+  assert.ok(got.ok);
+  if (got.ok) assert.deepEqual(got.value, [{ id: `m`, label: `m` }]);
 });
 
 test(`HTML from a proxy becomes a typed failure, not a thrown SyntaxError`, async () => {
@@ -154,4 +154,43 @@ test(`no apiKey means no Authorization header at all — some servers 401 on "Be
   const fetchImpl: FetchLike = async (_u, init) => { seen = init?.headers; return { ok: true, status: 200, text: async () => `{"data":[]}` }; };
   await provider({ fetchImpl }).models();
   assert.ok(seen && !(`authorization` in seen), JSON.stringify(seen));
+});
+
+test(`tool finish reasons are rejected with or without text`, async () => {
+  for (const finish_reason of [`tool_calls`, `function_call`]) {
+    for (const content of [null, `I will call a tool.`]) {
+      const body = JSON.stringify({ choices: [{ message: { content }, finish_reason }] });
+      const got = await provider({ id: `test-provider`, fetchImpl: stub({ body }).fetchImpl })
+        .chat({ model: `m`, messages: [] });
+      assert.equal(got.ok, false);
+      if (!got.ok) {
+        assert.equal(got.error.kind, `rejected`);
+        assert.equal(got.error.provider, `test-provider`);
+      }
+    }
+  }
+});
+
+test(`tool payloads cannot hide behind text and a stop finish reason`, async () => {
+  const call = { name: `lookup`, arguments: `{}` };
+  for (const payload of [
+    { tool_calls: [{ id: `call-1`, type: `function`, function: call }] },
+    { function_call: call },
+  ]) {
+    const body = JSON.stringify({ choices: [{
+      message: { content: `I will call a tool.`, ...payload }, finish_reason: `stop`,
+    }] });
+    const got = await provider({ fetchImpl: stub({ body }).fetchImpl }).chat({ model: `m`, messages: [] });
+    assert.equal(got.ok === false && got.error.kind, `rejected`);
+  }
+});
+
+test(`empty tool metadata preserves text replies and refusal mapping`, async () => {
+  for (const [finish_reason, stop] of [[`stop`, `end`], [`content_filter`, `refusal`]]) {
+    const body = JSON.stringify({ choices: [{
+      message: { content: `hello`, tool_calls: [], function_call: null }, finish_reason,
+    }] });
+    const got = await provider({ fetchImpl: stub({ body }).fetchImpl }).chat({ model: `m`, messages: [] });
+    assert.equal(got.ok && got.value.stop, stop);
+  }
 });
