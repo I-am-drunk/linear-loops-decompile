@@ -16,7 +16,7 @@ node tools/board/main.mjs --feedback
 | Exactness | #327 merged: required declaration checks run in CI; actual reference comparisons remain necessary |
 | T3 Code Connect | Existing adapter is a prototype over our protocol; interoperability is unverified |
 | Linear | Public-API client exists; sign-in and integration packages await wiring and verification |
-| Linear chat | Protocol map and standalone poll probe documented; account, billing, auth and streaming compatibility remain UNVERIFIED (docs/linear-chat-integration-map.md) |
+| Linear chat | Static audit and shared adapter interfaces added; E0 login challenge partially observed, authenticated E0–E5 acceptance remains UNVERIFIED (docs/linear-chat-integration-map.md §8) |
 | Cursor | Separate reference repo exists; exact authenticated layout capture remains unverified |
 
 A PR, package or green mock test is not a delivered user flow. Update this file

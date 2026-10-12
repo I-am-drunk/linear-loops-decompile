@@ -8,7 +8,8 @@ vendor implementation are included.
 ## Evidence and confidence
 
 `SOURCE` means inspected interface facts, not a successful authenticated request.
-`LIVE` means an observation recorded in the [experiment ledger](linear-chat-experiments.md).
+`LIVE` means an observation recorded in the [experiment ledger](linear-chat-experiments.md)
+or the versioned live checkpoint in §8.
 `DESIGN` means our proposed adapter contract. `UNVERIFIED` is an acceptance gap.
 Exact artifact hashes are in
 `tools/linear-chat-probe/evidence/sources.json`; assets remain in ignored
@@ -29,6 +30,10 @@ The current login page references a different family; targeted October facts
 are identified separately below. Do not silently combine them into one version.
 The [sync summary](../SPECS/sync-protocol.md) explicitly marks itself superseded;
 [KNOWLEDGE §4](../KNOWLEDGE.md) and re-inspection take precedence.
+The [static audit](linear-chat-static-audit.md) rechecks all 15 source artifacts,
+adds SDL correlation/nullability facts, and corrects KNOWLEDGE's conflation
+of the two compression gates. Those corrections take precedence over the
+historical summary, not over future live observations.
 
 ## 1. Route
 
@@ -146,6 +151,14 @@ Terminal distinction [S1, S2]: conversation `complete`/`error`; assistant turn
 or `ack:waiting` is not a completed turn. Confirm the target turn and refresh
 the stored snapshot before declaring completion.
 
+S1's `parts` is nullable and its metadata has a required `turnId`; use that
+correlation, not all conversation text. S1 contains no `AiConversationTurn`
+type: the turn lifecycle above comes from S2, not official turn SDL.
+S4 also gates binary prefix decoding on `compressionDictionaryVersion`;
+without it binary bytes remain untouched before MessagePack decoding.
+The separate URL compression gate is decoder-support/previous-failure based,
+not the same feature-flag check. See the static audit for exact byte ranges.
+
 ## 3. Authentication and lifetime
 
 **SOURCE [S4]:** GraphQL uses `credentials:"include"` and
@@ -243,13 +256,17 @@ handling and no-spend boundaries are in the experiment ledger.
 
 ## 6. Server adapter boundary
 
-**DESIGN, not implemented:** put `LinearChatTransport` behind the inference
+**DESIGN, transport not implemented:** put the Linear chat adapter behind the inference
 registry, never behind the entity/action integration. Keep auth, remote IDs,
 capability probing, deadlines and redaction private to that adapter.
 The existing `src/inference/types.ts` contract is text-only; like
 [T3 Code Connect](plan/t3-code-connect.md), the adapter must prove its actual
 wire protocol before claiming compatibility. Do not invent models, context
 windows, token usage, prices, temperature or max-token support.
+The shared [protocol adapter contract](linear-chat-adapter-contract.md) now
+defines interfaces in `src/inference/protocol.ts` for both Linear chat and
+T3 Code Connect. It remains separate from the text-only registry: no adapter
+is enabled, and no runtime policy enforcement or compatibility is claimed.
 
 **v1 poll:** validate connection and candidate query first; persist generated
 IDs and submit one mutation; poll fresh snapshots by returned ID, correlate
@@ -325,3 +342,27 @@ after verification. No refresh implementation is justified by current evidence.
 Acceptance remains: sacrificial-account send/poll, E1, workflow creation,
 JSON handshake, token birth/renewal/expiry, approval/decline and cancel/replay.
 Passing local fixtures proves our probe mechanics, not those provider claims.
+
+## 8. Live probe status
+
+The original map at `24e088e` ended at §7. This table uses the probe owner's
+E-labels from the [live checkpoint at e14591d](https://github.com/I-am-drunk/linear-loops-decompile/blob/e14591dc6bfc957814769ce6720f40effe96df36/facts/linear-chat-live-2026-10-12.md),
+not an inferred numbering of the older experiment ledger. Probe ownership
+remains with `live-linear-chat-probes`; this section consumes its evidence.
+Checkpoint observations end at 2026-10-12 17:50:04.196 UTC, awaiting email code.
+
+| Probe | Status | Evidence and remaining acceptance |
+|---|---|---|
+| E0 — token delivery and identity triple | **PARTIAL VERIFIED; authenticated portion OPEN / UNVERIFIED** | Live E0 records HTTP 200 and `success:true, authType:authToken` for the email challenge at 17:49:20.549 UTC; manual-code form at 17:50:04.196. Login HTTP client version `1.81129.0` observed, no challenge-response Set-Cookie names. Completion cookies, identity triple and authenticated read not observed. |
+| E1 — direct-chat credit behavior | **OPEN / UNVERIFIED** | Live E1: zero sends, no before/after usage snapshots. Missing values are not zero usage. |
+| E2 / E2b — JSON frames and minimal fields | **OPEN / UNVERIFIED** | Live E2: no authenticated socket; login HTTP version does not establish accepted socket version or account-specific fields. |
+| E3 — token mint and first use | **OPEN / UNVERIFIED** | Live E3: no session credential observed; email challenge acceptance is not issuance. TTL/refresh need later observations. |
+| E4 — workflow-style entity context | **OPEN / UNVERIFIED** | Live E4: zero context/source-flag sends; no acceptance evidence. |
+| E5 — send-time selection | **OPEN / UNVERIFIED** | Live E5: no send or input introspection; `promptPresetKey` and model selection not established. |
+
+Only E0's named login steps can move from open to verified at this checkpoint.
+Do not mark an entire probe verified from fixtures, source schemas, or a
+blocked experiment. For each later update, pin the facts commit and retain
+the observed time, inputs, result and limitations. Cancel/replay, approval
+decline, token expiry and actual registry integration remain separate
+acceptance gaps even if these six probes eventually pass.
