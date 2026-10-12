@@ -1,0 +1,7 @@
+{
+  "name": "ui-automations",
+  "private": true,
+  "type": "module",
+  "description": "Automations list page (AU1): rows, enabled-first sort, search, row actions, empty state. See docs/plan/automations.md.",
+  "ui": true
+}
