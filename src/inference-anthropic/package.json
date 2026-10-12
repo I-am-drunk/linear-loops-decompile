@@ -1,0 +1,6 @@
+{
+  "name": "inference-anthropic",
+  "private": true,
+  "type": "module",
+  "description": "Anthropic Messages API Provider implementation (IN3): /v1/models and /v1/messages. Same shape and status mapping as inference-openai. See docs/plan/inference.md."
+}

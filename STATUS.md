@@ -12,7 +12,7 @@ node tools/board/main.mjs --feedback
 | Main | Server/transport, model, theme and presentation kernels exist |
 | Product UI | Settings frame and row primitives are available; no composed app is delivered on main |
 | Execution | Persistence, scheduler, executor and UI wiring need explicit slices |
-| Inference | Text-only provider contract and fallback registry; adapters remain on PR branches |
+| Inference | Text-only registry plus OpenAI-compatible and Anthropic adapters; execution wiring remains |
 | Exactness | #327 merged: required declaration checks run in CI; actual reference comparisons remain necessary |
 | T3 Code Connect | Existing adapter is a prototype over our protocol; interoperability is unverified |
 | Linear | Public-API client exists; sign-in and integration packages await wiring and verification |
