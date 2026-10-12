@@ -3,7 +3,7 @@
 Session `01a13136-96e7-7330-b9ea-3f6952f070d2`, inference lane #316.
 Branch `live-linear-chat-probes`, explicitly based on #376 at `24e088e`.
 All timestamps below are UTC. This is a measurement log, not an adapter
-compatibility or pricing guarantee. **Checkpoint: awaiting the email code.**
+compatibility or pricing guarantee. **BLOCKED: email-code relay timed out.**
 
 ## Setup and decisions
 
@@ -18,11 +18,11 @@ compatibility or pricing guarantee. **Checkpoint: awaiting the email code.**
   Camoufox context was used; no existing personal browser session or profile
   was imported. The owner-supplied test email was reused (redacted here).
 - No paid plan, purchase, external integration, chat, or workflow has been
-  created at this checkpoint. The only accepted mutation requests an email.
+  created during this run. The only accepted mutation requests an email.
 
 ## E0 — token delivery and identity triple
 
-**PARTIAL LIVE observation; authenticated acceptance pending.**
+**PARTIAL LIVE observation; authenticated acceptance UNVERIFIED.**
 
 | Time | Observation |
 |---|---|
@@ -36,19 +36,29 @@ The accepted challenge request used `Linear-Client-Version: 1.81129.0`.
 Client-ID was present (redacted). **Set-Cookie names on the challenge response:
 none.** This is not the completion/authentication response and does not
 contradict session delivery by a later Set-Cookie.
+The [redacted response record](../tools/linear-chat-probe/evidence/live-login-challenge-2026-10-12.json)
+preserves the actual `loginCodeOnly:false` browser request flag. The Node
+helper's code-only request is a separate, unverified projection.
 
 `NEED-CODE` was written to `/tmp/linear-live-status.txt` when the manual
-entry step was reached. The relay watcher checks `/tmp/linear-live-code.txt`
-every 30 seconds, for at most two hours, rejecting files older than this
-request. The one-time code is not printed, committed, or treated as a session.
+entry step was reached (17:50:00 UTC). The relay watcher checked
+`/tmp/linear-live-code.txt` every 30 seconds against a two-hour deadline,
+rejecting files older than this request. It reported `CODE-TIMEOUT` at
+19:50:53.590 UTC; the final polling sleep accounts for deadline overshoot.
+The code file did not exist at final inspection. No completion mutation ran.
 
 Completion Set-Cookie names, userId, userAccountId, organizationId and
-authenticated `AiConversationsQuery(first:1)`: **UNVERIFIED** at checkpoint.
+authenticated `AiConversationsQuery(first:1)`: **UNVERIFIED**.
+At 19:50:59.267 UTC the browser still displayed the manual code-entry form.
+The completed GraphQL capture contains exactly one exchange, the successful
+email challenge above. There is no observed session token to hand off.
+The [final redacted outcome](../tools/linear-chat-probe/evidence/live-outcome-2026-10-12.json)
+records the timeout, absent identity, and zero authenticated probe attempts.
 
 ## E1 — direct-chat credit behavior
 
 **UNVERIFIED.** No authenticated organization, usage snapshot, usage alerts,
-direct-chat send, or post-send snapshot yet. Missing values are not zero.
+direct-chat send, or post-send snapshot. Missing values are not zero.
 No conclusion about whether normal chat consumes usage can be drawn.
 Only one direct send is authorized for the isolated A/B comparison; do not
 mix a workflow-context send into the direct-chat measurement window.
@@ -64,7 +74,7 @@ Its fixture tests do not establish live handshake or JSON-frame acceptance.
 
 ## E3 — token mint and first use
 
-**UNVERIFIED.** No session token observed or verified yet. An email challenge
+**UNVERIFIED.** No session token observed or verified. An email challenge
 acceptance timestamp is not a token mint timestamp. The later completion
 response time will bound observation of issuance, not assert an exact
 server-side issued-at time. Long-duration TTL checks belong to the orchestrator.
@@ -75,7 +85,7 @@ server-side issued-at time. Long-duration TTL checks belong to the orchestrator.
 
 ## E5 — send-time selection
 
-**UNVERIFIED.** No live send or input introspection yet. No claim of accepted
+**UNVERIFIED.** No live send or input introspection. No claim of accepted
 `promptPresetKey`, model selection, or workflow-context compatibility.
 
 ## Reproducibility and checks
@@ -93,9 +103,24 @@ correlated polls, and `socket-main.mjs`/`socket.mjs` for the JSON handshake
 experiment. They use only Node builtins. The new minimal auth projections
 are fixture-tested, not claimed as live browser-identical operations.
 
-Checkpoint checks: 35/35 probe tests pass on Node `v22.23.3`;
+Checks: 35/35 probe tests pass on Node `v22.23.3`;
 `git diff --check` and the documentation-link checker pass.
 No live inference or streaming acceptance is implied by these checks.
 Fresh-clone `bash ci/check-src.sh` at `e14591d`: **PASS**. The available
 Homebrew Bash 5.3.20 was used (not macOS Bash 3.2). This source gate does not
 exercise live Linear services. The separate probe tests are listed above.
+The code head `28e0b8a` also passed the source gate in a fresh clone with
+`npm_config_offline=true`, using the previously populated dependency cache.
+A redundant online run was stopped during slow toolchain dependency fetches;
+that interruption is not a test failure or a passing gate.
+
+## Resume boundary
+
+The browser capture controller is left running at code entry; the two-hour
+code watcher has exited. Resuming requires the owner to provide the relay
+code and restart the watcher or submit it in that same test browser. A stale
+code rejection would require a new normal login challenge, not a bypass.
+No existing personal session, guessed token, workspace ID, source flag, or
+model preset was substituted. The core usage question remains unanswered.
+Draft PR #377 preserves the measured facts and original probe additions;
+it is not a claim that E0–E5 or the product adapter are complete.

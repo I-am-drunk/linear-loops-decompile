@@ -1,0 +1,35 @@
+{
+  "kind": "LIVE_REDACTED_OBSERVATION",
+  "responseRecordedAt": "2026-10-12T17:49:20.549334+00:00",
+  "endpoint": "https://client-api.linear.app/graphql",
+  "httpStatus": 200,
+  "operationName": "EmailUserAccountAuthChallenge",
+  "variableNames": [
+    "challengeResponse",
+    "clientAuthCode",
+    "email",
+    "isDesktop",
+    "loginCodeOnly"
+  ],
+  "clientVersion": "1.81129.0",
+  "clientIdPresent": true,
+  "challengeResponsePresent": true,
+  "clientAuthCodePresent": true,
+  "loginCodeOnly": false,
+  "response": {
+    "data": {
+      "emailUserAccountAuthChallenge": {
+        "success": true,
+        "authType": "authToken"
+      }
+    }
+  },
+  "setCookieNames": [],
+  "redacted": [
+    "email",
+    "clientAuthCode",
+    "challengeResponse",
+    "clientId",
+    "other request/header values"
+  ]
+}
