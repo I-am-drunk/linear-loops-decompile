@@ -1,0 +1,29 @@
+{
+  "kind": "LIVE_BLOCKED_OUTCOME",
+  "status": "CODE-TIMEOUT",
+  "statusRecordedAt": "2026-10-12T19:50:53.590941+00:00",
+  "codeFilePresentAtFinalInspection": false,
+  "browserObservedAt": "2026-10-12T19:50:59.267686+00:00",
+  "browserPage": "manual email-code entry",
+  "completedGraphqlOperations": [
+    "EmailUserAccountAuthChallenge"
+  ],
+  "authenticationCompletionAttempts": 0,
+  "aiSendAttempts": 0,
+  "authenticatedSocketAttempts": 0,
+  "tokenObserved": false,
+  "userId": null,
+  "userAccountId": null,
+  "organizationId": null,
+  "tokenMintTime": null,
+  "firstVerifiedTokenUse": null,
+  "probeStatus": {
+    "E0": "partial: email challenge only",
+    "E1": "not run: authentication blocked",
+    "E2": "not run: authentication blocked",
+    "E2b": "not run: authentication blocked",
+    "E3": "no token observed",
+    "E4": "not run: authentication blocked",
+    "E5": "not run: authentication blocked"
+  }
+}

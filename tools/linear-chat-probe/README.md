@@ -79,3 +79,39 @@ Tests exercise injected protocol responses and native fetch against a local
 HTTP fixture; localhost injection is test-only, never a CLI destination.
 They prove mechanics and secret handling, not remote compatibility.
 Account-dependent tests were blocked as recorded in the ledger.
+
+## Isolated login and JSON handshake tools
+
+The [live facts](../../facts/linear-chat-live-2026-10-12.md) distinguish browser
+observations from fixture-tested code. These helpers do not solve a challenge,
+inspect an existing browser profile, or bypass an entitlement requirement.
+
+`auth-main.mjs` accepts `challenge` or `complete`, with `--input PRIVATE_FILE`
+and `--output NEW_PRIVATE_FILE`. Inputs must be regular, non-symlink 0600 files.
+Output is exclusively created as 0600 **before** the one network attempt;
+existing output files are refused, and failed attempts may leave an empty file.
+There are no automatic retries. An ambiguous failure must be reconciled.
+
+Challenge input: `email`, browser-issued `challengeResponse`, optional
+`clientAuthCode`. Completion input: `email`, `code`, `timezone`, optional
+`clientAuthCode`. Do not put these values in shell arguments. The completion
+helper reads `authenticationToken` from the response's Set-Cookie headers,
+never from the deprecated GraphQL payload field. `cookieObservedAt` is local
+response-reception time, not proof of server mint time or expiry. An empty
+membership list does not establish a workspace identity.
+
+```sh
+node tools/linear-chat-probe/auth-main.mjs complete \
+  --input tools/linear-chat-probe/.local/completion.json \
+  --output tools/linear-chat-probe/.local/session.json
+node tools/linear-chat-probe/socket-main.mjs \
+  --config tools/linear-chat-probe/.local/socket.json
+```
+
+The socket file requires captured `userId`, `userAccountId`, `clientType`,
+`flagClient`, `clientDatabaseId`, `clientVersion`, `cellName`, and `token`.
+No compression fields or binary-protocol option are sent. The 30-second
+probe reports frame kind, JSON decodability, command, and handshake presence;
+it does not subscribe to models or declare a run complete. A socket opening
+alone is not authenticated handshake acceptance. These extra helpers do not
+change the existing preflight → one send → correlated poll behavior.

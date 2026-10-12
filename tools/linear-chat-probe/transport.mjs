@@ -13,7 +13,7 @@ export function abortable(promise, signal) {
     promise.then((v) => { cleanup(); resolve(v); }, (e) => { cleanup(); reject(e); });
   });
 }
-async function bodyJson(response, signal) {
+export async function bodyJson(response, signal) {
   const reader = response.body?.getReader();
   if (!reader) throw new ProbeError('invalidResponse');
   const chunks = [];
