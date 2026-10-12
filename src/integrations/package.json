@@ -1,0 +1,6 @@
+{
+  "name": "integrations",
+  "private": true,
+  "type": "module",
+  "description": "Integration interface + registry + status model (IG1). An integration contributes entities, events and actions, nothing else; the registry knows nothing about any particular one. See docs/plan/integrations.md."
+}
