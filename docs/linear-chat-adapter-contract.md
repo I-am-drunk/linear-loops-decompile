@@ -47,10 +47,12 @@ Sources: [static audit](linear-chat-static-audit.md), [integration map](linear-c
    Unknown usage/cost has no numerical value. Sanitize content, tool data,
    identifiers and errors before logs/UI; type annotations do not sanitize.
 
-The existing registry retries `unavailable` failures. A bridge into that
-registry must not downcast an indeterminate write, suspension or protocol
-incompatibility into an ordinary text result or retryable failure. That
-bridge and runtime enforcement/tests are explicitly **not implemented**.
+The existing registry resolves another candidate on `unavailable`,
+`unconfigured` or `rateLimited` reachability failures; it does not dispatch
+chat retries. A future bridge must not downcast an indeterminate write,
+suspension or protocol incompatibility into an ordinary text result or
+retryable failure. That bridge and runtime enforcement/tests are explicitly
+**not implemented**.
 
 ## Provider-specific mapping, not a shared wire protocol
 
