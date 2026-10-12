@@ -146,6 +146,8 @@ test('private data is absent by default and literal tokens are always redacted',
   assert.ok(!safe.includes(config.token));
   assert.ok(safe.includes('contentSha256'));
   assert.ok(!safeReport(result, config.token, true).includes(config.token));
+  const special = 'test"quoted\\token';
+  assert.equal(JSON.parse(safeReport({ content: special }, special, true)).content, '[REDACTED]');
 });
 test('configuration rejects endpoint override, header injection and invalid durations', () => {
   for (const input of [{ endpoint: 'http://example.com' }, { token: 'x\r\ncookie: y' },
@@ -159,6 +161,28 @@ test('offline CLI outputs only fictional, redacted request plan', () => {
   assert.equal(child.status, 0, child.stderr);
   assert.deepEqual(JSON.parse(child.stdout), plan(exampleConfig, exampleIds));
   assert.ok(!child.stdout.includes(exampleConfig.token));
+});
+test('already aborted runs perform no fetch', async () => {
+  const s = scenario([]);
+  const controller = new AbortController();
+  controller.abort();
+  assert.equal((await runProbe(config, { ...s, signal: controller.signal })).outcome, 'interrupted');
+  assert.equal(s.calls.length, 0);
+});
+test('wrong conversation and malformed send cannot masquerade as completion', async () => {
+  const wrong = scenario([{ id: exampleIds.conversationId, parts: [part('text', { body: 'wrong' })] }]);
+  assert.equal((await runProbe(config, wrong)).outcome, 'invalidResponse');
+  const bad = scenario([], { send: () => json({ aiConversationSendMessage: { success: true } }) });
+  assert.equal((await runProbe(config, bad)).outcome, 'invalidResponse');
+  assert.equal(bad.calls.length, 2);
+});
+test('GraphQL rate limits on HTTP 200 are typed before send', async () => {
+  const s = scenario([], { preflight: () => new Response(JSON.stringify({
+    errors: [{ message: 'private', extensions: { code: 'RATELIMITED' } }],
+  })) });
+  const result = await runProbe(config, s);
+  assert.equal(result.outcome, 'rateLimited');
+  assert.equal(result.sendAttempts, 0);
 });
 test('native fetch loopback transport preserves operation order and reads the answer', async () => {
   const s = scenario([{ parts: [part('text', { body: 'native-ok' })] }]);
