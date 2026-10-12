@@ -96,4 +96,6 @@ are fixture-tested, not claimed as live browser-identical operations.
 Checkpoint checks: 35/35 probe tests pass on Node `v22.23.3`;
 `git diff --check` and the documentation-link checker pass.
 No live inference or streaming acceptance is implied by these checks.
-Fresh-clone source gate: pending.
+Fresh-clone `bash ci/check-src.sh` at `e14591d`: **PASS**. The available
+Homebrew Bash 5.3.20 was used (not macOS Bash 3.2). This source gate does not
+exercise live Linear services. The separate probe tests are listed above.

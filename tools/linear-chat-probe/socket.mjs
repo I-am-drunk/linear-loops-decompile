@@ -24,7 +24,7 @@ export async function frameSummary(data) {
     data instanceof Blob ? Buffer.from(await data.arrayBuffer()) : Buffer.from(data);
   if (bytes.length > 1024 * 1024) return { kind, bytes: bytes.length, jsonDecodable: null, oversized: true };
   try {
-    const frame = JSON.parse(bytes.toString('utf8'));
+    const frame = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
     return { kind, bytes: bytes.length, jsonDecodable: true,
       cmd: typeof frame?.cmd === 'string' ? frame.cmd : null,
       hasSync: frame?.cmd === 'hshk' && frame.sync !== undefined,

@@ -22,6 +22,7 @@ test('JSON payloads and binary payloads stay distinguishable; no frame values es
   assert.equal(binary.kind, 'binary');
   assert.equal(binary.jsonDecodable, true);
   assert.equal((await frameSummary(Buffer.from([0x81, 0xa3]))).jsonDecodable, false);
+  assert.equal((await frameSummary(Buffer.from([0x22, 0xff, 0x22]))).jsonDecodable, false);
 });
 test('opening a socket is not handshake acceptance', async () => {
   class FakeSocket extends EventTarget {
