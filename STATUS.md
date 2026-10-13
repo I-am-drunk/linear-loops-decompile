@@ -15,6 +15,7 @@ node tools/board/main.mjs --feedback
 | Inference | Text-only provider contract and fallback registry; adapters remain on PR branches |
 | Exactness | #327 merged: required declaration checks run in CI; actual reference comparisons remain necessary |
 | T3 Code Connect | Existing adapter is a prototype over our protocol; interoperability is unverified |
+| Chat/Loops research | docs/LINEAR-CHAT-AUTOMATIONS.md maps October client paths; live disabled-draft edit verified, native run/publish and visual parity unverified |
 | Linear | Public-API client exists; sign-in and integration packages await wiring and verification |
 | Cursor | Separate reference repo exists; exact authenticated layout capture remains unverified |
 
